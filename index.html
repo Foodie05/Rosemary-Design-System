@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Rosemary Design — Design System & Human Interface Guidelines v2.0 Beta
+    </title>
+    <meta
+      name="description"
+      content="Rosemary 品牌官方设计系统与人机交互指南 v2.0 Beta — 专为综合型独立软件家族打造的跨平台设计标准、设计令牌与人机交互规范。"
+    />
+    <meta
+      property="og:title"
+      content="Rosemary Design — Design System & Human Interface Guidelines v2.0 Beta"
+    />
+    <meta
+      property="og:description"
+      content="Rosemary 品牌官方设计系统与人机交互指南 v2.0 Beta — 专为综合型独立软件家族打造的跨平台设计标准、设计令牌与人机交互规范。"
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link
+      rel="icon"
+      href="https://dl.cruty.cn/logo/rosemary_pure.png"
+      type="image/png"
+    />
+    <script>
+      try {
+        const saved = localStorage.getItem("rosemary_theme");
+        const dark =
+          saved === "dark" ||
+          ((!saved || saved === "system") &&
+            matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.classList.toggle("dark", dark);
+        document.documentElement.dataset.theme = dark ? "dark" : "light";
+      } catch {}
+    </script>
+    <!-- Editorial typography; system font fallbacks are defined in tokens. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media = 'all'"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

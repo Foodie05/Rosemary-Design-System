@@ -1,0 +1,617 @@
+{
+  "status": "Prototype",
+  "implementedFirstWave": 14,
+  "betaApproved": false,
+  "components": [
+    {
+      "id": "button",
+      "name": "Button",
+      "status": "Prototype",
+      "wave": 1,
+      "flutter": "FilledButton / CupertinoButton",
+      "android": "Material 3 Button",
+      "ios": "Button / ButtonStyle",
+      "specification": "#/components/button"
+    },
+    {
+      "id": "icon-button",
+      "name": "Icon Button",
+      "status": "Prototype",
+      "wave": 1,
+      "flutter": "IconButton / CupertinoButton",
+      "android": "IconButton",
+      "ios": "Button + accessibilityLabel",
+      "specification": "#/components/icon-button"
+    },
+    {
+      "id": "button-group",
+      "name": "Button Group",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "Row / Wrap of actions",
+      "android": "Row / FlowRow of actions",
+      "ios": "HStack of Buttons",
+      "specification": "#/components/button-group"
+    },
+    {
+      "id": "split-button",
+      "name": "Split Button",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "Button + MenuAnchor",
+      "android": "Button + DropdownMenu",
+      "ios": "Button + Menu",
+      "specification": "#/components/split-button"
+    },
+    {
+      "id": "link-button",
+      "name": "Link Button",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "Link action with route callback",
+      "android": "TextButton with navigation callback",
+      "ios": "NavigationLink / Link",
+      "specification": "#/components/link-button"
+    },
+    {
+      "id": "floating-action-button",
+      "name": "Floating Action Button",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "FloatingActionButton; iOS toolbar action",
+      "android": "FloatingActionButton",
+      "ios": "Toolbar primary action",
+      "specification": "#/components/floating-action-button"
+    },
+    {
+      "id": "text-field",
+      "name": "Text Field",
+      "status": "Prototype",
+      "wave": 1,
+      "flutter": "TextField / CupertinoTextField",
+      "android": "TextField + TextFieldState adapter",
+      "ios": "TextField + Binding",
+      "specification": "#/components/text-field"
+    },
+    {
+      "id": "text-area",
+      "name": "Text Area",
+      "status": "Prototype",
+      "wave": 1,
+      "flutter": "Multiline TextField",
+      "android": "Multiline TextField",
+      "ios": "TextEditor",
+      "specification": "#/components/text-area"
+    },
+    {
+      "id": "password-field",
+      "name": "Password Field",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "Obscured TextField",
+      "android": "Secure text field",
+      "ios": "SecureField",
+      "specification": "#/components/password-field"
+    },
+    {
+      "id": "search-field",
+      "name": "Search Field",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "SearchBar / CupertinoSearchTextField",
+      "android": "SearchBar",
+      "ios": "searchable / TextField",
+      "specification": "#/components/search-field"
+    },
+    {
+      "id": "number-field",
+      "name": "Number Field",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "TextField + step actions",
+      "android": "TextField + step actions",
+      "ios": "TextField + Stepper",
+      "specification": "#/components/number-field"
+    },
+    {
+      "id": "checkbox",
+      "name": "Checkbox",
+      "status": "Prototype",
+      "wave": 1,
+      "flutter": "Checkbox; iOS checkmark choice row",
+      "android": "TriStateCheckbox",
+      "ios": "Checkmark choice Button / List selection",
+      "specification": "#/components/checkbox"
+    },
+    {
+      "id": "radio",
+      "name": "Radio Button",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "RadioGroup; iOS single-choice list",
+      "android": "RadioButton + selectableGroup",
+      "ios": "Picker single selection",
+      "specification": "#/components/radio"
+    },
+    {
+      "id": "switch",
+      "name": "Switch",
+      "status": "Prototype",
+      "wave": 1,
+      "flutter": "Switch.adaptive",
+      "android": "Switch",
+      "ios": "Toggle",
+      "specification": "#/components/switch"
+    },
+    {
+      "id": "slider",
+      "name": "Slider",
+      "status": "Prototype",
+      "wave": 1,
+      "flutter": "Slider / CupertinoSlider",
+      "android": "Slider",
+      "ios": "Slider",
+      "specification": "#/components/slider"
+    },
+    {
+      "id": "select",
+      "name": "Select",
+      "status": "Prototype",
+      "wave": 1,
+      "flutter": "MenuAnchor / adaptive picker sheet",
+      "android": "ExposedDropdownMenuBox / selection sheet",
+      "ios": "Picker / Menu; long-list sheet",
+      "specification": "#/components/select"
+    },
+    {
+      "id": "combo-box",
+      "name": "Combo Box",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "Autocomplete",
+      "android": "TextField + suggestions",
+      "ios": "TextField + suggestions",
+      "specification": "#/components/combo-box"
+    },
+    {
+      "id": "date-picker",
+      "name": "Date Picker",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "showDatePicker / CupertinoDatePicker",
+      "android": "DatePickerDialog",
+      "ios": "DatePicker",
+      "specification": "#/components/date-picker"
+    },
+    {
+      "id": "time-picker",
+      "name": "Time Picker",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "showTimePicker / CupertinoDatePicker",
+      "android": "TimePickerDialog",
+      "ios": "DatePicker hourAndMinute",
+      "specification": "#/components/time-picker"
+    },
+    {
+      "id": "file-upload",
+      "name": "File Upload",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "Host document picker adapter",
+      "android": "Activity Result document picker",
+      "ios": "fileImporter",
+      "specification": "#/components/file-upload"
+    },
+    {
+      "id": "color-picker",
+      "name": "Color Picker",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "Accessible color choices",
+      "android": "Accessible color choices",
+      "ios": "ColorPicker",
+      "specification": "#/components/color-picker"
+    },
+    {
+      "id": "tabs",
+      "name": "Tabs",
+      "status": "Prototype",
+      "wave": 1,
+      "flutter": "TabBar / adaptive section selector",
+      "android": "PrimaryTabRow",
+      "ios": "Section selector + one content panel",
+      "specification": "#/components/tabs"
+    },
+    {
+      "id": "segmented-control",
+      "name": "Segmented Control",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "SegmentedButton / CupertinoSegmentedControl",
+      "android": "SingleChoiceSegmentedButtonRow",
+      "ios": "Picker segmented style",
+      "specification": "#/components/segmented-control"
+    },
+    {
+      "id": "breadcrumb",
+      "name": "Breadcrumb",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "Wide-layout path links",
+      "android": "Wide-layout path links",
+      "ios": "Wide-layout NavigationLink path",
+      "specification": "#/components/breadcrumb"
+    },
+    {
+      "id": "sidebar",
+      "name": "Sidebar",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "NavigationRail / split layout",
+      "android": "NavigationRail / permanent drawer",
+      "ios": "NavigationSplitView",
+      "specification": "#/components/sidebar"
+    },
+    {
+      "id": "top-navigation",
+      "name": "Top Navigation",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "AppBar / CupertinoNavigationBar",
+      "android": "TopAppBar",
+      "ios": "NavigationStack toolbar",
+      "specification": "#/components/top-navigation"
+    },
+    {
+      "id": "bottom-navigation",
+      "name": "Bottom Navigation",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "NavigationBar / CupertinoTabBar",
+      "android": "NavigationBar",
+      "ios": "TabView",
+      "specification": "#/components/bottom-navigation"
+    },
+    {
+      "id": "pagination",
+      "name": "Pagination",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "Page action group",
+      "android": "Page action group",
+      "ios": "Page action group",
+      "specification": "#/components/pagination"
+    },
+    {
+      "id": "stepper",
+      "name": "Stepper",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "Step selection + controlled content",
+      "android": "Step selection + controlled content",
+      "ios": "Step selection + controlled content",
+      "specification": "#/components/stepper"
+    },
+    {
+      "id": "command-palette",
+      "name": "Command Palette",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "Shortcuts / Actions + search overlay",
+      "android": "Keyboard commands + search overlay",
+      "ios": "Search sheet; macOS commands later",
+      "specification": "#/components/command-palette"
+    },
+    {
+      "id": "table",
+      "name": "Table",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "DataTable; compact list on narrow widths",
+      "android": "Lazy layout / compact list",
+      "ios": "List; wide table adapter later",
+      "specification": "#/components/table"
+    },
+    {
+      "id": "data-grid",
+      "name": "Data Grid",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "Virtual data surface: separate design",
+      "android": "Virtual data surface: separate design",
+      "ios": "Virtual data surface: separate design",
+      "specification": "#/components/data-grid"
+    },
+    {
+      "id": "list",
+      "name": "List",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "ListView + stable item keys",
+      "android": "LazyColumn + stable keys",
+      "ios": "List + stable identity",
+      "specification": "#/components/list"
+    },
+    {
+      "id": "description-list",
+      "name": "Description List",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "Label-value layout",
+      "android": "Label-value layout",
+      "ios": "LabeledContent",
+      "specification": "#/components/description-list"
+    },
+    {
+      "id": "tree-view",
+      "name": "Tree View",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "Hierarchical disclosure + focus model",
+      "android": "Hierarchical lazy list + focus model",
+      "ios": "OutlineGroup / DisclosureGroup",
+      "specification": "#/components/tree-view"
+    },
+    {
+      "id": "badge",
+      "name": "Badge",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "Badge / semantic status",
+      "android": "Badge",
+      "ios": "Text status badge",
+      "specification": "#/components/badge"
+    },
+    {
+      "id": "tag",
+      "name": "Tag",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "Chip / input choice",
+      "android": "FilterChip / InputChip",
+      "ios": "Label / choice Button",
+      "specification": "#/components/tag"
+    },
+    {
+      "id": "avatar",
+      "name": "Avatar",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "Image + fallback semantics",
+      "android": "Image + fallback semantics",
+      "ios": "Image + fallback semantics",
+      "specification": "#/components/avatar"
+    },
+    {
+      "id": "dialog",
+      "name": "Dialog",
+      "status": "Prototype",
+      "wave": 1,
+      "flutter": "showAdaptiveDialog",
+      "android": "AlertDialog / Dialog",
+      "ios": "sheet for form; native alert for message",
+      "specification": "#/components/dialog"
+    },
+    {
+      "id": "alert-dialog",
+      "name": "Alert Dialog",
+      "status": "Prototype",
+      "wave": 1,
+      "flutter": "Adaptive alert",
+      "android": "AlertDialog",
+      "ios": "alert / confirmationDialog",
+      "specification": "#/components/alert-dialog"
+    },
+    {
+      "id": "sheet",
+      "name": "Sheet / Drawer",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "showModalBottomSheet / adaptive sheet",
+      "android": "ModalBottomSheet",
+      "ios": "sheet + presentationDetents",
+      "specification": "#/components/sheet"
+    },
+    {
+      "id": "toast",
+      "name": "Toast",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "Nonmodal status overlay",
+      "android": "Nonmodal status overlay",
+      "ios": "Nonmodal status overlay",
+      "specification": "#/components/toast"
+    },
+    {
+      "id": "snackbar",
+      "name": "Snackbar",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "ScaffoldMessenger + stable recovery",
+      "android": "SnackbarHost + stable recovery",
+      "ios": "Status with persistent Undo action",
+      "specification": "#/components/snackbar"
+    },
+    {
+      "id": "banner",
+      "name": "Banner",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "MaterialBanner / inline notice",
+      "android": "Inline notice",
+      "ios": "Inline notice",
+      "specification": "#/components/banner"
+    },
+    {
+      "id": "progress",
+      "name": "Progress Indicator",
+      "status": "Prototype",
+      "wave": 1,
+      "flutter": "LinearProgressIndicator",
+      "android": "LinearProgressIndicator",
+      "ios": "Determinate ProgressView",
+      "specification": "#/components/progress"
+    },
+    {
+      "id": "skeleton",
+      "name": "Skeleton",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "Static placeholder",
+      "android": "Static placeholder",
+      "ios": "redacted placeholder",
+      "specification": "#/components/skeleton"
+    },
+    {
+      "id": "spinner",
+      "name": "Spinner",
+      "status": "Prototype",
+      "wave": 1,
+      "flutter": "CircularProgressIndicator / CupertinoActivityIndicator",
+      "android": "CircularProgressIndicator",
+      "ios": "Indeterminate ProgressView",
+      "specification": "#/components/spinner"
+    },
+    {
+      "id": "tooltip",
+      "name": "Tooltip",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "Tooltip for pointer; keyboard help",
+      "android": "TooltipBox for pointer/keyboard",
+      "ios": "help on pointer platforms; accessible hint",
+      "specification": "#/components/tooltip"
+    },
+    {
+      "id": "popover",
+      "name": "Popover",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "MenuAnchor / adaptive overlay",
+      "android": "Popup / adaptive sheet",
+      "ios": "popover / adaptive sheet",
+      "specification": "#/components/popover"
+    },
+    {
+      "id": "dropdown-menu",
+      "name": "Dropdown Menu",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "MenuAnchor",
+      "android": "DropdownMenu",
+      "ios": "Menu",
+      "specification": "#/components/dropdown-menu"
+    },
+    {
+      "id": "context-menu",
+      "name": "Context Menu",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "Context actions / MenuAnchor",
+      "android": "Context actions",
+      "ios": "contextMenu",
+      "specification": "#/components/context-menu"
+    },
+    {
+      "id": "drawer",
+      "name": "Drawer",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "Wide side panel / narrow sheet",
+      "android": "ModalNavigationDrawer / side panel",
+      "ios": "NavigationSplitView / sheet",
+      "specification": "#/components/drawer"
+    },
+    {
+      "id": "card",
+      "name": "Card",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "Card / quiet grouped surface",
+      "android": "Card",
+      "ios": "Grouped content surface",
+      "specification": "#/components/card"
+    },
+    {
+      "id": "accordion",
+      "name": "Accordion",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "ExpansionTile / native disclosure",
+      "android": "Expandable content + semantics",
+      "ios": "DisclosureGroup",
+      "specification": "#/components/accordion"
+    },
+    {
+      "id": "divider",
+      "name": "Divider",
+      "status": "Draft",
+      "wave": 2,
+      "flutter": "Divider",
+      "android": "HorizontalDivider / VerticalDivider",
+      "ios": "Divider",
+      "specification": "#/components/divider"
+    },
+    {
+      "id": "empty-state",
+      "name": "Empty State",
+      "status": "Prototype",
+      "wave": 1,
+      "flutter": "Text + optional real action",
+      "android": "Text + optional real action",
+      "ios": "ContentUnavailableView / compatible content",
+      "specification": "#/components/empty-state"
+    },
+    {
+      "id": "scroll-area",
+      "name": "Scroll Area",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "ScrollView + Scrollbar with controller",
+      "android": "Native scroll state + platform indicators",
+      "ios": "ScrollView; system indicators",
+      "specification": "#/components/scroll-area"
+    },
+    {
+      "id": "resizable-panels",
+      "name": "Resizable Panels",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "Wide-layout split adapter",
+      "android": "Wide-layout split adapter",
+      "ios": "Wide split adapter; macOS later",
+      "specification": "#/components/resizable-panels"
+    },
+    {
+      "id": "metric-card",
+      "name": "Metric Card",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "Value + meaning; no animated counts",
+      "android": "Value + meaning",
+      "ios": "Value + meaning",
+      "specification": "#/components/metric-card"
+    },
+    {
+      "id": "prober-status",
+      "name": "Prober Status Indicator",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "Semantic status + optional recovery",
+      "android": "Semantic status + optional recovery",
+      "ios": "Semantic status + optional recovery",
+      "specification": "#/components/prober-status"
+    },
+    {
+      "id": "file-row",
+      "name": "File Browser Row",
+      "status": "Draft",
+      "wave": 3,
+      "flutter": "Selectable row + host actions",
+      "android": "Selectable lazy row + host actions",
+      "ios": "List row + swipeActions / contextMenu",
+      "specification": "#/components/file-row"
+    }
+  ]
+}

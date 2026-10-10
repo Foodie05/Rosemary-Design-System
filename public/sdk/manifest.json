@@ -1,0 +1,35 @@
+{
+  "source": {
+    "sha256": "e95d4a4aa62b05695dc227e5ab335230eac679762a218c9e0b4fe5fb204b3c5d",
+    "fileCount": 178
+  },
+  "packages": [
+    {
+      "id": "flutter",
+      "file": "rosemary-flutter-prototype.tar.gz",
+      "status": "Prototype",
+      "implementedComponents": 14,
+      "betaApproved": false,
+      "bytes": 116436,
+      "sha256": "f7d386c36272334f3e9444b8d4437ade44b80fa287185b6c50a2eb489f3aa43f"
+    },
+    {
+      "id": "android",
+      "file": "rosemary-android-prototype.tar.gz",
+      "status": "Prototype",
+      "implementedComponents": 14,
+      "betaApproved": false,
+      "bytes": 67024,
+      "sha256": "867b189d23ae77b9a29d55a6766fe49ba17bd4a8d12bc2aabdb26644bfe0b8c0"
+    },
+    {
+      "id": "ios",
+      "file": "rosemary-ios-prototype.tar.gz",
+      "status": "Prototype",
+      "implementedComponents": 14,
+      "betaApproved": false,
+      "bytes": 20448,
+      "sha256": "714ebf8e79eda0003164aa96e360c93cd7f0eb106b60cb3b80ffe41753413d56"
+    }
+  ]
+}

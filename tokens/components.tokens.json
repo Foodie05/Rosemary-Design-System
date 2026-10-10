@@ -1,0 +1,67 @@
+{
+  "component": {
+    "button": {
+      "background": {
+        "$type": "color",
+        "$value": "{semantic.color.accent}"
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": "{semantic.color.on-accent}"
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{semantic.radius.control}"
+      },
+      "height-small": {
+        "$type": "dimension",
+        "$value": {
+          "value": 32,
+          "unit": "px"
+        }
+      },
+      "height-medium": {
+        "$type": "dimension",
+        "$value": {
+          "value": 44,
+          "unit": "px"
+        }
+      },
+      "height-large": {
+        "$type": "dimension",
+        "$value": {
+          "value": 48,
+          "unit": "px"
+        }
+      }
+    },
+    "field": {
+      "background": {
+        "$type": "color",
+        "$value": "{semantic.color.surface}"
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{semantic.color.border-control}"
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{semantic.radius.control}"
+      }
+    },
+    "dialog": {
+      "background": {
+        "$type": "color",
+        "$value": "{semantic.color.surface}"
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{semantic.radius.panel}"
+      },
+      "padding": {
+        "$type": "dimension",
+        "$value": "{semantic.space.24}"
+      }
+    }
+  }
+}

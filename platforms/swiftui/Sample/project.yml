@@ -1,0 +1,40 @@
+name: RosemarySample
+options:
+  deploymentTarget:
+    iOS: '15.0'
+packages:
+  RosemaryUI:
+    path: ..
+targets:
+  RosemarySample:
+    type: application
+    platform: iOS
+    sources: [Sources]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: design.rosemary.swiftui.sample
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        SWIFT_VERSION: '5.0'
+        CODE_SIGNING_ALLOWED: NO
+    dependencies:
+      - package: RosemaryUI
+  RosemarySampleUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: design.rosemary.swiftui.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGNING_ALLOWED: NO
+    dependencies:
+      - target: RosemarySample
+schemes:
+  RosemarySample:
+    build:
+      targets:
+        RosemarySample: all
+        RosemarySampleUITests: [test]
+    test:
+      targets: [RosemarySampleUITests]

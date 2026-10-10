@@ -1,0 +1,29 @@
+{
+  "checkedAt": "2026-10-10T04:13:02.796Z",
+  "command": "npm run check",
+  "passed": true,
+  "exitCode": 0,
+  "source": {
+    "sha256": "e95d4a4aa62b05695dc227e5ab335230eac679762a218c9e0b4fe5fb204b3c5d",
+    "fileCount": 178
+  },
+  "steps": [
+    {
+      "script": "tokens:check",
+      "exitCode": 0
+    },
+    {
+      "script": "lint",
+      "exitCode": 0
+    },
+    {
+      "script": "test",
+      "exitCode": 0
+    },
+    {
+      "script": "build",
+      "exitCode": 0
+    }
+  ],
+  "recording": "Actual subprocess results. Complete output is docs/web-check.log."
+}

@@ -1,0 +1,8 @@
+node_modules/
+dist/
+build/
+src/generated/
+public/generated/
+platforms/flutter/lib/rosemary_tokens.dart
+platforms/flutter/.dart_tool/
+platforms/flutter/build/

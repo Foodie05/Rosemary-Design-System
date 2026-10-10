@@ -1,0 +1,13 @@
+{
+  "light": [
+    "primitives.tokens.json",
+    "semantic.tokens.json",
+    "components.tokens.json"
+  ],
+  "dark": [
+    "primitives.tokens.json",
+    "semantic.tokens.json",
+    "components.tokens.json",
+    "dark.tokens.json"
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "semantic": {
+    "color": {
+      "canvas": {
+        "$type": "color",
+        "$value": "{primitive.color.night}"
+      },
+      "surface": {
+        "$type": "color",
+        "$value": "{primitive.color.night-surface}"
+      },
+      "surface-subtle": {
+        "$type": "color",
+        "$value": "{primitive.color.night-soft}"
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{primitive.color.night-text}"
+      },
+      "text-secondary": {
+        "$type": "color",
+        "$value": "{primitive.color.night-muted}"
+      },
+      "text-tertiary": {
+        "$type": "color",
+        "$value": "{primitive.color.night-tertiary}"
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{primitive.color.night-line}"
+      },
+      "border-control": {
+        "$type": "color",
+        "$value": "{primitive.color.night-control}"
+      },
+      "accent": {
+        "$type": "color",
+        "$value": "{primitive.color.sage}"
+      },
+      "accent-hover": {
+        "$type": "color",
+        "$value": "{primitive.color.sage-hover}"
+      },
+      "on-accent": {
+        "$type": "color",
+        "$value": "{primitive.color.night}"
+      },
+      "accent-subtle": {
+        "$type": "color",
+        "$value": "{primitive.color.green-dark}"
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{primitive.color.sage}"
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{primitive.color.night-muted}"
+      },
+      "danger": {
+        "$type": "color",
+        "$value": "{primitive.color.danger-dark}"
+      },
+      "danger-subtle": {
+        "$type": "color",
+        "$value": "{primitive.color.danger-surface}"
+      },
+      "warning": {
+        "$type": "color",
+        "$value": "{primitive.color.warning-dark}"
+      },
+      "warning-subtle": {
+        "$type": "color",
+        "$value": "{primitive.color.warning-surface}"
+      },
+      "success": {
+        "$type": "color",
+        "$value": "{primitive.color.sage}"
+      },
+      "success-subtle": {
+        "$type": "color",
+        "$value": "{primitive.color.green-dark}"
+      },
+      "info": {
+        "$type": "color",
+        "$value": "{primitive.color.info-dark}"
+      },
+      "info-subtle": {
+        "$type": "color",
+        "$value": "{primitive.color.info-surface}"
+      },
+      "chart-one": {
+        "$type": "color",
+        "$value": "{primitive.color.sage}"
+      },
+      "chart-two": {
+        "$type": "color",
+        "$value": "{primitive.color.clay-dark}"
+      },
+      "chart-three": {
+        "$type": "color",
+        "$value": "{primitive.color.lilac-dark}"
+      },
+      "chart-four": {
+        "$type": "color",
+        "$value": "{primitive.color.chart-amber-dark}"
+      },
+      "overlay": {
+        "$type": "color",
+        "$value": "{primitive.color.overlay}"
+      }
+    }
+  }
+}

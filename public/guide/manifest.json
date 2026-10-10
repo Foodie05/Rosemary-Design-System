@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "version": "2.0.0-beta.1",
+  "repositoryUrl": "https://github.com/Foodie05/Rosemary-Design-System",
+  "websiteUrl": "https://design.rosemaryis.cc",
+  "sourceRef": "v2.0.0-beta.1",
+  "publicationStatus": "configured",
+  "entry": "ai-integration.md",
+  "documents": [
+    {
+      "id": "ai-integration",
+      "source": "docs/AI-INTEGRATION.md",
+      "file": "ai-integration.md",
+      "route": "#/ai-guide"
+    },
+    {
+      "id": "content",
+      "source": "docs/CONTENT.md",
+      "file": "content.md",
+      "route": "#/content?anchor=content-clarity"
+    },
+    {
+      "id": "motion",
+      "source": "docs/MOTION.md",
+      "file": "motion.md",
+      "route": "#/foundations?anchor=foundations-motion"
+    },
+    {
+      "id": "agents-reference",
+      "source": "docs/AGENTS.template.md",
+      "file": "agents-reference.md",
+      "route": "#/ai-guide?anchor=project-integration"
+    },
+    {
+      "id": "native-sdk-design",
+      "source": "docs/NATIVE-SDK-DESIGN.md",
+      "file": "native-sdk-design.md",
+      "route": "#/platforms?anchor=native-libraries"
+    },
+    {
+      "id": "flutter-sdk",
+      "source": "docs/native/flutter-sdk.md",
+      "file": "flutter-sdk.md",
+      "route": "#/platforms?anchor=native-libraries"
+    },
+    {
+      "id": "android-compose",
+      "source": "docs/native/android-compose.md",
+      "file": "android-compose.md",
+      "route": "#/platforms?anchor=native-libraries"
+    },
+    {
+      "id": "ios-swiftui",
+      "source": "docs/native/ios-swiftui.md",
+      "file": "ios-swiftui.md",
+      "route": "#/platforms?anchor=native-libraries"
+    }
+  ],
+  "catalogue": "catalogue.json",
+  "nativeComponentPlan": "native-component-plan.json",
+  "tokens": "../generated/rosemary.tokens.json",
+  "validation": "../generated/validation.json",
+  "acceptance": "../generated/acceptance.json",
+  "componentCount": 61,
+  "caseCount": 65
+}
