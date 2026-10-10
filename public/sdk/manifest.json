@@ -12,8 +12,8 @@
       "version": "0.3.0-prototype.2",
       "targetStage": "Beta",
       "betaApproved": false,
-      "bytes": 201284,
-      "sha256": "dd2245a76471eded444d9c15a1bc547c12486c29f5655b92f5915f141e329157"
+      "bytes": 202487,
+      "sha256": "f53492be23ea299f6cbfd5b35ca7f1e48393e96271f3cbc0b7fa2b1619eac999"
     },
     {
       "id": "android",
@@ -23,8 +23,8 @@
       "version": "0.3.0-prototype.2",
       "targetStage": "Beta",
       "betaApproved": false,
-      "bytes": 142381,
-      "sha256": "910d5eae2b75ca353539273b2f8f5d3655ba398b2ae2e4bff33bca116d36d48d"
+      "bytes": 143548,
+      "sha256": "4a29debb36c268bcdfe147ee703bf34685c988a801793e54a4555a2d110ce974"
     },
     {
       "id": "ios",
@@ -34,8 +34,8 @@
       "version": "0.3.0-prototype.2",
       "targetStage": "Beta",
       "betaApproved": false,
-      "bytes": 93500,
-      "sha256": "aefecdc2116dd6efedc0275d6ead4341573d1a4f5004bed8d3edf4516d631a8e"
+      "bytes": 94716,
+      "sha256": "cfd79a7f00f46712901b59094076145028038bc45eb705408e523409d1bff633"
     }
   ]
 }

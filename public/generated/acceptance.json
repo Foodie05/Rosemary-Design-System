@@ -1,6 +1,6 @@
 {
   "version": "2.0.0-beta.2",
-  "recordedAt": "2026-10-10T08:30:23.774Z",
+  "recordedAt": "2026-10-10T08:54:23.784Z",
   "source": {
     "sha256": "fee7740fe635299e494275d3266a9aad5a59272f09b694a02a59114c65b92b4b",
     "fileCount": 296
@@ -168,6 +168,11 @@
         "label": "Flutter iOS engine gallery integration",
         "status": "passed",
         "command": "flutter test integration_test/gallery_test.dart -d 79FCB370-77E4-4EC5-B691-3072FBA69704"
+      },
+      {
+        "label": "SwiftUI iOS UI execution (GitHub CI)",
+        "status": "passed",
+        "command": ".github/workflows/native-sdk.yml: swiftui / Run UI tests on an available iPhone simulator"
       }
     ],
     "flutterWidgetTestsPassed": 43

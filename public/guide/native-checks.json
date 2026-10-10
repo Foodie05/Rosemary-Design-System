@@ -138,16 +138,17 @@
       "status": "passed",
       "exitCode": 0,
       "output": "00:00 +0: loading [workspace]/platforms/flutter/example/integration_test/gallery_test.dart\nRunning Xcode build...                                          \nXcode build done.                                           10.6s\n00:00 +0: 61 previews at 320px 2x type platform=TargetPlatform.android dark=false rtl=false\n00:03 +1: 61 previews at 320px 2x type platform=TargetPlatform.android dark=false rtl=true\n00:05 +2: 61 previews at 320px 2x type platform=TargetPlatform.android dark=true rtl=false\n00:07 +3: 61 previews at 320px 2x type platform=TargetPlatform.android dark=true rtl=true\n00:09 +4: 61 previews at 320px 2x type platform=TargetPlatform.iOS dark=false rtl=false\n00:11 +5: 61 previews at 320px 2x type platform=TargetPlatform.iOS dark=false rtl=true\n00:13 +6: 61 previews at 320px 2x type platform=TargetPlatform.iOS dark=true rtl=false\n00:15 +7: 61 previews at 320px 2x type platform=TargetPlatform.iOS dark=true rtl=true\n00:17 +8: checkbox number pagination and tree change actual host state\n00:17 +9: (tearDownAll)\n00:18 +9: All tests passed!"
+    },
+    {
+      "label": "SwiftUI iOS UI execution (GitHub CI)",
+      "status": "passed",
+      "command": ".github/workflows/native-sdk.yml: swiftui / Run UI tests on an available iPhone simulator",
+      "output": "2026-10-10T08:48:28.5745320Z Test Case '-[RosemarySampleUITests.GalleryTests testAll61NativePreviews]' passed (471.797 seconds).\n2026-10-10T08:48:46.2251710Z Test Case '-[RosemarySampleUITests.GalleryTests testLargeDarkRTLGridAndCancellation]' passed (17.429 seconds).\n2026-10-10T08:49:06.1431320Z Test Case '-[RosemarySampleUITests.GalleryTests testNumberExplicitCommit]' passed (20.046 seconds).\n2026-10-10T08:49:25.0779520Z Test Case '-[RosemarySampleUITests.WorkflowTests testFailureRetryAndCancellation]' passed (19.006 seconds).\n2026-10-10T08:49:42.9581100Z Test Case '-[RosemarySampleUITests.WorkflowTests testNativeSelectionAndDestructiveCancellation]' passed (17.833 seconds).\nExecuted 5 tests, with 0 failures. TEST SUCCEEDED.",
+      "evidence": "https://github.com/Foodie05/Rosemary-Design-System/actions/runs/38038146428"
     }
   ],
   "blockedChecks": [],
-  "unexecutedChecks": [
-    {
-      "label": "SwiftUI iOS UI execution",
-      "status": "not-run",
-      "reason": "2026-10-10 fresh XCTest execution failed to connect to com.apple.instruments.deviceservice.lockdown (DTServiceHubClient failed to bless); only compilation passed."
-    }
-  ],
+  "unexecutedChecks": [],
   "manualAcceptance": {
     "status": "not-run",
     "paths": [
@@ -163,5 +164,63 @@
     "Initial layout matrices do not replace complete interaction and OS/device coverage.",
     "SwiftPM macOS tests and UI compilation are not iOS UI execution.",
     "Unavailable, failed, blocked and unexecuted checks are not passing evidence."
+  ],
+  "ci": {
+    "runId": 38038146428,
+    "url": "https://github.com/Foodie05/Rosemary-Design-System/actions/runs/38038146428",
+    "headSha": "4154126d90f554e14517e597f5c070c4e7883b1d",
+    "conclusion": "success",
+    "completedAt": "2026-10-10T08:49:59Z",
+    "jobs": [
+      {
+        "name": "compose",
+        "conclusion": "success",
+        "url": "https://github.com/Foodie05/Rosemary-Design-System/actions/runs/38038146428/job/114172813822"
+      },
+      {
+        "name": "swiftui",
+        "conclusion": "success",
+        "url": "https://github.com/Foodie05/Rosemary-Design-System/actions/runs/38038146428/job/114172813970"
+      },
+      {
+        "name": "flutter",
+        "conclusion": "success",
+        "url": "https://github.com/Foodie05/Rosemary-Design-System/actions/runs/38038146428/job/114172813980"
+      }
+    ],
+    "swiftUiTestsPassed": 5,
+    "swiftUiTestResults": [
+      "2026-10-10T08:48:28.5745320Z Test Case '-[RosemarySampleUITests.GalleryTests testAll61NativePreviews]' passed (471.797 seconds).",
+      "2026-10-10T08:48:46.2251710Z Test Case '-[RosemarySampleUITests.GalleryTests testLargeDarkRTLGridAndCancellation]' passed (17.429 seconds).",
+      "2026-10-10T08:49:06.1431320Z Test Case '-[RosemarySampleUITests.GalleryTests testNumberExplicitCommit]' passed (20.046 seconds).",
+      "2026-10-10T08:49:25.0779520Z Test Case '-[RosemarySampleUITests.WorkflowTests testFailureRetryAndCancellation]' passed (19.006 seconds).",
+      "2026-10-10T08:49:42.9581100Z Test Case '-[RosemarySampleUITests.WorkflowTests testNativeSelectionAndDestructiveCancellation]' passed (17.833 seconds)."
+    ],
+    "scope": "CI checkout of frozen 183-API engineering source; UI execution includes all 61 SwiftUI preview launches and workflow assertions. Manual screen reader acceptance is separate."
+  },
+  "localExecutionLimitations": [
+    {
+      "label": "SwiftUI iOS UI execution",
+      "status": "not-run",
+      "reason": "2026-10-10 fresh XCTest execution failed to connect to com.apple.instruments.deviceservice.lockdown (DTServiceHubClient failed to bless); only compilation passed."
+    }
+  ],
+  "deviceTargetBuilds": [
+    {
+      "platform": "Flutter iOS",
+      "status": "passed",
+      "command": "flutter build ios --no-codesign",
+      "checkedAt": "2026-10-10T08:53:44.946463+00:00",
+      "executedOnDevice": false,
+      "signed": false
+    },
+    {
+      "platform": "SwiftUI iOS",
+      "status": "passed",
+      "command": "xcodebuild -project platforms/swiftui/Sample/RosemarySample.xcodeproj -scheme RosemarySample -destination generic/platform=iOS CODE_SIGNING_ALLOWED=NO build",
+      "checkedAt": "2026-10-10T08:53:44.946463+00:00",
+      "executedOnDevice": false,
+      "signed": false
+    }
   ]
 }

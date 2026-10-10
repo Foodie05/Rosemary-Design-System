@@ -92,7 +92,7 @@ CI 位于 `.github/workflows/native-sdk.yml`，分别执行 Flutter、Compose、
 
 先复现问题，再查共享规范、令牌和实际组件实现。参数改动从 tokens/ 修改，不手工改生成文件；提交时运行 `npm run check`。原生改动还应运行对应平台检查，说明系统、工具链、复现方式和未验证范围。请勿提交生产密钥、服务器配置、本机路径配置或构建缓存。
 
-独立审计见 [首批 SDK 审计](docs/NATIVE-SDK-AUDIT-2026-10-10.md) 与 [全量 Beta 审计](docs/NATIVE-BETA-AUDIT-2026-10-10.md)。首批五项与全量八项已复现的缺陷均有修复和永久回归。冻结源码后的工程检查已通过；人工辅助技术、设备覆盖和 SwiftUI UI 测试执行仍是 Beta 门槛。
+独立审计见 [首批 SDK 审计](docs/NATIVE-SDK-AUDIT-2026-10-10.md) 与 [全量 Beta 审计](docs/NATIVE-BETA-AUDIT-2026-10-10.md)。首批五项与全量八项已复现的缺陷均有修复和永久回归。冻结源码后的工程检查与 [三端 CI](https://github.com/Foodie05/Rosemary-Design-System/actions/runs/38038146428) 已全部通过，SwiftUI 5 项 UI 测试含 61 项预览启动。人工辅助技术与设备覆盖仍是 Beta 门槛。
 
 ## 版权与许可
 

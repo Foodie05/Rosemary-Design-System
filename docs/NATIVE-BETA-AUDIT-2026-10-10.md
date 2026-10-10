@@ -370,3 +370,10 @@ Compose Modal 的回调 State 已按 sessionId 隔离，关闭先前跨会话 cu
 Compose 受控 Drawer 拒绝关闭已有实际设备回归，宿主保持 open=true 后恢复打开；Modal 按 sessionId 隔离关闭回调。独立最终只读复核未发现新的高优先级问题。以上是工程交付与已运行回归范围，初始渲染矩阵不替代全部交互或平台覆盖。
 
 SwiftUI UI 执行仍被本机 Xcode 设备服务阻断；Flutter iOS VoiceOver、Flutter Android TalkBack、SwiftUI iOS VoiceOver、Compose Android TalkBack 人工路径未执行。betaApproved=false，版本保持 0.3.0-prototype.2，不能批准全库 Beta。
+
+
+## 远程 CI 与实机目标编译补记
+
+GitHub CI [38038146428](https://github.com/Foodie05/Rosemary-Design-System/actions/runs/38038146428) 对冻结 commit `4154126d90f554e14517e597f5c070c4e7883b1d` 的 Flutter、Compose、SwiftUI 三项任务全部通过。SwiftUI 实际执行 5 个 XCUITest、0 失败，含全部 61 项预览启动、深色大字 RTL Grid、数值显式提交、失败重试和破坏性操作取消。该远程结果关闭全局的 SwiftUI UI 未执行项；本机 Xcode 设备服务限制保留在收据 localExecutionLimitations，不能改写成当地执行通过。
+
+Flutter 与 SwiftUI 的 generic iOS 实机目标编译均通过，未签名、未安装或在实机执行。可用 iPhone 连接不等于 VoiceOver 验收。四条人工读屏路径仍未执行，betaApproved=false，整库 Beta 尚未批准。
