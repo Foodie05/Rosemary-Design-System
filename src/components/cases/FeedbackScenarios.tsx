@@ -108,7 +108,7 @@ export function DismissBanner({ good }: ScenarioProps) {
           <strong>新版本可用</strong>
           <p>下次启动时可更新。</p>
           {good && (
-            <Button size="sm" variant="ghost" onClick={() => set(false)}>
+            <Button size="sm" variant="secondary" onClick={() => set(false)}>
               稍后提醒
             </Button>
           )}

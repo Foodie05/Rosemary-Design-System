@@ -144,7 +144,7 @@ export function BannerExample(p: PreviewProps) {
           <p>你的工作已保存，可稍后更新。</p>
           <Button
             disabled={p.disabled}
-            variant="ghost"
+            variant="secondary"
             onClick={() => set(false)}
           >
             稍后提醒

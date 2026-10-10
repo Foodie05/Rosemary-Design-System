@@ -1743,7 +1743,7 @@ const AUTHORED_SPECS: ComponentSpec[] = [
       "Banner Surface",
       "Leading Icon",
       "Title & Detail Text",
-      "Action Links",
+      "Outlined Action Buttons",
       "Dismiss [✕]",
     ],
     variants: ["Neutral Info", "Warning Amber", "Critical Red"],

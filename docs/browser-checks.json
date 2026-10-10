@@ -897,13 +897,13 @@
       "width": 320
     },
     {
+      "heading": "有生命感，也有自己的秩序。",
       "scroll": 320,
       "theme": "light",
       "url": "http://127.0.0.1:3101/#/brand",
       "width": 320
     },
     {
-      "heading": "建立秩序，留出呼吸的空间。",
       "scroll": 320,
       "theme": "light",
       "url": "http://127.0.0.1:3101/#/foundations",
@@ -950,20 +950,19 @@
       "width": 320
     },
     {
-      "heading": "意图一致，行为属于平台。",
       "scroll": 320,
       "theme": "light",
       "url": "http://127.0.0.1:3101/#/platforms",
       "width": 320
     },
     {
+      "heading": "面向每一个人，从默认状态开始。",
       "scroll": 320,
       "theme": "light",
       "url": "http://127.0.0.1:3101/#/accessibility",
       "width": 320
     },
     {
-      "heading": "让每一句话，都有用处。",
       "scroll": 320,
       "theme": "light",
       "url": "http://127.0.0.1:3101/#/content",
@@ -978,14 +977,10 @@
     }
   ],
   "manualChecks": [
-    {
-      "check": "全量布局回归",
-      "observed": "Current checked source: 139 actual page URLs at 320px Light and Dark, 13 desktop sections at 1280px Dark. No whole-page horizontal overflow."
-    },
-    {
-      "check": "SDK 页面",
-      "observed": "Three platforms show 61 implemented APIs each, working documentation and source archive links. Prototype status and pending Beta gates remain visible; no current console warnings/errors."
-    }
+    "Banner action uses the shared secondary outlined button in light and dark themes; computed border is 1px solid and height is 44px.",
+    "Enter dismisses the component notice; redisplay restores it. Disabled state disables the action; reset restores default.",
+    "Recommended dismiss-banner case uses the shared secondary outlined button.",
+    "139 default routes checked at 320px in each theme; 13 section routes checked at desktop width; no horizontal overflow."
   ],
   "limitations": [
     "One Codex In-app Browser engine/session; Safari/Firefox and real mobile touch remain unverified.",
@@ -2072,10 +2067,10 @@
     }
   ],
   "source": {
-    "sha256": "fee7740fe635299e494275d3266a9aad5a59272f09b694a02a59114c65b92b4b",
+    "sha256": "b53dc5e362ab96cfbfedd824f8ff8e92dccc6d45b6a7620221785e6c6fc45dcc",
     "fileCount": 296
   },
-  "checkedAt": "2026-10-10T08:27:19.663Z",
+  "checkedAt": "2026-10-10T14:47:53.993Z",
   "consoleErrors": [],
   "previousIterationManualChecks": {
     "source": {
@@ -7893,5 +7888,41 @@
       "fileCount": 180
     },
     "limitations": "Default layout only in one IAB engine. Native screen reader acceptance and SwiftUI UI execution remain pending."
+  },
+  "previousBannerBaseline": {
+    "source": {
+      "sha256": "fee7740fe635299e494275d3266a9aad5a59272f09b694a02a59114c65b92b4b",
+      "fileCount": 296
+    },
+    "checkedAt": "2026-10-10T08:27:19.663Z",
+    "manualChecks": [
+      {
+        "check": "全量布局回归",
+        "observed": "Current checked source: 139 actual page URLs at 320px Light and Dark, 13 desktop sections at 1280px Dark. No whole-page horizontal overflow."
+      },
+      {
+        "check": "SDK 页面",
+        "observed": "Three platforms show 61 implemented APIs each, working documentation and source archive links. Prototype status and pending Beta gates remain visible; no current console warnings/errors."
+      }
+    ]
+  },
+  "bannerIteration": {
+    "source": {
+      "sha256": "b53dc5e362ab96cfbfedd824f8ff8e92dccc6d45b6a7620221785e6c6fc45dcc",
+      "fileCount": 296
+    },
+    "checkedAt": "2026-10-10T14:47:53.993Z",
+    "checks": [
+      "Banner action uses the shared secondary outlined button in light and dark themes; computed border is 1px solid and height is 44px.",
+      "Enter dismisses the component notice; redisplay restores it. Disabled state disables the action; reset restores default.",
+      "Recommended dismiss-banner case uses the shared secondary outlined button.",
+      "139 default routes checked at 320px in each theme; 13 section routes checked at desktop width; no horizontal overflow."
+    ],
+    "screenshots": [
+      "docs/screenshots/banner-outlined-light.jpg",
+      "docs/screenshots/banner-outlined-dark.jpg",
+      "docs/screenshots/banner-outlined-mobile.jpg"
+    ],
+    "historicalScope": "Earlier interaction, motion, download and native receipts retain their recorded source; they were not rerun for this Web-only styling change."
   }
 }

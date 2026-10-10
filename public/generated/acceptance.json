@@ -1,8 +1,8 @@
 {
   "version": "2.0.0-beta.2",
-  "recordedAt": "2026-10-10T08:54:23.784Z",
+  "recordedAt": "2026-10-10T14:48:16.835Z",
   "source": {
-    "sha256": "fee7740fe635299e494275d3266a9aad5a59272f09b694a02a59114c65b92b4b",
+    "sha256": "b53dc5e362ab96cfbfedd824f8ff8e92dccc6d45b6a7620221785e6c6fc45dcc",
     "fileCount": 296
   },
   "brand": {
@@ -51,14 +51,10 @@
     "detailPagesChecked": 126,
     "wholePageOverflowFailures": 0,
     "manualChecks": [
-      {
-        "check": "全量布局回归",
-        "observed": "Current checked source: 139 actual page URLs at 320px Light and Dark, 13 desktop sections at 1280px Dark. No whole-page horizontal overflow."
-      },
-      {
-        "check": "SDK 页面",
-        "observed": "Three platforms show 61 implemented APIs each, working documentation and source archive links. Prototype status and pending Beta gates remain visible; no current console warnings/errors."
-      }
+      "Banner action uses the shared secondary outlined button in light and dark themes; computed border is 1px solid and height is 44px.",
+      "Enter dismisses the component notice; redisplay restores it. Disabled state disables the action; reset restores default.",
+      "Recommended dismiss-banner case uses the shared secondary outlined button.",
+      "139 default routes checked at 320px in each theme; 13 section routes checked at desktop width; no horizontal overflow."
     ],
     "download": {
       "file": "dark.tokens.json",
@@ -182,7 +178,7 @@
     "publication": {
       "repositoryUrl": "https://github.com/Foodie05/Rosemary-Design-System",
       "websiteUrl": "https://design.rosemaryis.cc",
-      "sourceRef": "v0.3.0-prototype.2",
+      "sourceRef": "v2.0.0-beta.2-banner.1",
       "status": "configured"
     },
     "readingSpecification": "docs/CONTENT.md",
