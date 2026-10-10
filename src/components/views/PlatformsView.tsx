@@ -1,6 +1,6 @@
 import {
   NATIVE_LIBRARIES,
-  NATIVE_FIRST_WAVE,
+  NATIVE_COMPONENT_PLAN,
 } from "../../data/nativeLibraries";
 import { DocDisclosure } from "../common/DocDisclosure";
 import { SelectionGroup, SelectionContent } from "../common/SelectionMotion";
@@ -74,9 +74,8 @@ export function PlatformsView() {
       <section id="native-libraries">
         <h2>原生组件库 SDK</h2>
         <p>
-          Prototype · 三端首批 {NATIVE_FIRST_WAVE.length}{" "}
-          项已实现，含本地示例与构建测试。其余 47 项为 Draft；Beta
-          仍须完成辅助技术与设备验收。
+          三端各 {NATIVE_COMPONENT_PLAN.length} 项已有实现与交互示例。 当前为
+          Prototype；Beta 仍须完成原生辅助技术和设备验收。
         </p>
         <div className="r-reading-grid">
           {NATIVE_LIBRARIES.map((platform) => (
@@ -131,7 +130,7 @@ export function PlatformsView() {
       <section>
         <h2>当前实现范围</h2>
         <p>
-          Flutter、Compose、SwiftUI 首批各 14 个本地组件已实现；
+          Flutter、Compose、SwiftUI 各 61 个本地组件已实现；
           构建记录可查，当前为 Prototype，尚未发布。
         </p>
       </section>
@@ -154,10 +153,9 @@ export function PlatformsView() {
           )}
         </SelectionGroup>
         <p style={{ marginTop: 24 }}>
-          Web 可在本项目直接运行。三端原生 SDK 首批 14 项已实现并附本地示例，
+          Web 可在本项目直接运行。三端原生 SDK 各 61 项已实现并附本地示例，
           构建与自动测试记录见平台文档。当前是 Prototype；辅助技术人工检查、
-          完整设备矩阵和其余 47 项实现仍待完成。WinUI
-          目前只有生成参数与参考源码。
+          完整设备矩阵仍待完成。WinUI 目前只有生成参数与参考源码。
         </p>
         <SelectionContent
           value={selected}

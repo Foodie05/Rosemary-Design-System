@@ -26,7 +26,18 @@ public struct RosemaryThemeModifier: ViewModifier {
   @Environment(\.colorScheme) private var scheme
   public func body(content: Content) -> some View {
     content.tint(RosemaryTheme(scheme: scheme).accent).foregroundColor(
-      RosemaryTheme(scheme: scheme).ink)
+      RosemaryTheme(scheme: scheme).ink
+    ).background(RosemaryTheme(scheme: scheme).canvas)
   }
 }
 extension View { public func rosemaryTheme() -> some View { modifier(RosemaryThemeModifier()) } }
+
+extension View {
+  @ViewBuilder func rosemaryNavigationStyle() -> some View {
+    #if os(iOS)
+      navigationViewStyle(.stack)
+    #else
+      self
+    #endif
+  }
+}

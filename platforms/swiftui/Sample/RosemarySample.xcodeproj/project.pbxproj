@@ -8,8 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		1858AA6857896BE396BE892A /* WorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCECC3FFDDFAEA667CCA8C3 /* WorkflowTests.swift */; };
+		7653E942AA99E93AC0D2E943 /* GalleryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0900BCC0D06A28FD8DA9F8B7 /* GalleryTests.swift */; };
 		AB46435BBF438EA8C99C4CC1 /* RosemarySampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B970EDEA45EA879DF9AFC6E9 /* RosemarySampleApp.swift */; };
 		E1DBF5CA887B45CE4C4D84A6 /* RosemaryUI in Frameworks */ = {isa = PBXBuildFile; productRef = 44BDD7DB299B524B3F58F6BD /* RosemaryUI */; };
+		EC9031E609254A398BDC8A1D /* Gallery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1727F354D40148D954465613 /* Gallery.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,7 +25,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0900BCC0D06A28FD8DA9F8B7 /* GalleryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryTests.swift; sourceTree = "<group>"; };
 		0A596B3B9236A0F8EA930C17 /* RosemarySample.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = RosemarySample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1727F354D40148D954465613 /* Gallery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gallery.swift; sourceTree = "<group>"; };
 		8BCECC3FFDDFAEA667CCA8C3 /* WorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowTests.swift; sourceTree = "<group>"; };
 		92AB3EC705A21C4AF08DD2BD /* RosemarySampleUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = RosemarySampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CB4659D5EBB44514E428AA8 /* swiftui */ = {isa = PBXFileReference; lastKnownFileType = folder; name = swiftui; path = ..; sourceTree = SOURCE_ROOT; };
@@ -55,6 +59,7 @@
 		4FF01A9C5E11E1D671684A4F /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				1727F354D40148D954465613 /* Gallery.swift */,
 				B970EDEA45EA879DF9AFC6E9 /* RosemarySampleApp.swift */,
 			);
 			path = Sources;
@@ -63,6 +68,7 @@
 		BACC9EFB474F717DB656FBAB /* UITests */ = {
 			isa = PBXGroup;
 			children = (
+				0900BCC0D06A28FD8DA9F8B7 /* GalleryTests.swift */,
 				8BCECC3FFDDFAEA667CCA8C3 /* WorkflowTests.swift */,
 			);
 			path = UITests;
@@ -167,6 +173,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EC9031E609254A398BDC8A1D /* Gallery.swift in Sources */,
 				AB46435BBF438EA8C99C4CC1 /* RosemarySampleApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -175,6 +182,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7653E942AA99E93AC0D2E943 /* GalleryTests.swift in Sources */,
 				1858AA6857896BE396BE892A /* WorkflowTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -353,6 +361,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGNING_ALLOWED = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -371,6 +380,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGNING_ALLOWED = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

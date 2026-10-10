@@ -186,8 +186,8 @@ export function ComponentDetail({ id }: { id: string }) {
           </tbody>
         </table>
         <p className="r-muted">
-          Web 源码在本项目可用。Flutter、SwiftUI、Compose 首批各 14 个本地
-          Prototype 组件已有实现与构建记录，其他 47 项为 Draft；
+          Web 源码在本项目可用。Flutter、SwiftUI、Compose 各 61 个本地
+          Prototype 组件已有实现与构建记录；
           原生辅助技术和完整设备验收未完成，WinUI 保留为指南与生成参数。
           <a href="#/platforms?anchor=native-libraries">
             查看 SDK 范围与验收 →

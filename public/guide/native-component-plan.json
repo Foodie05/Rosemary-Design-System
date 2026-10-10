@@ -1,6 +1,7 @@
 {
   "status": "Prototype",
-  "implementedFirstWave": 14,
+  "implementedComponentsPerPlatform": 61,
+  "targetStage": "Beta",
   "betaApproved": false,
   "components": [
     {
@@ -26,7 +27,7 @@
     {
       "id": "button-group",
       "name": "Button Group",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "Row / Wrap of actions",
       "android": "Row / FlowRow of actions",
@@ -36,7 +37,7 @@
     {
       "id": "split-button",
       "name": "Split Button",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "Button + MenuAnchor",
       "android": "Button + DropdownMenu",
@@ -46,7 +47,7 @@
     {
       "id": "link-button",
       "name": "Link Button",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "Link action with route callback",
       "android": "TextButton with navigation callback",
@@ -56,7 +57,7 @@
     {
       "id": "floating-action-button",
       "name": "Floating Action Button",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "FloatingActionButton; iOS toolbar action",
       "android": "FloatingActionButton",
@@ -69,7 +70,7 @@
       "status": "Prototype",
       "wave": 1,
       "flutter": "TextField / CupertinoTextField",
-      "android": "TextField + TextFieldState adapter",
+      "android": "TextFieldValue / String adapter",
       "ios": "TextField + Binding",
       "specification": "#/components/text-field"
     },
@@ -86,7 +87,7 @@
     {
       "id": "password-field",
       "name": "Password Field",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "Obscured TextField",
       "android": "Secure text field",
@@ -96,7 +97,7 @@
     {
       "id": "search-field",
       "name": "Search Field",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "SearchBar / CupertinoSearchTextField",
       "android": "SearchBar",
@@ -106,7 +107,7 @@
     {
       "id": "number-field",
       "name": "Number Field",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "TextField + step actions",
       "android": "TextField + step actions",
@@ -126,7 +127,7 @@
     {
       "id": "radio",
       "name": "Radio Button",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "RadioGroup; iOS single-choice list",
       "android": "RadioButton + selectableGroup",
@@ -166,9 +167,9 @@
     {
       "id": "combo-box",
       "name": "Combo Box",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
-      "flutter": "Autocomplete",
+      "flutter": "Controlled text + keyboard suggestions",
       "android": "TextField + suggestions",
       "ios": "TextField + suggestions",
       "specification": "#/components/combo-box"
@@ -176,7 +177,7 @@
     {
       "id": "date-picker",
       "name": "Date Picker",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "showDatePicker / CupertinoDatePicker",
       "android": "DatePickerDialog",
@@ -186,7 +187,7 @@
     {
       "id": "time-picker",
       "name": "Time Picker",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "showTimePicker / CupertinoDatePicker",
       "android": "TimePickerDialog",
@@ -196,7 +197,7 @@
     {
       "id": "file-upload",
       "name": "File Upload",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "Host document picker adapter",
       "android": "Activity Result document picker",
@@ -206,7 +207,7 @@
     {
       "id": "color-picker",
       "name": "Color Picker",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "Accessible color choices",
       "android": "Accessible color choices",
@@ -226,7 +227,7 @@
     {
       "id": "segmented-control",
       "name": "Segmented Control",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "SegmentedButton / CupertinoSegmentedControl",
       "android": "SingleChoiceSegmentedButtonRow",
@@ -236,7 +237,7 @@
     {
       "id": "breadcrumb",
       "name": "Breadcrumb",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "Wide-layout path links",
       "android": "Wide-layout path links",
@@ -246,7 +247,7 @@
     {
       "id": "sidebar",
       "name": "Sidebar",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "NavigationRail / split layout",
       "android": "NavigationRail / permanent drawer",
@@ -256,7 +257,7 @@
     {
       "id": "top-navigation",
       "name": "Top Navigation",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "AppBar / CupertinoNavigationBar",
       "android": "TopAppBar",
@@ -266,7 +267,7 @@
     {
       "id": "bottom-navigation",
       "name": "Bottom Navigation",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "NavigationBar / CupertinoTabBar",
       "android": "NavigationBar",
@@ -276,7 +277,7 @@
     {
       "id": "pagination",
       "name": "Pagination",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "Page action group",
       "android": "Page action group",
@@ -286,7 +287,7 @@
     {
       "id": "stepper",
       "name": "Stepper",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "Step selection + controlled content",
       "android": "Step selection + controlled content",
@@ -296,17 +297,17 @@
     {
       "id": "command-palette",
       "name": "Command Palette",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "Shortcuts / Actions + search overlay",
       "android": "Keyboard commands + search overlay",
-      "ios": "Search sheet; macOS commands later",
+      "ios": "Native search controller + keyboard commands",
       "specification": "#/components/command-palette"
     },
     {
       "id": "table",
       "name": "Table",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "DataTable; compact list on narrow widths",
       "android": "Lazy layout / compact list",
@@ -316,17 +317,17 @@
     {
       "id": "data-grid",
       "name": "Data Grid",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
-      "flutter": "Virtual data surface: separate design",
-      "android": "Virtual data surface: separate design",
-      "ios": "Virtual data surface: separate design",
+      "flutter": "Virtual rows + pinned column + edit/filter/keyboard",
+      "android": "Virtual rows + pinned column + edit/filter/keyboard",
+      "ios": "Virtual rows + pinned column + edit/filter/keyboard",
       "specification": "#/components/data-grid"
     },
     {
       "id": "list",
       "name": "List",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "ListView + stable item keys",
       "android": "LazyColumn + stable keys",
@@ -336,7 +337,7 @@
     {
       "id": "description-list",
       "name": "Description List",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "Label-value layout",
       "android": "Label-value layout",
@@ -346,17 +347,17 @@
     {
       "id": "tree-view",
       "name": "Tree View",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "Hierarchical disclosure + focus model",
       "android": "Hierarchical lazy list + focus model",
-      "ios": "OutlineGroup / DisclosureGroup",
+      "ios": "UITableView tree + keyboard / reader actions",
       "specification": "#/components/tree-view"
     },
     {
       "id": "badge",
       "name": "Badge",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "Badge / semantic status",
       "android": "Badge",
@@ -366,7 +367,7 @@
     {
       "id": "tag",
       "name": "Tag",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "Chip / input choice",
       "android": "FilterChip / InputChip",
@@ -376,7 +377,7 @@
     {
       "id": "avatar",
       "name": "Avatar",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "Image + fallback semantics",
       "android": "Image + fallback semantics",
@@ -406,17 +407,17 @@
     {
       "id": "sheet",
       "name": "Sheet / Drawer",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "showModalBottomSheet / adaptive sheet",
       "android": "ModalBottomSheet",
-      "ios": "sheet + presentationDetents",
+      "ios": "Native sheet + adaptive scroll content",
       "specification": "#/components/sheet"
     },
     {
       "id": "toast",
       "name": "Toast",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "Nonmodal status overlay",
       "android": "Nonmodal status overlay",
@@ -426,7 +427,7 @@
     {
       "id": "snackbar",
       "name": "Snackbar",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "ScaffoldMessenger + stable recovery",
       "android": "SnackbarHost + stable recovery",
@@ -436,7 +437,7 @@
     {
       "id": "banner",
       "name": "Banner",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "MaterialBanner / inline notice",
       "android": "Inline notice",
@@ -456,7 +457,7 @@
     {
       "id": "skeleton",
       "name": "Skeleton",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "Static placeholder",
       "android": "Static placeholder",
@@ -476,7 +477,7 @@
     {
       "id": "tooltip",
       "name": "Tooltip",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "Tooltip for pointer; keyboard help",
       "android": "TooltipBox for pointer/keyboard",
@@ -486,7 +487,7 @@
     {
       "id": "popover",
       "name": "Popover",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "MenuAnchor / adaptive overlay",
       "android": "Popup / adaptive sheet",
@@ -496,7 +497,7 @@
     {
       "id": "dropdown-menu",
       "name": "Dropdown Menu",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "MenuAnchor",
       "android": "DropdownMenu",
@@ -506,7 +507,7 @@
     {
       "id": "context-menu",
       "name": "Context Menu",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "Context actions / MenuAnchor",
       "android": "Context actions",
@@ -516,7 +517,7 @@
     {
       "id": "drawer",
       "name": "Drawer",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "Wide side panel / narrow sheet",
       "android": "ModalNavigationDrawer / side panel",
@@ -526,7 +527,7 @@
     {
       "id": "card",
       "name": "Card",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "Card / quiet grouped surface",
       "android": "Card",
@@ -536,7 +537,7 @@
     {
       "id": "accordion",
       "name": "Accordion",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "ExpansionTile / native disclosure",
       "android": "Expandable content + semantics",
@@ -546,7 +547,7 @@
     {
       "id": "divider",
       "name": "Divider",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 2,
       "flutter": "Divider",
       "android": "HorizontalDivider / VerticalDivider",
@@ -566,7 +567,7 @@
     {
       "id": "scroll-area",
       "name": "Scroll Area",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "ScrollView + Scrollbar with controller",
       "android": "Native scroll state + platform indicators",
@@ -576,7 +577,7 @@
     {
       "id": "resizable-panels",
       "name": "Resizable Panels",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "Wide-layout split adapter",
       "android": "Wide-layout split adapter",
@@ -586,7 +587,7 @@
     {
       "id": "metric-card",
       "name": "Metric Card",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "Value + meaning; no animated counts",
       "android": "Value + meaning",
@@ -596,7 +597,7 @@
     {
       "id": "prober-status",
       "name": "Prober Status Indicator",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "Semantic status + optional recovery",
       "android": "Semantic status + optional recovery",
@@ -606,7 +607,7 @@
     {
       "id": "file-row",
       "name": "File Browser Row",
-      "status": "Draft",
+      "status": "Prototype",
       "wave": 3,
       "flutter": "Selectable row + host actions",
       "android": "Selectable lazy row + host actions",

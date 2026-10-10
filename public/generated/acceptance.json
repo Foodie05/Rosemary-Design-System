@@ -1,9 +1,9 @@
 {
   "version": "2.0.0-beta.2",
-  "recordedAt": "2026-10-10T04:49:45.193Z",
+  "recordedAt": "2026-10-10T08:30:23.774Z",
   "source": {
-    "sha256": "e0c7ce45e68c8293e4d51ddec01e1b71f1976128379119fc6d107068a9b6d534",
-    "fileCount": 180
+    "sha256": "fee7740fe635299e494275d3266a9aad5a59272f09b694a02a59114c65b92b4b",
+    "fileCount": 296
   },
   "brand": {
     "directions": 3,
@@ -52,20 +52,12 @@
     "wholePageOverflowFailures": 0,
     "manualChecks": [
       {
-        "check": "404与恢复",
-        "observed": "Unknown hash, component, case, extra and malformed paths show a shared 404. Enter on Return Home recovers; Back and reload preserve the error. Skip focuses main without changing the application route. Static HTML has working skip and return links without an application bundle."
+        "check": "全量布局回归",
+        "observed": "Current checked source: 139 actual page URLs at 320px Light and Dark, 13 desktop sections at 1280px Dark. No whole-page horizontal overflow."
       },
       {
-        "check": "主题和动效",
-        "observed": "Static error document inherits saved dark theme and reduced motion; measured transition-duration is 0s. Mobile Light/Dark and desktop screenshots saved. Recovery focus outline is visible."
-      },
-      {
-        "check": "首页精简",
-        "observed": "Removed the duplicate brand-name row, decorative dot and same-row version badge; actual hero eyebrow is absent."
-      },
-      {
-        "check": "布局",
-        "observed": "Final source: 139 actual URLs at 320px Light/Dark and 13 sections at 1280px Dark have no whole-page horizontal overflow."
+        "check": "SDK 页面",
+        "observed": "Three platforms show 61 implemented APIs each, working documentation and source archive links. Prototype status and pending Beta gates remain visible; no current console warnings/errors."
       }
     ],
     "download": {
@@ -108,6 +100,11 @@
   "native": {
     "checks": [
       {
+        "label": "All 61 APIs and host examples",
+        "status": "passed",
+        "command": "[home]/.hermes/node/bin/node --import tsx scripts/check-native-coverage.mts"
+      },
+      {
         "label": "Flutter version",
         "status": "passed",
         "command": "flutter --version"
@@ -148,29 +145,39 @@
         "command": "swift test --package-path platforms/swiftui"
       },
       {
-        "label": "SwiftUI iOS Simulator app",
+        "label": "SwiftUI iOS app and UI test compilation",
         "status": "passed",
-        "command": "xcodebuild -project RosemarySample.xcodeproj -scheme RosemarySample -destination generic/platform=iOS Simulator -derivedDataPath build CODE_SIGNING_ALLOWED=NO build"
+        "command": "xcodebuild -project RosemarySample.xcodeproj -scheme RosemarySample -destination generic/platform=iOS Simulator -derivedDataPath build CODE_SIGNING_ALLOWED=NO build-for-testing"
       },
       {
         "label": "Compose AAR, sample APK and unit tests",
         "status": "passed",
-        "command": "<home>/.gradle/wrapper/dists/gradle-8.14.3-all/10utluxaxniiv4wxiphsi49nj/gradle-8.14.3/bin/gradle :rosemary-compose:testDebugUnitTest :rosemary-compose:assembleDebug :sample:assembleDebug --write-locks"
+        "command": "[home]/.gradle/wrapper/dists/gradle-8.14.3-all/10utluxaxniiv4wxiphsi49nj/gradle-8.14.3/bin/gradle :rosemary-compose:testDebugUnitTest :rosemary-compose:assembleDebug :sample:assembleDebug --write-locks"
       },
       {
         "label": "Compose device UI tests",
         "status": "passed",
-        "command": "<home>/.gradle/wrapper/dists/gradle-8.14.3-all/10utluxaxniiv4wxiphsi49nj/gradle-8.14.3/bin/gradle :rosemary-compose:connectedDebugAndroidTest --write-locks"
+        "command": "[home]/.gradle/wrapper/dists/gradle-8.14.3-all/10utluxaxniiv4wxiphsi49nj/gradle-8.14.3/bin/gradle :rosemary-compose:connectedDebugAndroidTest :sample:connectedDebugAndroidTest --write-locks"
+      },
+      {
+        "label": "Flutter Android engine gallery integration",
+        "status": "passed",
+        "command": "flutter test integration_test/gallery_test.dart -d emulator-5554"
+      },
+      {
+        "label": "Flutter iOS engine gallery integration",
+        "status": "passed",
+        "command": "flutter test integration_test/gallery_test.dart -d 79FCB370-77E4-4EC5-B691-3072FBA69704"
       }
     ],
-    "flutterWidgetTestsPassed": 15
+    "flutterWidgetTestsPassed": 43
   },
   "guide": {
     "manifest": "guide/manifest.json",
     "publication": {
       "repositoryUrl": "https://github.com/Foodie05/Rosemary-Design-System",
       "websiteUrl": "https://design.rosemaryis.cc",
-      "sourceRef": "v2.0.0-beta.2",
+      "sourceRef": "v0.3.0-prototype.2",
       "status": "configured"
     },
     "readingSpecification": "docs/CONTENT.md",
@@ -438,7 +445,9 @@
   },
   "nativeDesign": {
     "status": "Prototype",
-    "implementedFirstWave": 14,
+    "implementedComponentsPerPlatform": 61,
+    "implementations": 183,
+    "targetStage": "Beta",
     "betaApproved": false,
     "platforms": [
       "Flutter",

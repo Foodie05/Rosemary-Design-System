@@ -1,35 +1,41 @@
 {
   "source": {
-    "sha256": "e0c7ce45e68c8293e4d51ddec01e1b71f1976128379119fc6d107068a9b6d534",
-    "fileCount": 180
+    "sha256": "fee7740fe635299e494275d3266a9aad5a59272f09b694a02a59114c65b92b4b",
+    "fileCount": 296
   },
   "packages": [
     {
       "id": "flutter",
       "file": "rosemary-flutter-prototype.tar.gz",
       "status": "Prototype",
-      "implementedComponents": 14,
+      "implementedComponents": 61,
+      "version": "0.3.0-prototype.2",
+      "targetStage": "Beta",
       "betaApproved": false,
-      "bytes": 116282,
-      "sha256": "29cca2b3a494b81976bbdd92fdaf04c1df07466a72b0236f69078e45f6f38a8d"
+      "bytes": 201284,
+      "sha256": "dd2245a76471eded444d9c15a1bc547c12486c29f5655b92f5915f141e329157"
     },
     {
       "id": "android",
       "file": "rosemary-android-prototype.tar.gz",
       "status": "Prototype",
-      "implementedComponents": 14,
+      "implementedComponents": 61,
+      "version": "0.3.0-prototype.2",
+      "targetStage": "Beta",
       "betaApproved": false,
-      "bytes": 66957,
-      "sha256": "5e35aa8437e66ef844632eef5605f5e25a14fd792cef6ef71d30dff4ef900685"
+      "bytes": 142381,
+      "sha256": "910d5eae2b75ca353539273b2f8f5d3655ba398b2ae2e4bff33bca116d36d48d"
     },
     {
       "id": "ios",
       "file": "rosemary-ios-prototype.tar.gz",
       "status": "Prototype",
-      "implementedComponents": 14,
+      "implementedComponents": 61,
+      "version": "0.3.0-prototype.2",
+      "targetStage": "Beta",
       "betaApproved": false,
-      "bytes": 20398,
-      "sha256": "8fb362164a6b7fe823a5b0b1146c67ac2d365744b4d75feb0ade6bab74e7f014"
+      "bytes": 93500,
+      "sha256": "aefecdc2116dd6efedc0275d6ead4341573d1a4f5004bed8d3edf4516d631a8e"
     }
   ]
 }

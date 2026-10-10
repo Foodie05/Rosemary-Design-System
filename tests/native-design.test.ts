@@ -16,12 +16,10 @@ describe("Native library design covers real specifications without claiming impl
       for (const host of ["flutter", "android", "ios"] as const)
         expect(component[host].trim().length).toBeGreaterThan(0);
   });
-  it("separates first-wave Prototype from later Draft and partitions implementation into explicit batches", () => {
-    expect(
-      NATIVE_COMPONENT_PLAN.every(
-        (x) => x.status === (x.wave === 1 ? "Prototype" : "Draft"),
-      ),
-    ).toBe(true);
+  it("keeps all 61 implemented APIs in Prototype until device acceptance, preserving batch history", () => {
+    expect(NATIVE_COMPONENT_PLAN.every((x) => x.status === "Prototype")).toBe(
+      true,
+    );
     expect(
       [1, 2, 3].map(
         (wave) => NATIVE_COMPONENT_PLAN.filter((x) => x.wave === wave).length,

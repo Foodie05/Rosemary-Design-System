@@ -1,0 +1,2083 @@
+{
+  "schemaVersion": 1,
+  "componentsPerPlatform": 61,
+  "implementations": 183,
+  "targetStage": "Beta",
+  "evidenceType": "API declarations and exhaustive host examples; not device or screen reader acceptance",
+  "components": [
+    {
+      "id": "button",
+      "name": "Button",
+      "specification": "#/components/button",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryButton",
+          "files": [
+            "platforms/flutter/lib/rosemary.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryButton",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryComponents.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryButton",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryComponents.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "icon-button",
+      "name": "Icon Button",
+      "specification": "#/components/icon-button",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryIconButton",
+          "files": [
+            "platforms/flutter/lib/src/components.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryIconButton",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryComponents.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryIconButton",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryComponents.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "button-group",
+      "name": "Button Group",
+      "specification": "#/components/button-group",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryButtonGroup",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryButtonGroup",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryButtonGroup",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "split-button",
+      "name": "Split Button",
+      "specification": "#/components/split-button",
+      "platforms": {
+        "flutter": {
+          "api": "RosemarySplitButton",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemarySplitButton",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemarySplitButton",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "link-button",
+      "name": "Link Button",
+      "specification": "#/components/link-button",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryLinkButton",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryLinkButton",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryLinkButton",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "floating-action-button",
+      "name": "Floating Action Button",
+      "specification": "#/components/floating-action-button",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryFloatingActionButton",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryFloatingActionButton",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryFloatingActionButton",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "text-field",
+      "name": "Text Field",
+      "specification": "#/components/text-field",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryTextField",
+          "files": [
+            "platforms/flutter/lib/rosemary.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryTextField",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryComponents.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryTextField",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryComponents.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "text-area",
+      "name": "Text Area",
+      "specification": "#/components/text-area",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryTextArea",
+          "files": [
+            "platforms/flutter/lib/src/components.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryTextArea",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryComponents.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryTextArea",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryComponents.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "password-field",
+      "name": "Password Field",
+      "specification": "#/components/password-field",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryPasswordField",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryPasswordField",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryPasswordField",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "search-field",
+      "name": "Search Field",
+      "specification": "#/components/search-field",
+      "platforms": {
+        "flutter": {
+          "api": "RosemarySearchField",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemarySearchField",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemarySearchField",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "number-field",
+      "name": "Number Field",
+      "specification": "#/components/number-field",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryNumberField",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryNumberField",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryNumberField",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "checkbox",
+      "name": "Checkbox",
+      "specification": "#/components/checkbox",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryCheckbox",
+          "files": [
+            "platforms/flutter/lib/src/components.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryCheckbox",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryComponents.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryCheckbox",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryComponents.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "radio",
+      "name": "Radio Button",
+      "specification": "#/components/radio",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryRadio",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryRadio",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryRadio",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "switch",
+      "name": "Switch",
+      "specification": "#/components/switch",
+      "platforms": {
+        "flutter": {
+          "api": "RosemarySwitch",
+          "files": [
+            "platforms/flutter/lib/rosemary.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemarySwitch",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryComponents.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemarySwitch",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryComponents.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "slider",
+      "name": "Slider",
+      "specification": "#/components/slider",
+      "platforms": {
+        "flutter": {
+          "api": "RosemarySlider",
+          "files": [
+            "platforms/flutter/lib/src/components.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemarySlider",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryComponents.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemarySlider",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryComponents.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "select",
+      "name": "Select",
+      "specification": "#/components/select",
+      "platforms": {
+        "flutter": {
+          "api": "RosemarySelect",
+          "files": [
+            "platforms/flutter/lib/src/components.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemarySelect",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryComponents.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemarySelect",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryComponents.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "combo-box",
+      "name": "Combo Box",
+      "specification": "#/components/combo-box",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryComboBox",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryComboBox",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/ComboBox.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryComboBox",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "date-picker",
+      "name": "Date Picker",
+      "specification": "#/components/date-picker",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryDatePicker",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryDatePicker",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryDatePicker",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "time-picker",
+      "name": "Time Picker",
+      "specification": "#/components/time-picker",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryTimePicker",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryTimePicker",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryTimePicker",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "file-upload",
+      "name": "File Upload",
+      "specification": "#/components/file-upload",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryFileUpload",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryFileUpload",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryFileUpload",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "color-picker",
+      "name": "Color Picker",
+      "specification": "#/components/color-picker",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryColorPicker",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryColorPicker",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryColorPicker",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "tabs",
+      "name": "Tabs",
+      "specification": "#/components/tabs",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryTabs",
+          "files": [
+            "platforms/flutter/lib/src/components.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryTabs",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryComponents.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryTabs",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryComponents.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "segmented-control",
+      "name": "Segmented Control",
+      "specification": "#/components/segmented-control",
+      "platforms": {
+        "flutter": {
+          "api": "RosemarySegmentedControl",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemarySegmentedControl",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemarySegmentedControl",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "breadcrumb",
+      "name": "Breadcrumb",
+      "specification": "#/components/breadcrumb",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryBreadcrumb",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryBreadcrumb",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryBreadcrumb",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "sidebar",
+      "name": "Sidebar",
+      "specification": "#/components/sidebar",
+      "platforms": {
+        "flutter": {
+          "api": "RosemarySidebar",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemarySidebar",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemarySidebar",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "top-navigation",
+      "name": "Top Navigation",
+      "specification": "#/components/top-navigation",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryTopNavigation",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryTopNavigation",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryTopNavigation",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "bottom-navigation",
+      "name": "Bottom Navigation",
+      "specification": "#/components/bottom-navigation",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryBottomNavigation",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryBottomNavigation",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryBottomNavigation",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "pagination",
+      "name": "Pagination",
+      "specification": "#/components/pagination",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryPagination",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryPagination",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryPagination",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "stepper",
+      "name": "Stepper",
+      "specification": "#/components/stepper",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryStepper",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryStepper",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryStepper",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "command-palette",
+      "name": "Command Palette",
+      "specification": "#/components/command-palette",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryCommandPalette",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryCommandPalette",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/Commands.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryCommandPalette",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "table",
+      "name": "Table",
+      "specification": "#/components/table",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryTable",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryTable",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryTable",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "data-grid",
+      "name": "Data Grid",
+      "specification": "#/components/data-grid",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryDataGrid",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryDataGrid",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryDataGrid",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "list",
+      "name": "List",
+      "specification": "#/components/list",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryList",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryList",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryList",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "description-list",
+      "name": "Description List",
+      "specification": "#/components/description-list",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryDescriptionList",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryDescriptionList",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryDescriptionList",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "tree-view",
+      "name": "Tree View",
+      "specification": "#/components/tree-view",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryTreeView",
+          "files": [
+            "platforms/flutter/lib/src/tree.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryTreeView",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/Tree.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryTreeView",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "badge",
+      "name": "Badge",
+      "specification": "#/components/badge",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryBadge",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryBadge",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryBadge",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "tag",
+      "name": "Tag",
+      "specification": "#/components/tag",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryTag",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryTag",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryTag",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "avatar",
+      "name": "Avatar",
+      "specification": "#/components/avatar",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryAvatar",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryAvatar",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryAvatar",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "dialog",
+      "name": "Dialog",
+      "specification": "#/components/dialog",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryDialog",
+          "files": [
+            "platforms/flutter/lib/src/components.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryDialog",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryComponents.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryDialog",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryComponents.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "alert-dialog",
+      "name": "Alert Dialog",
+      "specification": "#/components/alert-dialog",
+      "platforms": {
+        "flutter": {
+          "api": "showRosemaryAlertDialog",
+          "files": [
+            "platforms/flutter/lib/src/components.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryAlertDialog",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryComponents.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "rosemaryAlertDialog",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryComponents.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "sheet",
+      "name": "Sheet / Drawer",
+      "specification": "#/components/sheet",
+      "platforms": {
+        "flutter": {
+          "api": "RosemarySheet",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemarySheet",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemarySheet",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "toast",
+      "name": "Toast",
+      "specification": "#/components/toast",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryToast",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryToast",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryToast",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "snackbar",
+      "name": "Snackbar",
+      "specification": "#/components/snackbar",
+      "platforms": {
+        "flutter": {
+          "api": "RosemarySnackbar",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemarySnackbar",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemarySnackbar",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "banner",
+      "name": "Banner",
+      "specification": "#/components/banner",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryBanner",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryBanner",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryBanner",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "progress",
+      "name": "Progress Indicator",
+      "specification": "#/components/progress",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryProgress",
+          "files": [
+            "platforms/flutter/lib/src/components.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryProgress",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryComponents.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryProgress",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryComponents.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "skeleton",
+      "name": "Skeleton",
+      "specification": "#/components/skeleton",
+      "platforms": {
+        "flutter": {
+          "api": "RosemarySkeleton",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemarySkeleton",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemarySkeleton",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "spinner",
+      "name": "Spinner",
+      "specification": "#/components/spinner",
+      "platforms": {
+        "flutter": {
+          "api": "RosemarySpinner",
+          "files": [
+            "platforms/flutter/lib/src/components.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemarySpinner",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryComponents.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemarySpinner",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryComponents.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "tooltip",
+      "name": "Tooltip",
+      "specification": "#/components/tooltip",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryTooltip",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryTooltip",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryTooltip",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "popover",
+      "name": "Popover",
+      "specification": "#/components/popover",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryPopover",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryPopover",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryPopover",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "dropdown-menu",
+      "name": "Dropdown Menu",
+      "specification": "#/components/dropdown-menu",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryDropdownMenu",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryDropdownMenu",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryDropdownMenu",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "context-menu",
+      "name": "Context Menu",
+      "specification": "#/components/context-menu",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryContextMenu",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryContextMenu",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryContextMenu",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "drawer",
+      "name": "Drawer",
+      "specification": "#/components/drawer",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryDrawer",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryDrawer",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryDrawer",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "card",
+      "name": "Card",
+      "specification": "#/components/card",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryCard",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryCard",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryCard",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "accordion",
+      "name": "Accordion",
+      "specification": "#/components/accordion",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryAccordion",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryAccordion",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryAccordion",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "divider",
+      "name": "Divider",
+      "specification": "#/components/divider",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryDivider",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryDivider",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryDivider",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "empty-state",
+      "name": "Empty State",
+      "specification": "#/components/empty-state",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryEmptyState",
+          "files": [
+            "platforms/flutter/lib/src/components.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryEmptyState",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryComponents.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryEmptyState",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryComponents.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "scroll-area",
+      "name": "Scroll Area",
+      "specification": "#/components/scroll-area",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryScrollArea",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryScrollArea",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryScrollArea",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "resizable-panels",
+      "name": "Resizable Panels",
+      "specification": "#/components/resizable-panels",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryResizablePanels",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryResizablePanels",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryResizablePanels",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "metric-card",
+      "name": "Metric Card",
+      "specification": "#/components/metric-card",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryMetricCard",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryMetricCard",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryMetricCard",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "prober-status",
+      "name": "Prober Status Indicator",
+      "specification": "#/components/prober-status",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryProberStatus",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryProberStatus",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryProberStatus",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    },
+    {
+      "id": "file-row",
+      "name": "File Browser Row",
+      "specification": "#/components/file-row",
+      "platforms": {
+        "flutter": {
+          "api": "RosemaryFileRow",
+          "files": [
+            "platforms/flutter/lib/src/extended.dart"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "android": {
+          "api": "RosemaryFileRow",
+          "files": [
+            "platforms/android/rosemary-compose/src/main/java/design/rosemary/compose/RosemaryExtended.kt"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        },
+        "ios": {
+          "api": "RosemaryFileRow",
+          "files": [
+            "platforms/swiftui/Sources/RosemaryUI/RosemaryExtended.swift"
+          ],
+          "example": true,
+          "stage": "Prototype",
+          "betaApproved": false
+        }
+      }
+    }
+  ]
+}

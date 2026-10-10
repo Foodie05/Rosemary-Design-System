@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'gallery.dart';
 import 'package:rosemary_reference/rosemary.dart';
 
 void main() => runApp(const RosemaryExample());
@@ -80,6 +81,13 @@ class _ProjectEditorState extends State<ProjectEditor> {
     appBar: AppBar(
       title: const Text('Rosemary SDK · 本地预览'),
       actions: [
+        IconButton(
+          tooltip: '全部组件',
+          icon: const Icon(Icons.widgets_outlined),
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(builder: (_) => const RosemaryGallery()),
+          ),
+        ),
         RosemaryIconButton(
           label: '修改名称',
           icon: Icons.edit_outlined,

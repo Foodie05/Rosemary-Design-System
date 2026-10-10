@@ -75,7 +75,7 @@ export function GovernanceView() {
               <td>4 类产物</td>
               <td>
                 Dart、Swift、Kotlin、C# 参数生成。Flutter、Compose、SwiftUI
-                首批各 14 项为本地 Prototype，已建立构建和自动测试；
+                各 61 项为本地 Prototype，已建立构建和自动测试；
                 辅助技术与完整设备验收、WinUI 构建待完成。
               </td>
             </tr>

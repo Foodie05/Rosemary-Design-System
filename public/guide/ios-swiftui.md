@@ -1,15 +1,33 @@
 # iOS SwiftUI SDK
 
-Prototype，2026-10-10。首批 14 个组件有公开实现；其余 47 项为 Draft。未发布到公共 registry，Beta 未验收。
+状态：Prototype。全部 61 项规范组件都有公开 API 和宿主示例，目标为整库 Beta。当前工程版本为 `0.3.0-prototype.2`；人工辅助技术与设备验收尚未完成，因此不宣称 Beta 已获批准。未发布到 pub.dev、Maven 或 Swift Package Registry。
 
-## 实际接入
+完整组件、API、源码对应表见 [API 清单](api.md) 与 [机器清单](component-coverage.json)。规范行为以网站对应组件页面为准；示例使用内存业务状态，不承担生产持久化、权限或网络服务。
+
+## 接入
+
+Swift tools 5.9+，iOS 15+。从 GitHub checkout 中把 `platforms/swiftui` 作为本地 Swift Package 加入 Xcode，再依赖 `RosemaryUI`。仓库根部不冒充 Swift Package；未来独立包地址尚未发布。macOS 12 的可编译兼容层并非本轮完整 macOS Beta 验收范围。
 
 ```swift
 import RosemaryUI
-RosemaryButton("保存", busy: busy, action: save)
-  .rosemaryTheme()
+RosemaryToastHost(state: toast) {
+    RosemaryButton("保存", busy: busy, action: save)
+}.rosemaryTheme().rosemaryMotion(reduced: appReduced)
 ```
-SwiftPM 本地 path 依赖指向 platforms/swiftui。控件使用 Binding；SwiftUI Menu/Picker/Slider/TextField/TextEditor 保留系统语义与输入。iOS Checkbox 为带勾选的选择行，不声称存在通用系统 checkbox 样式。Dialog 由宿主 sheet(isPresented:) 展示；rosemaryAlertDialog 使用系统 alert。ProjectDraft 将 beginSave/complete/cancel 分开。支持系统主题与 accessibilityReduceMotion；后台与关闭原因仍需完整验收。
+
+SwiftUI Binding 保留宿主状态，默认跟随系统主题、Dynamic Type 和布局方向。长 Select 使用搜索选择 sheet；iOS Checkbox 为带勾选的选择行。Data Grid 使用 UICollectionView 虚拟布局与冻结列，Tree 使用 UITableView；命令和可编辑 Combo Box 使用原生键盘响应器，文本菜单和输入法归 UIKit。
+
+```swift
+@State private var session: RosemaryModalSession?
+// 每次打开：session = RosemaryModalSession()
+projectEditor.rosemaryModal(session: $session, title: "项目设置",
+    onClose: { id, reason in
+        // 回调附带原会话 ID。异步业务结果也必须验证自己的 operation ID。
+        if reason == .confirm { save(draft) }
+    }) { RosemaryTextField("名称", value: $draft) }
+```
+
+`rosemaryAlertDialog` 使用系统警告；普通 Sheet 由原生 SwiftUI 展示。文件选择 `fileImporter` 的 Result 包含取消/失败；宿主负责 security-scoped URL 生命周期、权限与上传。文件和图片读取不内置网络业务。
 
 ```sh
 cd platforms/swiftui
@@ -17,22 +35,26 @@ swift test
 cd Sample
 xcodegen generate --spec project.yml
 xcodebuild -project RosemarySample.xcodeproj -scheme RosemarySample \
-  -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
-# 在测试用 Simulator 上用相同 scheme 执行 test。
+  -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build-for-testing
+xcodebuild -project RosemarySample.xcodeproj -scheme RosemarySample \
+  -destination 'id=<simulator-id>' CODE_SIGNING_ALLOWED=NO test
 ```
-Swift tools 5.9+，iOS 15 / macOS 12 声明；实际用 Swift 6.4 / Xcode 27 生成模拟器应用。macOS 单测不计作 iOS 设备或 VoiceOver 验收。
 
-## 范围与验收
+Gallery 使用全部 61 项；XCUITest 含工作流、61 项预览、明暗/大字/RTL、数字输入。当前 Xcode 27 的测试宿主要求 iOS17，组件库和应用仍为 iOS15。历史执行曾因 DTServiceHub 无法连接而阻塞，最终记录以本次 native-checks.json 的实际状态为准；编译不计作执行成功。
 
-公开组件：Button、Icon Button、Text Field、Text Area、Checkbox、Switch、Slider、Select、Tabs、Dialog、Alert Dialog、Progress、Spinner、Empty State。源码位于 platforms/swiftui；示例包含编辑项目、保存失败、重试、取消与明确清空确认，不含生产网络服务。
+## 共同使用契约
 
-实际执行结果见 [native-checks.json](native-checks.json)，Beta 门槛见 [总设计](native-sdk-design.md)。自动测试不能代替 VoiceOver/TalkBack 人工检查；尚未覆盖全部设备、系统版本、长列表、后台恢复、快速反向与关闭原因，不能声明整库 Beta。
+- `value` / Binding / controller 由宿主持有；选项使用稳定且唯一的 ID。输入草稿、确认选择、业务保存是三个不同动作。宿主拒绝选择时不自动改写文本或值。
+- Number Field 支持直接输入、范围验证和步进。Combo Box 支持方向键高亮、禁用跳过、Enter 确认、Escape 放弃高亮；文本编辑不代表确认选择。
+- Select 的长列表提供搜索、草稿、确认和取消；禁用或移除控件使原浮层失效。旧菜单动作在提交时重新验证，不能执行已删除或已禁用的动作。
+- Data Grid 使用虚拟行、冻结列、多列过滤、列宽配置、独立行选择和单元格编辑。Tree View 使用稳定节点 ID，方向键、Home/End、文字定位与展开状态；删除/收起后恢复合法焦点。宿主拥有记录、选择、过滤及列宽，可序列化到自己的存储。
+- 浮层每次使用新会话 ID；结果区分 confirm / cancel / outside / back / programmatic，业务只在 confirm 时保存。旧会话迟到关闭不得影响新会话。
+- 通知使用一个状态对象和一个 Host。指针、键盘焦点、读屏及后台暂停超时，恢复后使用剩余时间；需要恢复操作的错误使用持久 Snackbar/Banner，不能仅依赖短暂 Toast。
+- 系统减少动态效果与应用偏好合并。默认跟随系统主题、字号和方向；隐藏/后台等待动画暂停，拖动直接跟随。禁止强制关闭系统偏好。
+- 导航回调、系统文档选择、图片下载/失败兜底、上传、异步取消和生产存储由宿主提供。Context Menu 同时有可见“更多操作”入口。产品专属 Metric/Prober/File Row 提供文字趋势、健康状态、时间、文件元数据和独立打开动作。
 
-## 本机 UI 测试限制
+## 检查与状态
 
-2026-10-10：已生成 2 项 XCUITest 流程测试。Xcode 27 在 iOS 26.5 和 27.0 的独立测试模拟器上都无法连接 com.apple.instruments.deviceservice.lockdown（DTServiceHubClient failed to bless service hub）。测试未执行成功；不能算作 iOS 流程通过。保留测试源码，未绕过系统保护或更改宿主权限。
+执行输出见 [native-checks.json](native-checks.json)，独立审计见 [审计记录](native-beta-audit.md)。自动渲染矩阵检查初始布局，不等同于每一种交互、原生 UI 执行或人工读屏验收。macOS SwiftPM 测试不计作 iOS UI 通过。所有失败、未执行和外部阻塞必须保留。
 
-## 独立审计修复
-
-本轮审计记录见 NATIVE-SDK-AUDIT-2026-10-10.md。修复以独立复現和回归验证为准，不以无发现替代 Beta 验收。
-保存模型在 beginSave 捕获提交快照和 saveOperation；complete 必须携带当次 operation。取消/离开使旧操作失效，新编辑不会被旧完成回调写入 savedName。Prototype 内状态模型的 complete 签名增加必要句柄参数，尚未承诺 Stable API。
+四条人工路径是 Flutter iOS VoiceOver、Flutter Android TalkBack、SwiftUI iOS VoiceOver、Compose Android TalkBack。按 [人工验收表](manual-acceptance.md) 操作并记录真实设备、系统、测试者及结果；没有记录不能批准整库 Beta。

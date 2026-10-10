@@ -2,7 +2,32 @@ import RosemaryUI
 import SwiftUI
 
 @main struct RosemarySampleApp: App {
-  var body: some Scene { WindowGroup { ProjectEditor().rosemaryTheme() } }
+  var body: some Scene { WindowGroup { SampleRoot().rosemaryTheme() } }
+}
+private struct SampleRoot: View {
+  let args = ProcessInfo.processInfo.arguments
+  var gallery: String? {
+    guard let i = args.firstIndex(of: "--gallery"), args.indices.contains(i + 1),
+      Gallery.ids.contains(args[i + 1])
+    else { return nil }
+    return args[i + 1]
+  }
+  @Environment(\.layoutDirection) private var direction
+  @Environment(\.sizeCategory) private var category
+  var body: some View {
+    Group {
+      if let gallery {
+        NavigationView { Gallery(initialId: gallery) }.navigationViewStyle(.stack)
+      } else {
+        ProjectEditor()
+      }
+    }
+    .environment(\.layoutDirection, args.contains("--rtl") ? .rightToLeft : direction)
+    .environment(
+      \.sizeCategory, args.contains("--large") ? .accessibilityExtraExtraExtraLarge : category
+    )
+    .preferredColorScheme(args.contains("--dark") ? .dark : args.contains("--light") ? .light : nil)
+  }
 }
 struct ProjectEditor: View {
   @State private var draft = ProjectDraft()
@@ -59,6 +84,7 @@ struct ProjectEditor: View {
           }
         }.padding(24)
       }.navigationTitle("Rosemary SDK").toolbar {
+        NavigationLink("全部组件", destination: Gallery())
         RosemaryIconButton("修改名称", systemImage: "pencil") {
           editName = draft.name
           editing = true

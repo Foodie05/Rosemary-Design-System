@@ -6,6 +6,10 @@ if (!env.JAVA_HOME && existsSync("/opt/homebrew/opt/openjdk@21"))
   env.JAVA_HOME = "/opt/homebrew/opt/openjdk@21";
 if (!env.ANDROID_HOME && existsSync("/Volumes/Apps/Library/Android/sdk"))
   env.ANDROID_HOME = "/Volumes/Apps/Library/Android/sdk";
+const redactHostPaths = (value) =>
+  value
+    .replaceAll(process.cwd(), "[workspace]")
+    .replaceAll(process.env.HOME || "/Users/studio", "[home]");
 const run = (label, command, args, cwd = ".") => {
   const result = spawnSync(command, args, {
     cwd,
@@ -23,17 +27,29 @@ const run = (label, command, args, cwd = ".") => {
   console.log(`${label}: ${status}`);
   return {
     label,
-    command: [command, ...args].join(" "),
+    command: redactHostPaths([command, ...args].join(" ")),
     cwd,
     status,
     exitCode: result.status,
-    output: ((result.stdout || "") + (result.stderr || "")).trim(),
-    error: result.error?.message,
+    output: redactHostPaths(
+      ((result.stdout || "") + (result.stderr || "")).trim(),
+    ),
+    error: result.error?.message
+      ? redactHostPaths(result.error.message)
+      : undefined,
   };
 };
 const flutter = env.FLUTTER_BIN || "flutter";
 const gradle = env.GRADLE_BIN || "./gradlew";
+const coverage = run("All 61 APIs and host examples", process.execPath, [
+  "--import",
+  "tsx",
+  "scripts/check-native-coverage.mts",
+]);
+const sourceAtStart = sourceFingerprint();
+const nativeAtStart = nativeFingerprint();
 const checks = [
+  coverage,
   run("Flutter version", flutter, ["--version"]),
   run("Flutter analyze", flutter, ["analyze"], "platforms/flutter"),
   run(
@@ -67,7 +83,7 @@ const checks = [
     "platforms/swiftui",
   ]),
   run(
-    "SwiftUI iOS Simulator app",
+    "SwiftUI iOS app and UI test compilation",
     "xcodebuild",
     [
       "-project",
@@ -79,7 +95,7 @@ const checks = [
       "-derivedDataPath",
       "build",
       "CODE_SIGNING_ALLOWED=NO",
-      "build",
+      "build-for-testing",
     ],
     "platforms/swiftui/Sample",
   ),
@@ -101,7 +117,11 @@ if (env.NATIVE_ANDROID_DEVICE) {
     run(
       "Compose device UI tests",
       gradle,
-      [":rosemary-compose:connectedDebugAndroidTest", "--write-locks"],
+      [
+        ":rosemary-compose:connectedDebugAndroidTest",
+        ":sample:connectedDebugAndroidTest",
+        "--write-locks",
+      ],
       "platforms/android",
     ),
   );
@@ -126,33 +146,108 @@ if (env.NATIVE_IOS_DEVICE)
       "platforms/swiftui/Sample",
     ),
   );
+for (const [platform, device] of [
+  ["Android", env.NATIVE_FLUTTER_ANDROID_DEVICE],
+  ["iOS", env.NATIVE_FLUTTER_IOS_DEVICE],
+]) {
+  if (device)
+    checks.push(
+      run(
+        `Flutter ${platform} engine gallery integration`,
+        flutter,
+        ["test", "integration_test/gallery_test.dart", "-d", device],
+        "platforms/flutter/example",
+      ),
+    );
+}
+const sourceAtEnd = sourceFingerprint(),
+  nativeAtEnd = nativeFingerprint();
+const sourceUnchanged = sourceAtStart.sha256 === sourceAtEnd.sha256;
+const nativeUnchanged = nativeAtStart.sha256 === nativeAtEnd.sha256;
+if (!sourceUnchanged || !nativeUnchanged)
+  checks.push({
+    label: "Source stayed unchanged during checks",
+    status: "failed",
+    output: "Source changed while checks ran; repeat on the final snapshot.",
+  });
+const unexecutedChecks = [];
+if (!env.NATIVE_IOS_DEVICE)
+  unexecutedChecks.push({
+    label: "SwiftUI iOS UI execution",
+    status: "not-run",
+    reason:
+      env.NATIVE_IOS_BLOCK_REASON ||
+      "No NATIVE_IOS_DEVICE supplied. Compilation is a separate check.",
+  });
+if (!env.NATIVE_ANDROID_DEVICE)
+  unexecutedChecks.push({
+    label: "Compose device UI and gallery",
+    status: "not-run",
+  });
+for (const [platform, device] of [
+  ["Android", env.NATIVE_FLUTTER_ANDROID_DEVICE],
+  ["iOS", env.NATIVE_FLUTTER_IOS_DEVICE],
+]) {
+  if (!device)
+    unexecutedChecks.push({
+      label: `Flutter ${platform} engine gallery integration`,
+      status: "not-run",
+    });
+}
+const iosFailure = checks.find(
+  (c) => c.label === "SwiftUI device workflow tests" && c.status !== "passed",
+);
+const blockedChecks = [];
+if (
+  iosFailure &&
+  /DTServiceHub|deviceservice.lockdown/.test(iosFailure.output)
+) {
+  blockedChecks.push({
+    label: iosFailure.label,
+    status: "blocked",
+    reason:
+      "Xcode could not connect to its device service; no successful UI execution.",
+    output: iosFailure.output,
+  });
+}
 mkdirSync("docs", { recursive: true });
 writeFileSync(
   "docs/native-checks.json",
   JSON.stringify(
     {
+      schemaVersion: 2,
       checkedAt: new Date().toISOString(),
-      source: sourceFingerprint(),
-      nativeSource: nativeFingerprint(),
+      version: "0.3.0-prototype.2",
+      source: sourceAtEnd,
+      nativeSource: nativeAtEnd,
+      sourceAtStart,
+      nativeAtStart,
+      sourceUnchanged,
+      nativeUnchanged,
       status: "Prototype",
-      firstWaveComponentsPerPlatform: 14,
+      targetStage: "Beta",
+      implementedComponentsPerPlatform: 61,
+      implementations: 183,
+      engineeringPassed: checks.every((c) => c.status === "passed"),
       betaApproved: false,
       checks,
-      blockedChecks: [
-        {
-          label: "SwiftUI Simulator workflow execution",
-          status: "blocked",
-          attempts: ["iOS 26.5", "iOS 27.0"],
-          reason:
-            "Xcode 27 could not connect to com.apple.instruments.deviceservice.lockdown: DTServiceHubClient failed to bless service hub. Test code compiled; no successful iOS UI execution.",
-          source: "docs/native/ios-swiftui.md",
-        },
-      ],
+      blockedChecks,
+      unexecutedChecks,
+      manualAcceptance: {
+        status: "not-run",
+        paths: [
+          "Flutter iOS VoiceOver",
+          "Flutter Android TalkBack",
+          "SwiftUI iOS VoiceOver",
+          "Compose Android TalkBack",
+        ],
+        source: "docs/native/manual-acceptance.md",
+      },
       limitations: [
-        "No real-device or manual VoiceOver/TalkBack acceptance.",
-        "Not all Dynamic Type, RTL, keyboard, lifecycle, long-list and dismissal-reason gates are complete.",
-        "Later 47 components remain Draft. SDKs are local, unpublished Prototype packages.",
-        "Unavailable or failed checks are not passing evidence.",
+        "Real-device and manual screen reader acceptance is pending.",
+        "Initial layout matrices do not replace complete interaction and OS/device coverage.",
+        "SwiftPM macOS tests and UI compilation are not iOS UI execution.",
+        "Unavailable, failed, blocked and unexecuted checks are not passing evidence.",
       ],
     },
     null,

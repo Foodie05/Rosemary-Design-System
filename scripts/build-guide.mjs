@@ -43,7 +43,8 @@ writeFileSync(
   JSON.stringify(
     {
       status: "Prototype",
-      implementedFirstWave: 14,
+      implementedComponentsPerPlatform: NATIVE_COMPONENT_PLAN.length,
+      targetStage: "Beta",
       betaApproved: false,
       components: NATIVE_COMPONENT_PLAN,
     },
@@ -51,10 +52,17 @@ writeFileSync(
     2,
   ) + "\n",
 );
+for(const file of ["api.md","component-coverage.json","manual-acceptance.md"]) {
+  let body=readFileSync(`docs/native/${file}`,"utf8");
+  if(file==="api.md") body=body.replaceAll("(../../",`(${publication.repositoryUrl}/blob/${publication.sourceRef}/`);
+  writeFileSync(`public/guide/${file}`,body);
+}
+if(existsSync("docs/NATIVE-BETA-AUDIT-2026-10-10.md")) copyFileSync("docs/NATIVE-BETA-AUDIT-2026-10-10.md","public/guide/native-beta-audit.md");
 for (const [id, file] of documents) {
   const content = readFileSync(file, "utf8")
     .replaceAll("(../native-checks.json)", "(native-checks.json)")
-    .replaceAll("(../NATIVE-SDK-DESIGN.md)", "(native-sdk-design.md)");
+    .replaceAll("(../NATIVE-SDK-DESIGN.md)", "(native-sdk-design.md)")
+    .replaceAll("(../NATIVE-BETA-AUDIT-2026-10-10.md)","(native-beta-audit.md)");
   writeFileSync(`public/guide/${id}.md`, content);
 }
 if (existsSync("docs/native-checks.json"))

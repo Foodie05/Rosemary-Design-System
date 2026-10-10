@@ -10,11 +10,15 @@ const walk = (dir) =>
           ".gradle",
           ".dart_tool",
           "Pods",
+          "ephemeral",
+          ".kotlin",
+          ".idea",
           "xcuserdata",
         ].includes(entry.name)
         ? []
         : walk(`${dir}/${entry.name}`)
-      : [
+      : entry.name.startsWith(".flutter-plugins") ||
+          [
             ".DS_Store",
             "local.properties",
             "Generated.xcconfig",
@@ -25,14 +29,12 @@ const walk = (dir) =>
   );
 export function sourceFingerprint() {
   const files = [
+    ".github",
     "src",
     "docs/native",
     "tokens",
     "tests",
-    "platforms/flutter/lib",
-    "platforms/flutter/test",
-    "platforms/flutter/example/lib",
-    "platforms/flutter/example/test",
+    "platforms/flutter",
     "platforms/swiftui",
     "platforms/android",
   ]
@@ -57,13 +59,17 @@ export function sourceFingerprint() {
       "platforms/flutter/example/pubspec.lock",
       "platforms/flutter/example/ios/Runner.xcodeproj/project.pbxproj",
       "platforms/flutter/example/android/app/build.gradle.kts",
+      ".github/workflows/native-sdk.yml",
+      "scripts/evidence-source.mjs",
       "scripts/check-native.mjs",
+      "scripts/check-native-coverage.mts",
       "scripts/package-native.mjs",
       "scripts/build-tokens.mjs",
       "scripts/token-engine.mjs",
       "scripts/check-tokens.mjs",
       "scripts/check-web.mjs",
     ])
+    .filter((path, index, paths) => paths.indexOf(path) === index)
     .sort();
   const hash = createHash("sha256");
   for (const file of files) {
@@ -78,10 +84,7 @@ export function sourceFingerprint() {
 // Native build receipts use a scope that does not change when unrelated Web copy changes.
 export function nativeFingerprint() {
   const files = [
-    "platforms/flutter/lib",
-    "platforms/flutter/test",
-    "platforms/flutter/example/lib",
-    "platforms/flutter/example/test",
+    "platforms/flutter",
     "platforms/android",
     "platforms/swiftui",
     "tokens",
@@ -97,11 +100,16 @@ export function nativeFingerprint() {
       "platforms/flutter/example/android/app/build.gradle.kts",
       "docs/NATIVE-SDK-DESIGN.md",
       "src/data/nativeLibraries.ts",
+      ".github/workflows/native-sdk.yml",
+      "scripts/evidence-source.mjs",
       "scripts/check-native.mjs",
+      "scripts/check-native-coverage.mts",
       "scripts/build-tokens.mjs",
       "scripts/token-engine.mjs",
+      ".github/workflows/native-sdk.yml",
       "scripts/evidence-source.mjs",
     ])
+    .filter((path, index, paths) => paths.indexOf(path) === index)
     .sort();
   const hash = createHash("sha256");
   for (const file of files) {

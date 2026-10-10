@@ -16,10 +16,10 @@ const guide = read("public/guide/manifest.json");
 const nativePlan = read("public/guide/native-component-plan.json").components;
 if (
   nativePlan.length !== catalogue.components.length ||
-  nativePlan.some((c) => c.status !== (c.wave === 1 ? "Prototype" : "Draft"))
+  nativePlan.some((c) => c.status !== "Prototype")
 )
   throw Error(
-    "Native inventory must distinguish implemented Prototype wave 1 from Draft later waves.",
+    "Native inventory must match all 61 implemented Prototype APIs without approving Beta.",
   );
 const current = sourceFingerprint();
 if (current.sha256 !== engineering.source.sha256)
@@ -145,7 +145,9 @@ const receipt = {
   },
   nativeDesign: {
     status: "Prototype",
-    implementedFirstWave: 14,
+    implementedComponentsPerPlatform: 61,
+    implementations: 183,
+    targetStage: "Beta",
     betaApproved: false,
     platforms: ["Flutter", "Android Compose", "iOS SwiftUI"],
     componentMappings: nativePlan.length,

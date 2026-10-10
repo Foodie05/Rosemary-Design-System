@@ -104,7 +104,7 @@ focus=BorderRadius.circular(4.0)
 |---|---|
 | `flutter analyze && flutter test`，`platforms/flutter` | analyze 无问题；11 个测试通过 |
 | `flutter test --reporter expanded`，`platforms/flutter/example` | 1 个测试通过；仅失败→重试，不含编辑、无效提交或取消路径 |
-| `DEVELOPER_DIR=/Volumes/Apps/Xcode-beta.app/Contents/Developer swift test`，`platforms/swiftui` | macOS arm64，3 个状态模型测试通过；不计 iOS UI/读屏 |
+| `DEVELOPER_DIR=<Xcode developer directory> swift test`，`platforms/swiftui` | macOS arm64，3 个状态模型测试通过；不计 iOS UI/读屏 |
 | JDK 21、已有 Android SDK、Gradle 8.14.3 `:rosemary-compose:testDebugUnitTest --offline` | BUILD SUCCESSFUL，单测重新执行；3 项通过；另有 jvmTarget DSL 过时警告 |
 | 临时复制 Flutter lib/pubspec，`flutter pub get --offline && flutter test test/audit_test.dart --reporter expanded` | 新增 3 项边界断言均失败，分别复现 N2/N3/N4 |
 | 临时 Flutter `flutter test test/hidden_tab_test.dart --reporter expanded` | 新增隐藏面板断言失败，复现 N5；running=true |

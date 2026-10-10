@@ -62,7 +62,7 @@ const secondWave = [
   "accordion",
   "divider",
 ];
-/** Design proposals, not implementation availability. Each tuple names the host primitive/strategy. */
+/** Implemented platform adapters. Release stage is separate from API availability. */
 const primitives: Record<string, [string, string, string]> = {
   button: [
     "FilledButton / CupertinoButton",
@@ -96,7 +96,7 @@ const primitives: Record<string, [string, string, string]> = {
   ],
   "text-field": [
     "TextField / CupertinoTextField",
-    "TextField + TextFieldState adapter",
+    "TextFieldValue / String adapter",
     "TextField + Binding",
   ],
   "text-area": ["Multiline TextField", "Multiline TextField", "TextEditor"],
@@ -129,7 +129,7 @@ const primitives: Record<string, [string, string, string]> = {
     "Picker / Menu; long-list sheet",
   ],
   "combo-box": [
-    "Autocomplete",
+    "Controlled text + keyboard suggestions",
     "TextField + suggestions",
     "TextField + suggestions",
   ],
@@ -192,7 +192,7 @@ const primitives: Record<string, [string, string, string]> = {
   "command-palette": [
     "Shortcuts / Actions + search overlay",
     "Keyboard commands + search overlay",
-    "Search sheet; macOS commands later",
+    "Native search controller + keyboard commands",
   ],
   table: [
     "DataTable; compact list on narrow widths",
@@ -200,9 +200,9 @@ const primitives: Record<string, [string, string, string]> = {
     "List; wide table adapter later",
   ],
   "data-grid": [
-    "Virtual data surface: separate design",
-    "Virtual data surface: separate design",
-    "Virtual data surface: separate design",
+    "Virtual rows + pinned column + edit/filter/keyboard",
+    "Virtual rows + pinned column + edit/filter/keyboard",
+    "Virtual rows + pinned column + edit/filter/keyboard",
   ],
   list: [
     "ListView + stable item keys",
@@ -217,7 +217,7 @@ const primitives: Record<string, [string, string, string]> = {
   "tree-view": [
     "Hierarchical disclosure + focus model",
     "Hierarchical lazy list + focus model",
-    "OutlineGroup / DisclosureGroup",
+    "UITableView tree + keyboard / reader actions",
   ],
   badge: ["Badge / semantic status", "Badge", "Text status badge"],
   tag: [
@@ -243,7 +243,7 @@ const primitives: Record<string, [string, string, string]> = {
   sheet: [
     "showModalBottomSheet / adaptive sheet",
     "ModalBottomSheet",
-    "sheet + presentationDetents",
+    "Native sheet + adaptive scroll content",
   ],
   toast: [
     "Nonmodal status overlay",
@@ -336,11 +336,7 @@ export const NATIVE_COMPONENT_PLAN = COMPONENT_SPECS.map((spec) => {
   return {
     id: spec.id,
     name: spec.name,
-    status: NATIVE_FIRST_WAVE.includes(
-      spec.id as (typeof NATIVE_FIRST_WAVE)[number],
-    )
-      ? ("Prototype" as const)
-      : ("Draft" as const),
+    status: "Prototype" as const,
     wave: NATIVE_FIRST_WAVE.includes(
       spec.id as (typeof NATIVE_FIRST_WAVE)[number],
     )

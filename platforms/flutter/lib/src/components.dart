@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'theme.dart';
+import 'fields.dart';
 
 /// Generated semantic colors feed real native controls; the app owns routing/state.
 ThemeData rosemaryThemeData(Brightness brightness) {
@@ -52,16 +55,33 @@ class RosemaryIconButton extends StatelessWidget {
     this.busy = false,
   });
   @override
-  Widget build(BuildContext context) => Semantics(
-    value: busy ? '正在处理' : null,
-    liveRegion: busy,
-    child: IconButton(
-      tooltip: label,
-      onPressed: busy ? null : onPressed,
-      constraints: const BoxConstraints(minHeight: 48, minWidth: 48),
-      icon: busy ? const RosemarySpinner(label: '正在处理', size: 20) : Icon(icon),
-    ),
-  );
+  Widget build(BuildContext context) =>
+      Theme.of(context).platform == TargetPlatform.iOS
+      ? Semantics(
+          label: label,
+          value: busy ? '正在处理' : null,
+          child: CupertinoButton(
+            minimumSize: const Size(44, 44),
+            onPressed: busy ? null : onPressed,
+            child: ExcludeSemantics(
+              child: busy
+                  ? const RosemarySpinner(size: 20)
+                  : Icon(icon, size: 20),
+            ),
+          ),
+        )
+      : Semantics(
+          value: busy ? '正在处理' : null,
+          liveRegion: busy,
+          child: IconButton(
+            tooltip: label,
+            onPressed: busy ? null : onPressed,
+            constraints: const BoxConstraints(minHeight: 48, minWidth: 48),
+            icon: busy
+                ? const RosemarySpinner(label: '正在处理', size: 20)
+                : Icon(icon),
+          ),
+        );
 }
 
 class RosemaryTextArea extends StatelessWidget {
@@ -81,19 +101,32 @@ class RosemaryTextArea extends StatelessWidget {
     this.onChanged,
   });
   @override
-  Widget build(BuildContext context) => TextField(
-    controller: controller,
-    focusNode: focusNode,
-    enabled: enabled,
-    minLines: 3,
-    maxLines: null,
-    onChanged: onChanged,
-    decoration: InputDecoration(
-      labelText: label,
-      errorText: errorText,
-      floatingLabelBehavior: FloatingLabelBehavior.always,
-    ),
-  );
+  Widget build(BuildContext context) =>
+      Theme.of(context).platform == TargetPlatform.iOS
+      ? rosemaryCupertinoField(
+          context,
+          label: label,
+          controller: controller,
+          focusNode: focusNode,
+          enabled: enabled,
+          error: errorText,
+          minLines: 3,
+          maxLines: null,
+          onChanged: onChanged,
+        )
+      : TextField(
+          controller: controller,
+          focusNode: focusNode,
+          enabled: enabled,
+          minLines: 3,
+          maxLines: null,
+          onChanged: onChanged,
+          decoration: InputDecoration(
+            labelText: label,
+            errorText: errorText,
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+          ),
+        );
 }
 
 class RosemaryCheckbox extends StatelessWidget {
@@ -109,14 +142,51 @@ class RosemaryCheckbox extends StatelessWidget {
     this.onChanged,
   });
   @override
-  Widget build(BuildContext context) => CheckboxListTile(
-    title: Text(label),
-    value: value,
-    tristate: tristate,
-    onChanged: onChanged,
-    contentPadding: EdgeInsets.zero,
-    controlAffinity: ListTileControlAffinity.leading,
-  );
+  Widget build(BuildContext context) =>
+      Theme.of(context).platform == TargetPlatform.iOS
+      ? Semantics(
+          checked: value,
+          mixed: tristate && value == null,
+          selected: value == true,
+          child: CupertinoButton(
+            minimumSize: const Size(44, 44),
+            onPressed: onChanged == null
+                ? null
+                : () => onChanged!(
+                    tristate
+                        ? (value == false
+                              ? true
+                              : value == true
+                              ? null
+                              : false)
+                        : !(value ?? false),
+                  ),
+            child: Row(
+              children: [
+                ExcludeSemantics(
+                  child: Icon(
+                    value == true
+                        ? CupertinoIcons.check_mark_circled_solid
+                        : value == null
+                        ? CupertinoIcons.minus_circle
+                        : CupertinoIcons.circle,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(child: Text(label)),
+              ],
+            ),
+          ),
+        )
+      : CheckboxListTile(
+          title: Text(label),
+          value: value,
+          tristate: tristate,
+          onChanged: onChanged,
+          contentPadding: EdgeInsets.zero,
+          controlAffinity: ListTileControlAffinity.leading,
+        );
 }
 
 class RosemarySlider extends StatelessWidget {
@@ -180,10 +250,61 @@ class RosemarySelect<T> extends StatefulWidget {
 
 class _RosemarySelectState<T> extends State<RosemarySelect<T>> {
   final focus = FocusNode();
+  ValueNotifier<List<RosemaryOption<T>>>? liveOptions;
+  void refreshOptions({bool removed = false}) {
+    final source = liveOptions;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (source != null && identical(liveOptions, source))
+        source.value = removed || widget.onChanged == null
+            ? []
+            : List.of(widget.options);
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant RosemarySelect<T> old) {
+    super.didUpdateWidget(old);
+    refreshOptions();
+  }
+
   @override
   void dispose() {
+    refreshOptions(removed: true);
     focus.dispose();
     super.dispose();
+  }
+
+  Future<void> openSheet() async {
+    if (liveOptions != null) return;
+    final source = ValueNotifier<List<RosemaryOption<T>>>(
+      List.of(widget.options),
+    );
+    liveOptions = source;
+    final initial = widget.value;
+    final child = _SelectSheet<T>(
+      label: widget.label,
+      options: source,
+      initial: initial,
+    );
+    final T? result = Theme.of(context).platform == TargetPlatform.iOS
+        ? await showCupertinoModalPopup<T>(
+            context: context,
+            builder: (_) => child,
+          )
+        : await showModalBottomSheet<T>(
+            context: context,
+            isScrollControlled: true,
+            useSafeArea: true,
+            builder: (_) => child,
+          );
+    source.dispose();
+    liveOptions = null;
+    if (!mounted) return;
+    if (result != null &&
+        widget.onChanged != null &&
+        widget.options.any((o) => o.value == result && o.enabled))
+      widget.onChanged!(result);
+    if (focus.context != null) focus.requestFocus();
   }
 
   @override
@@ -203,53 +324,192 @@ class _RosemarySelectState<T> extends State<RosemarySelect<T>> {
       children: [
         Text(label),
         const SizedBox(height: 8),
-        MenuAnchor(
-          childFocusNode: focus,
-          menuChildren: options
-              .map(
-                (o) => MenuItemButton(
-                  onPressed: o.enabled && enabled
-                      ? () => onChanged(o.value)
+        if (options.length > 8 ||
+            Theme.of(context).platform == TargetPlatform.iOS)
+          OutlinedButton(
+            focusNode: focus,
+            onPressed: enabled ? openSheet : null,
+            style: OutlinedButton.styleFrom(minimumSize: const Size(160, 48)),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(child: Text(selected?.label ?? '请选择')),
+                const SizedBox(width: 12),
+                const Icon(Icons.expand_more),
+              ],
+            ),
+          )
+        else
+          MenuAnchor(
+            childFocusNode: focus,
+            menuChildren: options
+                .map(
+                  (o) => MenuItemButton(
+                    onPressed: o.enabled && enabled
+                        ? () => onChanged(o.value)
+                        : null,
+                    leadingIcon: o.value == value
+                        ? const Icon(Icons.check)
+                        : null,
+                    child: Text(o.label),
+                  ),
+                )
+                .toList(),
+            builder: (context, controller, child) => CallbackShortcuts(
+              bindings: {
+                const SingleActivator(LogicalKeyboardKey.escape):
+                    controller.close,
+              },
+              child: Semantics(
+                label: label,
+                child: OutlinedButton(
+                  focusNode: focus,
+                  onPressed: enabled
+                      ? () => controller.isOpen
+                            ? controller.close()
+                            : controller.open()
                       : null,
-                  leadingIcon: o.value == value
-                      ? const Icon(Icons.check)
-                      : null,
-                  child: Text(o.label),
-                ),
-              )
-              .toList(),
-          builder: (context, controller, child) => CallbackShortcuts(
-            bindings: {
-              const SingleActivator(LogicalKeyboardKey.escape):
-                  controller.close,
-            },
-            child: Semantics(
-              label: label,
-              child: OutlinedButton(
-                focusNode: focus,
-                onPressed: enabled
-                    ? () => controller.isOpen
-                          ? controller.close()
-                          : controller.open()
-                    : null,
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size(160, 48),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Flexible(child: Text(selected?.label ?? '请选择')),
-                    const SizedBox(width: 12),
-                    const Icon(Icons.expand_more),
-                  ],
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(160, 48),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(child: Text(selected?.label ?? '请选择')),
+                      const SizedBox(width: 12),
+                      const Icon(Icons.expand_more),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
       ],
     );
   }
+}
+
+class _SelectSheet<T> extends StatefulWidget {
+  final String label;
+  final ValueListenable<List<RosemaryOption<T>>> options;
+  final T? initial;
+  const _SelectSheet({
+    required this.label,
+    required this.options,
+    this.initial,
+  });
+  @override
+  State<_SelectSheet<T>> createState() => _SelectSheetState<T>();
+}
+
+class _SelectSheetState<T> extends State<_SelectSheet<T>> {
+  late T? draft = widget.initial;
+  String query = '';
+  @override
+  Widget build(
+    BuildContext context,
+  ) => ValueListenableBuilder<List<RosemaryOption<T>>>(
+    valueListenable: widget.options,
+    builder: (context, options, _) {
+      final ios = Theme.of(context).platform == TargetPlatform.iOS;
+      final filtered = options
+          .where((o) => o.label.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+      final valid = options.any((o) => o.value == draft && o.enabled);
+      Widget action(String title, VoidCallback? fn) => ios
+          ? CupertinoButton(onPressed: fn, child: Text(title))
+          : TextButton(onPressed: fn, child: Text(title));
+      return Material(
+        color: Theme.of(context).colorScheme.surface,
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.viewInsetsOf(context).bottom,
+            ),
+            child: SizedBox(
+              height: MediaQuery.sizeOf(context).height * .75,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      widget.label,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: ios
+                        ? CupertinoSearchTextField(
+                            onChanged: (q) => setState(() => query = q),
+                          )
+                        : TextField(
+                            decoration: const InputDecoration(
+                              labelText: '搜索选项',
+                            ),
+                            onChanged: (q) => setState(() => query = q),
+                          ),
+                  ),
+                  Expanded(
+                    child: RadioGroup<T>(
+                      groupValue: draft,
+                      onChanged: (v) => setState(() => draft = v),
+                      child: filtered.isEmpty
+                          ? const Center(child: Text('没有匹配的选项'))
+                          : ListView.builder(
+                              itemCount: filtered.length,
+                              itemBuilder: (context, i) {
+                                final o = filtered[i];
+                                return Semantics(
+                                  selected: o.value == draft,
+                                  child: ios
+                                      ? CupertinoButton(
+                                          onPressed: o.enabled
+                                              ? () => setState(
+                                                  () => draft = o.value,
+                                                )
+                                              : null,
+                                          child: Row(
+                                            children: [
+                                              Expanded(child: Text(o.label)),
+                                              if (o.value == draft)
+                                                const Icon(
+                                                  CupertinoIcons.check_mark,
+                                                ),
+                                            ],
+                                          ),
+                                        )
+                                      : RadioListTile<T>(
+                                          title: Text(o.label),
+                                          value: o.value,
+                                          enabled: o.enabled,
+                                        ),
+                                );
+                              },
+                            ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Wrap(
+                      spacing: 16,
+                      children: [
+                        action('取消', () => Navigator.pop(context)),
+                        action(
+                          '确认',
+                          valid ? () => Navigator.pop(context, draft) : null,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    },
+  );
 }
 
 /// Native tab semantics with host-controlled selection and mounted panel state.
@@ -367,14 +627,31 @@ class RosemaryDialog extends StatelessWidget {
     this.cancelLabel = '取消',
   });
   @override
-  Widget build(BuildContext context) => AlertDialog.adaptive(
-    title: Text(title),
-    content: content,
-    actions: [
-      TextButton(onPressed: onCancel, child: Text(cancelLabel)),
-      TextButton(onPressed: onConfirm, child: Text(confirmLabel)),
-    ],
-  );
+  Widget build(BuildContext context) =>
+      Theme.of(context).platform == TargetPlatform.iOS
+      ? CupertinoAlertDialog(
+          title: Text(title),
+          content: content,
+          actions: [
+            CupertinoDialogAction(
+              onPressed: onCancel,
+              child: Text(cancelLabel),
+            ),
+            CupertinoDialogAction(
+              onPressed: onConfirm,
+              isDefaultAction: true,
+              child: Text(confirmLabel),
+            ),
+          ],
+        )
+      : AlertDialog(
+          title: Text(title),
+          content: content,
+          actions: [
+            TextButton(onPressed: onCancel, child: Text(cancelLabel)),
+            TextButton(onPressed: onConfirm, child: Text(confirmLabel)),
+          ],
+        );
 }
 
 Future<RosemaryDialogResult?> showRosemaryDialog(
@@ -433,19 +710,58 @@ class RosemaryProgress extends StatelessWidget {
   );
 }
 
-class RosemarySpinner extends StatelessWidget {
+class RosemarySpinner extends StatefulWidget {
   final String label;
   final double size;
   const RosemarySpinner({super.key, this.label = '正在加载', this.size = 24});
   @override
+  State<RosemarySpinner> createState() => _SpinnerState();
+}
+
+class _SpinnerState extends State<RosemarySpinner> with WidgetsBindingObserver {
+  bool active = true;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    final state = WidgetsBinding.instance.lifecycleState;
+    active = state == null || state == AppLifecycleState.resumed;
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (mounted) setState(() => active = state == AppLifecycleState.resumed);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => SizedBox(
-    width: size,
-    height: size,
-    child: MediaQuery.disableAnimationsOf(context)
-        ? Semantics(label: label, child: const Icon(Icons.hourglass_empty))
+    width: widget.size,
+    height: widget.size,
+    child:
+        MediaQuery.disableAnimationsOf(context) ||
+            !active ||
+            !TickerMode.valuesOf(context).enabled
+        ? Semantics(
+            label: widget.label,
+            child: const Icon(Icons.hourglass_empty),
+          )
+        : Theme.of(context).platform == TargetPlatform.iOS
+        ? Semantics(
+            label: widget.label,
+            child: CupertinoActivityIndicator(
+              radius: widget.size / 2,
+              color: DefaultTextStyle.of(context).style.color,
+            ),
+          )
         : CircularProgressIndicator(
             strokeWidth: 2,
-            semanticsLabel: label,
+            semanticsLabel: widget.label,
             color: DefaultTextStyle.of(context).style.color,
           ),
   );
