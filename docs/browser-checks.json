@@ -983,16 +983,20 @@
   ],
   "manualChecks": [
     {
-      "check": "完整焦点轮廓与折叠",
-      "observed": "Actual focused Home note at 1280px and 320px: outer focus outline is complete on all four sides; details clip margin 8px covers 2px outline + 2px offset. Closing content settles at content-visibility hidden / opacity 0. Footer Select opens and Escape closes after layout settles."
+      "check": "404与恢复",
+      "observed": "Unknown hash, component, case, extra and malformed paths show a shared 404. Enter on Return Home recovers; Back and reload preserve the error. Skip focuses main without changing the application route. Static HTML has working skip and return links without an application bundle."
     },
     {
-      "check": "页脚间距、对齐与版权",
-      "observed": "Fields have actual 8px label-to-control gap. Footer separates identity, utility and copyright rows; at desktop links and both select controls share identical bottom coordinate 815.4609375. Mobile stacks fields without overflow. Actual copyright is © 2026 Rosemary Island LLC."
+      "check": "主题和动效",
+      "observed": "Static error document inherits saved dark theme and reduced motion; measured transition-duration is 0s. Mobile Light/Dark and desktop screenshots saved. Recovery focus outline is visible."
     },
     {
-      "check": "最终布局",
-      "observed": "Current source 139 URLs at 320px Light and Dark, 13 Dark desktop sections at 1280px: no whole-page horizontal overflow; current QA console has no warning/error."
+      "check": "首页精简",
+      "observed": "Removed the duplicate brand-name row, decorative dot and same-row version badge; actual hero eyebrow is absent."
+    },
+    {
+      "check": "布局",
+      "observed": "Final source: 139 actual URLs at 320px Light/Dark and 13 sections at 1280px Dark have no whole-page horizontal overflow."
     }
   ],
   "limitations": [
@@ -1004,78 +1008,91 @@
   ],
   "desktopSections": [
     {
+      "group": "sections",
       "scroll": 1280,
       "theme": "dark",
       "url": "http://127.0.0.1:3101/#/overview",
       "width": 1280
     },
     {
+      "group": "sections",
       "scroll": 1280,
       "theme": "dark",
       "url": "http://127.0.0.1:3101/#/philosophy",
       "width": 1280
     },
     {
+      "group": "sections",
       "scroll": 1280,
       "theme": "dark",
       "url": "http://127.0.0.1:3101/#/brand",
       "width": 1280
     },
     {
+      "group": "sections",
       "scroll": 1280,
       "theme": "dark",
       "url": "http://127.0.0.1:3101/#/foundations",
       "width": 1280
     },
     {
+      "group": "sections",
       "scroll": 1280,
       "theme": "dark",
       "url": "http://127.0.0.1:3101/#/components",
       "width": 1280
     },
     {
+      "group": "sections",
       "scroll": 1280,
       "theme": "dark",
       "url": "http://127.0.0.1:3101/#/dodont",
       "width": 1280
     },
     {
+      "group": "sections",
       "scroll": 1280,
       "theme": "dark",
       "url": "http://127.0.0.1:3101/#/patterns",
       "width": 1280
     },
     {
+      "group": "sections",
       "scroll": 1280,
       "theme": "dark",
       "url": "http://127.0.0.1:3101/#/tokens",
       "width": 1280
     },
     {
+      "group": "sections",
       "scroll": 1280,
       "theme": "dark",
       "url": "http://127.0.0.1:3101/#/platforms",
       "width": 1280
     },
     {
+      "group": "sections",
       "scroll": 1280,
       "theme": "dark",
       "url": "http://127.0.0.1:3101/#/accessibility",
       "width": 1280
     },
     {
+      "group": "sections",
       "scroll": 1280,
       "theme": "dark",
       "url": "http://127.0.0.1:3101/#/content",
       "width": 1280
     },
     {
+      "group": "sections",
       "scroll": 1280,
       "theme": "dark",
       "url": "http://127.0.0.1:3101/#/ai-guide",
       "width": 1280
     },
     {
+      "group": "sections",
       "scroll": 1280,
       "theme": "dark",
       "url": "http://127.0.0.1:3101/#/governance",
@@ -2067,10 +2084,10 @@
     }
   ],
   "source": {
-    "sha256": "e95d4a4aa62b05695dc227e5ab335230eac679762a218c9e0b4fe5fb204b3c5d",
-    "fileCount": 178
+    "sha256": "e0c7ce45e68c8293e4d51ddec01e1b71f1976128379119fc6d107068a9b6d534",
+    "fileCount": 180
   },
-  "checkedAt": "2026-10-10T04:11:38.946Z",
+  "checkedAt": "2026-10-10T04:43:37.279Z",
   "consoleErrors": [],
   "previousIterationManualChecks": {
     "source": {
@@ -7800,5 +7817,49 @@
     "website": "https://design.rosemaryis.cc",
     "tag": "v2.0.0-beta.1",
     "limitations": "One IAB engine; default states. Native manual/device gates remain unverified."
+  },
+  "previousFallbackBaseline": {
+    "source": {
+      "sha256": "e95d4a4aa62b05695dc227e5ab335230eac679762a218c9e0b4fe5fb204b3c5d",
+      "fileCount": 178
+    },
+    "checkedAt": "2026-10-10T04:11:38.946Z",
+    "manualChecks": [
+      {
+        "check": "完整焦点轮廓与折叠",
+        "observed": "Actual focused Home note at 1280px and 320px: outer focus outline is complete on all four sides; details clip margin 8px covers 2px outline + 2px offset. Closing content settles at content-visibility hidden / opacity 0. Footer Select opens and Escape closes after layout settles."
+      },
+      {
+        "check": "页脚间距、对齐与版权",
+        "observed": "Fields have actual 8px label-to-control gap. Footer separates identity, utility and copyright rows; at desktop links and both select controls share identical bottom coordinate 815.4609375. Mobile stacks fields without overflow. Actual copyright is © 2026 Rosemary Island LLC."
+      },
+      {
+        "check": "最终布局",
+        "observed": "Current source 139 URLs at 320px Light and Dark, 13 Dark desktop sections at 1280px: no whole-page horizontal overflow; current QA console has no warning/error."
+      }
+    ]
+  },
+  "fallbackIteration": {
+    "source": {
+      "sha256": "e0c7ce45e68c8293e4d51ddec01e1b71f1976128379119fc6d107068a9b6d534",
+      "fileCount": 180
+    },
+    "motion": {
+      "motion": "reduced",
+      "theme": "dark",
+      "transition": "0s"
+    },
+    "keyboard": {
+      "focus": "not-found-content",
+      "title": "404 · 页面未找到 — Rosemary Design",
+      "url": "http://127.0.0.1:3101/#/components/not-a-component?anchor=missing"
+    },
+    "counts": {
+      "light": 139,
+      "dark": 139,
+      "desktop": 13
+    },
+    "tests": 440,
+    "limitations": "One IAB engine; no new screen-reader or real-device certification. HTTP error handling checked separately on deployed Apache."
   }
 }

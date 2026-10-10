@@ -1,6 +1,6 @@
 # Rosemary Design System
 
-第二轮迭代，v2.0.0-beta.1。基于已有 React 网站重构；品牌语言采用 **Organic Precision**：编辑式标题、纸色与松绿、叶形曲线和精密网格。保留原 Rosemary 标志。
+第二轮迭代，v2.0.0-beta.2。基于已有 React 网站重构；品牌语言采用 **Organic Precision**：编辑式标题、纸色与松绿、叶形曲线和精密网格。保留原 Rosemary 标志。
 
 当前包含三个品牌方向 × 四类实际视觉场景、65 个双侧可视化案例（56 个交互模拟）、61 项组件规范（54 个交互参考）、169 个令牌 × 两个主题。案例和组件有独立 hash URL、统一筛选、可操作 Playground 和实际运行的源码。
 
@@ -25,7 +25,7 @@ npm run preview -- --host 127.0.0.1 --port 3101 --strictPort
 ## 验证与产物
 
 ```sh
-npm run check          # Tokens 当前性/确定性、类型、429 项测试、生产构建
+npm run check          # Tokens 当前性/确定性、类型、440 项测试、生产构建
 npm run check:native   # 已安装 Flutter / Xcode / Android SDK 和 JDK 时执行，保存实际结果
 npm run evidence       # 汇总已保存的测试、浏览器与原生证据；不替代测试
 ```
@@ -80,7 +80,7 @@ AI 应先读取 [接入指南](docs/AI-INTEGRATION.md)，再按任务查组件�
 
 - 国际站：[design.rosemaryis.cc](https://design.rosemaryis.cc)
 - 国内站：[design.cruty.cn](https://design.cruty.cn)
-- 版本：Web v2.0.0-beta.1；三端 SDK Prototype，首批各 14 项。
+- 版本：Web v2.0.0-beta.2；三端 SDK Prototype，首批各 14 项。
 
 AI 接入从 `/guide/manifest.json` 和 `/guide/ai-integration.md` 开始，按清单读取相关规范和实际源码。两个网站提供相同构建；源码标签用于固定审阅版本，不代表原生 Beta 验收已完成。
 
@@ -95,3 +95,9 @@ AI 接入从 `/guide/manifest.json` 和 `/guide/ai-integration.md` 开始，按�
 ## 版权与许可
 
 © 2026 Rosemary Island LLC。当前未指定开放源代码许可证；公共可见不自动授予再分发或商业使用许可。品牌、字体和第三方依赖各自遵循其授权。新增许可证须由权利人确定。
+
+## 404 恢复页面
+
+不存在的栏目、组件、案例与多余路径统一显示 Rosemary 404，只提供返回首页。页面共用品牌排版、主题、参数与控件反馈；恢复链接指向根路径，不会停留在错误的深层地址。
+
+Vite 构建生成独立的 `dist/404.html`，其中说明和返回链接不依赖应用 JavaScript；`404.html` 由共享组件生成，不手工维护。Apache 站点需设置 `ErrorDocument 404 /404.html`，保留真正的 HTTP 404 状态，不能用首页重写掩盖错误。该规则已用于两个在线站点。其他静态托管平台需配置对应的错误文档入口；hash 路由由应用处理，其 HTTP 请求本身仍访问根文档。

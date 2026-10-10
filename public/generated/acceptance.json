@@ -1,9 +1,9 @@
 {
-  "version": "2.0.0-beta.1",
-  "recordedAt": "2026-10-10T04:17:42.980Z",
+  "version": "2.0.0-beta.2",
+  "recordedAt": "2026-10-10T04:49:45.193Z",
   "source": {
-    "sha256": "e95d4a4aa62b05695dc227e5ab335230eac679762a218c9e0b4fe5fb204b3c5d",
-    "fileCount": 178
+    "sha256": "e0c7ce45e68c8293e4d51ddec01e1b71f1976128379119fc6d107068a9b6d534",
+    "fileCount": 180
   },
   "brand": {
     "directions": 3,
@@ -40,8 +40,8 @@
   "engineering": {
     "command": "npm run check",
     "passed": true,
-    "testsPassed": 429,
-    "testsTotal": 429,
+    "testsPassed": 440,
+    "testsTotal": 440,
     "types": "passed",
     "build": "passed"
   },
@@ -52,16 +52,20 @@
     "wholePageOverflowFailures": 0,
     "manualChecks": [
       {
-        "check": "完整焦点轮廓与折叠",
-        "observed": "Actual focused Home note at 1280px and 320px: outer focus outline is complete on all four sides; details clip margin 8px covers 2px outline + 2px offset. Closing content settles at content-visibility hidden / opacity 0. Footer Select opens and Escape closes after layout settles."
+        "check": "404与恢复",
+        "observed": "Unknown hash, component, case, extra and malformed paths show a shared 404. Enter on Return Home recovers; Back and reload preserve the error. Skip focuses main without changing the application route. Static HTML has working skip and return links without an application bundle."
       },
       {
-        "check": "页脚间距、对齐与版权",
-        "observed": "Fields have actual 8px label-to-control gap. Footer separates identity, utility and copyright rows; at desktop links and both select controls share identical bottom coordinate 815.4609375. Mobile stacks fields without overflow. Actual copyright is © 2026 Rosemary Island LLC."
+        "check": "主题和动效",
+        "observed": "Static error document inherits saved dark theme and reduced motion; measured transition-duration is 0s. Mobile Light/Dark and desktop screenshots saved. Recovery focus outline is visible."
       },
       {
-        "check": "最终布局",
-        "observed": "Current source 139 URLs at 320px Light and Dark, 13 Dark desktop sections at 1280px: no whole-page horizontal overflow; current QA console has no warning/error."
+        "check": "首页精简",
+        "observed": "Removed the duplicate brand-name row, decorative dot and same-row version badge; actual hero eyebrow is absent."
+      },
+      {
+        "check": "布局",
+        "observed": "Final source: 139 actual URLs at 320px Light/Dark and 13 sections at 1280px Dark have no whole-page horizontal overflow."
       }
     ],
     "download": {
@@ -166,7 +170,7 @@
     "publication": {
       "repositoryUrl": "https://github.com/Foodie05/Rosemary-Design-System",
       "websiteUrl": "https://design.rosemaryis.cc",
-      "sourceRef": "v2.0.0-beta.1",
+      "sourceRef": "v2.0.0-beta.2",
       "status": "configured"
     },
     "readingSpecification": "docs/CONTENT.md",

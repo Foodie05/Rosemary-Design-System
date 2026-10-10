@@ -12,6 +12,119 @@
   font-synthesis: none;
   color-scheme: light;
 }
+
+/* Recovery has the same hierarchy and controls as the guide, with fewer choices. */
+.r-not-found {
+  width: min(100%, 1320px);
+  min-height: 100svh;
+  margin-inline: auto;
+  padding-inline: clamp(
+    var(--r-semantic-space-24),
+    5vw,
+    var(--r-semantic-space-64)
+  );
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+.r-not-found-header {
+  padding-block: var(--r-semantic-space-24);
+  border-bottom: 1px solid var(--r-semantic-color-border);
+}
+.r-not-found-wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--r-semantic-space-8);
+  min-height: var(--r-component-button-height-medium);
+  font: 600 1.5rem/1.4 var(--r-semantic-font-editorial);
+}
+.r-not-found-wordmark em {
+  font-weight: 400;
+  color: var(--r-semantic-color-text-secondary);
+}
+.r-not-found-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--r-semantic-space-48);
+  padding-block: var(--r-semantic-space-64);
+  outline: none;
+}
+.r-not-found-copy {
+  min-width: 0;
+}
+.r-not-found-code {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--r-semantic-space-16);
+  margin-bottom: var(--r-semantic-space-24);
+  font: 400 3rem/1 var(--r-semantic-font-editorial);
+  color: var(--r-semantic-color-accent);
+}
+.r-not-found-code span {
+  font: 400 var(--r-semantic-size-caption)/1.5 var(--r-semantic-font-code);
+  letter-spacing: 0.08em;
+  color: var(--r-semantic-color-text-secondary);
+}
+.r-not-found h1 {
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  line-height: 1.3;
+}
+.r-not-found-description {
+  margin-block: var(--r-semantic-space-24) var(--r-semantic-space-32);
+  max-width: 30em;
+}
+.r-not-found-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--r-semantic-space-16);
+}
+.r-not-found-actions .r-button {
+  min-height: 44px;
+}
+.r-not-found-actions svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.75;
+}
+.r-not-found-art {
+  color: var(--r-semantic-color-text-secondary);
+}
+.r-not-found-art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.r-not-found-footer {
+  border-top: 1px solid var(--r-semantic-color-border);
+  padding-block: var(--r-semantic-space-24);
+  font: 400 var(--r-semantic-size-caption)/1.7 var(--r-semantic-font-code);
+  color: var(--r-semantic-color-text-secondary);
+  overflow-wrap: anywhere;
+}
+@media (max-width: 700px) {
+  .r-not-found {
+    padding-inline: var(--r-semantic-space-24);
+  }
+  .r-not-found-main {
+    grid-template-columns: 1fr;
+    gap: var(--r-semantic-space-32);
+    padding-block: var(--r-semantic-space-48);
+  }
+  .r-not-found-art {
+    display: none;
+  }
+}
+@media (max-width: 360px) {
+  .r-not-found {
+    padding-inline: var(--r-semantic-space-16);
+  }
+  .r-not-found-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
 :root.dark {
   color-scheme: dark;
 }
@@ -5781,11 +5894,36 @@ input[type="checkbox"]:not(.r-switch):not([role="switch"]):disabled {
 }
 
 /* Keep the action label and busy mark in stable, separately reserved geometry. */
-.r-button-content { position: relative; padding-inline: var(--r-semantic-space-24); }
-.r-button-content > .r-button-spinner { position: absolute; inset-inline-start: 0; }
+.r-button-content {
+  position: relative;
+  padding-inline: var(--r-semantic-space-24);
+}
+.r-button-content > .r-button-spinner {
+  position: absolute;
+  inset-inline-start: 0;
+}
 .r-icon-control .r-button-content,
-.r-header-search .r-button-content { padding-inline: 0; }
-.r-icon-control .r-button-spinner { inset: 0; }
-.r-breadcrumb ol { display: flex; flex-wrap: wrap; gap: var(--r-semantic-space-8); list-style: none; padding: 0; margin: 0; }
-.r-breadcrumb li { display: inline-flex; align-items: center; gap: var(--r-semantic-space-8); }
-.r-breadcrumb a { display: inline-flex; align-items: center; min-height: 44px; }
+.r-header-search .r-button-content {
+  padding-inline: 0;
+}
+.r-icon-control .r-button-spinner {
+  inset: 0;
+}
+.r-breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--r-semantic-space-8);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.r-breadcrumb li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--r-semantic-space-8);
+}
+.r-breadcrumb a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}

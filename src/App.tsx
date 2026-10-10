@@ -14,6 +14,7 @@ import {
   platformIsMac,
 } from "./context/SitePreferences";
 import { DocBoundary } from "./components/common/DocBoundary";
+import { NotFoundPage } from "./components/common/NotFoundPage";
 import {
   lazy,
   Suspense,
@@ -31,7 +32,7 @@ import { Header } from "./components/layout/Header";
 import { Sidebar } from "./components/layout/Sidebar";
 import { CommandSearch } from "./components/search/CommandSearch";
 import { OverviewView } from "./components/views/OverviewView";
-import { parseRoute, routeFor } from "./routing";
+import { routeFromLocation, routeFor } from "./routing";
 type DocViewProps = {
   initialCaseId?: string;
   componentId?: string;
@@ -80,7 +81,7 @@ const titles: Record<SectionId, string> = {
 };
 export default function App() {
   useScrollbars();
-  const [route, setRoute] = useState(() => parseRoute(location.hash));
+  const [route, setRoute] = useState(() => routeFromLocation(location));
   const currentRoute = useRef(route);
   const [pageMotion, setPageMotion] = useState<{
     kind: PageMotion;
@@ -119,7 +120,7 @@ export default function App() {
   useEffect(() => {
     const handle = () => {
       positions.current[previous.current] = window.scrollY;
-      const next = parseRoute(location.hash);
+      const next = routeFromLocation(location);
       previous.current = next.key;
       const motion = pageMotionFor(currentRoute.current, next);
       currentRoute.current = next;
@@ -130,6 +131,7 @@ export default function App() {
         });
         setRoute(next);
         setMenu(false);
+        openSearch(false);
       });
     };
     window.addEventListener("hashchange", handle);
@@ -144,11 +146,18 @@ export default function App() {
           ? getCaseImplementation(route.id)?.title
           : undefined
       : undefined;
-    document.title = `${item ? item + " · " : ""}${titles[route.section]} — Rosemary Design`;
+    document.title = route.notFound
+      ? "404 · 页面未找到 — Rosemary Design"
+      : `${item ? item + " · " : ""}${titles[route.section]} — Rosemary Design`;
     let observer: MutationObserver | undefined;
     const attempt = () => {
       if (main.current?.querySelector(".r-loading-message")) return false;
-      if (route.anchor) {
+      if (route.notFound) {
+        window.scrollTo(0, 0);
+        document
+          .getElementById("not-found-content")
+          ?.focus({ preventScroll: true });
+      } else if (route.anchor) {
         const target = document.getElementById(route.anchor);
         if (!target) return false;
         revealAnchor(target);
@@ -178,7 +187,11 @@ export default function App() {
   }, [route.key]);
   useEffect(() => {
     const handle = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+      if (
+        !currentRoute.current.notFound &&
+        (e.metaKey || e.ctrlKey) &&
+        e.key.toLowerCase() === "k"
+      ) {
         e.preventDefault();
         openSearch((v) => !v);
       }
@@ -199,110 +212,121 @@ export default function App() {
       <SitePreferences.Provider
         value={{ mode: isDark ? "dark" : "light", isMac: platformIsMac() }}
       >
-        <div className="r-app">
-          <a
-            href="#main-content"
-            className="r-skip-link"
-            onClick={(e) => {
-              e.preventDefault();
-              main.current?.focus();
-            }}
+        {route.notFound ? (
+          <div
+            key={pageKey(route)}
+            className="r-route-content"
+            data-route-motion={pageMotion.kind}
+            data-native={pageMotion.native || undefined}
           >
-            跳到主要内容
-          </a>
-          <Header
-            currentSection={route.section}
-            isDark={isDark}
-            onToggleTheme={() => setTheme(isDark ? "light" : "dark")}
-            onOpenSearch={() => openSearch(true)}
-            isMobileMenuOpen={menu}
-            onToggleMobileMenu={() => setMenu(!menu)}
-          />
-          <div className={home ? "r-home-frame" : "r-doc-frame"}>
-            <div className={home ? "r-home-sidebar" : ""}>
-              <Sidebar
-                currentSection={route.section}
-                isOpenMobile={menu}
-                onCloseMobile={() => setMenu(false)}
-              />
-            </div>
-            <main
-              id="main-content"
-              ref={main}
-              tabIndex={-1}
-              className={home ? "r-home-main" : "r-document-main"}
-            >
-              <div
-                key={pageKey(route)}
-                className="r-route-content"
-                data-route-motion={pageMotion.kind}
-                data-native={pageMotion.native || undefined}
-              >
-                <Breadcrumbs route={route} />
-                <DocBoundary key={route.key}>
-                  <Suspense
-                    fallback={
-                      <p className="r-loading-message" role="status">
-                        正在加载规范…
-                      </p>
-                    }
-                  >
-                    {home ? (
-                      <OverviewView onNavigate={navigate} />
-                    ) : (
-                      View && (
-                        <View
-                          {...(route.section === "dodont"
-                            ? { initialCaseId: route.id }
-                            : route.section === "components"
-                              ? { componentId: route.id }
-                              : route.section === "tokens"
-                                ? { query: route.query }
-                                : {})}
-                        />
-                      )
-                    )}
-                  </Suspense>
-                </DocBoundary>
-              </div>
-              <footer className="r-footer">
-                <div className="r-footer-identity">
-                  <a href="#/overview" className="r-footer-wordmark">
-                    Rosemary <em>Design</em>
-                  </a>
-                  <p>以审慎的思考，创造自然的体验。</p>
-                </div>
-                <div className="r-footer-utilities">
-                  <nav className="r-footer-links" aria-label="页脚链接">
-                    <a href="#/governance">v2.0 Beta · 验证记录</a>
-                    <a href="#/accessibility">无障碍目标</a>
-                    <a href="#/ai-guide">Agent 指南</a>
-                  </nav>
-                  <div className="r-footer-preferences">
-                    <label className="r-field r-theme-preference">
-                      <span className="r-field-label">网站主题</span>
-                      <Select
-                        value={theme}
-                        onValueChange={(value) =>
-                          setTheme(value as ThemePreference)
-                        }
-                        label={"网站主题"}
-                        options={[
-                          { value: "system", label: "跟随系统" },
-                          { value: "light", label: "浅色" },
-                          { value: "dark", label: "深色" },
-                        ]}
-                      />
-                    </label>
-                    <MotionPreferenceControl />
-                  </div>
-                </div>
-                <span>© 2026 Rosemary Island LLC</span>
-              </footer>
-            </main>
+            <NotFoundPage />
           </div>
-          <CommandSearch isOpen={search} onClose={() => openSearch(false)} />
-        </div>
+        ) : (
+          <div className="r-app">
+            <a
+              href="#main-content"
+              className="r-skip-link"
+              onClick={(e) => {
+                e.preventDefault();
+                main.current?.focus();
+              }}
+            >
+              跳到主要内容
+            </a>
+            <Header
+              currentSection={route.section}
+              isDark={isDark}
+              onToggleTheme={() => setTheme(isDark ? "light" : "dark")}
+              onOpenSearch={() => openSearch(true)}
+              isMobileMenuOpen={menu}
+              onToggleMobileMenu={() => setMenu(!menu)}
+            />
+            <div className={home ? "r-home-frame" : "r-doc-frame"}>
+              <div className={home ? "r-home-sidebar" : ""}>
+                <Sidebar
+                  currentSection={route.section}
+                  isOpenMobile={menu}
+                  onCloseMobile={() => setMenu(false)}
+                />
+              </div>
+              <main
+                id="main-content"
+                ref={main}
+                tabIndex={-1}
+                className={home ? "r-home-main" : "r-document-main"}
+              >
+                <div
+                  key={pageKey(route)}
+                  className="r-route-content"
+                  data-route-motion={pageMotion.kind}
+                  data-native={pageMotion.native || undefined}
+                >
+                  <Breadcrumbs route={route} />
+                  <DocBoundary key={route.key}>
+                    <Suspense
+                      fallback={
+                        <p className="r-loading-message" role="status">
+                          正在加载规范…
+                        </p>
+                      }
+                    >
+                      {home ? (
+                        <OverviewView onNavigate={navigate} />
+                      ) : (
+                        View && (
+                          <View
+                            {...(route.section === "dodont"
+                              ? { initialCaseId: route.id }
+                              : route.section === "components"
+                                ? { componentId: route.id }
+                                : route.section === "tokens"
+                                  ? { query: route.query }
+                                  : {})}
+                          />
+                        )
+                      )}
+                    </Suspense>
+                  </DocBoundary>
+                </div>
+                <footer className="r-footer">
+                  <div className="r-footer-identity">
+                    <a href="#/overview" className="r-footer-wordmark">
+                      Rosemary <em>Design</em>
+                    </a>
+                    <p>以审慎的思考，创造自然的体验。</p>
+                  </div>
+                  <div className="r-footer-utilities">
+                    <nav className="r-footer-links" aria-label="页脚链接">
+                      <a href="#/governance">v2.0 Beta · 验证记录</a>
+                      <a href="#/accessibility">无障碍目标</a>
+                      <a href="#/ai-guide">Agent 指南</a>
+                    </nav>
+                    <div className="r-footer-preferences">
+                      <label className="r-field r-theme-preference">
+                        <span className="r-field-label">网站主题</span>
+                        <Select
+                          value={theme}
+                          onValueChange={(value) =>
+                            setTheme(value as ThemePreference)
+                          }
+                          label={"网站主题"}
+                          options={[
+                            { value: "system", label: "跟随系统" },
+                            { value: "light", label: "浅色" },
+                            { value: "dark", label: "深色" },
+                          ]}
+                        />
+                      </label>
+                      <MotionPreferenceControl />
+                    </div>
+                  </div>
+                  <span>© 2026 Rosemary Island LLC</span>
+                </footer>
+              </main>
+            </div>
+            <CommandSearch isOpen={search} onClose={() => openSearch(false)} />
+          </div>
+        )}
       </SitePreferences.Provider>
     </MotionPreferences>
   );

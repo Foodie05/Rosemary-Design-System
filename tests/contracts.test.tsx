@@ -1,4 +1,4 @@
-import { writeFileSync, mkdirSync } from "node:fs";
+import { writeFileSync, mkdirSync, readFileSync } from "node:fs";
 import { IMPLEMENTATION_NOTES } from "../src/components/playground/implementationNotes";
 import { describe, it, expect, afterAll } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -117,7 +117,7 @@ afterAll(() => {
     "docs/catalogue.json",
     JSON.stringify(
       {
-        version: "2.0.0-beta.1",
+        version: JSON.parse(readFileSync("package.json", "utf8")).version,
         cases: DO_DONT_CASES.map((c) => {
           const impl = getCaseImplementation(c.id);
           return {

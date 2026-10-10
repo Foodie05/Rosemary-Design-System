@@ -16,10 +16,6 @@ export function OverviewView(_props: {
     <div className="r-home r-home-compact">
       <section className="r-hero" id="intro">
         <div className="r-hero-copy">
-          <div className="r-eyebrow">
-            <span className="r-dot" /> ROSEMARY DESIGN SYSTEM{" "}
-            <span className="r-version">v2.0 Beta</span>
-          </div>
           <h1>
             Organic
             <br />

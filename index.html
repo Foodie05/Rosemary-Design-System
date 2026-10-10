@@ -26,7 +26,14 @@
       type="image/png"
     />
     <script>
+      document.documentElement.dataset.motion = matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches
+        ? "reduced"
+        : "full";
       try {
+        if (localStorage.getItem("rosemary_motion") === "reduce")
+          document.documentElement.dataset.motion = "reduced";
         const saved = localStorage.getItem("rosemary_theme");
         const dark =
           saved === "dark" ||

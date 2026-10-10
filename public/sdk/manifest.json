@@ -1,7 +1,7 @@
 {
   "source": {
-    "sha256": "e95d4a4aa62b05695dc227e5ab335230eac679762a218c9e0b4fe5fb204b3c5d",
-    "fileCount": 178
+    "sha256": "e0c7ce45e68c8293e4d51ddec01e1b71f1976128379119fc6d107068a9b6d534",
+    "fileCount": 180
   },
   "packages": [
     {
@@ -10,8 +10,8 @@
       "status": "Prototype",
       "implementedComponents": 14,
       "betaApproved": false,
-      "bytes": 116436,
-      "sha256": "f7d386c36272334f3e9444b8d4437ade44b80fa287185b6c50a2eb489f3aa43f"
+      "bytes": 116282,
+      "sha256": "29cca2b3a494b81976bbdd92fdaf04c1df07466a72b0236f69078e45f6f38a8d"
     },
     {
       "id": "android",
@@ -19,8 +19,8 @@
       "status": "Prototype",
       "implementedComponents": 14,
       "betaApproved": false,
-      "bytes": 67024,
-      "sha256": "867b189d23ae77b9a29d55a6766fe49ba17bd4a8d12bc2aabdb26644bfe0b8c0"
+      "bytes": 66957,
+      "sha256": "5e35aa8437e66ef844632eef5605f5e25a14fd792cef6ef71d30dff4ef900685"
     },
     {
       "id": "ios",
@@ -28,8 +28,8 @@
       "status": "Prototype",
       "implementedComponents": 14,
       "betaApproved": false,
-      "bytes": 20448,
-      "sha256": "714ebf8e79eda0003164aa96e360c93cd7f0eb106b60cb3b80ffe41753413d56"
+      "bytes": 20398,
+      "sha256": "8fb362164a6b7fe823a5b0b1146c67ac2d365744b4d75feb0ade6bab74e7f014"
     }
   ]
 }

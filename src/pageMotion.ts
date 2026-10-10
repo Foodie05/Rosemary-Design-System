@@ -6,10 +6,14 @@ import { DO_DONT_CASES } from "./data/doDontCases";
 type Route = ReturnType<typeof parseRoute>;
 export type PageMotion =
   "none" | "peer-forward" | "peer-back" | "deeper" | "parent" | "cross";
-export const pageKey = (route: Route) => `${route.section}/${route.id || ""}`;
+export const pageKey = (route: Route) =>
+  route.notFound
+    ? `404:${route.key.split("?")[0]}`
+    : `${route.section}/${route.id || ""}`;
 /** Only actual route hierarchy and registered order determine direction. Queries/anchors are not pages. */
 export function pageMotionFor(from: Route, to: Route): PageMotion {
   if (pageKey(from) === pageKey(to)) return "none";
+  if (from.notFound || to.notFound) return "cross";
   if (from.section === to.section) {
     if (!from.id && to.id) return "deeper";
     if (from.id && !to.id) return "parent";
