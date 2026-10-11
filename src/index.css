@@ -424,6 +424,10 @@ main:focus {
 .r-secondary:hover {
   background: var(--r-semantic-color-surface-subtle);
 }
+.r-button:focus:not(:focus-visible),
+.r-related-links a:focus:not(:focus-visible) {
+  outline: none;
+}
 .r-tertiary,
 .r-ghost {
   background: transparent;

@@ -1,8 +1,8 @@
 {
   "version": "2.0.0-beta.2",
-  "recordedAt": "2026-10-10T14:48:16.835Z",
+  "recordedAt": "2026-10-11T02:08:55.233Z",
   "source": {
-    "sha256": "b53dc5e362ab96cfbfedd824f8ff8e92dccc6d45b6a7620221785e6c6fc45dcc",
+    "sha256": "7a8be8f969121d62b7ee3333148c9f5adaf37159ae1973308081245378da838b",
     "fileCount": 296
   },
   "brand": {
@@ -51,10 +51,11 @@
     "detailPagesChecked": 126,
     "wholePageOverflowFailures": 0,
     "manualChecks": [
-      "Banner action uses the shared secondary outlined button in light and dark themes; computed border is 1px solid and height is 44px.",
-      "Enter dismisses the component notice; redisplay restores it. Disabled state disables the action; reset restores default.",
-      "Recommended dismiss-banner case uses the shared secondary outlined button.",
-      "139 default routes checked at 320px in each theme; 13 section routes checked at desktop width; no horizontal overflow."
+      "Outlined Banner default has a 1px border and no outline in light and dark themes.",
+      "Tab navigation to Banner action retains its 2px visible keyboard focus outline.",
+      "Pointer activation of the shared outlined reset button does not show an outline; keyboard return restores visible focus.",
+      "Accessibility reference links retain visible keyboard focus.",
+      "139 default routes per theme at 320px and 13 desktop section routes have no horizontal overflow."
     ],
     "download": {
       "file": "dark.tokens.json",
@@ -178,7 +179,7 @@
     "publication": {
       "repositoryUrl": "https://github.com/Foodie05/Rosemary-Design-System",
       "websiteUrl": "https://design.rosemaryis.cc",
-      "sourceRef": "v2.0.0-beta.2-banner.1",
+      "sourceRef": "v2.0.0-beta.2-banner.2",
       "status": "configured"
     },
     "readingSpecification": "docs/CONTENT.md",
