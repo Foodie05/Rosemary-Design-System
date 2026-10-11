@@ -1,0 +1,64 @@
+:root, [data-theme="light"] {
+  --canvas: #F8F7FB;
+  --surface: #FFFFFF;
+  --raised: #FFFFFF;
+  --ink: #302B3B;
+  --muted: #706579;
+  --border: #DED8E5;
+  --control: #8D8198;
+  --primary: #614578;
+  --on-primary: #FFFFFF;
+  --primary-soft: #E8E1F0;
+  --sun: #F3CD6B;
+  --on-sun: #513F13;
+  --sky: #DDEBF6;
+  --on-sky: #34516C;
+  --success: #2F6952;
+  --success-soft: #EAF4EE;
+  --warning: #815300;
+  --warning-soft: #FBF0D9;
+  --danger: #A53C46;
+  --danger-soft: #FBECEE;
+  --on-danger: #FFFFFF;
+  --info: #315F9A;
+  --info-soft: #EAF1FC;
+  --focus: #745291;
+}
+
+[data-theme="dark"] {
+  --canvas: #1C1922;
+  --surface: #25212D;
+  --raised: #302A39;
+  --ink: #F0EAF6;
+  --muted: #B9AEC6;
+  --border: #43394F;
+  --control: #94859F;
+  --primary: #CDB5EA;
+  --on-primary: #2D2038;
+  --primary-soft: #3C2F4C;
+  --sun: #E4C16B;
+  --on-sun: #3E3010;
+  --sky: #2B4256;
+  --on-sky: #D9EBFB;
+  --success: #9DD5B5;
+  --success-soft: #213D30;
+  --warning: #EBC97C;
+  --warning-soft: #44371C;
+  --danger: #F1ADB6;
+  --danger-soft: #452830;
+  --on-danger: #30171D;
+  --info: #AAC9EF;
+  --info-soft: #253B57;
+  --focus: #CDB5EA;
+}
+
+:root {
+  --motion-feedback: 120ms;
+  --motion-state: 180ms;
+  --motion-enter: 260ms;
+  --motion-exit: 160ms;
+  --motion-layout: 240ms;
+  --motion-fold-cycle: 1200ms;
+  --motion-progress: 320ms;
+  --motion-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
