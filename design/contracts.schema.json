@@ -1,0 +1,386 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "sdkVersion",
+    "specVersion",
+    "scope",
+    "common",
+    "components"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "sdkVersion": {
+      "const": "0.4.0"
+    },
+    "specVersion": {
+      "const": "1.2.0"
+    },
+    "scope": {
+      "const": "33-foundation-components"
+    },
+    "common": {
+      "type": "object",
+      "required": [
+        "stateOwnership",
+        "theme",
+        "direction",
+        "reducedMotion",
+        "dismissReasons",
+        "date",
+        "focus",
+        "platformMinimum",
+        "platformSemantics"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "stateOwnership": {
+          "type": "string",
+          "minLength": 1
+        },
+        "theme": {
+          "type": "string",
+          "minLength": 1
+        },
+        "direction": {
+          "const": "ltr-or-rtl"
+        },
+        "reducedMotion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dismissReasons": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "confirm",
+              "cancel",
+              "outside",
+              "escape",
+              "back",
+              "programmatic",
+              "unmount"
+            ]
+          }
+        },
+        "date": {
+          "type": "object",
+          "required": [
+            "calendar",
+            "min",
+            "max",
+            "format",
+            "timeFormat",
+            "timezone",
+            "cancel"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "calendar": {
+              "const": "gregorian"
+            },
+            "min": {
+              "const": "0001-01-01"
+            },
+            "max": {
+              "const": "9999-12-31"
+            },
+            "format": {
+              "const": "YYYY-MM-DD"
+            },
+            "timeFormat": {
+              "const": "HH:mm"
+            },
+            "timezone": {
+              "const": "none-local-date-and-time"
+            },
+            "cancel": {
+              "const": "discard-picker-draft-not-consumer-value"
+            }
+          }
+        },
+        "focus": {
+          "type": "string",
+          "minLength": 1
+        },
+        "platformMinimum": {
+          "type": "object",
+          "required": [
+            "web",
+            "android",
+            "ios",
+            "flutter"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "web": {
+              "type": "string",
+              "minLength": 1
+            },
+            "android": {
+              "const": "API 26"
+            },
+            "ios": {
+              "const": "iOS 17"
+            },
+            "flutter": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "android",
+                  "ios",
+                  "web",
+                  "windows",
+                  "macos",
+                  "linux"
+                ]
+              }
+            }
+          }
+        },
+        "platformSemantics": {
+          "type": "object",
+          "required": [
+            "web",
+            "android",
+            "ios",
+            "flutter"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "web": {
+              "type": "string",
+              "minLength": 1
+            },
+            "android": {
+              "type": "string",
+              "minLength": 1
+            },
+            "ios": {
+              "type": "string",
+              "minLength": 1
+            },
+            "flutter": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "type": "array",
+      "minItems": 33,
+      "maxItems": 33,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "use",
+          "anatomy",
+          "variants",
+          "dimensions",
+          "states",
+          "behavior",
+          "keyboard",
+          "semantics",
+          "motion",
+          "good",
+          "bad",
+          "responsive",
+          "maturity",
+          "validation",
+          "implementation",
+          "stateKeys",
+          "events",
+          "tokenKey",
+          "acceptance"
+        ],
+        "properties": {
+          "id": {
+            "enum": [
+              "button",
+              "link",
+              "iconButton",
+              "input",
+              "textarea",
+              "select",
+              "search",
+              "checkbox",
+              "radio",
+              "switch",
+              "slider",
+              "date",
+              "upload",
+              "tabs",
+              "breadcrumb",
+              "pagination",
+              "menu",
+              "tooltip",
+              "popover",
+              "dialog",
+              "drawer",
+              "toast",
+              "alert",
+              "card",
+              "list",
+              "table",
+              "badge",
+              "avatar",
+              "empty",
+              "skeleton",
+              "loading",
+              "progress",
+              "stepper"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "use": {
+            "type": "string",
+            "minLength": 1
+          },
+          "anatomy": {
+            "type": "string",
+            "minLength": 1
+          },
+          "variants": {
+            "type": "string",
+            "minLength": 1
+          },
+          "dimensions": {
+            "type": "string",
+            "minLength": 1
+          },
+          "states": {
+            "type": "string",
+            "minLength": 1
+          },
+          "behavior": {
+            "type": "string",
+            "minLength": 1
+          },
+          "keyboard": {
+            "type": "string",
+            "minLength": 1
+          },
+          "semantics": {
+            "type": "string",
+            "minLength": 1
+          },
+          "motion": {
+            "type": "string",
+            "minLength": 1
+          },
+          "good": {
+            "type": "string",
+            "minLength": 1
+          },
+          "bad": {
+            "type": "string",
+            "minLength": 1
+          },
+          "responsive": {
+            "type": "string",
+            "minLength": 1
+          },
+          "maturity": {
+            "type": "string",
+            "minLength": 1
+          },
+          "validation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "implementation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tokenKey": {
+            "enum": [
+              "button",
+              "link",
+              "iconButton",
+              "input",
+              "textarea",
+              "select",
+              "search",
+              "checkbox",
+              "radio",
+              "switch",
+              "slider",
+              "date",
+              "upload",
+              "tabs",
+              "breadcrumb",
+              "pagination",
+              "menu",
+              "tooltip",
+              "popover",
+              "dialog",
+              "drawer",
+              "toast",
+              "alert",
+              "card",
+              "list",
+              "table",
+              "badge",
+              "avatar",
+              "empty",
+              "skeleton",
+              "loading",
+              "progress",
+              "stepper"
+            ]
+          },
+          "stateKeys": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "events": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "acceptance": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "consumerResponsibilities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

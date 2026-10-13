@@ -1,0 +1,26 @@
+{
+  "name": "rosemary-design-system-sdk",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.25.0",
+  "license": "MIT",
+  "scripts": {
+    "design:generate": "node scripts/generate-design.mjs",
+    "design:check": "node scripts/generate-design.mjs --check && node scripts/check-design.mjs",
+    "build:shared": "pnpm --filter @rosemary-ui/tokens build && pnpm --filter @rosemary-ui/icons build",
+    "test:shared": "node --test tests/design-foundation.test.mjs",
+    "build": "pnpm -r --if-present build",
+    "test": "pnpm test:shared && pnpm -r --if-present test",
+    "build:react": "pnpm build:shared && pnpm --filter @rosemary-ui/react build",
+    "test:react": "pnpm --filter @rosemary-ui/react test",
+    "test:web": "pnpm design:check && pnpm test:shared && pnpm test:react"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "ajv": "8.20.0",
+    "esbuild": "0.28.2",
+    "@playwright/test": "1.64.0",
+    "prettier": "3.9.10"
+  }
+}

@@ -1,12 +1,12 @@
 # Rosemary Forma 1.2.0 · 验证记录
 
-日期：2026-10-13。范围：本地 Web 门户、自包含 HTML 与源码包。本轮未部署、未提交或推送 GitHub，也没有新增测试文件。
+日期：2026-10-13。范围：本地 Web 门户、自包含 HTML 与源码包。下述原有门户验证为此前本地修订记录；SDK 集成的新验证另列。
 
 ## 本轮结果
 
 - 选择控件、案例 Tab、加载／进度、日期、右抽屉与勾线校准的既有针对性检查中，排除被本轮品牌视觉替换的旧断言后，当前保留 **64 条适用结果**。其中加载长边翻转、右抽屉进退与复选框勾线校准来自 `/tmp/rosemary-corrections-smoke.mjs` 的 21 条 Chrome 烟雾，0 个运行时异常。
 - 最终品牌层级、首页卡片布局、站点壳层、产品名大小写和原生滚动条使用 `/tmp/rosemary-shell-final.mjs` 做有限 Chrome 烟雾，**13 条通过**，0 个运行时异常。此前 16 条 Forma 集成烟雾已被新版品牌规则取代，不计入当前总数。
-- `local-review-report.json` 汇总当前 **77 条针对性操作**。`node tests/static-check.mjs` 在最终源码上通过：17 页面、71 图标、33 规格及独立可视化、26 组对比度、24 个主题角色、离线资源和原始 Logo 哈希；相关 JavaScript 的 `node --check` 全部通过。
+- `local-review-report.json` 汇总当前 **77 条针对性操作**。`node tests/static-check.mjs` 在最终源码上通过：17 页面（SDK 集成前）、71 图标、33 规格及独立可视化、26 组对比度、24 个主题角色、离线资源和原始 Logo 哈希；相关 JavaScript 的 `node --check` 全部通过。
 
 `browser-test-report.json` 中的 645 项完整矩阵来自本轮加载、抽屉、勾线和 Rosemary Forma 改版之前，仅作为历史基线，不能当作最终修订的全量回归结论。本轮按要求没有机械重跑该矩阵；当前结论以 77 条仍适用的针对性操作、最终静态检查、代表截图和交付包一致性为准。
 
@@ -37,3 +37,14 @@
 ## 验证边界
 
 本轮验证为 Chrome 本地 Web 与离线页面。尚未覆盖 Safari、Firefox、真实移动设备及人工读屏，不等于生产跨平台组件库或 WCAG 认证。音乐进度、账户格式、权限和搜索均为明确标注的本地示例。
+
+
+## SDK 0.4.0 接入栏目 · 最终离线验证
+
+新增第 18 章“SDK 接入”，分别说明规范 1.2.0 和 SDK 0.4.0、四端安装、主题与状态、API、CI 及许可证。安装/API 链接固定到 v0.4.0，采用“以 Release 实际资产及 SHA256 为准”的中性说明；页面部署由 Release 完成后的流程处理。小型接入/迁移/验收文档加入源码 ZIP，SDK 大产物留在 GitHub Release。
+
+2026-10-13 15:11 UTC，自包含 `rosemary-design-portal.html` 直接通过 `file:` 打开，完成新增 SDK 页的 10 项隔离 Chrome 检查：路由/标题、导航入口、四端 API 卡片、版本固定的 Release 和 16 个平台资产链接、1440px 浅色与 375px 深色的列数和整页横向边界、主题深链接、0 个运行时异常。源码入口亦已进行同范围检查。新页窄屏主题表在本页内换行，代码块可横向滚动；所有各段截图保存为 `screenshots/sdk-*.png`，已实际查看桌面安装段与窄屏深色主题段。报告 `sdk-browser-review.json` 记录离线 HTML SHA256、实际完成时间及边界；`releaseAssetsFetched:false` 表示此次只核对链接版本和文件名，未提前抓取未创建的 Release 资产。
+
+最终静态检查通过 18 页、71 图标、33 规格与独立预览、26 对比检查、原始 Logo 哈希及离线无外部脚本/样式/图片依赖，同时检查生成 HTML 含 SDK 注册、固定资产路径与主题诊断内容。最终文档/报告写入后再次生成 HTML/source ZIP；ZIP 全部条目 CRC 和工作目录逐字节对照通过，三个 `docs/sdk` 小型文档、SDK 页面/样式、最新测试/报告和 10 张 SDK 截图均在包内。旧 17 页 / 77 项记录仍是历史基线，未机械重跑 645 项旧矩阵。
+
+SwiftUI 稳定 Xcode 26.3 [CI 38417217654](https://github.com/Foodie05/Rosemary-Design-System/actions/runs/38417217654) 真实执行 6 个 host、6 个 simulator 模型测试与 8 个 UI 测试，全部通过；实际 source tar 外置解包测试和 simulator consumer build 均通过，来源干净、同 CI SHA、两项归档消费 exit status 为 0。这里记录的是 PR a1a44ec 的 merge checkout f20d31cc570ee270fbcd43b1b3e462b1ff079b5c；最终发布资产以 Release manifest 所绑定的 main commit、CI 和 SHA 为准。SwiftUI 本机 UI host 受权限限制、iOS 17 runtime 未执行、人工读屏未覆盖；Flutter 六目标与 Compose 的实际结果分别见各端报告，不能从门户截图或某一端结果推广。

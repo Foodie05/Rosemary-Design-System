@@ -1,0 +1,46 @@
+{
+  "name": "@rosemary-ui/react",
+  "version": "0.4.0",
+  "type": "module",
+  "license": "MIT",
+  "description": "Rosemary Forma React components with controlled state and shared themes",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "BRAND-ASSETS.md",
+    "STATE-MAPPING.md"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./css": "./dist/styles.css",
+    "./brand-assets": "./BRAND-ASSETS.md"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node ../../scripts/copy-package-assets.mjs react",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1 || ^19.2.8",
+    "react-dom": "^18.3.1 || ^19.2.8"
+  },
+  "dependencies": {
+    "@rosemary-ui/tokens": "workspace:*",
+    "@rosemary-ui/icons": "workspace:*"
+  },
+  "devDependencies": {
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.7",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.8",
+    "jsdom": "30.1.2"
+  }
+}

@@ -32,7 +32,7 @@ let nextID=0;
 const pending=new Map();
 const exceptions=[];
 const checks=[];
-const routes=['overview','philosophy','identity','subbrand','colors','typography','layout','icons','components','cases','loading','motion','patterns','content','accessibility','platforms','governance'];
+const routes=['overview','philosophy','identity','subbrand','colors','typography','layout','icons','components','cases','loading','motion','patterns','content','accessibility','platforms','sdk','governance'];
 function check(name, value) { assert.ok(value,name);checks.push(name); }
 function send(method,params={}) {
   return new Promise((resolve,reject)=> {
@@ -105,7 +105,7 @@ try {
   await send('Runtime.enable');await send('Page.enable');
   await send('Browser.setDownloadBehavior',{behavior:'allow',downloadPath:downloads});
   await until('Boolean(window.RosemaryPages && document.querySelector("main h1"))');
-  check('Portal exposes 17 complete pages',await evaluate('RosemaryPages.pages.length===17'));
+  check('Portal exposes 18 complete pages',await evaluate('RosemaryPages.pages.length===18'));
   await runDatePickerChecks({route,click,key,evaluate,delay,check,send,screenshot,viewport});
   for(const width of [1440,375]) {
     for(const theme of ['light','dark']) {
@@ -185,7 +185,7 @@ try {
   const offline=path.join(profile,'portal-offline.html');await writeFile(offline,await readFile(path.join(root,'rosemary-design-portal.html')));
   await send('Page.navigate',{url:pathToFileURL(offline).href});
   await until(`Boolean(window.RosemaryPages&&document.querySelector('main h1'))`);
-  check('Self-contained HTML also opens from a local file URL',await evaluate(`location.protocol==='file:'&&RosemaryPages.pages.length===17`));
+  check('Self-contained HTML also opens from a local file URL',await evaluate(`location.protocol==='file:'&&RosemaryPages.pages.length===18`));
   await route('icons');
   check('Offline icon and embedded-logo resources work without a server',await evaluate(`document.querySelectorAll('[data-icon-id]').length===71&&document.querySelector('.official-logo').src.startsWith('data:image/png')`));
   check('No uncaught browser runtime exceptions',exceptions.length===0);

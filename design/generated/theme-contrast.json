@@ -1,0 +1,270 @@
+{
+  "light": [
+    {
+      "foreground": "ink",
+      "background": "canvas",
+      "target": 4.5,
+      "ratio": 12.83163670542059
+    },
+    {
+      "foreground": "muted",
+      "background": "canvas",
+      "target": 4.5,
+      "ratio": 5.145307858621092
+    },
+    {
+      "foreground": "ink",
+      "background": "surface",
+      "target": 4.5,
+      "ratio": 13.68631141376837
+    },
+    {
+      "foreground": "muted",
+      "background": "surface",
+      "target": 4.5,
+      "ratio": 5.488020529995962
+    },
+    {
+      "foreground": "ink",
+      "background": "raised",
+      "target": 4.5,
+      "ratio": 13.68631141376837
+    },
+    {
+      "foreground": "muted",
+      "background": "raised",
+      "target": 4.5,
+      "ratio": 5.488020529995962
+    },
+    {
+      "foreground": "on-primary",
+      "background": "primary",
+      "target": 4.5,
+      "ratio": 7.982546832820872
+    },
+    {
+      "foreground": "primary",
+      "background": "primary-soft",
+      "target": 4.5,
+      "ratio": 6.256606394882186
+    },
+    {
+      "foreground": "ink",
+      "background": "primary-soft",
+      "target": 4.5,
+      "ratio": 10.727135750918277
+    },
+    {
+      "foreground": "on-sun",
+      "background": "sun",
+      "target": 4.5,
+      "ratio": 6.644427229550004
+    },
+    {
+      "foreground": "on-sky",
+      "background": "sky",
+      "target": 4.5,
+      "ratio": 6.807775381656662
+    },
+    {
+      "foreground": "success",
+      "background": "success-soft",
+      "target": 4.5,
+      "ratio": 5.722169805061696
+    },
+    {
+      "foreground": "warning",
+      "background": "warning-soft",
+      "target": 4.5,
+      "ratio": 5.85601538906081
+    },
+    {
+      "foreground": "danger",
+      "background": "danger-soft",
+      "target": 4.5,
+      "ratio": 5.498220224761084
+    },
+    {
+      "foreground": "info",
+      "background": "info-soft",
+      "target": 4.5,
+      "ratio": 5.716051444544233
+    },
+    {
+      "foreground": "on-danger",
+      "background": "danger",
+      "target": 4.5,
+      "ratio": 6.297513772797236
+    },
+    {
+      "foreground": "control",
+      "background": "canvas",
+      "target": 3,
+      "ratio": 3.4384290095990044
+    },
+    {
+      "foreground": "control",
+      "background": "surface",
+      "target": 3,
+      "ratio": 3.667451883174605
+    },
+    {
+      "foreground": "control",
+      "background": "raised",
+      "target": 3,
+      "ratio": 3.667451883174605
+    },
+    {
+      "foreground": "focus",
+      "background": "canvas",
+      "target": 3,
+      "ratio": 5.862521757088685
+    },
+    {
+      "foreground": "focus",
+      "background": "surface",
+      "target": 3,
+      "ratio": 6.253005776232216
+    },
+    {
+      "foreground": "focus",
+      "background": "raised",
+      "target": 3,
+      "ratio": 6.253005776232216
+    }
+  ],
+  "dark": [
+    {
+      "foreground": "ink",
+      "background": "canvas",
+      "target": 4.5,
+      "ratio": 14.696293422393556
+    },
+    {
+      "foreground": "muted",
+      "background": "canvas",
+      "target": 4.5,
+      "ratio": 8.19851989674712
+    },
+    {
+      "foreground": "ink",
+      "background": "surface",
+      "target": 4.5,
+      "ratio": 13.346055997872602
+    },
+    {
+      "foreground": "muted",
+      "background": "surface",
+      "target": 4.5,
+      "ratio": 7.445272253133818
+    },
+    {
+      "foreground": "ink",
+      "background": "raised",
+      "target": 4.5,
+      "ratio": 11.745128385701559
+    },
+    {
+      "foreground": "muted",
+      "background": "raised",
+      "target": 4.5,
+      "ratio": 6.552173802769693
+    },
+    {
+      "foreground": "on-primary",
+      "background": "primary",
+      "target": 4.5,
+      "ratio": 8.284436430039822
+    },
+    {
+      "foreground": "primary",
+      "background": "primary-soft",
+      "target": 4.5,
+      "ratio": 6.689853886493018
+    },
+    {
+      "foreground": "ink",
+      "background": "primary-soft",
+      "target": 4.5,
+      "ratio": 10.454442922486342
+    },
+    {
+      "foreground": "on-sun",
+      "background": "sun",
+      "target": 4.5,
+      "ratio": 7.424112191865992
+    },
+    {
+      "foreground": "on-sky",
+      "background": "sky",
+      "target": 4.5,
+      "ratio": 8.543365407503735
+    },
+    {
+      "foreground": "success",
+      "background": "success-soft",
+      "target": 4.5,
+      "ratio": 7.109671788294736
+    },
+    {
+      "foreground": "warning",
+      "background": "warning-soft",
+      "target": 4.5,
+      "ratio": 7.284634925904617
+    },
+    {
+      "foreground": "danger",
+      "background": "danger-soft",
+      "target": 4.5,
+      "ratio": 7.124054186275401
+    },
+    {
+      "foreground": "info",
+      "background": "info-soft",
+      "target": 4.5,
+      "ratio": 6.683559464061996
+    },
+    {
+      "foreground": "on-danger",
+      "background": "danger",
+      "target": 4.5,
+      "ratio": 8.99943120875986
+    },
+    {
+      "foreground": "control",
+      "background": "canvas",
+      "target": 3,
+      "ratio": 5.0472140663267115
+    },
+    {
+      "foreground": "control",
+      "background": "surface",
+      "target": 3,
+      "ratio": 4.583495962308823
+    },
+    {
+      "foreground": "control",
+      "background": "raised",
+      "target": 3,
+      "ratio": 4.033682201037002
+    },
+    {
+      "foreground": "focus",
+      "background": "canvas",
+      "target": 3,
+      "ratio": 9.404236686526302
+    },
+    {
+      "foreground": "focus",
+      "background": "surface",
+      "target": 3,
+      "ratio": 8.540212543959022
+    },
+    {
+      "foreground": "focus",
+      "background": "raised",
+      "target": 3,
+      "ratio": 7.515770410821495
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+name: SDK Web and shared contracts
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: sdk-web-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+env:
+  ROSEMARY_ARTIFACT_ROOT: ${{ github.workspace }}/artifacts
+jobs:
+  web:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Configure isolated consumer build directory
+        run: echo "ROSEMARY_BUILD_ROOT=$RUNNER_TEMP/rosemary-consumers" >> "$GITHUB_ENV"
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: pnpm/action-setup@9fd676a19091d4595eefd76e4bd31c97133911f1 # v4.2.0
+        with:
+          version: 11.25.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22.23.2
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Shared deterministic generation, schema, aliases and actual contrast
+        run: pnpm design:check && pnpm build:shared && pnpm test:shared && node --test tests/release-assembly.test.mjs
+      - name: Strict builds and workspace interaction regressions
+        run: pnpm --filter @rosemary-ui/react build && pnpm test:react && pnpm --filter rosemary-react-gallery build
+      - name: Pack installable source distribution
+        run: node scripts/pack-sdk-web.mjs
+      - name: Independent shared tarball consumer
+        run: node scripts/check-shared-consumer.mjs
+      - name: Independent React 18.3.1 consumer, strict types, SSR and actual controlled interactions
+        run: node scripts/check-react-consumers.mjs 18.3.1
+      - name: Independent React 19.2.8 consumer, strict types, SSR and actual controlled interactions
+        run: node scripts/check-react-consumers.mjs 19.2.8
+      - name: Install pinned Playwright engines and Linux dependencies
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
+      - name: Chromium Firefox WebKit behavior, modal focus, local date, RTL and reduced motion
+        run: pnpm exec playwright test --config examples/react-gallery/playwright.config.mjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: rosemary-sdk-web-0.4.0
+          path: artifacts/
+          if-no-files-found: warn
+          retention-days: 14

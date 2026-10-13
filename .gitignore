@@ -6,3 +6,27 @@ archive/
 rosemary-icons/
 rosemary-icons-70.zip
 screenshots/failure.png
+
+# SDK dependencies and reproducible local build outputs
+node_modules/
+**/node_modules/
+packages/*/dist/
+examples/*/dist/
+**/.dart_tool/
+**/.flutter-plugins*
+**/.gradle/
+**/.build/
+**/.swiftpm/
+**/build/
+**/Pods/
+**/local.properties
+**/xcuserdata/
+**/DerivedData/
+
+# Portable SDK artifacts and browser reports
+artifacts/
+playwright-report/
+test-results/
+
+# Build directories can be external symlinks on development hosts
+**/build
