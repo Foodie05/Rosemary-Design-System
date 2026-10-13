@@ -22,3 +22,8 @@ examples/*/dist/
 **/local.properties
 **/xcuserdata/
 **/DerivedData/
+
+# Portable SDK artifacts and browser reports
+artifacts/
+playwright-report/
+test-results/

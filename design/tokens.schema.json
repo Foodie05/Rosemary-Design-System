@@ -301,7 +301,8 @@
         "latinEditorial",
         "code",
         "webScalePx",
-        "lineHeight"
+        "lineHeight",
+        "weights"
       ],
       "properties": {
         "webScalePx": {
@@ -385,6 +386,32 @@
         "code": {
           "type": "string",
           "minLength": 1
+        },
+        "weights": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "regular",
+            "medium",
+            "semibold"
+          ],
+          "properties": {
+            "regular": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 900
+            },
+            "medium": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 900
+            },
+            "semibold": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 900
+            }
+          }
         }
       },
       "additionalProperties": false
@@ -442,7 +469,9 @@
         "drawerExitMs",
         "tabsMs",
         "loadingCycleMs",
-        "progressMs"
+        "progressMs",
+        "progressFlowMs",
+        "skeletonCycleMs"
       ],
       "additionalProperties": false,
       "properties": {
@@ -499,6 +528,14 @@
           "minimum": 0
         },
         "progressMs": {
+          "type": "number",
+          "minimum": 0
+        },
+        "progressFlowMs": {
+          "type": "number",
+          "minimum": 0
+        },
+        "skeletonCycleMs": {
           "type": "number",
           "minimum": 0
         }

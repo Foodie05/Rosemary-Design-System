@@ -12,6 +12,7 @@ for(const name of ['tokens','contracts']) {
 }
 const tokens=read('design/tokens.json'),contracts=read('design/contracts.json');validateSource(tokens,contracts);
 for(const mode of ['light','dark'])if(validateContrast(resolveAliases(tokens.themes[mode])).length)throw new Error('Default theme contrast failed');
+for(const name of fs.readdirSync(path.join(root,'design/themes')).filter(name=>name.endsWith('.json'))){const theme=read(`design/themes/${name}`);const validate=ajv.compile(read('design/tokens.schema.json'));if(!validate({...tokens,themes:theme.themes}))throw new Error(`Subbrand theme schema ${name}: ${JSON.stringify(validate.errors)}`);for(const mode of ['light','dark']){const failures=validateContrast(resolveAliases(theme.themes[mode]));if(failures.length)throw new Error(`Subbrand contrast ${name}/${mode}: ${JSON.stringify(failures)}`)}console.log(`${theme.name}: 24 roles per mode and 44 actual contrast checks passed`)}
 const logo=fs.readFileSync(path.join(root,'assets/rosemary-logo.png'));
 const {createHash}=await import('node:crypto');
 if(createHash('sha256').update(logo).digest('hex')!=='fe0ee00522c8a47f2242676f8417b240d299263e8dbc7b7bddc28ece9bb36d4c')throw new Error('Official logo changed');

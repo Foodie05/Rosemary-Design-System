@@ -33,8 +33,8 @@ export const defaultThemes: Readonly<Record<'light'|'dark',RosemaryColors>>=Obje
 export const contrastPairs=[["ink","canvas",4.5],["muted","canvas",4.5],["ink","surface",4.5],["muted","surface",4.5],["ink","raised",4.5],["muted","raised",4.5],["on-primary","primary",4.5],["primary","primary-soft",4.5],["ink","primary-soft",4.5],["on-sun","sun",4.5],["on-sky","sky",4.5],["success","success-soft",4.5],["warning","warning-soft",4.5],["danger","danger-soft",4.5],["info","info-soft",4.5],["on-danger","danger",4.5],["control","canvas",3],["control","surface",3],["control","raised",3],["focus","canvas",3],["focus","surface",3],["focus","raised",3]] as const;
 export const spacing=[4,8,12,16,24,32,48,64,96] as const;
 export const radius={"control":8,"content":12,"dialog":20,"pill":999} as const;
-export const typography={"ui":"-apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Microsoft YaHei, sans-serif","editorial":"Songti SC, STSong, Noto Serif CJK SC, Georgia, serif","latinEditorial":"Georgia, Times New Roman, serif","code":"SFMono-Regular, Consolas, Liberation Mono, monospace","webScalePx":{"caption":12,"small":14,"body":16,"lead":20,"heading":28,"title":40,"display":64},"lineHeight":{"body":1.75,"compact":1.5,"heading":1.3}} as const;
-export const motion={"instantFeedback":120,"state":180,"transition":260,"exit":160,"layout":240,"confirmation":220,"restoration":480,"page":220,"easing":"cubic-bezier(0.2, 0.7, 0.2, 1)","drawerEnterMs":220,"drawerExitMs":180,"tabsMs":180,"loadingCycleMs":1200,"progressMs":320} as const;
+export const typography={"ui":"-apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Microsoft YaHei, sans-serif","editorial":"Songti SC, STSong, Noto Serif CJK SC, Georgia, serif","latinEditorial":"Georgia, Times New Roman, serif","code":"SFMono-Regular, Consolas, Liberation Mono, monospace","webScalePx":{"caption":12,"small":14,"body":16,"lead":20,"heading":28,"title":40,"display":64},"lineHeight":{"body":1.75,"compact":1.5,"heading":1.3},"weights":{"regular":400,"medium":500,"semibold":600}} as const;
+export const motion={"instantFeedback":120,"state":180,"transition":260,"exit":160,"layout":240,"confirmation":220,"restoration":480,"page":220,"easing":"cubic-bezier(0.2, 0.7, 0.2, 1)","drawerEnterMs":220,"drawerExitMs":180,"tabsMs":180,"loadingCycleMs":1200,"progressMs":320,"progressFlowMs":1800,"skeletonCycleMs":1500} as const;
 export const metrics={"controlRadius":8,"contentRadius":12,"dialogRadius":20,"touchTarget":44,"buttonSmallHeight":32,"buttonMediumHeight":40,"buttonLargeHeight":48,"drawerEnterMs":220,"drawerExitMs":180,"tabsMs":180,"loadingCycleMs":1200,"progressMs":320} as const;
 export const componentTokens={
   "button": {
@@ -305,7 +305,7 @@ export const componentTokens={
     "radius": "control",
     "minTouchTarget": 44,
     "sizes": [
-      18,
+      17,
       32,
       48
     ],
