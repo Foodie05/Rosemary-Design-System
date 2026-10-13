@@ -27,9 +27,9 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Shared deterministic generation, schema, aliases and actual contrast
-        run: pnpm design:check && pnpm test:shared
+        run: pnpm design:check && pnpm build:shared && pnpm test:shared
       - name: Strict builds and workspace interaction regressions
-        run: pnpm build:react && pnpm test:react && pnpm --filter rosemary-react-gallery build
+        run: pnpm --filter @rosemary-ui/react build && pnpm test:react && pnpm --filter rosemary-react-gallery build
       - name: Pack installable source distribution
         run: node scripts/pack-sdk-web.mjs
       - name: Independent shared tarball consumer
