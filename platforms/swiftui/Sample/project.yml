@@ -1,0 +1,57 @@
+name: RosemarySample
+options:
+  deploymentTarget:
+    iOS: '17.0'
+packages:
+  RosemaryUI:
+    path: ../../..
+settings:
+  base:
+    SWIFT_VERSION: '5.0'
+    CODE_SIGNING_ALLOWED: NO
+    DEVELOPMENT_TEAM: ''
+targets:
+  RosemarySample:
+    type: application
+    platform: iOS
+    sources: [App]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: design.rosemary.sample
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        TARGETED_DEVICE_FAMILY: '1,2'
+    dependencies:
+      - package: RosemaryUI
+        product: RosemaryUI
+  RosemarySampleTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [../Tests/RosemaryUITests]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: design.rosemary.sample.tests
+        GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - target: RosemarySample
+      - package: RosemaryUI
+        product: RosemaryUI
+  RosemarySampleUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: design.rosemary.sample.uitests
+        GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - target: RosemarySample
+schemes:
+  RosemarySample:
+    build:
+      targets:
+        RosemarySample: all
+    test:
+      targets: [RosemarySampleTests, RosemarySampleUITests]
