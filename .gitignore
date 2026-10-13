@@ -6,3 +6,19 @@ archive/
 rosemary-icons/
 rosemary-icons-70.zip
 screenshots/failure.png
+
+# SDK dependencies and reproducible local build outputs
+node_modules/
+**/node_modules/
+packages/*/dist/
+examples/*/dist/
+**/.dart_tool/
+**/.flutter-plugins*
+**/.gradle/
+**/.build/
+**/.swiftpm/
+**/build/
+**/Pods/
+**/local.properties
+**/xcuserdata/
+**/DerivedData/

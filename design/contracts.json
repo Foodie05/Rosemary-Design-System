@@ -1,0 +1,1496 @@
+{
+  "schemaVersion": 1,
+  "sdkVersion": "0.4.0",
+  "specVersion": "1.2.0",
+  "scope": "33-foundation-components",
+  "common": {
+    "stateOwnership": "consumer-controlled; transient state reconciles to consumer value",
+    "theme": "inherit parent, merge overrides; reject malformed colors; report contrast diagnostics without recoloring",
+    "direction": "ltr-or-rtl",
+    "reducedMotion": "system-or-app-reduce; either request disables motion",
+    "dismissReasons": [
+      "confirm",
+      "cancel",
+      "outside",
+      "escape",
+      "back",
+      "programmatic",
+      "unmount"
+    ],
+    "date": {
+      "calendar": "gregorian",
+      "min": "0001-01-01",
+      "max": "9999-12-31",
+      "format": "YYYY-MM-DD",
+      "timeFormat": "HH:mm",
+      "timezone": "none-local-date-and-time",
+      "cancel": "discard-picker-draft-not-consumer-value"
+    },
+    "focus": "visible; logical order; modal containment and return; nonmodal no trap",
+    "platformMinimum": {
+      "web": "React 18 and 19; latest 2 browser major versions",
+      "android": "API 26",
+      "ios": "iOS 17",
+      "flutter": [
+        "android",
+        "ios",
+        "web",
+        "windows",
+        "macos",
+        "linux"
+      ]
+    },
+    "platformSemantics": {
+      "web": "Use the contract HTML/ARIA name, role, value and state. Semantics do not require platform default visual styles.",
+      "android": "Use Compose semantics and accessibility actions, preserve editable input/IME, merge decorative child nodes, and expose errors/selection/progress; HTML and ARIA strings are Web references.",
+      "ios": "Use SwiftUI accessibility names, values, traits, actions and focus. Preserve platform text editing, keyboard and safe areas; custom Rosemary visuals remain required.",
+      "flutter": "Use Semantics, Focus/Actions/Shortcuts and real editable text; expose checked/mixed/enabled/selected/progress, and exclude decorative geometry. Avoid duplicate native child announcements."
+    }
+  },
+  "components": [
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "button",
+      "title": "按钮",
+      "use": "执行当前界面的明确动作。导航到另一个位置时使用链接。",
+      "anatomy": "容器、动作标签；图标与加载指示为可选部件。",
+      "variants": "主要、次要、文本、危险；图标在文字前或后，但位置应有含义。",
+      "dimensions": "桌面 32 / 40 / 48px 高度起点；触屏主要目标至少按 44px 验证；文字两侧通常 12–20px。",
+      "states": "默认、悬停、按下、焦点、禁用、加载；完成和失败通过关联状态反馈。",
+      "behavior": "一次激活执行一次。加载期间阻止重复提交，保持标签与宽度，明确成功或失败。",
+      "keyboard": "Tab 聚焦；Enter / Space 激活。",
+      "semantics": "使用原生 button。说明禁用原因；异步操作可使用 aria-busy。",
+      "motion": "按下反馈约 120ms；加载指示按加载规范，不增加完成等待。",
+      "good": "一个任务区域有一个主要操作，标签写“动词 + 对象”。",
+      "bad": "多个操作都使用主要样式，或只用“确定”隐藏真实后果。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "idle",
+        "disabled",
+        "busy"
+      ],
+      "events": [
+        "activate"
+      ],
+      "tokenKey": "button",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "link",
+      "title": "链接",
+      "use": "导航到页面、资源或页面内位置。",
+      "anatomy": "目标文字；必要时包含外部打开或下载说明。",
+      "variants": "正文链接、导航链接、下载链接。",
+      "dimensions": "点击区与行高相容；触控场景增加外围留白。",
+      "states": "默认、悬停、焦点、当前页面、已访问（适用时）。",
+      "behavior": "保留真实 href、浏览器返回和新标签页能力。",
+      "keyboard": "Tab 聚焦，Enter 激活；不要把 Space 改成链接激活。",
+      "semantics": "使用 a。当前位置用 aria-current，外部打开有必要时说明。",
+      "motion": "通常只改变颜色或下划线，不移动链接文字。",
+      "good": "文字说明目标，例如“查看隐私设置”。",
+      "bad": "使用没有目的地的“点击这里”，或用链接执行不可逆操作。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "default",
+        "current",
+        "visited"
+      ],
+      "events": [
+        "navigate"
+      ],
+      "tokenKey": "link",
+      "consumerResponsibilities": [
+        "navigation-target"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "iconButton",
+      "title": "图标按钮",
+      "use": "空间有限且语义熟悉的独立操作。重要或陌生操作优先保留文字。",
+      "anatomy": "操作区域、图标、可访问名称；提示为可选。",
+      "variants": "常规、选中、危险；不把缩小按钮文字当成图标。",
+      "dimensions": "图形常用 20 / 24px，操作区域与图形分开定义；触控以 44px 起验证。",
+      "states": "默认、悬停、按下、焦点、禁用、选中（若为切换）。",
+      "behavior": "执行与可见标签按钮相同的动作，提示不承载必要信息。",
+      "keyboard": "Tab、Enter、Space；切换型使用持续选中状态。",
+      "semantics": "button 必须有 aria-label 或可见文本；装饰 SVG 隐藏。",
+      "motion": "轻微背景变化，不旋转或跳动图形。",
+      "good": "名称写“删除记录”，而不是“垃圾桶”。",
+      "bad": "仅给 SVG 加标题，按钮本身没有清楚名称。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "idle",
+        "disabled",
+        "busy",
+        "pressed"
+      ],
+      "events": [
+        "activate",
+        "pressed-change"
+      ],
+      "tokenKey": "iconButton",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "input",
+      "title": "单行输入",
+      "use": "输入一项短文本或有明确格式的值。",
+      "anatomy": "持续可见标签、输入容器、值；帮助、前后缀、清除和错误信息按需出现。",
+      "variants": "普通、密码、邮箱、数字语义等；使用合适的原生类型与输入法提示。",
+      "dimensions": "常规高度 40–44px，正文 16px 起；宽度按预期内容确定。",
+      "states": "空、聚焦、已填、只读、禁用、错误、校验中。",
+      "behavior": "提交或合适时机校验；保留输入；不要在尚未输入时连续报错。",
+      "keyboard": "原生文本编辑；Enter 是否提交由表单语义决定。",
+      "semantics": "label 与 input 关联；帮助与错误通过 aria-describedby；错误用 aria-invalid。",
+      "motion": "边界和焦点短反馈；不摇晃整个字段表示错误。",
+      "good": "解释字段要求，并在字段附近给出修复方法。",
+      "bad": "只用 placeholder 作标签，或失败后清空内容。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "empty",
+        "filled",
+        "readonly",
+        "disabled",
+        "invalid"
+      ],
+      "events": [
+        "value-change",
+        "commit"
+      ],
+      "tokenKey": "input",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "textarea",
+      "title": "多行输入",
+      "use": "输入说明、评论或其他长度不固定的文本。",
+      "anatomy": "标签、多行容器、帮助；字符限制和错误按需。",
+      "variants": "固定初始行数、可调整高度、自适应高度。",
+      "dimensions": "至少显示 3–4 行起点；最长高度和滚动规则明确。",
+      "states": "空、聚焦、已填、只读、禁用、错误。",
+      "behavior": "支持自然换行、粘贴和中断草稿；不要通过 Enter 意外提交。",
+      "keyboard": "Enter 换行；快捷提交必须有可见替代并说明。",
+      "semantics": "原生 textarea 与标签；字数说明不按每个字符重复播报。",
+      "motion": "高度变化避免突然移动用户正在编辑的位置。",
+      "good": "明确字数上限，保留用户内容和选择范围。",
+      "bad": "未说明快捷键就用 Enter 发送，或自动缩小字体容纳更多字。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "empty",
+        "filled",
+        "readonly",
+        "disabled",
+        "invalid"
+      ],
+      "events": [
+        "value-change",
+        "commit"
+      ],
+      "tokenKey": "textarea",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "select",
+      "title": "选择器",
+      "use": "从一组互斥、已知选项中选择。选项较少且需要比较时可用单选。",
+      "anatomy": "标签、当前值、展开指示、选项列表。",
+      "variants": "Rosemary 定制选择、分组选择；可搜索组合框必须另有完整键盘规格。",
+      "dimensions": "默认与输入框高度一致；选项不能因固定宽度丢失关键信息。",
+      "states": "未选择、选中、展开、聚焦、禁用、错误。",
+      "behavior": "默认选择不得替用户作出有重大后果的决定；变化是否立即生效要明确。",
+      "keyboard": "方向键移动，Home / End 到首尾；Enter / Space 展开或确认，Esc 取消，Tab 离开收起；支持前缀键入定位。",
+      "semantics": "定制 combobox/listbox 与分组语义；当前值、选中项和展开状态同步；隐藏表单值不触发系统菜单。",
+      "motion": "菜单使用短进入过渡，不逐个播放选项动画。",
+      "good": "用可理解的选项名，保留必要的分类。",
+      "bad": "把不相关动作、导航和设置混进同一列表。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "closed",
+        "open",
+        "disabled",
+        "invalid"
+      ],
+      "events": [
+        "value-change",
+        "open-change"
+      ],
+      "tokenKey": "select",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "search",
+      "title": "搜索",
+      "use": "在可说明的范围中查找内容。",
+      "anatomy": "范围提示、输入、清除；结果、无结果和加载状态。",
+      "variants": "即时过滤、提交搜索、全局搜索。",
+      "dimensions": "输入宽度能容纳常用查询；结果区不遮住当前输入。",
+      "states": "空、输入中、请求中、有结果、无结果、错误。",
+      "behavior": "明确搜索范围；异步查询取消过期结果；保留查询词。",
+      "keyboard": "Enter 提交或选中结果，方向键按模式移动，Esc 关闭临时搜索。",
+      "semantics": "输入有标签；结果数量适度播报，不能每个字符大量打断。",
+      "motion": "结果局部更新，避免整个页面跳动。",
+      "good": "无结果时显示查询并提供调整建议。",
+      "bad": "把网络失败显示为“没有结果”，或回退后丢失查询。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "idle",
+        "loading",
+        "results",
+        "empty",
+        "error"
+      ],
+      "events": [
+        "query-change",
+        "submit",
+        "clear"
+      ],
+      "tokenKey": "search",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "checkbox",
+      "title": "复选框",
+      "use": "选择零个、一个或多个独立选项。",
+      "anatomy": "方框、标签；组标题和说明按需。",
+      "variants": "单项、选项组、全选／部分选中。",
+      "dimensions": "控件图形约 18–20px；整行标签可激活，触控范围充分。",
+      "states": "未选、已选、部分选中、焦点、禁用、错误组。",
+      "behavior": "允许独立切换；全选与部分选中关系明确。",
+      "keyboard": "Space 切换；Tab 按合理顺序移动。",
+      "semantics": "原生 checkbox；相关组选用 fieldset/legend；部分选中同步属性。",
+      "motion": "勾选短反馈，字形稳定。",
+      "good": "用复选框表达可同时成立的选择。",
+      "bad": "用复选框做互斥选择，或以默认勾选获得隐蔽授权。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "unchecked",
+        "checked",
+        "mixed",
+        "disabled"
+      ],
+      "events": [
+        "value-change"
+      ],
+      "tokenKey": "checkbox",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "radio",
+      "title": "单选框",
+      "use": "从少量互斥选项中选择一个。",
+      "anatomy": "组标题、圆形控件、选项标签和说明。",
+      "variants": "纵向或横向排列；较长内容优先纵向。",
+      "dimensions": "整行标签可点击，选项间距至少区分独立目标。",
+      "states": "未选、已选、焦点、禁用、组错误。",
+      "behavior": "同组只有一个值；必须选择时清楚说明。",
+      "keyboard": "方向键在同组中移动，Space 选择。",
+      "semantics": "原生 radio，共用 name；组有 legend。",
+      "motion": "选中标记短反馈。",
+      "good": "让需要比较的选项同时可见。",
+      "bad": "把多个互不相关的设置放成一组单选。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "unchecked",
+        "checked",
+        "disabled"
+      ],
+      "events": [
+        "value-change"
+      ],
+      "tokenKey": "radio",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "switch",
+      "title": "开关",
+      "use": "控制立即生效的二元设置。需要提交的选择通常使用复选框。",
+      "anatomy": "标签、开关、必要的影响说明。",
+      "variants": "开启／关闭；服务不可用时说明原因。",
+      "dimensions": "轨道约 42–46px；实际触控区域按 44px 起验证。",
+      "states": "开、关、焦点、禁用、保存中、保存失败。",
+      "behavior": "切换结果明确。保存失败恢复真实状态并说明，不把假成功留在界面。",
+      "keyboard": "Space 切换；Tab 聚焦。",
+      "semantics": "使用 role=switch 与 aria-checked，或适合的原生实现。",
+      "motion": "滑块约 180ms 平移；减少动态时直接切换。",
+      "good": "标签描述被控制的功能，不随状态改变成不同概念。",
+      "bad": "用开关执行一次性的“删除全部”或“提交”。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "off",
+        "on",
+        "busy",
+        "error",
+        "disabled"
+      ],
+      "events": [
+        "value-change"
+      ],
+      "tokenKey": "switch",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "slider",
+      "title": "滑块",
+      "use": "在连续或有明确步长的范围内调整值。需要精确输入时提供输入框。",
+      "anatomy": "标签、轨道、滑块、当前值和必要范围说明。",
+      "variants": "连续、离散；双端范围需要额外键盘规则。",
+      "dimensions": "滑块可触达区域不小于可视图形；轨道长度足以分辨步长。",
+      "states": "默认、焦点、拖动、最小／最大、禁用。",
+      "behavior": "显示当前值和单位，允许非拖拽操作。",
+      "keyboard": "方向键改变步长；Home/End 到边界。",
+      "semantics": "优先 input type=range，关联 output；自定义同步 aria-valuenow 等。",
+      "motion": "值变化即时响应，不能用缓动拖延实际输入。",
+      "good": "让用户看到并能精确设置重要数值。",
+      "bad": "只允许拖动，或把单位隐藏在 Tooltip 中。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "idle",
+        "dragging",
+        "disabled"
+      ],
+      "events": [
+        "value-change",
+        "commit"
+      ],
+      "tokenKey": "slider",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "date",
+      "title": "日期与时间",
+      "use": "选择日历日期和本地时间，明确格式与区间关系。",
+      "anatomy": "标签、文本字段、选择器入口；定制月历、年／月视图或小时／分钟两列，关联格式与错误说明。",
+      "variants": "日期、时间、区间；统一使用 Rosemary 定制选择器。",
+      "dimensions": "字段高至少 44px；窄屏选择面板随字段展开，日期网格和时间选项兼顾触控。",
+      "states": "未选、已选、打开、输入无效、区间倒置。",
+      "behavior": "日期使用 YYYY-MM-DD，范围 0001–9999 年；时间使用 24 小时 HH:mm，支持每一分钟。可直接输入或定制选择；结束日期不能早于开始日期，值按本地日期与时间保留，不转换时区。",
+      "keyboard": "Tab 到入口；Enter / Space 或字段 ArrowDown 打开。日历方向键移动、Home / End 到周首尾、PageUp / PageDown 换月；点击年份或月份进入专门视图，年份可直接输入跳转；Enter / Space 选日期。时间上下键选择、左右键换列、Home / End 到首尾；完成后应用。Esc 取消并返回入口，Tab 离开或点击外部收起。",
+      "semantics": "带名称的非模态选择面板；日历网格与时间列表标记选中值，仅一个选项进入 Tab 顺序。保留文本输入与关联错误，不强制依靠图形选择。",
+      "motion": "月份切换即时更新，保持选中值与键盘焦点，不使用大幅翻页。",
+      "good": "让字段、日历和时间列表使用同一主题，并清楚说明格式与本地时间语义。",
+      "bad": "用系统原生日期／时间弹窗打断统一界面，或在取消时覆盖原值。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "closed",
+        "open",
+        "invalid",
+        "reversed-range",
+        "disabled"
+      ],
+      "events": [
+        "date-change",
+        "time-change",
+        "range-change",
+        "open-change"
+      ],
+      "tokenKey": "date",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "upload",
+      "title": "文件上传",
+      "use": "选择或拖入文件，并明确是否会发送到服务端。",
+      "anatomy": "选择入口、类型／大小限制、文件列表、进度与移除／重试。",
+      "variants": "单个、多个、拖放；拖放不能是唯一入口。",
+      "dimensions": "区域可键盘操作；文件名可换行，错误不挤掉操作。",
+      "states": "未选、选择中、校验、上传中、部分成功、失败、取消。",
+      "behavior": "上传前说明限制；逐文件反馈；保留可重试列表。",
+      "keyboard": "选择按钮可聚焦；原生文件对话框；移除操作有名称。",
+      "semantics": "真实 input type=file；状态播报克制，错误按文件关联。",
+      "motion": "新项短进入；上传进度按实际数据。",
+      "good": "明确本例是否只显示文件名，不上传内容。",
+      "bad": "未说明就自动上传，或整批失败却不指出失败文件。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "empty",
+        "selected",
+        "uploading",
+        "partial",
+        "failed",
+        "cancelled"
+      ],
+      "events": [
+        "files-selected",
+        "file-removed",
+        "retry",
+        "cancel"
+      ],
+      "tokenKey": "upload",
+      "consumerResponsibilities": [
+        "file-access-permission",
+        "transport",
+        "storage",
+        "retry-policy"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "tabs",
+      "title": "标签页",
+      "use": "切换同一上下文内的少量并列视图，不代替不同页面的全局导航。",
+      "anatomy": "标签列表、当前指示、关联面板。",
+      "variants": "常规、分段选择；长列表改用其他导航。",
+      "dimensions": "标签内容完整可读；触屏目标充分。",
+      "states": "未选、已选、焦点、禁用、面板加载。",
+      "behavior": "切换后选中与内容一致；保留必要的筛选和滚动上下文。",
+      "keyboard": "方向键移动；Home/End 首尾；激活模式与加载延迟匹配。",
+      "semantics": "tablist、tab、tabpanel 与 aria-controls/labelledby，单一 tab stop。",
+      "motion": "选中定位条约 180ms；内容不整页横向飞入。",
+      "good": "用简短、同层级标签，并保持面板关联。",
+      "bad": "把步骤进度、页内锚点和并列视图混为一种控件。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "idle",
+        "selected",
+        "disabled",
+        "loading"
+      ],
+      "events": [
+        "value-change"
+      ],
+      "tokenKey": "tabs",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "breadcrumb",
+      "title": "面包屑",
+      "use": "表示层级位置与上级路径，不显示最近访问历史。",
+      "anatomy": "有序路径、分隔符、当前页面。",
+      "variants": "完整路径；空间不足时可折叠中间层级。",
+      "dimensions": "正文或辅助字号；链接仍有可访问目标。",
+      "states": "上级可导航、当前不可重复导航、焦点。",
+      "behavior": "保持层级含义，折叠后可访问隐藏上级。",
+      "keyboard": "Tab 和 Enter；顺序与阅读顺序一致。",
+      "semantics": "nav 有名称，使用有序列表，当前项 aria-current=page。",
+      "motion": "无需空间动画。",
+      "good": "将当前项与可点击上级明确区分。",
+      "bad": "把任意历史页面拼成看似层级的路径。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "ancestor",
+        "current"
+      ],
+      "events": [
+        "navigate"
+      ],
+      "tokenKey": "breadcrumb",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "pagination",
+      "title": "分页",
+      "use": "浏览已知分页的数据集合。连续浏览可以另用加载更多。",
+      "anatomy": "上一页、页码／当前范围、下一页；每页数量按需。",
+      "variants": "数字分页、简洁前后页、每页数量。",
+      "dimensions": "按钮间距与触控范围充分；总页数很大时合理省略。",
+      "states": "首页、末页、当前页、加载、失败。",
+      "behavior": "改变页码后说明新结果；筛选变更时处理无效页码。",
+      "keyboard": "Tab、Enter；不可用方向要有可理解状态。",
+      "semantics": "导航有名称，当前页 aria-current=page；结果更新适度播报。",
+      "motion": "内容局部替换，不让页码栏位置反复跳动。",
+      "good": "显示实际范围与可访问的前后页。",
+      "bad": "提供无法到达的末页或请求失败仍改变当前页。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "idle",
+        "loading",
+        "first",
+        "last",
+        "error"
+      ],
+      "events": [
+        "page-change"
+      ],
+      "tokenKey": "pagination",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "menu",
+      "title": "操作菜单",
+      "use": "收纳当前对象的次要操作，不隐藏主要操作。",
+      "anatomy": "触发器、操作列表、可选分组与危险项。",
+      "variants": "原生菜单、展开式操作列表；二者语义不可混用。",
+      "dimensions": "项目高度和可触达区域足够，靠边自动避让。",
+      "states": "关闭、展开、聚焦项、禁用项。",
+      "behavior": "点外部或 Esc 关闭并合理恢复焦点；动作完成后关闭。",
+      "keyboard": "原生菜单按平台；disclosure 使用 Tab，不冒充完整 ARIA menu。",
+      "semantics": "aria-expanded、控制关系；只有实现菜单键盘协议才使用 menu/menuitem。",
+      "motion": "约 180ms 进入，120ms 退出；减少动态直接切换。",
+      "good": "把危险操作与常规操作区分，并使用明确标签。",
+      "bad": "给一个普通按钮列表添加 menu 角色，却不支持方向键和焦点管理。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "closed",
+        "open",
+        "disabled"
+      ],
+      "events": [
+        "activate",
+        "open-change"
+      ],
+      "tokenKey": "menu",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "tooltip",
+      "title": "工具提示",
+      "use": "解释非必要的短信息。必要说明应直接显示在页面上。",
+      "anatomy": "触发控件、提示文本和位置关系。",
+      "variants": "纯文本；需要交互时使用 Popover，而不是 Tooltip。",
+      "dimensions": "不覆盖触发元素或关键内容，位置按可用空间调整。",
+      "states": "隐藏、悬停显示、焦点显示、Esc 关闭。",
+      "behavior": "指针可移入提示阅读；焦点仍在触发控件。",
+      "keyboard": "聚焦可显示，Esc 可关闭；不加入额外 Tab 停点。",
+      "semantics": "role=tooltip 与 aria-describedby；控件仍有独立名称。",
+      "motion": "短淡入即可，减少动态直接显示。",
+      "good": "提示补充含义，正文已经足以完成任务。",
+      "bad": "把错误、格式要求或唯一标签藏在只响应鼠标悬停的提示里。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "closed",
+        "open",
+        "dismissed"
+      ],
+      "events": [
+        "open-change"
+      ],
+      "tokenKey": "tooltip",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "popover",
+      "title": "非模态浮层",
+      "use": "展示与当前对象相关的简短交互内容。",
+      "anatomy": "触发器、内容区、必要标题和关闭入口。",
+      "variants": "筛选、简要编辑、上下文说明。",
+      "dimensions": "限制宽度和高度，在屏幕边缘避让，内部可滚动。",
+      "states": "关闭、展开、输入、保存、错误。",
+      "behavior": "明确焦点策略；不需要阻断背景时不用模态。",
+      "keyboard": "Tab 可访问内容；Esc 安全关闭；保留未提交信息。",
+      "semantics": "与触发器关联；按内容语义使用标题、表单等，不随意设置 dialog。",
+      "motion": "小幅进入 180ms，退出 120ms。",
+      "good": "只放与当前上下文直接相关的短任务。",
+      "bad": "把完整多步流程塞进窄小浮层。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "closed",
+        "open",
+        "invalid"
+      ],
+      "events": [
+        "open-change",
+        "dismiss"
+      ],
+      "tokenKey": "popover",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "dialog",
+      "title": "对话框",
+      "use": "处理需要暂时阻断当前任务的决定或短表单。",
+      "anatomy": "标题、必要说明、内容、明确动作与取消／关闭。",
+      "variants": "确认、表单、危险确认；不叠加模态。",
+      "dimensions": "宽度随内容与屏幕调整，长内容内部滚动，动作仍可到达。",
+      "states": "打开、编辑、提交中、错误、关闭。",
+      "behavior": "焦点进入模态；背景不可交互；关闭后回到入口或合理位置。",
+      "keyboard": "Tab 在模态内循环，Esc 按安全规则关闭。",
+      "semantics": "优先 dialog.showModal；关联标题；关闭不应丢弃未告知的数据。",
+      "motion": "进入 220–260ms，退出约 160–180ms；无大幅弹跳。",
+      "good": "说明真实后果，按钮使用具体动作。",
+      "bad": "用模态展示普通成功提示，或叠加多个确认层。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "closed",
+        "opening",
+        "open",
+        "submitting",
+        "invalid",
+        "closing"
+      ],
+      "events": [
+        "open-change",
+        "dismiss"
+      ],
+      "tokenKey": "dialog",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "drawer",
+      "title": "抽屉",
+      "use": "在保留页面上下文的同时容纳导航、详情或短任务。",
+      "anatomy": "容器、标题、关闭入口、内容与可选动作。",
+      "variants": "模态、非模态；必须明确两者差别。",
+      "dimensions": "窄屏可占大部分或全屏；主要操作可触达。",
+      "states": "关闭、展开、加载、编辑、错误。",
+      "behavior": "模态抽屉阻止背景交互；非模态不制造焦点陷阱；保留选择。",
+      "keyboard": "键盘可关闭和访问内容；焦点按是否模态管理。",
+      "semantics": "模态可用 dialog；导航抽屉包含有名称的 nav。",
+      "motion": "短距离位移，约 240ms；减少动态直接显示。",
+      "good": "选择符合任务的模态方式并保留当前目的地。",
+      "bad": "只做一个视觉遮罩，却仍允许键盘操作后面的页面。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "closed",
+        "opening",
+        "open",
+        "submitting",
+        "invalid",
+        "closing"
+      ],
+      "events": [
+        "open-change",
+        "dismiss"
+      ],
+      "tokenKey": "drawer",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "toast",
+      "title": "临时状态提示",
+      "use": "确认低风险、无需立即处理的结果。",
+      "anatomy": "状态文字、可选图标；只有确有必要才加动作。",
+      "variants": "成功、普通信息；重要失败用持久提示。",
+      "dimensions": "不覆盖关键操作，长文本可换行。",
+      "states": "出现、可读、关闭；连续消息应合理合并。",
+      "behavior": "显示时间按内容验证；不要让必须执行的动作仅短暂出现。",
+      "keyboard": "不主动抢焦点；交互型提示要可访问并有足够时间。",
+      "semantics": "普通结果使用 polite 状态播报，避免同时多个 live region 重复播报。",
+      "motion": "小幅淡入，结束后退出；不弹跳或全屏庆祝。",
+      "good": "用来说明“已复制”之类无需后续处理的结果。",
+      "bad": "把唯一撤销或修复入口放在几秒后消失的 Toast 中。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "visible",
+        "paused",
+        "dismissed"
+      ],
+      "events": [
+        "dismiss",
+        "action"
+      ],
+      "tokenKey": "toast",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "alert",
+      "title": "就地提示与错误",
+      "use": "说明影响当前内容、字段或页面的状态，并提供恢复操作。",
+      "anatomy": "状态符号、事实、影响与必要下一步。",
+      "variants": "信息、成功、警告、错误。",
+      "dimensions": "靠近关联内容；不能因布局紧凑把重要说明裁掉。",
+      "states": "可见、处理中、恢复、失败、部分完成。",
+      "behavior": "错误持续到被解决或有明确处理；不要静默消失。",
+      "keyboard": "链接与修复按钮可通过键盘到达。",
+      "semantics": "适当使用 status/alert；仅真正紧急的信息用打断式播报。",
+      "motion": "状态颜色与文字同步更新，不摇晃页面。",
+      "good": "说明发生了什么和如何处理。",
+      "bad": "只写“出错了”，或者使用颜色而没有文字。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "info",
+        "success",
+        "warning",
+        "danger"
+      ],
+      "events": [
+        "action"
+      ],
+      "tokenKey": "alert",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "card",
+      "title": "卡片",
+      "use": "把一个独立对象或任务相关信息组织成单元。",
+      "anatomy": "标题／主体、必要元信息、少量相关动作。",
+      "variants": "内容卡、可导航卡、任务卡。",
+      "dimensions": "内边距 16–24px 起点，圆角 12px；密度按任务调整。",
+      "states": "常规、可交互焦点、选中、加载、空、错误。",
+      "behavior": "只有整个单元确实指向同一目标时才整卡可点；避免嵌套交互冲突。",
+      "keyboard": "实际动作使用按钮／链接；不把 div 改成不完整的按钮。",
+      "semantics": "保留正确标题层级与链接名称。",
+      "motion": "只有用户触发时反馈，不让所有卡片默认漂浮。",
+      "good": "将一条独立记录组织为卡片，动作各自清楚。",
+      "bad": "把每一段规范说明都拆成没有关系的卡片。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "idle",
+        "selected",
+        "loading",
+        "error"
+      ],
+      "events": [
+        "activate"
+      ],
+      "tokenKey": "card",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "list",
+      "title": "列表",
+      "use": "展示同类型对象并帮助扫描、选择或进入详情。",
+      "anatomy": "主文本、可选说明／图标／状态、清楚的操作区。",
+      "variants": "单行、多行、可选择、可排序。",
+      "dimensions": "内容高度随文字增长，密度按任务选择。",
+      "states": "空、有数据、选中、聚焦、加载、错误。",
+      "behavior": "主要动作稳定；拖拽排序有非拖拽替代；更新后保持合理焦点。",
+      "keyboard": "Tab 访问实际动作；可选择列表根据语义采用适当协议。",
+      "semantics": "使用 ul/ol；不要将普通内容列表误设为 listbox。",
+      "motion": "新增或恢复项做一次局部提示；不整表弹跳。",
+      "good": "先突出主信息，再放次要说明和状态。",
+      "bad": "只有悬停时才显示必须使用的操作。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "empty",
+        "loading",
+        "ready",
+        "error"
+      ],
+      "events": [
+        "selection-change",
+        "activate"
+      ],
+      "tokenKey": "list",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "table",
+      "title": "数据表格",
+      "use": "比较具有相同字段的多条记录。简单内容不必强制表格化。",
+      "anatomy": "标题或说明、列头、行、单元格、可选排序／选择／分页。",
+      "variants": "只读、排序、选择、行操作；复杂网格需要独立规范。",
+      "dimensions": "列宽按内容，数值合理对齐；横向滚动限定在表格容器。",
+      "states": "空、加载、部分数据、排序、无结果、错误。",
+      "behavior": "排序与筛选作用范围明确；更新不使焦点丢失。",
+      "keyboard": "排序头使用按钮；复杂编辑网格另行实现键盘协议。",
+      "semantics": "table、caption、th/scope；排序使用 aria-sort。",
+      "motion": "排序结果可短替换，不逐行飞入。",
+      "good": "保留表头与列含义，并清楚标记排序方向。",
+      "bad": "用纯 div 画出表格却丢失行列语义，或导致整页横向溢出。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "empty",
+        "loading",
+        "ready",
+        "error",
+        "sorted"
+      ],
+      "events": [
+        "sort-change",
+        "selection-change",
+        "activate"
+      ],
+      "tokenKey": "table",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "badge",
+      "title": "标签与徽标",
+      "use": "说明简短类别、数量或状态。它不是默认的按钮。",
+      "anatomy": "短文本，可选状态符号。",
+      "variants": "类别标签、数量徽标、状态标签；筛选标签属于交互控件。",
+      "dimensions": "字号 12–14px 起点，留出适当内边距。",
+      "states": "常规、不同语义；交互标签另有焦点和选中态。",
+      "behavior": "非交互标签不显示会误导点击的反馈。",
+      "keyboard": "仅交互标签可聚焦，按按钮或复选语义实现。",
+      "semantics": "不要只靠颜色区分类别与状态；数量更新适度播报。",
+      "motion": "静态为主，避免红点不断闪烁。",
+      "good": "用“等待同步”等明确文本表达状态。",
+      "bad": "把装饰标签与可点击筛选混用而不区分。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "neutral",
+        "info",
+        "success",
+        "warning",
+        "danger"
+      ],
+      "events": [],
+      "tokenKey": "badge",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "avatar",
+      "title": "头像",
+      "use": "帮助识别个人或群组，不代替姓名等必要信息。",
+      "anatomy": "图像或文字回退，可选状态。",
+      "variants": "图像、首字母／姓名缩写、群组。",
+      "dimensions": "24 / 32 / 40px 起点；点击区域单独确定。",
+      "states": "加载、可用、图像失败、无图像。",
+      "behavior": "图像失败时回退，不重复请求；隐私显示遵循产品策略。",
+      "keyboard": "非交互头像不加入 Tab 顺序；入口使用真实链接／按钮。",
+      "semantics": "相邻已有姓名时图像可装饰；否则提供合适替代文本。",
+      "motion": "不持续动画。",
+      "good": "保留文字回退和相邻名称。",
+      "bad": "把头像颜色或图片作为唯一身份线索。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "loading",
+        "image",
+        "fallback"
+      ],
+      "events": [],
+      "tokenKey": "avatar",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "empty",
+      "title": "空状态",
+      "use": "说明当前没有内容的原因及可执行下一步。",
+      "anatomy": "状态标题、原因／范围、必要动作；插画可选。",
+      "variants": "首次使用、筛选无结果、权限不足、离线。",
+      "dimensions": "按区域尺寸调整，避免大插画挤掉操作。",
+      "states": "不同空因不能用同一文案代替。",
+      "behavior": "动作必须与原因匹配；清除筛选不能伪装成创建内容。",
+      "keyboard": "行动入口可键盘使用，状态可被读取。",
+      "semantics": "结构化标题和文字；装饰插画隐藏。",
+      "motion": "静态默认，用户触发转换可短反馈。",
+      "good": "“没有符合筛选的记录”，并提供“清除筛选”。",
+      "bad": "把网络失败说成“还没有任何记录”。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "first-use",
+        "filtered",
+        "offline",
+        "denied"
+      ],
+      "events": [
+        "action"
+      ],
+      "tokenKey": "empty",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "skeleton",
+      "title": "骨架占位",
+      "use": "加载可预期的内容结构，例如文章、列表或媒体卡片。",
+      "anatomy": "与最终内容相近的标题线、文本块或媒体框。",
+      "variants": "静态、低频局部亮度变化。",
+      "dimensions": "占位尺寸接近结果，避免内容出现后大幅跳动。",
+      "states": "加载、完成、失败、空；骨架不是错误状态。",
+      "behavior": "不模拟可点击控件；加载结束替换为真实内容或明确错误。",
+      "keyboard": "占位不进入键盘顺序。",
+      "semantics": "骨架装饰层隐藏，所属区域 aria-busy，外部状态文字描述加载。",
+      "motion": "减少动态时静态；不做大幅、高亮连续扫光。",
+      "good": "用骨架稳定列表或文章的结构。",
+      "bad": "给按钮、菜单、通知或模态框本体套骨架。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "loading",
+        "finished",
+        "error"
+      ],
+      "events": [],
+      "tokenKey": "skeleton",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "loading",
+      "title": "不确定加载",
+      "use": "任务正在进行，但没有可信的完成量。",
+      "anatomy": "加载图形、明确动作文字；长任务另有取消／后台说明。",
+      "variants": "折面指示器、按钮内加载、行内状态。",
+      "dimensions": "图形 18 / 32 / 48px；局部任务用小尺寸。",
+      "states": "等待、运行、完成、错误、取消、超时。",
+      "behavior": "短等待避免闪现；持续任务定义取消、离开与错误路径，不无限阻塞。",
+      "keyboard": "不要把动画加入 Tab 顺序；取消按钮必须真实可用。",
+      "semantics": "图形隐藏，区域 aria-busy；状态文字只在状态改变时适度播报。",
+      "motion": "折面循环约 1200ms，仅操作进行时播放；减少动态保留静态图形与文字。",
+      "good": "保持任务上下文，只显示当前需要的一处主要加载反馈。",
+      "bad": "显示虚构百分比，或同时启动多个装饰性加载器。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "idle",
+        "running",
+        "finished",
+        "error",
+        "cancelled",
+        "timeout"
+      ],
+      "events": [
+        "cancel"
+      ],
+      "tokenKey": "loading",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "progress",
+      "title": "确定进度",
+      "use": "可以从实际完成量推导进度的任务。",
+      "anatomy": "当前值、总量、当前阶段、必要的取消与结果。",
+      "variants": "Rosemary 全高流动高光线性进度、持久任务卡。",
+      "dimensions": "长度足以区分变化；不要用颜色或长度作为唯一状态。",
+      "states": "未开始、进行、暂停／取消、完成、部分失败。",
+      "behavior": "百分比来自真实完成量；未知时改成不确定状态，不自动增长到 99%。",
+      "keyboard": "操作按钮可键盘使用，进度本体一般不需聚焦。",
+      "semantics": "优先 progress；同步 value/max 和可理解名称，减少过密播报。",
+      "motion": "视觉填充以约 320ms 过渡跟随真实值，不延迟状态与可访问进度更新；减少动态时直接切换。",
+      "good": "显示“已处理 3 / 6 项”等有依据的进度。",
+      "bad": "用固定计时器伪装真实网络或文件处理进度。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "idle",
+        "running",
+        "unknown",
+        "finished",
+        "partial",
+        "cancelled",
+        "error"
+      ],
+      "events": [
+        "cancel",
+        "retry"
+      ],
+      "tokenKey": "progress",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    },
+    {
+      "responsive": "验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。",
+      "maturity": "implementation requires SDK acceptance",
+      "validation": "SDK acceptance requires every applicable listed state, keyboard or accessibility action, light/dark/custom themes, and target-platform assistive technology. Unexecuted paths remain explicitly unverified.",
+      "id": "stepper",
+      "title": "步骤指示",
+      "use": "展示多步流程当前位置和完成状态，不等同于百分比。",
+      "anatomy": "步骤名、当前步骤、完成／错误标记。",
+      "variants": "只读指示、允许返回的可交互步骤。",
+      "dimensions": "窄屏可显示当前步骤与总步骤，但隐藏步骤仍可理解。",
+      "states": "未开始、当前、完成、错误、不可进入。",
+      "behavior": "进入条件、返回后保留内容和分支变化要明确。",
+      "keyboard": "仅允许进入的步骤使用链接或按钮；不能只支持点击圆点。",
+      "semantics": "有序结构，当前步骤使用适当 aria-current。",
+      "motion": "局部选中变化，不整段连续闪动。",
+      "good": "用任务名称说明步骤，明确能否返回修改。",
+      "bad": "将尚未完成的验证标成成功，或用步骤数代替实际处理百分比。",
+      "implementation": "Rosemary rendering; no demo business data",
+      "stateKeys": [
+        "upcoming",
+        "current",
+        "complete",
+        "error",
+        "unavailable"
+      ],
+      "events": [
+        "step-change"
+      ],
+      "tokenKey": "stepper",
+      "consumerResponsibilities": [
+        "business-data",
+        "persistence"
+      ],
+      "acceptance": [
+        "light-dark-custom-theme",
+        "keyboard-or-platform-accessibility-actions",
+        "localized-name-role-value-state",
+        "200-percent-or-dynamic-type",
+        "rtl-long-labels",
+        "reduced-motion",
+        "controlled-state",
+        "lifecycle-cleanup"
+      ]
+    }
+  ]
+}

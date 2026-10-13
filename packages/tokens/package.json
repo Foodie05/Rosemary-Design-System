@@ -1,0 +1,25 @@
+{
+  "name": "@rosemary-ui/tokens",
+  "version": "0.4.0",
+  "type": "module",
+  "license": "MIT",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "dist",
+    "svg",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./css": "./dist/tokens.css",
+    "./tokens.json": "./dist/tokens.json"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node ../../scripts/copy-package-assets.mjs tokens"
+  }
+}
