@@ -1,0 +1,537 @@
+{
+  "revision": "rosemary-forma-shell-final",
+  "passed": 77,
+  "checks": [
+    "Checkbox selected mark has a visible intermediate frame",
+    "Checkbox deselection mark has a visible intermediate frame",
+    "Deselection settles with no visible mark",
+    "Radio moves real selection and animates dot",
+    "Native radio keyboard navigation still works",
+    "Switch has real moving middle frame",
+    "Reduced motion updates check immediately without transition",
+    "No runtime errors",
+    "Case tabs retains DOM and moves marker through an intermediate frame",
+    "Case tabs animates current content at 180ms",
+    "Case tabs settles on selected item",
+    "Account tabs retains DOM and moves marker through an intermediate frame",
+    "Account tabs animates current content at 180ms",
+    "Account tabs settles on selected item",
+    "Hidden password uses eye-off and action label show",
+    "Visible password uses eye and action label hide",
+    "Case checkbox animates selection on same input",
+    "Case checkbox animates deselection on same input",
+    "Member filter retains DOM and moves marker through an intermediate frame",
+    "Member filter animates current content at 180ms",
+    "Member filter settles on selected item",
+    "Case radio shows both selection and deselection on retained inputs",
+    "Case radio can return to original role without replacing input",
+    "Search categories retains DOM and moves marker through an intermediate frame",
+    "Search categories animates current content at 180ms",
+    "Search categories settles on selected item",
+    "Suggestions separate hint paragraph from option buttons",
+    "Favorite has actual animation and real pressed value",
+    "Rapid tab changes settle at latest case without duplicate markers",
+    "Reduced motion keeps tabs functional without content animation",
+    "Reduced-motion case check has immediate mark",
+    "Shared motion change preserves date state and documentation tabs",
+    "No runtime errors",
+    "Fold panes use one light-theme brand color with no gradient",
+    "Fold opacity sequence matches the restored brand treatment",
+    "Fold panes exchange front/back layers during the shuffle",
+    "Progress retains a stable single-color base at the real 3/6 value",
+    "Progress highlight is full-height and clipped to measured fill",
+    "Completed progress stops and hides the highlight",
+    "Date picker jumps from year input to the selected year month view",
+    "Date picker opens February 1900 without committing early",
+    "Date picker commits the selected civil date and returns focus",
+    "Targeted browser smoke has no uncaught runtime exceptions",
+    "Loader rests upright in the same geometry at idle and animation endpoints",
+    "Loader turns around long edges without planar tilt or disappearing",
+    "Loader preserves opacity rhythm and exchanges layers",
+    "Completed loading returns to the exact idle geometry",
+    "Reduced motion keeps the exact upright brand geometry",
+    "Drawer has a real 220ms entering intermediate frame",
+    "Drawer and backdrop settle fully open",
+    "Drawer remains modal through a real 180ms exit frame",
+    "Drawer closes after exit, restores focus and retains draft",
+    "Rapid reopen interrupts a pending drawer close",
+    "Escape uses the animated exit instead of closing immediately",
+    "Escape exit restores opener focus",
+    "Backdrop click starts the same animated close",
+    "Save also waits for drawer exit",
+    "Saved drawer closes, updates preview and restores focus",
+    "Component switch immediately closes and detaches the old drawer",
+    "Reduced-motion drawer opens immediately with focus",
+    "Reduced-motion drawer closes immediately and restores focus",
+    "Shared checkbox keeps its control size and moves only the tick upward",
+    "Case checkbox uses the same one-pixel upward tick correction",
+    "Correction smoke has no uncaught runtime exceptions",
+    "1024 home has no horizontal overflow",
+    "Full Forma lockup uses official mark and two words only",
+    "Component card has a textless illustration",
+    "Typical-case title remains on one line at 1024",
+    "Sidebar uses the compact Forma product badge",
+    "Root and navigation scrollbars use the 8px native slot",
+    "375 dark home remains within the viewport",
+    "375 home keeps the revised full lockup and illustration",
+    "Five product marks share the standardized badge frame",
+    "Subbrand mark family creates no horizontal overflow",
+    "Governance footer spells Rosemary Forma with R and F uppercase",
+    "Dark governance keeps the styled native scrollbar",
+    "Final shell smoke has no uncaught runtime exceptions"
+  ],
+  "evidence": {
+    "checkboxOn": {
+      "checked": true,
+      "opacity": 0.765981,
+      "transform": "matrix(0.428287, -0.428287, 0.428287, 0.428287, 0, 0)"
+    },
+    "checkboxOff": {
+      "checked": false,
+      "opacity": 0.111018,
+      "transform": "matrix(0.165235, -0.165235, 0.165235, 0.165235, 0, 0)"
+    },
+    "radio": {
+      "checked": true,
+      "opacity": 0.765896,
+      "transform": "matrix(0.605587, 0, 0, 0.605587, 0, 0)"
+    },
+    "switch": {
+      "checked": "true",
+      "x": 12.1239
+    },
+    "Case tabs": {
+      "sameMarker": true,
+      "sameList": true,
+      "oldX": 314.546875,
+      "oldY": 484.875,
+      "x": 538.3328857421875,
+      "y": 484.875,
+      "targetX": 575.515625,
+      "targetY": 484.875,
+      "contentAnimations": [
+        180
+      ]
+    },
+    "Account tabs": {
+      "sameMarker": true,
+      "sameList": true,
+      "oldX": 866.71875,
+      "oldY": 782.125,
+      "x": 1039.3414306640625,
+      "y": 782.125,
+      "targetX": 1092.078125,
+      "targetY": 782.125,
+      "contentAnimations": [
+        180
+      ]
+    },
+    "caseCheckOn": {
+      "same": true,
+      "checked": true,
+      "opacity": 0.605828
+    },
+    "caseCheckOff": {
+      "same": true,
+      "checked": false,
+      "opacity": 0.394045
+    },
+    "Member filter": {
+      "sameMarker": true,
+      "sameList": true,
+      "oldX": 361.546875,
+      "oldY": 228.0625,
+      "x": 463.6388244628906,
+      "y": 228.0625,
+      "targetX": 480.546875,
+      "targetY": 228.0625,
+      "contentAnimations": [
+        180
+      ]
+    },
+    "caseRadio": {
+      "same": true,
+      "checked": true,
+      "on": 0.605168,
+      "off": 0.394833
+    },
+    "Search categories": {
+      "sameMarker": true,
+      "sameList": true,
+      "oldX": 370.546875,
+      "oldY": 340.890625,
+      "x": 411.9179382324219,
+      "y": 340.890625,
+      "targetX": 424.546875,
+      "targetY": 340.890625,
+      "contentAnimations": [
+        180
+      ]
+    },
+    "correctionSmoke": {
+      "loader": {
+        "idle": {
+          "loader": {
+            "x": 334.546875,
+            "y": 761.0115356445312,
+            "w": 32,
+            "h": 36
+          },
+          "front": {
+            "x": 12.46875,
+            "y": 2.875,
+            "w": 12.15625,
+            "h": 30.234375,
+            "transform": "matrix(1, 0, 0, 1, 0, 0)",
+            "opacity": 1,
+            "z": "2"
+          },
+          "back": {
+            "x": 7.671875,
+            "y": 2.875,
+            "w": 12.15625,
+            "h": 30.234375,
+            "transform": "matrix(1, 0, 0, 1, 0, 0)",
+            "opacity": 0.4,
+            "z": "1"
+          }
+        },
+        "t0": {
+          "loader": {
+            "x": 334.546875,
+            "y": 760.65625,
+            "w": 32,
+            "h": 36
+          },
+          "front": {
+            "x": 12.46875,
+            "y": 2.875,
+            "w": 12.15625,
+            "h": 30.234375,
+            "transform": "matrix(1, 0, 0, 1, 0, 0)",
+            "opacity": 1,
+            "z": "2"
+          },
+          "back": {
+            "x": 7.671875,
+            "y": 2.875,
+            "w": 12.15625,
+            "h": 30.234375,
+            "transform": "matrix(1, 0, 0, 1, 0, 0)",
+            "opacity": 0.4,
+            "z": "1"
+          }
+        },
+        "t240": {
+          "loader": {
+            "x": 334.546875,
+            "y": 760.65625,
+            "w": 32,
+            "h": 36
+          },
+          "front": {
+            "x": 12.46875,
+            "y": 2.875,
+            "w": 6.211578369140625,
+            "h": 30.234375,
+            "transform": "matrix3d(0.529919, 0, -0.848048, 0, 0, 1, 0, 0, 0.848048, 0, 0.529919, 0, 0, 0, 0, 1)",
+            "opacity": 0.910908,
+            "z": "1"
+          },
+          "back": {
+            "x": 13.59307861328125,
+            "y": 2.875,
+            "w": 6.23504638671875,
+            "h": 30.234375,
+            "transform": "matrix3d(0.529919, 0, 0.848048, 0, 0, 1, 0, 0, -0.848048, 0, 0.529919, 0, 0, 0, 0, 1)",
+            "opacity": 0.50934,
+            "z": "2"
+          }
+        },
+        "t540": {
+          "loader": {
+            "x": 334.546875,
+            "y": 760.65625,
+            "w": 32,
+            "h": 36
+          },
+          "front": {
+            "x": 12.46875,
+            "y": 2.875,
+            "w": 12.15625,
+            "h": 30.234375,
+            "transform": "matrix(1, 0, 0, 1, 0, 0)",
+            "opacity": 0.78,
+            "z": "1"
+          },
+          "back": {
+            "x": 7.671875,
+            "y": 2.875,
+            "w": 12.15625,
+            "h": 30.234375,
+            "transform": "matrix3d(1, 0, -1.06233e-31, 0, 0, 1, 0, 0, 1.06233e-31, 0, 1, 0, 0, 0, 0, 1)",
+            "opacity": 0.67,
+            "z": "2"
+          }
+        },
+        "t840": {
+          "loader": {
+            "x": 334.546875,
+            "y": 760.65625,
+            "w": 32,
+            "h": 36
+          },
+          "front": {
+            "x": 12.46875,
+            "y": 1.4534912109375,
+            "w": 6.715362548828125,
+            "h": 33.075927734375,
+            "transform": "matrix3d(0.529919, 0, 0.848048, 0, 0, 1, 0, 0, -0.848048, 0, 0.529919, 0, 0, 0, 0, 1)",
+            "opacity": 0.92,
+            "z": "2"
+          },
+          "back": {
+            "x": 13.140655517578125,
+            "y": 1.4534912109375,
+            "w": 6.687469482421875,
+            "h": 33.075927734375,
+            "transform": "matrix3d(0.529919, 0, -0.848048, 0, 0, 1, 0, 0, 0.848048, 0, 0.529919, 0, 0, 0, 0, 1)",
+            "opacity": 0.51,
+            "z": "1"
+          }
+        },
+        "complete": {
+          "loader": {
+            "x": 334.546875,
+            "y": 760.65625,
+            "w": 32,
+            "h": 36
+          },
+          "front": {
+            "x": 12.46875,
+            "y": 2.875,
+            "w": 12.15625,
+            "h": 30.234375,
+            "transform": "matrix(1, 0, 0, 1, 0, 0)",
+            "opacity": 1,
+            "z": "2"
+          },
+          "back": {
+            "x": 7.671875,
+            "y": 2.875,
+            "w": 12.15625,
+            "h": 30.234375,
+            "transform": "matrix(1, 0, 0, 1, 0, 0)",
+            "opacity": 0.4,
+            "z": "1"
+          }
+        },
+        "reduced": {
+          "loader": {
+            "x": 334.546875,
+            "y": 760.65625,
+            "w": 32,
+            "h": 36
+          },
+          "front": {
+            "x": 12.46875,
+            "y": 2.875,
+            "w": 12.15625,
+            "h": 30.234375,
+            "transform": "matrix(1, 0, 0, 1, 0, 0)",
+            "opacity": 1,
+            "z": "2"
+          },
+          "back": {
+            "x": 7.671875,
+            "y": 2.875,
+            "w": 12.15625,
+            "h": 30.234375,
+            "transform": "matrix(1, 0, 0, 1, 0, 0)",
+            "opacity": 0.4,
+            "z": "1"
+          }
+        }
+      },
+      "drawer": {
+        "enterMid": {
+          "open": true,
+          "state": "open",
+          "x": 283.214,
+          "opacity": 0.27381,
+          "focus": "name"
+        },
+        "open": {
+          "x": 0,
+          "opacity": 1,
+          "backdrop": "rgba(28, 20, 40, 0.36)"
+        },
+        "exitMid": {
+          "open": true,
+          "state": "closing",
+          "x": 298.935,
+          "opacity": 0.233501
+        }
+      },
+      "checkbox": {
+        "control": {
+          "x": 333.546875,
+          "y": 514.75,
+          "width": 18,
+          "height": 18,
+          "top": 514.75,
+          "right": 351.546875,
+          "bottom": 532.75,
+          "left": 333.546875
+        },
+        "transform": "matrix(0.707107, -0.707107, 0.707107, 0.707107, 0, -1)",
+        "translateY": -1,
+        "width": "10px",
+        "height": "6px",
+        "caseTop": "1px"
+      },
+      "screenshots": [
+        "loading-long-edge-idle.png",
+        "loading-long-edge-turn.png",
+        "loading-long-edge-complete.png",
+        "drawer-motion-final.png",
+        "checkbox-centered-final.png",
+        "case-checkbox-centered-final.png"
+      ]
+    },
+    "progressDateSmokeBeforeLongEdgeCorrection": {
+      "progress": {
+        "value": 3,
+        "max": 6,
+        "ratio": 0.5,
+        "base": "rgb(97, 69, 120)",
+        "fillHeight": 8,
+        "highlightHeight": 8,
+        "highlightWidth": 80,
+        "clippedByFill": true,
+        "completedAnimation": "none",
+        "completedOpacity": 0
+      },
+      "date": {
+        "value": "1900-02-28",
+        "popupHidden": true,
+        "focusReturnedTo": "start",
+        "status": "开始日期已选择 1900-02-28。"
+      },
+      "screenshots": [
+        "progress-full-height-final.png",
+        "date-picker-smoke-final.png"
+      ]
+    },
+    "shellFinalSmoke": {
+      "scope": "Final brand hierarchy, homepage card layout, site shell, native scrollbar skin and product-name casing",
+      "browser": "Google Chrome (local headless Chromium)",
+      "viewportThemes": [
+        "1024px / light",
+        "375px / dark",
+        "1024px / dark governance"
+      ],
+      "passed": 13,
+      "checks": [
+        "1024 home has no horizontal overflow",
+        "Full Forma lockup uses official mark and two words only",
+        "Component card has a textless illustration",
+        "Typical-case title remains on one line at 1024",
+        "Sidebar uses the compact Forma product badge",
+        "Root and navigation scrollbars use the 8px native slot",
+        "375 dark home remains within the viewport",
+        "375 home keeps the revised full lockup and illustration",
+        "Five product marks share the standardized badge frame",
+        "Subbrand mark family creates no horizontal overflow",
+        "Governance footer spells Rosemary Forma with R and F uppercase",
+        "Dark governance keeps the styled native scrollbar",
+        "Final shell smoke has no uncaught runtime exceptions"
+      ],
+      "evidence": {
+        "home1024": {
+          "overflow": -15,
+          "brand": {
+            "official": true,
+            "top": "rosemary",
+            "bottom": "Forma",
+            "divider": false,
+            "product": false
+          },
+          "art": {
+            "exists": true,
+            "text": "",
+            "width": 313.875,
+            "height": 147.125
+          },
+          "caseTitle": {
+            "height": 35,
+            "lineHeight": 35,
+            "whiteSpace": "nowrap"
+          },
+          "shell": {
+            "mark": true,
+            "official": false,
+            "label": "Forma"
+          },
+          "scrollbar": {
+            "rootWidth": "8px",
+            "navWidth": "8px",
+            "thumbColor": "color(srgb 0.439216 0.396078 0.47451 / 0.28)",
+            "standard": "color(srgb 0.439216 0.396078 0.47451 / 0.28) rgba(0, 0, 0, 0)"
+          }
+        },
+        "home375": {
+          "overflow": 0,
+          "sidebar": "none",
+          "brandRight": 147.265625,
+          "brandBottom": "Forma",
+          "artWidth": 291,
+          "divider": false,
+          "product": false
+        },
+        "marks": {
+          "count": 5,
+          "viewBoxes": [
+            "0 0 64 64"
+          ],
+          "backgrounds": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "frames": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "cores": [
+            1,
+            1,
+            2,
+            1,
+            2
+          ],
+          "overflow": -15
+        },
+        "governance": {
+          "text": "Rosemary Forma",
+          "caseCorrect": 0,
+          "overflow": -15,
+          "rootWidth": "8px",
+          "thumb": "color(srgb 0.72549 0.682353 0.776471 / 0.28)"
+        }
+      },
+      "screenshots": [
+        "forma-home-1024-light-final.png",
+        "forma-home-375-dark-final.png",
+        "subbrand-product-marks-final.png",
+        "governance-forma-name-dark-final.png"
+      ]
+    }
+  },
+  "runtimeExceptions": []
+}

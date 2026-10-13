@@ -1,25 +1,15 @@
 (() => {
   'use strict';
-  const {icon,foldLoader,svgSource,escape,rules} = window.RosemaryUI;
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const {icon,foldLoader,svgSource,escape} = window.RosemaryUI;
+  const reduced = window.RosemaryMotion.reduced;
   const timers = new Set();
   const animations = new Set();
   const gallery = {query:'',category:'all',size:24,selected:'book'};
-  const dataRows = [
-    {name:'家庭日程',date:'2026-10-10',status:'已同步'},
-    {name:'周末照片',date:'2026-10-12',status:'仅此设备'},
-    {name:'旅行清单',date:'2026-10-11',status:'等待同步'}
-  ];
-  let sort = {key:'name',direction:1};
-  let demoPage = 1;
-  let files = [];
   let foldState = 'idle';
   let foldGeneration = 0;
   let progress = {state:'idle',done:0};
   let listInsertions = 0;
-  let resizeObserver;
-  let drawerOpener;
-  let currentPage='';
+  let motionTabsCleanup;
   const byId = id => document.getElementById(id);
   const portal = () => window.RosemaryPortal;
   const later = (fn,ms) => {const timer=setTimeout(()=>{timers.delete(timer);fn();},ms);timers.add(timer);return timer;};
@@ -57,38 +47,6 @@
     status('icon-selected-usage',item.usage);
     status('icon-selected-source',svgSource(gallery.selected));
   }
-  function renderSpec(id){
-    const item=window.RosemaryComponentCatalog[id];const target=byId('component-spec-content');if(!item||!target)return;
-    byId('component-spec-select').value=id;
-    const fields=[['结构','anatomy'],['变体','variants'],['尺寸','dimensions'],['状态','states'],['行为','behavior'],['键盘','keyboard'],['语义与可访问性','semantics'],['响应与边界','responsive'],['动效','motion'],['验证要求','validation']];
-    target.innerHTML=`<header class="spec-heading"><h3>${escape(item.title)}</h3><p>${escape(item.use)}</p><div class="spec-meta"><span>${escape(item.implementation)}</span><span>${escape(item.maturity)}</span></div></header><dl class="component-spec-dl">${fields.map(([label,key])=>`<div><dt>${label}</dt><dd>${escape(item[key])}</dd></div>`).join('')}</dl>${rules(escape(item.good),escape(item.bad))}`;
-  }
-  function updatePagination(){
-    const target=byId('pagination-results');if(!target)return;
-    const names=['周末记录','家庭日程','照片清单','阅读笔记','旅行安排','收纳计划'];
-    target.innerHTML=names.slice((demoPage-1)*2,demoPage*2).map((name,i)=>`<div>${name}<small>示例 ${(demoPage-1)*2+i+1} / 6</small></div>`).join('');
-    document.querySelectorAll('[data-demo-page]').forEach(button=>{if(Number(button.dataset.demoPage)===demoPage)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
-    document.querySelector('[data-page-step="-1"]').disabled=demoPage===1;
-    document.querySelector('[data-page-step="1"]').disabled=demoPage===3;
-  }
-  function renderTable(){
-    const target=byId('sample-table-body');if(!target)return;
-    const rows=[...dataRows].sort((a,b)=>a[sort.key].localeCompare(b[sort.key],'zh-CN')*sort.direction);
-    target.innerHTML=rows.map(row=>`<tr><th scope="row">${row.name}</th><td>${row.date}</td><td><span class="sample-badge">${row.status}</span></td></tr>`).join('');
-    document.querySelectorAll('[data-sort-header]').forEach(header=>header.setAttribute('aria-sort',header.dataset.sortHeader===sort.key?(sort.direction===1?'ascending':'descending'):'none'));
-  }
-  function renderFiles(){
-    const target=byId('file-demo-list');if(!target)return;target.replaceChildren();
-    files.forEach((file,index)=>{
-      const row=document.createElement('li');const label=document.createElement('span');label.textContent=file.name;
-      const size=document.createElement('small');size.textContent=file.size<1024?`${file.size} B`:`${(file.size/1024).toFixed(1)} KB`;
-      const remove=document.createElement('button');remove.type='button';remove.dataset.removeFile=String(index);remove.setAttribute('aria-label',`移除 ${file.name}`);remove.innerHTML=icon('close');
-      row.append(label,size,remove);target.append(row);
-    });
-  }
-  function showTooltip(trigger){const tip=byId(trigger.dataset.tooltipTrigger);if(tip)tip.hidden=false;}
-  function hideTooltips(){document.querySelectorAll('.sample-tooltip').forEach(tip=>tip.hidden=true);}
-
   function renderFold(){
     const stage=byId('fold-demo-stage');if(!stage)return;
     stage.dataset.state=foldState;
@@ -109,17 +67,8 @@
   }
   function renderProgress(){
     const bar=byId('task-progress');if(!bar)return;
-    bar.value=progress.done;
-    const fill=byId('task-progress-fill');
-    if(fill){
-      const reset=progress.done===0;
-      fill.dataset.instant=String(reset);
-      fill.style.setProperty('--progress-ratio',String(Math.min(1,Math.max(0,progress.done/bar.max))));
-      if(reset){
-        fill.getBoundingClientRect();
-        requestAnimationFrame(()=>{if(fill.isConnected)fill.dataset.instant='false';});
-      }
-    }
+    window.RosemaryMotion.progress(bar,byId('task-progress-fill'),progress.done);
+    byId('task-progress-fill').dataset.flowing=String(progress.state==='running'&&progress.done>0&&progress.done<6);
     status('task-progress-count',`已完成 ${progress.done} / 6 项`);
     const labels={idle:'未开始',running:'进行中',failed:'失败',cancelled:'已取消',complete:'已完成'};
     status('progress-phase',labels[progress.state]);
@@ -170,18 +119,11 @@
     later(()=>{placeholder.classList.remove('is-running');placeholder.hidden=true;result.hidden=false;byId('skeleton-demo-region').setAttribute('aria-busy','false');control.removeAttribute('aria-disabled');control.textContent='重新演示';status('skeleton-status','演示内容已显示，加载前后使用相近的结构。');},1500);
   }
 
-  function updateMotionMarker(){
-    const tabs=byId('motion-tabs');if(!tabs)return;
-    const selected=tabs.querySelector('[aria-selected="true"]');if(!selected)return;
-    const indicator=tabs.querySelector('.motion-tab-indicator');
-    indicator.style.setProperty('--marker-x',selected.offsetLeft+'px');indicator.style.setProperty('--marker-width',selected.offsetWidth+'px');
-  }
-  function chooseMotionTab(button,focus=false){
-    const tabs=byId('motion-tabs');if(!tabs)return;
-    tabs.querySelectorAll('[data-motion-tab]').forEach(tab=>{const active=tab===button;tab.setAttribute('aria-selected',String(active));tab.tabIndex=active?0:-1;});
+  function bindMotionTabs(){
+    const panel=byId('motion-tab-panel');
     const titles={notes:'记录',plans:'计划',saved:'收藏'};
-    const copy={notes:'显示已添加的演示记录。内容范围即时更新，选中标记说明当前视图。',plans:'显示计划视图的说明。动画只移动定位标记，不改变页面整体位置。',saved:'显示收藏视图的说明。快速重复切换时保持最新选择，不播放过期过渡。'};
-    const panel=byId('motion-tab-panel');panel.innerHTML=`<h3>${titles[button.dataset.motionTab]}</h3><p>${copy[button.dataset.motionTab]}</p>`;panel.setAttribute('aria-labelledby',button.id);updateMotionMarker();if(focus)button.focus();
+    const copy={notes:'显示已添加的演示记录。定位条与内容淡入使用和组件预览相同的规则。',plans:'显示计划视图。文字保持固定位置，选中标记移动，内容短暂淡入。',saved:'显示收藏视图。快速切换会打断旧动效，立即响应最后一次选择。'};
+    motionTabsCleanup=window.RosemaryMotion.bindTabs(byId('motion-tabs'),{panel,initialKey:'notes',onChange(key){panel.innerHTML=`<h3>${titles[key]}</h3><p>${copy[key]}</p>`;}});
   }
   function confirmAction(){
     const control=byId('confirm-button');if(!control||control.disabled||control.getAttribute('aria-disabled')==='true')return;
@@ -205,44 +147,24 @@
     list.innerHTML='<li><span class="record-dot"></span><span>整理周末照片</span><small>示例记录</small></li><li><span class="record-dot"></span><span>确认家庭日程</span><small>示例记录</small></li>';
     byId('insert-motion-row').disabled=false;status('motion-list-status','列表已重置。');
   }
-  function openDrawer(opener){
-    drawerOpener=opener;const dialog=byId('demo-drawer');if(!dialog)return;
-    dialog.showModal();dialog.querySelector('[data-lab-action="close-demo-drawer"]').focus();
-    animate(dialog,[{opacity:.5,transform:'translateX(16px)'},{opacity:1,transform:'translateX(0)'}],{duration:240,easing:'cubic-bezier(.2,.7,.2,1)'});
-  }
-
-  function locationChanged(){
-    if(currentPage!=='components')return;
-    const query=new URLSearchParams(location.hash.split('?')[1]||'');const id=query.get('component');
-    if(id&&window.RosemaryComponentCatalog[id])renderSpec(id);
-  }
   function init(page){
-    currentPage=page;
     if(page==='icons'){
       byId('icon-query').value=gallery.query;byId('icon-category').value=gallery.category;byId('icon-size').value=String(gallery.size);renderGallery();
-    }
-    if(page==='components'){
-      renderSpec('button');locationChanged();demoPage=1;updatePagination();renderTable();files=[];renderFiles();
     }
     if(page==='loading'){
       foldState='idle';renderFold();progress={state:'idle',done:0};renderProgress();
     }
     if(page==='motion'){
-      listInsertions=0;requestAnimationFrame(updateMotionMarker);resizeObserver=new ResizeObserver(updateMotionMarker);resizeObserver.observe(byId('motion-tabs'));
+      listInsertions=0;bindMotionTabs();
     }
   }
   function destroy(){
-    stopTimers();progressGeneration++;progressSampleGeneration++;foldGeneration++;animations.forEach(animation=>animation.cancel());animations.clear();resizeObserver?.disconnect();resizeObserver=undefined;hideTooltips();currentPage='';
+    stopTimers();progressGeneration++;progressSampleGeneration++;foldGeneration++;animations.forEach(animation=>animation.cancel());animations.clear();motionTabsCleanup?.();motionTabsCleanup=undefined;
   }
   document.addEventListener('visibilitychange',()=>document.documentElement.classList.toggle('portal-motion-paused',document.hidden));
-  reduced.addEventListener('change',()=>{if(reduced.matches){animations.forEach(animation=>animation.cancel());animations.clear();}updateMotionMarker();});
+  reduced.addEventListener('change',()=>{if(reduced.matches){animations.forEach(animation=>animation.cancel());animations.clear();}});
   document.addEventListener('click',event=>{
     const iconButton=event.target.closest('[data-icon-id]');if(iconButton){gallery.selected=iconButton.dataset.iconId;document.querySelectorAll('[data-icon-id]').forEach(button=>button.setAttribute('aria-pressed',String(button===iconButton)));renderIconInspector();return;}
-    const pageButton=event.target.closest('[data-demo-page]');if(pageButton){demoPage=Number(pageButton.dataset.demoPage);updatePagination();return;}
-    const step=event.target.closest('[data-page-step]');if(step&&!step.disabled){demoPage=Math.min(3,Math.max(1,demoPage+Number(step.dataset.pageStep)));updatePagination();return;}
-    const sortButton=event.target.closest('[data-table-sort]');if(sortButton){const key=sortButton.dataset.tableSort;sort={key,direction:sort.key===key?-sort.direction:1};renderTable();return;}
-    const remove=event.target.closest('[data-remove-file]');if(remove){const index=Number(remove.dataset.removeFile);files.splice(index,1);renderFiles();byId('sample-files').focus();return;}
-    const motionTab=event.target.closest('[data-motion-tab]');if(motionTab){chooseMotionTab(motionTab);return;}
     const actionButton=event.target.closest('[data-lab-action],[data-action]');if(!actionButton||actionButton.disabled||actionButton.getAttribute('aria-disabled')==='true')return;
     const action=actionButton.dataset.labAction||actionButton.dataset.action;
     if(action==='copy-selected-icon')copyText(svgSource(gallery.selected));
@@ -261,35 +183,13 @@
     else if(action==='confirm-action')confirmAction();
     else if(action==='insert-motion-row')insertMotionRow();
     else if(action==='reset-motion-rows')resetMotionRows();
-    else if(action==='apply-filter'){actionButton.closest('details').open=false;portal().notify('筛选选项已用于本页演示，不影响真实记录。');}
-    else if(action==='open-demo-drawer')openDrawer(actionButton);
-    else if(action==='close-demo-drawer')byId('demo-drawer').close();
   });
   document.addEventListener('input',event=>{
     if(event.target.id==='icon-query'){gallery.query=event.target.value;renderGallery();}
-    if(event.target.id==='sample-range')status('sample-range-value',event.target.value+' 分钟');
   });
   document.addEventListener('change',event=>{
     if(event.target.id==='icon-category'){gallery.category=event.target.value;renderGallery();}
     if(event.target.id==='icon-size'){gallery.size=Number(event.target.value);renderGallery();}
-    if(event.target.id==='component-spec-select')renderSpec(event.target.value);
-    if(event.target.id==='sample-files'){files=[...event.target.files];renderFiles();}
   });
-  document.addEventListener('pointerover',event=>{const trigger=event.target.closest('[data-tooltip-trigger]');if(trigger)showTooltip(trigger);});
-  document.addEventListener('pointerout',event=>{const anchor=event.target.closest('.tooltip-anchor');if(anchor&&!anchor.contains(event.relatedTarget))hideTooltips();});
-  document.addEventListener('focusin',event=>{if(event.target.matches('[data-tooltip-trigger]'))showTooltip(event.target);});
-  document.addEventListener('focusout',event=>{const anchor=event.target.closest('.tooltip-anchor');if(anchor&&!anchor.contains(event.relatedTarget))hideTooltips();});
-  document.addEventListener('keydown',event=>{
-    if(event.key==='Escape')hideTooltips();
-    if(event.target.matches('[data-motion-tab]')){
-      const tabs=[...event.target.parentElement.querySelectorAll('[data-motion-tab]')];const index=tabs.indexOf(event.target);let next;
-      if(event.key==='ArrowRight')next=(index+1)%tabs.length;if(event.key==='ArrowLeft')next=(index+tabs.length-1)%tabs.length;if(event.key==='Home')next=0;if(event.key==='End')next=tabs.length-1;
-      if(next!==undefined){event.preventDefault();chooseMotionTab(tabs[next],true);}
-    }
-  });
-  document.addEventListener('dragover',event=>{const target=event.target.closest('#file-dropzone');if(target){event.preventDefault();target.classList.add('is-dragging');}});
-  document.addEventListener('dragleave',event=>{const target=event.target.closest('#file-dropzone');if(target&&!target.contains(event.relatedTarget))target.classList.remove('is-dragging');});
-  document.addEventListener('drop',event=>{const target=event.target.closest('#file-dropzone');if(target){event.preventDefault();target.classList.remove('is-dragging');files=[...event.dataTransfer.files];renderFiles();}});
-  document.addEventListener('DOMContentLoaded',()=>byId('demo-drawer')?.addEventListener('close',()=>{if(drawerOpener?.isConnected)drawerOpener.focus({preventScroll:true});}));
-  window.RosemaryLabs={init,destroy,locationChanged};
+  window.RosemaryLabs={init,destroy};
 })();

@@ -56,6 +56,7 @@
   --motion-feedback: 120ms;
   --motion-state: 180ms;
   --motion-enter: 260ms;
+  --motion-page: 220ms;
   --motion-exit: 160ms;
   --motion-layout: 240ms;
   --motion-fold-cycle: 1200ms;

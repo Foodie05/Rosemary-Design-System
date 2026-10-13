@@ -1,0 +1,343 @@
+.page[data-page="overview"] {
+  --forma-rule: color-mix(in srgb,var(--ink) 18%,transparent);
+  --forma-soft: color-mix(in srgb,var(--primary) 8%,var(--canvas));
+  max-width:1480px;
+  padding-top:0;
+  padding-bottom:74px;
+  overflow:hidden;
+}
+
+.page[data-page="overview"] .forma-hero {
+  min-height:clamp(610px,calc(100vh - 76px),820px);
+  display:grid;
+  grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);
+  align-items:center;
+  gap:clamp(48px,6vw,104px);
+  padding:74px 0 82px;
+}
+
+.page[data-page="overview"] .forma-hero-copy {max-width:720px;position:relative;z-index:1}
+.page[data-page="overview"] .forma-hero-brand {margin-bottom:58px}
+.page[data-page="overview"] .forma-hero-brand .rm-brand {--brand-color:var(--primary)}
+.page[data-page="overview"] .forma-eyebrow {
+  color:var(--primary);
+  font-size:12px;
+  letter-spacing:.12em;
+  margin-bottom:17px;
+}
+.page[data-page="overview"] .forma-title {
+  max-width:720px;
+  font-family:var(--editorial);
+  font-size:clamp(44px,4.15vw,68px);
+  font-weight:400;
+  line-height:1.42;
+  letter-spacing:-2.2px;
+}
+.page[data-page="overview"] .forma-title:focus {outline:none}
+.page[data-page="overview"] .forma-lede {
+  max-width:585px;
+  margin-top:25px;
+  color:var(--muted);
+  font-size:16px;
+  line-height:2;
+}
+.page[data-page="overview"] .forma-actions {display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+.page[data-page="overview"] .forma-actions .button {min-height:46px;padding-inline:20px}
+
+.page[data-page="overview"] .forma-composition {
+  width:min(100%,510px);
+  aspect-ratio:4/5;
+  justify-self:end;
+  position:relative;
+}
+.page[data-page="overview"] .forma-sheet {
+  position:absolute;
+  border:1px solid var(--forma-rule);
+  background:var(--surface);
+}
+.page[data-page="overview"] .forma-sheet-back {
+  inset:4% 15% 21% 2%;
+  border-radius:50% 50% 12px 12px;
+  background:var(--primary-soft);
+}
+.page[data-page="overview"] .forma-sheet-front {
+  inset:18% 2% 3% 19%;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 24px 70px color-mix(in srgb,var(--ink) 7%,transparent);
+}
+.page[data-page="overview"] .forma-sheet-front:before {
+  content:"";
+  position:absolute;
+  inset:0 72% 0 0;
+  border-right:1px solid var(--forma-rule);
+  background:var(--forma-soft);
+}
+.page[data-page="overview"] .forma-shape {position:absolute;display:block}
+.page[data-page="overview"] .forma-shape-round {
+  width:21%;
+  aspect-ratio:1;
+  border-radius:50%;
+  top:11%;
+  left:40%;
+  background:var(--sun);
+}
+.page[data-page="overview"] .forma-shape-square {
+  width:16%;
+  aspect-ratio:1;
+  top:14%;
+  right:10%;
+  border:1px solid var(--forma-rule);
+  border-radius:9px 9px 9px 42%;
+  background:var(--sky);
+}
+.page[data-page="overview"] .forma-rule {
+  position:absolute;
+  left:40%;
+  height:7px;
+  border-radius:999px;
+  background:var(--forma-rule);
+}
+.page[data-page="overview"] .forma-rule-wide {top:44%;width:45%}
+.page[data-page="overview"] .forma-rule-mid {top:52%;width:36%;opacity:.72}
+.page[data-page="overview"] .forma-rule-short {top:60%;width:22%;opacity:.48}
+.page[data-page="overview"] .forma-control {
+  position:absolute;
+  left:40%;
+  bottom:15%;
+  width:28%;
+  height:9%;
+  border-radius:8px;
+  background:var(--primary);
+}
+.page[data-page="overview"] .forma-axis {position:absolute;background:var(--primary);opacity:.62}
+.page[data-page="overview"] .forma-axis-x {width:28%;height:1px;right:0;top:9%}
+.page[data-page="overview"] .forma-axis-y {width:1px;height:21%;right:10%;top:0}
+
+.page[data-page="overview"] .forma-contents {
+  display:flex;
+  align-items:center;
+  gap:28px;
+  min-height:58px;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  font-size:12px;
+}
+.page[data-page="overview"] .forma-contents span {margin-right:auto;color:var(--muted)}
+.page[data-page="overview"] .forma-contents a {padding:14px 0;color:var(--muted)}
+.page[data-page="overview"] .forma-contents a:hover {color:var(--primary)}
+
+.page[data-page="overview"] .forma-section {scroll-margin-top:100px;padding-top:clamp(78px,9vw,132px)}
+.page[data-page="overview"] .forma-section-heading {
+  display:grid;
+  grid-template-columns:72px minmax(0,1fr);
+  gap:24px;
+  align-items:start;
+  margin-bottom:47px;
+}
+.page[data-page="overview"] .forma-section-index {
+  color:var(--primary);
+  font:12px/1.5 var(--code);
+  letter-spacing:.08em;
+}
+.page[data-page="overview"] .forma-section-heading h2,
+.page[data-page="overview"] .forma-start h2 {
+  max-width:690px;
+  font-family:var(--editorial);
+  font-size:clamp(32px,3vw,47px);
+  font-weight:400;
+  line-height:1.48;
+  letter-spacing:-1.25px;
+}
+.page[data-page="overview"] .forma-section-heading p:not(.forma-section-index) {
+  max-width:560px;
+  margin-top:12px;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.9;
+}
+
+.page[data-page="overview"] .forma-principle-list {
+  list-style:none;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:0;
+  padding:0;
+  margin:0 0 0 96px;
+  border-top:1px solid var(--border);
+}
+.page[data-page="overview"] .forma-principle-list li {min-height:230px;padding:29px 30px 25px 0;border-bottom:1px solid var(--border)}
+.page[data-page="overview"] .forma-principle-list li+li {padding-left:30px;border-left:1px solid var(--border)}
+.page[data-page="overview"] .forma-principle-list span {display:block;color:var(--muted);font:11px/1.5 var(--code);margin-bottom:45px}
+.page[data-page="overview"] .forma-principle-list h3 {font-size:17px;font-weight:560;margin-bottom:12px}
+.page[data-page="overview"] .forma-principle-list p {max-width:300px;color:var(--muted);font-size:13px;line-height:1.9}
+
+.page[data-page="overview"] .forma-paths {
+  display:grid;
+  grid-template-columns:minmax(0,1.12fr) minmax(360px,.88fr);
+  grid-template-rows:repeat(3,minmax(132px,auto));
+  gap:16px;
+  margin-left:96px;
+}
+.page[data-page="overview"] .forma-path {
+  min-width:0;
+  display:grid;
+  grid-template-columns:74px minmax(0,1fr) 24px;
+  gap:20px;
+  align-items:start;
+  padding:27px 28px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--surface);
+  transition:border-color 160ms var(--ease),background 160ms var(--ease),transform 160ms var(--ease);
+}
+.page[data-page="overview"] .forma-path:hover {border-color:var(--control);background:var(--forma-soft);transform:translateY(-2px)}
+.page[data-page="overview"] .forma-path-label {font-size:11px;color:var(--primary);letter-spacing:.08em}
+.page[data-page="overview"] .forma-path-copy {min-width:0}
+.page[data-page="overview"] .forma-path-copy strong {display:block;font:400 25px/1.4 var(--editorial);letter-spacing:-.5px;white-space:nowrap}
+.page[data-page="overview"] .forma-path-copy small {display:block;max-width:390px;margin-top:9px;color:var(--muted);font-size:12px;line-height:1.8}
+.page[data-page="overview"] .forma-path-arrow {justify-self:end;color:var(--muted);padding-top:4px}
+.page[data-page="overview"] .forma-path-arrow .icon {width:17px;height:17px}
+.page[data-page="overview"] .forma-path-featured {
+  grid-row:span 2;
+  min-height:280px;
+  align-content:stretch;
+  background:var(--primary-soft);
+  border-color:transparent;
+}
+.page[data-page="overview"] .forma-path-art {
+  grid-column:1/-1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:clamp(170px,17vw,252px);
+  margin:-4px 0 20px;
+  color:var(--primary);
+}
+.page[data-page="overview"] .forma-build-illustration {width:min(100%,560px);height:auto;overflow:visible}
+.page[data-page="overview"] .forma-build-illustration path,
+.page[data-page="overview"] .forma-build-illustration rect,
+.page[data-page="overview"] .forma-build-illustration circle {vector-effect:non-scaling-stroke}
+.page[data-page="overview"] .forma-build-frame {stroke:var(--control);stroke-width:1.5}
+.page[data-page="overview"] .forma-build-muted {stroke:var(--muted);stroke-width:2;stroke-linecap:round;opacity:.54}
+.page[data-page="overview"] .forma-build-plum {stroke:var(--primary);stroke-width:3;stroke-linecap:round}
+.page[data-page="overview"] circle.forma-build-plum {fill:var(--primary);stroke:none}
+.page[data-page="overview"] .forma-build-sun {stroke:var(--warning);stroke-width:3;stroke-linecap:round}
+.page[data-page="overview"] circle.forma-build-sun {fill:var(--sun);stroke:var(--warning);stroke-width:1}
+.page[data-page="overview"] .forma-build-sky {stroke:var(--info);stroke-width:3;stroke-linecap:round}
+.page[data-page="overview"] circle.forma-build-sky {fill:var(--sky);stroke:var(--info);stroke-width:1}
+.page[data-page="overview"] .forma-build-sky-fill {fill:var(--sky);stroke:var(--info);stroke-width:1.25}
+.page[data-page="overview"] .forma-build-plum-fill {fill:var(--primary);stroke:var(--primary);stroke-width:1}
+.page[data-page="overview"] .forma-path:not(.forma-path-featured):not(:last-child) {grid-template-columns:minmax(0,1fr) 24px;grid-template-rows:auto 1fr}
+.page[data-page="overview"] .forma-path:not(.forma-path-featured):not(:last-child) .forma-path-copy {grid-column:1/-1;align-self:end;padding-right:20px}
+.page[data-page="overview"] .forma-path:not(.forma-path-featured):not(:last-child) .forma-path-arrow {grid-column:2;grid-row:1}
+.page[data-page="overview"] .forma-path:last-child {grid-column:1/-1}
+.page[data-page="overview"] .forma-path-featured .forma-path-copy strong {font-size:clamp(32px,3vw,46px)}
+.page[data-page="overview"] .forma-path-case {background:var(--sky);color:var(--on-sky);border-color:transparent}
+.page[data-page="overview"] .forma-path-case .forma-path-label,
+.page[data-page="overview"] .forma-path-case .forma-path-copy small,
+.page[data-page="overview"] .forma-path-case .forma-path-arrow {color:inherit;opacity:.76}
+
+.page[data-page="overview"] .forma-start {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(330px,.78fr);
+  gap:clamp(60px,9vw,150px);
+  align-items:end;
+  margin-top:clamp(78px,9vw,132px);
+  padding-top:clamp(66px,7vw,96px);
+  border-top:1px solid var(--border);
+}
+.page[data-page="overview"] .forma-start-copy>p:not(.forma-section-index) {max-width:610px;margin-top:20px;color:var(--muted);font-size:14px;line-height:2}
+.page[data-page="overview"] .forma-start h2 {margin-top:18px}
+.page[data-page="overview"] .forma-inline-link {display:inline-flex;align-items:center;gap:8px;margin-top:26px;color:var(--primary);font-size:13px}
+.page[data-page="overview"] .forma-inline-link .icon {width:15px;height:15px}
+.page[data-page="overview"] .forma-resources {border-top:1px solid var(--border)}
+.page[data-page="overview"] .forma-resource-title {padding:0 0 15px;color:var(--muted);font-size:11px;letter-spacing:.08em}
+.page[data-page="overview"] .forma-resources>a {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  min-height:62px;
+  border-bottom:1px solid var(--border);
+  font-size:13px;
+}
+.page[data-page="overview"] .forma-resources>a>span {display:flex;align-items:center;gap:12px}
+.page[data-page="overview"] .forma-resources .icon {width:17px;height:17px;color:var(--primary)}
+.page[data-page="overview"] .forma-resources>a>.icon {width:13px;height:13px;color:var(--muted)}
+.page[data-page="overview"] .forma-resources>a:hover {color:var(--primary)}
+
+@media(max-width:1100px) {
+  .page[data-page="overview"] .forma-hero {grid-template-columns:minmax(0,1.05fr) minmax(300px,.75fr);gap:34px;min-height:620px;padding-block:58px 68px}
+  .page[data-page="overview"] .forma-hero-brand {margin-bottom:44px}
+  .page[data-page="overview"] .forma-title {font-size:clamp(40px,4.4vw,54px)}
+  .page[data-page="overview"] .forma-composition {max-width:400px}
+  .page[data-page="overview"] .forma-principle-list,
+  .page[data-page="overview"] .forma-paths {margin-left:0}
+  .page[data-page="overview"] .forma-paths {grid-template-columns:minmax(0,1fr) minmax(340px,.92fr)}
+}
+
+@media(max-width:800px) {
+  .page[data-page="overview"] .forma-hero {min-height:0;grid-template-columns:minmax(0,1.05fr) minmax(260px,.75fr);padding-block:50px 62px}
+  .page[data-page="overview"] .forma-hero-brand .rm-brand {--brand-height:52px!important}
+  .page[data-page="overview"] .forma-title {font-size:40px;letter-spacing:-1.5px}
+  .page[data-page="overview"] .forma-lede {font-size:14px}
+  .page[data-page="overview"] .forma-contents {gap:20px}
+  .page[data-page="overview"] .forma-principle-list {grid-template-columns:1fr}
+  .page[data-page="overview"] .forma-principle-list li {min-height:0;display:grid;grid-template-columns:44px 160px minmax(0,1fr);gap:18px;padding:24px 0;align-items:start}
+  .page[data-page="overview"] .forma-principle-list li+li {padding-left:0;border-left:0}
+  .page[data-page="overview"] .forma-principle-list span {margin:3px 0 0}
+  .page[data-page="overview"] .forma-principle-list h3 {margin:0}
+  .page[data-page="overview"] .forma-paths {grid-template-columns:1fr;grid-template-rows:auto}
+  .page[data-page="overview"] .forma-path-featured {grid-row:auto;min-height:190px}
+  .page[data-page="overview"] .forma-path-art {min-height:132px;margin:0 0 13px}
+  .page[data-page="overview"] .forma-path:last-child {grid-column:auto}
+  .page[data-page="overview"] .forma-start {grid-template-columns:1fr 1fr;gap:50px}
+}
+
+@media(max-width:580px) {
+  .page[data-page="overview"] {padding-bottom:48px}
+  .page[data-page="overview"] .forma-hero {display:flex;flex-direction:column;align-items:stretch;gap:38px;padding:36px 0 48px}
+  .page[data-page="overview"] .forma-hero-brand {margin-bottom:40px}
+  .page[data-page="overview"] .forma-hero-brand .rm-brand {--brand-height:44px!important;gap:10px}
+  .page[data-page="overview"] .forma-title {font-size:clamp(35px,10.2vw,43px);line-height:1.46;letter-spacing:-1.25px}
+  .page[data-page="overview"] .forma-title br {display:none}
+  .page[data-page="overview"] .forma-lede {font-size:14px;line-height:1.95;margin-top:21px}
+  .page[data-page="overview"] .forma-actions {margin-top:28px;gap:10px}
+  .page[data-page="overview"] .forma-actions .button {min-height:44px;padding-inline:15px;font-size:12px}
+  .page[data-page="overview"] .forma-composition {width:min(88%,360px);align-self:center;aspect-ratio:5/4}
+  .page[data-page="overview"] .forma-sheet-back {inset:2% 21% 14% 2%;border-radius:48% 48% 10px 10px}
+  .page[data-page="overview"] .forma-sheet-front {inset:14% 2% 2% 22%}
+  .page[data-page="overview"] .forma-contents {overflow-x:auto;gap:22px;white-space:nowrap;scrollbar-width:none}
+  .page[data-page="overview"] .forma-contents::-webkit-scrollbar {display:none}
+  .page[data-page="overview"] .forma-contents span {display:none}
+  .page[data-page="overview"] .forma-section {padding-top:72px}
+  .page[data-page="overview"] .forma-section-heading {grid-template-columns:1fr;gap:14px;margin-bottom:29px}
+  .page[data-page="overview"] .forma-section-heading h2,
+  .page[data-page="overview"] .forma-start h2 {font-size:31px;line-height:1.52;letter-spacing:-.8px}
+  .page[data-page="overview"] .forma-section-heading p:not(.forma-section-index) {font-size:13px}
+  .page[data-page="overview"] .forma-principle-list li {grid-template-columns:38px minmax(0,1fr);gap:2px 14px;padding:23px 0}
+  .page[data-page="overview"] .forma-principle-list h3 {font-size:16px}
+  .page[data-page="overview"] .forma-principle-list p {grid-column:2;font-size:13px}
+  .page[data-page="overview"] .forma-paths {grid-template-columns:1fr;gap:12px}
+  .page[data-page="overview"] .forma-path:last-child {grid-column:auto}
+  .page[data-page="overview"] .forma-path {grid-template-columns:50px minmax(0,1fr) 18px;padding:22px 20px;gap:12px}
+  .page[data-page="overview"] .forma-path-featured {min-height:176px;align-content:end}
+  .page[data-page="overview"] .forma-path-art {min-height:120px;margin:0 0 12px}
+  .page[data-page="overview"] .forma-path-featured .forma-path-copy strong {font-size:31px}
+  .page[data-page="overview"] .forma-path-copy strong {font-size:22px}
+  .page[data-page="overview"] .forma-start {grid-template-columns:1fr;gap:48px;margin-top:74px;padding-top:63px}
+  .page[data-page="overview"] .forma-start-copy>p:not(.forma-section-index) {font-size:13px}
+}
+
+@media(prefers-reduced-motion:reduce) {
+  .page[data-page="overview"] .forma-path {transition:none}
+  .page[data-page="overview"] .forma-path:hover {transform:none}
+}
+
+@media(forced-colors:active) {
+  .page[data-page="overview"] .forma-sheet,
+  .page[data-page="overview"] .forma-path {border-color:CanvasText}
+  .page[data-page="overview"] .forma-control,
+  .page[data-page="overview"] .forma-axis {background:Highlight}
+}
