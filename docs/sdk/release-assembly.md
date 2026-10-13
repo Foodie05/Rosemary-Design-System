@@ -1,0 +1,20 @@
+# SDK 0.4.0 release assembly
+
+The assembly command reads GitHub and writes a new local directory. It never merges, tags, creates a Release or publishes to a registry. It requires Node 22.23.2, authenticated `gh`, and Python 3 (`ROSEMARY_PYTHON` can choose its executable). Input archives are downloaded as their original GitHub Actions ZIPs and their SHA-256 is checked against GitHub's artifact digest before extraction.
+
+After review and merge, record the complete **current main HEAD** and dispatch all four SDK workflows on main if path filters did not trigger them. Wait for every job in Web, Android API 26/36, SwiftUI and the Flutter platform matrix to succeed for that exact SHA. A successful PR run or a build from an intermediate working tree cannot substitute for this final-main evidence. The script selects each workflow's latest run at that exact SHA and fails if it is pending, failed or cancelled; it does not silently fall back to an older successful attempt.
+
+```sh
+node scripts/assemble-sdk-release.mjs --head FULL_MAIN_SHA --dry-run
+node scripts/assemble-sdk-release.mjs --head FULL_MAIN_SHA --output /new/path/rosemary-sdk-0.4.0
+```
+
+The output path must not exist. A failed assembly leaves its partial output for inspection and never writes `READY`. Choose a new path on retry. `--dry-run` validates the main SHA, workflow/job results and artifact identities without downloading or writing an assembly. The final main SHA is checked again after downloads to reject a branch moving during assembly.
+
+`assets/` contains the actual tokens/icons/React tarballs; canonical Android AAR, local Maven ZIP and sample APK from API 36; Swift package source archive and unsigned simulator sample; Flutter source and all six consumer target artifacts. Android API 26 remains separately evidenced. Flutter's canonical source is explicitly the Linux/Web/Android runner's archive; every runner's actual source and consumer digest is preserved in the manifest, so different archive metadata is never described as identical bytes. Native simulator/debug samples are described as such and are not signed device/store distributions.
+
+All seven original CI ZIPs are retained as release evidence. `release-manifest.json` records the repository, exact SHA, workflow/run/attempt, artifact ID, GitHub ZIP digest, per-run package digests and the origin of every standalone asset. `SHA256SUMS` covers every other file in `assets/`, including the manifest and evidence ZIPs. Unpacked inspection files stay under `extracted/` and are not standalone release assets. Each native provenance record must explicitly identify the final SHA and a clean source checkout; source/consumer digests and React type/SSR/behavior/asset results must agree with downloaded bytes. Swift additionally requires successful executed tests, both extracted-source package/sample consumers, and the pinned normalized project matching its committed bytes. Android requires successful library/consumer/device phases, real XML assertions with zero failures/skips and the requested API; Flutter requires its test and corresponding target/device phases plus the exact archived source digest. The browser report must contain real passing paths and no failing/skipped/flaky results.
+
+The operator reviews `READY`, the manifest, install instructions, platform limitations and checksums before the separately authorized final tag/Release operation. Tag `v0.4.0` must resolve to this manifest SHA. Upload the flat `assets/` files as the Release's installable outputs and evidence, without adding local working-tree builds. There is no public package registry publication.
+
+The run/artifact fields and archive digest are defined by the official [GitHub workflow-runs API](https://docs.github.com/en/rest/actions/workflow-runs) and [Actions artifacts API](https://docs.github.com/en/rest/actions/artifacts). A script dry run is not a release build or successful final assembly. Until final-main CI exists, the final bundle remains unverified.

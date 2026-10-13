@@ -984,6 +984,7 @@ textarea.rm-input {
 @media (forced-colors: active) {
   .rm-fold-back,
   .rm-fold-front {
+    forced-color-adjust: none;
     background: CanvasText;
   }
   .rm-progress {
@@ -991,6 +992,7 @@ textarea.rm-input {
     border: 1px solid CanvasText;
   }
   .rm-progress > span {
+    forced-color-adjust: none;
     background: Highlight;
   }
   .rm-progress > span::after {
@@ -1004,6 +1006,7 @@ textarea.rm-input {
   }
   .rm-check input:checked + .rm-check-visual,
   .rm-switch[aria-checked="true"]::before {
+    forced-color-adjust: none;
     background: Highlight;
     color: HighlightText;
   }
@@ -1188,4 +1191,16 @@ body:has(.rm-dialog:modal) {
 .rm-card[data-selected="true"] {
   border-color: var(--rm-primary);
   background: var(--rm-primary-soft);
+}
+
+@media (forced-colors: active) {
+  .rm-check input[aria-checked="mixed"] + .rm-check-visual {
+    forced-color-adjust: none;
+    background: Highlight;
+    border-color: CanvasText;
+  }
+  .rm-check-mixed {
+    forced-color-adjust: none;
+    background: HighlightText;
+  }
 }

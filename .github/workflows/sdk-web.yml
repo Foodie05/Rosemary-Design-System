@@ -27,7 +27,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Shared deterministic generation, schema, aliases and actual contrast
-        run: pnpm design:check && pnpm build:shared && pnpm test:shared
+        run: pnpm design:check && pnpm build:shared && pnpm test:shared && node --test tests/release-assembly.test.mjs
       - name: Strict builds and workspace interaction regressions
         run: pnpm --filter @rosemary-ui/react build && pnpm test:react && pnpm --filter rosemary-react-gallery build
       - name: Pack installable source distribution

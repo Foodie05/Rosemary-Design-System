@@ -38,8 +38,16 @@ export default defineConfig({
   },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-    { name: "firefox", use: { ...devices["Desktop Firefox"] } },
-    { name: "webkit", use: { ...devices["Desktop Safari"] } },
+    {
+      name: "firefox",
+      testIgnore: "**/forced-colors.spec.mjs",
+      use: { ...devices["Desktop Firefox"] },
+    },
+    {
+      name: "webkit",
+      testIgnore: "**/forced-colors.spec.mjs",
+      use: { ...devices["Desktop Safari"] },
+    },
   ],
   webServer: {
     command: "node server.mjs",

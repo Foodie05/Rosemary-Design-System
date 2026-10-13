@@ -940,7 +940,7 @@
       "behavior": "模态抽屉阻止背景交互；非模态不制造焦点陷阱；保留选择。",
       "keyboard": "键盘可关闭和访问内容；焦点按是否模态管理。",
       "semantics": "模态可用 dialog；导航抽屉包含有名称的 nav。",
-      "motion": "短距离位移，约 240ms；减少动态直接显示。",
+      "motion": "进入 220ms、退出 180ms；等待实际退出动画完成后移除，可从当前姿态中断和反转；减少动态直接显示。",
       "good": "选择符合任务的模态方式并保留当前目的地。",
       "bad": "只做一个视觉遮罩，却仍允许键盘操作后面的页面。",
       "implementation": "Rosemary rendering; no demo business data",
