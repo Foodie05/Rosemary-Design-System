@@ -218,6 +218,10 @@ struct RosemaryFieldFrame: ViewModifier {
   private var p = RosemaryPalette()
   var invalid = false
   var focused = false
+  init(invalid: Bool = false, focused: Bool = false) {
+    self.invalid = invalid
+    self.focused = focused
+  }
   func body(content: Content) -> some View {
     content.padding(12).frame(minHeight: RosemaryNativeMetrics.dimension("input", "minHeight"))
       .background(p.colors.surface)
@@ -234,6 +238,7 @@ struct RosemaryFieldFrame: ViewModifier {
 private struct ThemeOverrideModifier: ViewModifier {
   private var p = RosemaryPalette()
   let overrides: [String: Color]
+  init(overrides: [String: Color]) { self.overrides = overrides }
   func body(content: Content) -> some View {
     content.environment(\.rosemaryTheme, try! RosemaryTheme(colors: p.colors).overriding(overrides))
   }

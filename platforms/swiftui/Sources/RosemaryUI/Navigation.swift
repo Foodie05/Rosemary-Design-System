@@ -53,102 +53,110 @@ public struct RosemarySelect<Value: Hashable>: View {
     cursor =
       options.firstIndex { $0.value == selection } ?? options.firstIndex { !$0.disabled } ?? 0
   }
+  private var selectedLabel: String { options.first { $0.value == selection }?.label ?? label }
+  private func optionRow(_ i: Int, _ o: RosemaryOption<Value>) -> some View {
+    Button {
+      choose(i)
+    } label: {
+      HStack {
+        Text(o.label).frame(maxWidth: .infinity, alignment: .leading)
+        if o.value == selection { RosemaryIcon("check") }
+      }.padding(12).frame(minHeight: 44).foregroundStyle(
+        o.disabled ? p.colors.muted : p.colors.ink
+      ).background(cursor == i ? p.colors.primarySoft : p.colors.surface)
+    }.buttonStyle(.plain).disabled(o.disabled).id(i).accessibilityAddTraits(
+      o.value == selection ? .isSelected : [])
+  }
+  private var optionsPanel: some View {
+    ScrollViewReader { proxy in
+      ScrollView {
+        VStack(spacing: 0) {
+          ForEach(Array(options.enumerated()), id: \.element.id) { i, o in
+            optionRow(i, o)
+          }
+        }
+      }.onAppear { proxy.scrollTo(cursor, anchor: .center) }
+        .onChange(of: cursor) { _, value in proxy.scrollTo(value, anchor: .center) }
+    }.background(p.colors.surface, in: RoundedRectangle(cornerRadius: 8))
+      .overlay(
+        RoundedRectangle(cornerRadius: 8).stroke(p.colors.control, lineWidth: p.stroke)
+      )
+      .onKeyPress(.escape) {
+        open = false
+        focus = true
+        return .handled
+      }
+      .onKeyPress(.tab) {
+        open = false
+        return .ignored
+      }
+  }
+  private var trigger: some View {
+    Button(action: expand) {
+      HStack {
+        Text(selectedLabel).frame(
+          maxWidth: .infinity, alignment: .leading)
+        RosemaryIcon("down")
+      }
+    }.buttonStyle(.plain).modifier(RosemaryFieldFrame(invalid: error != nil, focused: focus))
+      .focused($focus).accessibilityLabel(label).accessibilityValue(
+        "\(options.first { $0.value == selection }?.label ?? ""), \(open ? p.text("Expanded"):p.text("Collapsed"))"
+      )
+      .onKeyPress(.downArrow) {
+        if !open { expand() } else { move(1) }
+        return .handled
+      }
+      .onKeyPress(.upArrow) {
+        if !open { expand() } else { move(-1) }
+        return .handled
+      }
+      .onKeyPress(.home) {
+        cursor = options.firstIndex { !$0.disabled } ?? 0
+        return .handled
+      }
+      .onKeyPress(.end) {
+        cursor = options.lastIndex { !$0.disabled } ?? 0
+        return .handled
+      }
+      .onKeyPress(.return) {
+        if open { choose(cursor) } else { expand() }
+        return .handled
+      }
+      .onKeyPress(.escape) {
+        open = false
+        return .handled
+      }
+      .onKeyPress(.tab) {
+        open = false
+        return .ignored
+      }
+      .onKeyPress(phases: .down) { key in
+        guard open, !key.characters.isEmpty, key.characters.first?.isLetter == true else {
+          return .ignored
+        }
+        if Date().timeIntervalSince(prefixTime) > 0.7 { prefix = "" }
+        prefix += key.characters.lowercased()
+        prefixTime = Date()
+        if let i = options.firstIndex(where: {
+          !$0.disabled && $0.label.lowercased().hasPrefix(prefix)
+        }) {
+          cursor = i
+        }
+        return .handled
+      }
+
+  }
   public var body: some View {
     VStack(alignment: .leading, spacing: 6) {
       Text(label).rosemaryTypography(.small, weight: .medium).foregroundStyle(p.colors.ink)
-      Button(action: expand) {
-        HStack {
-          Text(options.first { $0.value == selection }?.label ?? label).frame(
-            maxWidth: .infinity, alignment: .leading)
-          RosemaryIcon("down")
+      trigger.overlay(alignment: .topLeading) {
+        if open {
+          RosemaryAnchoredLayer(
+            width: 280, height: min(240, CGFloat(options.count) * 44),
+            dismissOutside: { open = false }
+          ) { optionsPanel }
         }
-      }.buttonStyle(.plain).modifier(RosemaryFieldFrame(invalid: error != nil, focused: focus))
-        .focused($focus).accessibilityLabel(label).accessibilityValue(
-          "\(options.first { $0.value == selection }?.label ?? ""), \(open ? p.text("Expanded"):p.text("Collapsed"))"
-        )
-        .onKeyPress(.downArrow) {
-          if !open { expand() } else { move(1) }
-          return .handled
-        }
-        .onKeyPress(.upArrow) {
-          if !open { expand() } else { move(-1) }
-          return .handled
-        }
-        .onKeyPress(.home) {
-          cursor = options.firstIndex { !$0.disabled } ?? 0
-          return .handled
-        }
-        .onKeyPress(.end) {
-          cursor = options.lastIndex { !$0.disabled } ?? 0
-          return .handled
-        }
-        .onKeyPress(.return) {
-          if open { choose(cursor) } else { expand() }
-          return .handled
-        }
-        .onKeyPress(.escape) {
-          open = false
-          return .handled
-        }
-        .onKeyPress(.tab) {
-          open = false
-          return .ignored
-        }
-        .onKeyPress(phases: .down) { key in
-          guard open, !key.characters.isEmpty, key.characters.first?.isLetter == true else {
-            return .ignored
-          }
-          if Date().timeIntervalSince(prefixTime) > 0.7 { prefix = "" }
-          prefix += key.characters.lowercased()
-          prefixTime = Date()
-          if let i = options.firstIndex(where: {
-            !$0.disabled && $0.label.lowercased().hasPrefix(prefix)
-          }) {
-            cursor = i
-          }
-          return .handled
-        }
-        .overlay(alignment: .topLeading) {
-          if open {
-            RosemaryAnchoredLayer(
-              width: 280, height: min(240, CGFloat(options.count) * 44),
-              dismissOutside: { open = false }
-            ) {
-              ScrollViewReader { proxy in
-                ScrollView {
-                  VStack(spacing: 0) {
-                    ForEach(Array(options.enumerated()), id: \.element.id) { i, o in
-                      Button {
-                        choose(i)
-                      } label: {
-                        HStack {
-                          Text(o.label).frame(maxWidth: .infinity, alignment: .leading)
-                          if o.value == selection { RosemaryIcon("check") }
-                        }.padding(12).frame(minHeight: 44).foregroundStyle(
-                          o.disabled ? p.colors.muted : p.colors.ink
-                        ).background(cursor == i ? p.colors.primarySoft : p.colors.surface)
-                      }.buttonStyle(.plain).disabled(o.disabled).id(i).accessibilityAddTraits(
-                        o.value == selection ? .isSelected : [])
-                    }
-                  }
-                }.onAppear { proxy.scrollTo(cursor, anchor: .center) }
-                  .onChange(of: cursor) { _, value in proxy.scrollTo(value, anchor: .center) }
-              }.background(p.colors.surface, in: RoundedRectangle(cornerRadius: 8))
-                .overlay(
-                  RoundedRectangle(cornerRadius: 8).stroke(p.colors.control, lineWidth: p.stroke)
-                )
-                .onKeyPress(.escape) {
-                  open = false
-                  focus = true
-                  return .handled
-                }
-                .onKeyPress(.tab) {
-                  open = false
-                  return .ignored
-                }
-            }
-          }
-        }
+      }
       if let error { Text(error).rosemaryTypography(.caption).foregroundStyle(p.colors.danger) }
     }.zIndex(open ? 50 : 0).onDisappear {
       open = false
@@ -156,6 +164,7 @@ public struct RosemarySelect<Value: Hashable>: View {
     }
   }
 }
+
 public struct RosemaryTabs<Value: Hashable, Content: View>: View {
   private var p = RosemaryPalette()
   let options: [RosemaryOption<Value>]

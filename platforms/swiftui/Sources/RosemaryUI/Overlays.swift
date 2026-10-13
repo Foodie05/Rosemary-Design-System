@@ -132,6 +132,20 @@ private struct RosemaryModalModifier<Panel: View>: ViewModifier {
   @FocusState private var closeFocus: Bool
   @AccessibilityFocusState private var a11yFocus: Bool
   @Environment(\.layoutDirection) var direction
+  init(
+    presented: Binding<Bool>, title: String, drawer: RosemaryDrawerEdge?, modal: Bool,
+    dismissOutside: Bool, panel: Panel, onDismiss: @escaping (RosemaryDismissReason) -> Void,
+    restoreFocus: @escaping () -> Void
+  ) {
+    _presented = presented
+    self.title = title
+    self.drawer = drawer
+    self.modal = modal
+    self.dismissOutside = dismissOutside
+    self.panel = panel
+    self.onDismiss = onDismiss
+    self.restoreFocus = restoreFocus
+  }
   private func dismiss(_ reason: RosemaryDismissReason) {
     guard presented else { return }
     requestedReason = reason
