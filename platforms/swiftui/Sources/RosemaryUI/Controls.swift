@@ -22,7 +22,7 @@ public struct RosemaryButtonStyle: ButtonStyle {
     )
     .padding(
       .vertical, 10
-    ).frame(minHeight: 44)
+    ).frame(minHeight: 44).contentShape(Rectangle())
     .foregroundStyle(
       variant == .primary
         ? p.colors.onPrimary : variant == .danger ? p.colors.onDanger : p.colors.primary
@@ -250,7 +250,7 @@ public struct RosemaryCheckbox: View {
         }.frame(width: 20, height: 20)
         Text(label).foregroundStyle(p.colors.ink)
         Spacer(minLength: 0)
-      }.padding(.vertical, 10).frame(minHeight: 44)
+      }.padding(.vertical, 10).frame(minHeight: 44).contentShape(Rectangle())
     }.buttonStyle(.plain).animation(
       p.reduce ? nil : .easeInOut(duration: RosemaryNativeMetrics.duration("state")), value: checked
     )

@@ -15,9 +15,11 @@ final class GalleryUITests: XCTestCase {
       if element.exists && element.isHittable { return }
       // Move towards the element instead of repeatedly overshooting it.
       if element.exists && element.frame.maxY < container.frame.midY {
-        container.swipeDown()
+        container.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: 0.25)).press(
+          forDuration: 0.05, thenDragTo: container.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: 0.75)))
       } else {
-        container.swipeUp()
+        container.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: 0.75)).press(
+          forDuration: 0.05, thenDragTo: container.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: 0.25)))
       }
     }
     XCTAssertTrue(element.isHittable)
@@ -28,6 +30,7 @@ final class GalleryUITests: XCTestCase {
     input.tap()
     input.typeText("Rosemary")
     XCTAssertTrue(app.staticTexts["Name value: Rosemary"].exists)
+    app.buttons["Navigation"].tap()
     app.buttons["Forms"].tap()
     let checkbox = app.descendants(matching: .any).matching(identifier: "checkbox").firstMatch
     reveal(checkbox, in: app)
@@ -60,27 +63,36 @@ final class GalleryUITests: XCTestCase {
     }
   }
   func testDateCancelPreservesValueAndInvalidDirectInputReportsError() {
-    let app = launch()
-    let trigger = app.buttons["Choose Date"]
-    reveal(trigger, in: app)
-    trigger.tap()
+    let app = XCUIApplication()
+    app.launchArguments = ["--capture", "date"]
+    app.launch()
+    let trigger = app.buttons["Choose Local date"]
+    XCTAssertTrue(trigger.waitForExistence(timeout: 10))
     let monday = app.buttons["2026-10-05"]
     reveal(monday, in: app)
     let sunday = app.buttons["2026-10-04"]
     XCTAssertTrue(sunday.exists)
     XCTAssertLessThan(monday.frame.minX, sunday.frame.minX)
     XCTAssertGreaterThan(app.buttons["2026-10-01"].frame.minX, monday.frame.minX)
+    app.buttons["Year 2026"].tap()
+    XCTAssertTrue(app.textFields["Year 1–9999"].waitForExistence(timeout: 3))
+    let year = app.buttons["2027"]
+    reveal(year, in: app)
+    year.tap()
     let next = app.buttons["Next month"]
     reveal(next, in: app)
     next.tap()
-    let day = app.buttons["2026-11-15"]
+    XCTAssertTrue(app.buttons["2027-11-15"].waitForExistence(timeout: 3))
+    app.buttons["Month 11"].tap()
+    app.buttons["Month 12"].tap()
+    let day = app.buttons["2027-12-15"]
     reveal(day, in: app)
     day.tap()
     let cancel = app.buttons["Cancel"].firstMatch
     reveal(cancel, in: app)
     cancel.tap()
     XCTAssertTrue(app.staticTexts["Date value: 2026-10-13"].exists)
-    let field = app.textFields["Date"]
+    let field = app.textFields["Local date"]
     reveal(field, in: app)
     field.tap()
     field.press(forDuration: 1.1)
@@ -136,6 +148,28 @@ final class GalleryUITests: XCTestCase {
     XCTAssertLessThan(title.frame.minY, app.buttons["Edge trigger"].frame.minY)
     app.buttons["Close Boundary placement"].tap()
     XCTAssertFalse(title.exists)
+  }
+
+  func testToastControlledPauseAndRuntimePersistentDuration() {
+    let app = XCUIApplication()
+    app.launchArguments = ["--capture", "toast"]
+    app.launch()
+    let notice = app.staticTexts["Timed notification"]
+    XCTAssertTrue(notice.waitForExistence(timeout: 10))
+    let vanishedWhilePaused = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: notice)
+    vanishedWhilePaused.isInverted = true
+    wait(for: [vanishedWhilePaused], timeout: 1.4)
+    app.buttons["Resume notification"].tap()
+    let vanishedAfterResume = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: notice)
+    wait(for: [vanishedAfterResume], timeout: 4)
+    XCTAssertTrue(app.staticTexts["Dismissals: 1"].exists)
+    app.buttons["Show persistent notification"].tap()
+    XCTAssertTrue(notice.waitForExistence(timeout: 3))
+    let vanishedWithoutDuration = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: notice)
+    vanishedWithoutDuration.isInverted = true
+    wait(for: [vanishedWithoutDuration], timeout: 1.4)
+    app.buttons["Dismiss Timed notification"].tap()
+    XCTAssertTrue(app.staticTexts["Dismissals: 2"].exists)
   }
 
 }

@@ -12,6 +12,7 @@ public struct RosemaryDate: View {
   @State private var draft = RosemaryDateDraft(nil)
   @State private var text = ""
   @State private var error: String?
+  @State private var initialized = false
   @State private var cursor = RosemaryLocalDate(year: 1, month: 1, day: 1)!
   @State private var mode = CalendarMode.days
   @State private var yearText = ""
@@ -182,6 +183,8 @@ public struct RosemaryDate: View {
         }
       }
     }.zIndex(open ? 50 : 0).onAppear {
+      guard !initialized else { return }
+      initialized = true
       text = value?.description ?? ""
       if open { begin() }
     }.onChange(of: open) { _, v in
@@ -212,9 +215,9 @@ public struct RosemaryDate: View {
       RosemaryButton(String(cursor.year), variant: .quiet) {
         mode = .years
         yearText = String(cursor.year)
-      }.fixedSize(horizontal: true, vertical: false)
+      }.fixedSize(horizontal: true, vertical: false).accessibilityLabel(p.format("Year %d", cursor.year))
       RosemaryButton(String(cursor.month), variant: .quiet) { mode = .months }.fixedSize(
-        horizontal: true, vertical: false)
+        horizontal: true, vertical: false).accessibilityLabel(p.format("Month %d", cursor.month))
     }
   }
   private var monthArrows: some View {

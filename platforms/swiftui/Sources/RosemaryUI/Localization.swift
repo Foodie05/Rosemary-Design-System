@@ -22,7 +22,7 @@ public struct RosemaryStrings {
     "Use HH:mm, 00:00–23:59": "请以 HH:mm 输入 00:00–23:59 的时间",
     "End must be on or after start": "结束日期不能早于开始日期", "Sun": "日", "Mon": "一", "Tue": "二", "Wed": "三",
     "Thu": "四", "Fri": "五", "Sat": "六", "upcoming": "待开始", "current": "当前步骤", "complete": "已完成",
-    "error": "错误", "unavailable": "不可进入", "Month %d": "%d 月",
+    "error": "错误", "unavailable": "不可进入", "Month %d": "%d 月", "Year %d": "%d 年",
     "Step %d of %d, %@": "第 %d 步，共 %d 步，%@", "Page %d of %d": "第 %d 页，共 %d 页",
     "%d percent, %@ of %@": "%d%%，已完成 %@，总计 %@",
   ]

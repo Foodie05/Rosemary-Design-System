@@ -21,7 +21,11 @@ jobs:
         with:
           xcode-version: '26.3'
       - name: Install project generator
-        run: brew install xcodegen
+        run: |
+          curl --fail --location --retry 3 https://github.com/yonaskolb/XcodeGen/releases/download/2.46.0/xcodegen.zip -o "$RUNNER_TEMP/xcodegen.zip"
+          echo "4d9e34b62172d645eed6457cac13fc222569974098ef4ee9c3368bedf0196806  $RUNNER_TEMP/xcodegen.zip" | shasum -a 256 -c -
+          unzip -q "$RUNNER_TEMP/xcodegen.zip" -d "$RUNNER_TEMP/xcodegen-tool"
+          echo "$RUNNER_TEMP/xcodegen-tool/xcodegen/bin" >> "$GITHUB_PATH"
       - name: Build and test root-package consumer
         env:
           ROSEMARY_BUILD_ROOT: ${{ runner.temp }}/rosemary-build

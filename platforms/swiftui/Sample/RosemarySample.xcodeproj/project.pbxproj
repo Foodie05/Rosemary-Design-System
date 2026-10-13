@@ -34,12 +34,12 @@
 
 /* Begin PBXFileReference section */
 		0A596B3B9236A0F8EA930C17 /* RosemarySample.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = RosemarySample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2692A1DFB5D793FFDE4398DF /* RosemaryUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RosemaryUI; path = ../../..; sourceTree = SOURCE_ROOT; };
 		2A61963347ECDE3DD2AC3251 /* RosemarySampleTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = RosemarySampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		31959C891E9447C97DFC6A45 /* RosemarySampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosemarySampleApp.swift; sourceTree = "<group>"; };
 		393304F74D138F8D32D705AA /* GalleryUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryUITests.swift; sourceTree = "<group>"; };
 		92AB3EC705A21C4AF08DD2BD /* RosemarySampleUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = RosemarySampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A34FFFA808C964478FF109E5 /* RosemaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosemaryTests.swift; sourceTree = "<group>"; };
-		BC5326CC071A9FE1B64F822E /* rosemary-design-system-sdk */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "rosemary-design-system-sdk"; path = ../../..; sourceTree = SOURCE_ROOT; };
 		CD6367342BCAB8B6E0F039A7 /* vigilo.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = vigilo.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -121,7 +121,7 @@
 		FC71E0A112643A806CA81C60 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				BC5326CC071A9FE1B64F822E /* rosemary-design-system-sdk */,
+				2692A1DFB5D793FFDE4398DF /* RosemaryUI */,
 			);
 			name = Packages;
 			sourceTree = "<group>";

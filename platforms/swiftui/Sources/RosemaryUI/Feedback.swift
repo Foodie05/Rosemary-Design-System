@@ -59,6 +59,9 @@ public struct RosemaryLoading: View {
   let running: Bool
   let size: CGFloat
   let color: Color?
+  @State private var appeared = false
+  @State private var started = Date()
+  private var active: Bool { running && scene == .active }
   public init(_ label: String, isRunning: Bool, size: CGFloat = 32, color: Color? = nil) {
     self.label = label
     running = isRunning
@@ -67,10 +70,10 @@ public struct RosemaryLoading: View {
   }
   public var body: some View {
     HStack(spacing: 10) {
-      TimelineView(.animation(paused: !running || p.reduce || scene != .active)) { context in
+      TimelineView(.animation(paused: !active || !appeared || p.reduce)) { context in
         let t =
-          running && !p.reduce && scene == .active
-          ? context.date.timeIntervalSinceReferenceDate.truncatingRemainder(
+          active && appeared && !p.reduce
+          ? context.date.timeIntervalSince(started).truncatingRemainder(
             dividingBy: RosemaryNativeMetrics.duration("loadingCycleMs"))
             / RosemaryNativeMetrics.duration("loadingCycleMs")
           : 0
@@ -89,12 +92,23 @@ public struct RosemaryLoading: View {
           .opacity(f.frontOpacity).rotation3DEffect(
             .degrees(f.frontAngle), axis: (x: 0, y: 1, z: 0), anchor: .leading, perspective: 0.3
           ).offset(x: size * 0.39, y: h * 0.08).zIndex(f.backOnTop ? 1 : 2)
-        }.frame(width: size, height: h).environment(\.layoutDirection, .leftToRight)
+        }.frame(width: size, height: h).opacity(running && !appeared ? 0 : 1)
+          .environment(\.layoutDirection, .leftToRight)
           .accessibilityHidden(true)
       }
       if !label.isEmpty { Text(label).foregroundStyle(p.colors.muted) }
     }.accessibilityElement(children: .combine).accessibilityLabel(label).accessibilityValue(
       running ? p.text("Loading") : p.text("Stopped"))
+      .task(id: active) {
+        appeared = false
+        guard active else { return }
+        do {
+          try await Task.sleep(for: .milliseconds(Int(RosemaryNativeMetrics.dimension("loading", "appearanceDelayMs"))))
+        } catch { return }
+        guard !Task.isCancelled else { return }
+        started = Date()
+        appeared = true
+      }.onDisappear { appeared = false }
   }
 }
 public struct RosemaryProgress: View {
@@ -237,49 +251,82 @@ public struct RosemaryAlert: View {
   }
 }
 public struct RosemaryToast: View {
+  private var p = RosemaryPalette()
   @Binding var presented: Bool
   let title: String
   let status: RosemaryStatus
   let duration: Duration?
+  let paused: Bool
   let onDismiss: () -> Void
   @Environment(\.scenePhase) var scene
   @State private var task: Task<Void, Never>?
+  @State private var remaining: Duration?
+  @State private var deadline: ContinuousClock.Instant?
+  @State private var hovering = false
+  @FocusState private var keyboardFocused: Bool
+  @AccessibilityFocusState private var dismissFocused: Bool
+  @AccessibilityFocusState private var messageFocused: Bool
   public init(
     _ title: String, isPresented: Binding<Bool>, status: RosemaryStatus = .success,
-    duration: Duration? = .seconds(5), onDismiss: @escaping () -> Void = {}
+    duration: Duration? = .seconds(5), isPaused: Bool = false, onDismiss: @escaping () -> Void = {}
   ) {
     self.title = title
     _presented = isPresented
     self.status = status
     self.duration = duration
+    paused = isPaused
     self.onDismiss = onDismiss
+  }
+  private var suspended: Bool {
+    paused || hovering || keyboardFocused || dismissFocused || messageFocused || scene != .active
   }
   private func dismiss() {
     guard presented else { return }
     task?.cancel()
+    task = nil
+    deadline = nil
     presented = false
     onDismiss()
   }
-  private func schedule() {
+  private func schedule(reset: Bool = false) {
     task?.cancel()
-    guard presented, scene == .active, let duration else { return }
+    if let deadline {
+      remaining = max(.zero, ContinuousClock.now.duration(to: deadline))
+    }
+    deadline = nil
+    if reset { remaining = duration }
+    guard presented, !suspended, let duration, let remaining else { return }
+    let delay = min(duration, remaining)
+    deadline = ContinuousClock.now.advanced(by: delay)
     task = Task {
-      try? await Task.sleep(for: duration)
+      do { try await Task.sleep(for: delay) } catch { return }
       guard !Task.isCancelled else { return }
       dismiss()
     }
   }
+  private var notification: some View {
+    let c = status.colors(p.colors)
+    return HStack(alignment: .top, spacing: 12) {
+      RosemaryIcon(c.2).foregroundStyle(c.0)
+      Text(title).rosemaryTypography(.body, weight: .semibold)
+        .frame(maxWidth: .infinity, alignment: .leading).accessibilityFocused($messageFocused)
+      RosemaryIconButton("close", label: "\(p.text("Dismiss")) \(title)", action: dismiss)
+        .focused($keyboardFocused).accessibilityFocused($dismissFocused)
+    }.padding(16).foregroundStyle(p.colors.ink).background(
+      c.1, in: RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("card"))
+    ).accessibilityElement(children: .contain)
+      .accessibilityAction(named: p.text("Dismiss"), dismiss)
+  }
   public var body: some View {
     Group {
-      if presented {
-        RosemaryAlert(title, message: "", status: status, onDismiss: dismiss).onHover { hover in
-          if hover { task?.cancel() } else { schedule() }
-        }.accessibilityAction(named: "Dismiss", dismiss)
-      }
-    }.onChange(of: presented) { _, _ in schedule() }.onChange(of: scene) { _, _ in schedule() }
-      .onAppear(perform: schedule).onDisappear {
+      if presented { notification.onHover { hovering = $0 } }
+    }.onChange(of: presented) { _, _ in schedule(reset: true) }
+      .onChange(of: duration) { _, _ in schedule(reset: true) }
+      .onChange(of: suspended) { _, _ in schedule() }
+      .onAppear { schedule(reset: true) }.onDisappear {
         task?.cancel()
         task = nil
+        deadline = nil
       }
   }
 }

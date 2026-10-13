@@ -43,6 +43,9 @@ struct Gallery: View {
   @State private var dialog = false
   @State private var drawer = false
   @State private var toast = false
+  @State private var toastPaused = true
+  @State private var toastDuration: Duration? = .milliseconds(900)
+  @State private var toastDismissals = 0
   @State private var loading = false
   @State private var completed = 0.0
   @State private var sorted: String? = "name"
@@ -79,6 +82,7 @@ struct Gallery: View {
     _timeOpen = State(initialValue: kind == "time")
     _selectOpen = State(initialValue: kind == "select")
     _popover = State(initialValue: kind == "edge-popover")
+    _toast = State(initialValue: kind == "toast")
   }
   var body: some View { Group { if let capture { captureScreen(capture) } else { galleryScreen } } }
   @ViewBuilder private func captureScreen(_ kind: String) -> some View {
@@ -89,6 +93,7 @@ struct Gallery: View {
           RosemaryDate(
             "Local date", value: $date, isExpanded: $dateOpen, initialMonth: seed,
             initialView: kind == "year" ? .years : kind == "month" ? .months : .days)
+          Text("Date value: \(date?.description ?? "nil")").accessibilityIdentifier("date-value")
         } else if kind == "time" {
           RosemaryTime("Local time", value: $time, isExpanded: $timeOpen)
         } else if kind == "select" {
@@ -109,6 +114,16 @@ struct Gallery: View {
               Text("Anchored inside the usable viewport")
             }
           }
+        } else if kind == "toast" {
+          RosemaryToast("Timed notification", isPresented: $toast, duration: toastDuration,
+            isPaused: toastPaused) { toastDismissals += 1 }
+          RosemaryButton("Resume notification") { toastPaused = false }
+          RosemaryButton("Show persistent notification") {
+            toastDuration = nil
+            toastPaused = false
+            toast = true
+          }
+          Text("Dismissals: \(toastDismissals)")
         } else if kind == "busy" {
           RosemaryButton("Saving", isLoading: true) {}
           RosemaryButton("Removing", variant: .danger, isLoading: true) {}
