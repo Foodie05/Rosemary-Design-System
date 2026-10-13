@@ -2,7 +2,7 @@
 
 API 26+, Compose foundation UI primitives, Gregorian local date/time, host-controlled values. This module implements the 33 contracts in `design/contracts.json`. Theme roles and icon geometry come from generated shared design data.
 
-Use `RosemaryTheme(mode = RosemaryThemeMode.System) { … }`. Nested themes inherit. Pass `RosemaryTheme.colors.copy(primary = …)` for role overrides, `direction` for RTL, and `reduceMotion = true` when the application requests reduced motion. Text uses scalable sp. Native Android focus, text IME, selection semantics, modal windows and Storage Access Framework are retained. Theme colors must be opaque finite sRGB; wide-gamut values require explicit host conversion. Contrast diagnostics report ratios without changing host colors.
+Use `RosemaryTheme(mode = RosemaryThemeMode.System) { … }`. Nested themes inherit. Pass `RosemaryTheme.colors.copy(primary = …)` for role overrides, `direction` for RTL, and `reduceMotion = true` when the application requests reduced motion. Text uses scalable sp. Native Android focus, text IME, selection semantics, modal windows and Storage Access Framework are retained. Theme colors must be opaque finite sRGB; wide-gamut values require explicit host conversion. Contrast diagnostics report ratios without changing host colors. Supply a complete `highContrastColors` palette and optionally `highContrast = true`; API36+ observes the public OS high-contrast-text preference, while API26–35 use the application setting. See API.md for the explicit palette and coverage limits.
 
 ```kotlin
 RosemaryInput(name, { name = it }, label = "Project name")

@@ -731,3 +731,5 @@ const RosemaryText(
     this.textAlign,
   })
 ```
+
+Menu options use stable IDs. Opening initially or through controlled state establishes menu focus. Arrow/Home/End/typeahead skip disabled items and reveal the active row in a scrollable popup. Dynamic replacement preserves the active ID when possible, otherwise moves to the first enabled item; Enter cannot submit a removed/disabled row. Tab proposes closing and continues native traversal.

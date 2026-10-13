@@ -76,6 +76,7 @@ fun Gallery(
     var alternate by remember { mutableStateOf(initialCustom) }
     var rtl by remember { mutableStateOf(false) }
     var reduced by remember { mutableStateOf(false) }
+    var highContrast by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf(initialComponent) }
     RosemaryTheme(
         language = if (chinese) RosemaryLanguage.Chinese else RosemaryLanguage.English,
@@ -95,7 +96,13 @@ fun Gallery(
             }
         }
         val vigilo = remember(context, dark) { VigiloTheme.colors(context, dark) }
-        RosemaryTheme(colors = if (alternate) vigilo else base) {
+        val palette = if (alternate) vigilo else base
+        RosemaryTheme(
+            colors = palette,
+            highContrast = highContrast,
+            highContrastColors =
+                palette.copy(border = palette.ink, control = palette.ink, focus = palette.ink),
+        ) {
             Column(
                 Modifier.fillMaxSize()
                     .background(RosemaryTheme.colors.canvas)
@@ -112,6 +119,7 @@ fun Gallery(
                     RosemarySwitch(alternate, { alternate = it }, "Vigilo")
                     RosemarySwitch(rtl, { rtl = it }, "RTL")
                     RosemarySwitch(reduced, { reduced = it }, "Reduce motion")
+                    RosemarySwitch(highContrast, { highContrast = it }, "High contrast")
                 }
                 RosemarySelect(
                     selected,

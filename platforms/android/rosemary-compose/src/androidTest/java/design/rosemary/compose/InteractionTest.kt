@@ -29,12 +29,33 @@ class InteractionTest {
     fun inputReflectsHostValueAndMixedCheckboxEmitsOneChange() {
         var callbacks = 0
         var checked = 0
+        var diagnosticReports = 0
         compose.setContent {
             val inputMode = LocalInputModeManager.current
             SideEffect { inputMode.requestInputMode(InputMode.Keyboard) }
             var value by remember { mutableStateOf("") }
-            RosemaryTheme {
+            var reports by remember { mutableIntStateOf(0) }
+            val highContrastPalette =
+                design.rosemary.compose.generated.RosemaryTokens.light.let {
+                    it.copy(border = it.ink, control = it.ink, focus = it.ink)
+                }
+            RosemaryTheme(
+                highContrast = true,
+                highContrastColors = highContrastPalette,
+                onContrastDiagnostics = {
+                    assertTrue(it.all { diagnostic -> diagnostic.passes })
+                    reports++
+                    diagnosticReports++
+                },
+            ) {
+                val actualPalette = RosemaryTheme.colors
+                val contrastRequested = RosemaryTheme.highContrast
+                SideEffect {
+                    assertTrue(contrastRequested)
+                    assertEquals(highContrastPalette, actualPalette)
+                }
                 Column {
+                    RosemaryText("Theme reports: $reports")
                     RosemaryInput(
                         value,
                         {
@@ -55,6 +76,11 @@ class InteractionTest {
         compose.runOnIdle {
             assertEquals(1, callbacks)
             assertEquals(1, checked)
+            assertEquals(
+                "Inline diagnostics callback reaches idle after updating its host",
+                1,
+                diagnosticReports,
+            )
         }
     }
 

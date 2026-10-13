@@ -1,9 +1,12 @@
 package design.rosemary.compose
 
 import android.database.ContentObserver
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.view.accessibility.AccessibilityManager
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -58,6 +61,7 @@ enum class RosemaryDismissReason {
 private val LocalRosemaryThemePresent = staticCompositionLocalOf { false }
 internal val LocalRosemaryColors = staticCompositionLocalOf { RosemaryTokens.light }
 internal val LocalRosemaryReducedMotion = staticCompositionLocalOf { false }
+private val LocalRosemaryHighContrast = staticCompositionLocalOf { false }
 
 object RosemaryTheme {
     val colors: RosemaryColors
@@ -65,6 +69,23 @@ object RosemaryTheme {
 
     val reducedMotion: Boolean
         @Composable get() = LocalRosemaryReducedMotion.current
+
+    val highContrast: Boolean
+        @Composable get() = LocalRosemaryHighContrast.current
+}
+
+@RequiresApi(36)
+@Composable
+private fun systemHighContrastText(): Boolean {
+    val context = LocalContext.current
+    val manager = remember(context) { context.getSystemService(AccessibilityManager::class.java) }
+    var enabled by remember(manager) { mutableStateOf(manager.isHighContrastTextEnabled) }
+    DisposableEffect(manager) {
+        val listener = AccessibilityManager.HighContrastTextStateChangeListener { enabled = it }
+        manager.addHighContrastTextStateChangeListener(context.mainExecutor, listener)
+        onDispose { manager.removeHighContrastTextStateChangeListener(listener) }
+    }
+    return enabled
 }
 
 /** Pass colors.copy(role = ...) for partial role overrides; nested themes inherit by default. */
@@ -77,12 +98,19 @@ fun RosemaryTheme(
     language: RosemaryLanguage? = null,
     strings: RosemaryStrings? = null,
     onContrastDiagnostics: ((List<RosemaryContrastDiagnostic>) -> Unit)? = null,
+    highContrast: Boolean = false,
+    highContrastColors: RosemaryColors? = null,
     content: @Composable () -> Unit,
 ) {
     val parent = LocalRosemaryColors.current
     val parentPresent = LocalRosemaryThemePresent.current
+    val contrastRequested =
+        highContrast ||
+            LocalRosemaryHighContrast.current ||
+            (if (Build.VERSION.SDK_INT >= 36) systemHighContrastText() else false)
     val resolved =
-        colors
+        (if (contrastRequested) highContrastColors else null)
+            ?: colors
             ?: when (mode) {
                 RosemaryThemeMode.System ->
                     if (isSystemInDarkTheme()) RosemaryTokens.dark else RosemaryTokens.light
@@ -93,8 +121,9 @@ fun RosemaryTheme(
                     else if (isSystemInDarkTheme()) RosemaryTokens.dark else RosemaryTokens.light
             }
     val diagnostics = remember(resolved) { rosemaryValidateTheme(resolved) }
-    LaunchedEffect(diagnostics, onContrastDiagnostics) {
-        onContrastDiagnostics?.invoke(diagnostics)
+    val reportDiagnostics by rememberUpdatedState(onContrastDiagnostics)
+    LaunchedEffect(diagnostics) {
+        reportDiagnostics?.invoke(diagnostics)
     }
     val context = LocalContext.current
     var systemReduced by
@@ -135,6 +164,7 @@ fun RosemaryTheme(
         LocalRosemaryThemePresent provides true,
         LocalRosemaryStrings provides resolvedStrings,
         LocalRosemaryColors provides resolved,
+        LocalRosemaryHighContrast provides contrastRequested,
         LocalRosemaryReducedMotion provides
             (reduceMotion || systemReduced || LocalRosemaryReducedMotion.current),
         LocalLayoutDirection provides (direction ?: LocalLayoutDirection.current),

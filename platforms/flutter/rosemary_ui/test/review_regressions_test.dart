@@ -124,7 +124,7 @@ void main() {
     },
   );
   testWidgets(
-    'Select End scrolls at screen edge and options mutation normalizes active ID',
+    'Select and Menu End reveal active items and dynamic lists retain safe IDs',
     (tester) async {
       tester.view.reset();
       tester.view.physicalSize = const Size(320, 640);
@@ -177,6 +177,45 @@ void main() {
       await tester.sendKeyEvent(LogicalKeyboardKey.enter);
       await tester.pumpAndSettle();
       expect(chosen, 'next');
+      expect(tester.takeException(), isNull);
+      var menuOpen = true;
+      options = [
+        for (var i = 0; i < 30; i++) RosemaryOption('$i', 'Action $i'),
+      ];
+      await tester.pumpWidget(
+        host(
+          StatefulBuilder(
+            builder: (context, setState) {
+              update = setState;
+              return RosemaryMenu(
+                open: menuOpen,
+                trigger: RosemaryButton(
+                  label: 'Actions',
+                  onPressed: () => setState(() => menuOpen = true),
+                ),
+                items: options,
+                onActivate: (value) => chosen = value,
+                onOpenChanged: (value) => setState(() => menuOpen = value),
+              );
+            },
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.end);
+      await tester.pumpAndSettle();
+      expect(find.text('Action 29').hitTestable(), findsOneWidget);
+      update(
+        () => options = [
+          const RosemaryOption('29', 'Disabled former action', enabled: false),
+          const RosemaryOption('safe', 'Safe replacement'),
+        ],
+      );
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pumpAndSettle();
+      expect(chosen, 'safe');
+      expect(menuOpen, isFalse);
       expect(tester.takeException(), isNull);
     },
   );

@@ -239,26 +239,61 @@ class _MenuState extends State<RosemaryMenu> {
   String prefix = '';
   DateTime last = DateTime.fromMillisecondsSinceEpoch(0);
   final scope = FocusNode();
+  final itemKeys = <String, GlobalKey>{};
   List<int> get enabled => [
     for (var i = 0; i < widget.items.length; i++)
       if (widget.items[i].enabled) i,
   ];
+  void normalize([String? previousId]) {
+    final found = widget.items.indexWhere(
+      (item) => item.id == previousId && item.enabled,
+    );
+    active = found >= 0 ? found : (enabled.firstOrNull ?? -1);
+  }
+
+  void revealActive() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !widget.open || !enabled.contains(active)) return;
+      final target = itemKeys[widget.items[active].id]?.currentContext;
+      if (target != null) Scrollable.ensureVisible(target, alignment: .5);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    normalize();
+    if (widget.open) WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && widget.open) scope.requestFocus();
+    });
+  }
+
   @override
   void didUpdateWidget(RosemaryMenu old) {
     super.didUpdateWidget(old);
+    final previousId = active >= 0 && active < old.items.length
+        ? old.items[active].id
+        : null;
+    normalize(previousId);
     if (!old.open && widget.open && enabled.isNotEmpty) {
       active = enabled.first;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) scope.requestFocus();
       });
     }
+    if (widget.open) revealActive();
   }
 
   KeyEventResult key(FocusNode node, KeyEvent event) {
     if (event is! KeyDownEvent || enabled.isEmpty)
       return KeyEventResult.ignored;
     final k = event.logicalKey;
+    if (k == LogicalKeyboardKey.tab) {
+      widget.onOpenChanged(false);
+      return KeyEventResult.ignored;
+    }
     if (k == LogicalKeyboardKey.enter || k == LogicalKeyboardKey.space) {
+      if (!enabled.contains(active)) normalize();
       widget.onActivate(widget.items[active].id);
       widget.onOpenChanged(false);
       return KeyEventResult.handled;
@@ -287,6 +322,7 @@ class _MenuState extends State<RosemaryMenu> {
       return KeyEventResult.ignored;
     }
     setState(() {});
+    revealActive();
     return KeyEventResult.handled;
   }
 
@@ -303,6 +339,7 @@ class _MenuState extends State<RosemaryMenu> {
     onDismiss: (_) => widget.onOpenChanged(false),
     child: Focus(
       focusNode: scope,
+      autofocus: widget.open,
       onKeyEvent: key,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -310,6 +347,7 @@ class _MenuState extends State<RosemaryMenu> {
         children: [
           for (var i = 0; i < widget.items.length; i++)
             RosemaryActionSurface(
+              key: itemKeys.putIfAbsent(widget.items[i].id, GlobalKey.new),
               enabled: widget.items[i].enabled,
               selected: i == active,
               background: i == active
