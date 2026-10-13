@@ -1,0 +1,31 @@
+{
+  "source": "rosemary-design-portal.html / self-contained offline SDK page",
+  "completedUTC": "2026-10-13T15:11:36.819Z",
+  "releaseAssetsFetched": false,
+  "checks": [
+    "SDK route has correct title",
+    "Desktop navigation includes SDK",
+    "Four actual platform API entries",
+    "Version-fixed Release and platform assets",
+    "1440 light no horizontal page overflow",
+    "1440 light cards use intended columns",
+    "375 dark no horizontal page overflow",
+    "375 dark cards use intended columns",
+    "Theme deep link resolves SDK section",
+    "No runtime exceptions"
+  ],
+  "exceptions": [],
+  "screenshots": [
+    "sdk-install-1440-light.png",
+    "sdk-install-375-dark.png",
+    "sdk-overview-1440-light.png",
+    "sdk-overview-375-dark.png",
+    "sdk-theme-1440-light.png",
+    "sdk-theme-375-dark.png",
+    "sdk-verification-1440-light.png",
+    "sdk-verification-375-dark.png",
+    "sdk-versions-1440-light.png",
+    "sdk-versions-375-dark.png"
+  ],
+  "htmlSHA256": "8b9ef028dcf7498dc4710c0e579cf26b3bb1b1ee6ea92d74f795d837c775be41"
+}

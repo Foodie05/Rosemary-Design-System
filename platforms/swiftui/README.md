@@ -8,7 +8,7 @@ RosemaryUI supports iOS 17+ (Swift tools 5.9+, Swift 5 language mode). The root 
 import RosemaryUI
 ```
 
-The planned release tag is `v0.4.0`; the exact-version example resolves only after that tag is created following final acceptance. Until then use the candidate branch or a local root package. No public registry publication is performed. Source is MIT; see repository `BRAND-ASSETS.md` for separate brand asset terms.
+Installation is pinned to the `v0.4.0` Git tag. Check the corresponding GitHub Release assets and SHA256 manifest, or extract `RosemaryUI-0.4.0-source.tar.gz` and consume its root package through a local path. No public registry publication is performed. Source is MIT; see repository `BRAND-ASSETS.md` for separate brand asset terms.
 
 ## Theme, localization and accessibility
 

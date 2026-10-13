@@ -1,4 +1,19 @@
-# Rosemary Forma 1.2.0
+# Rosemary Design System
+
+本仓库同时维护 **Rosemary Forma 1.2.0 设计规范**与 **Rosemary SDK 0.4.0 组件代码**。安装固定到 `v0.4.0`，以 GitHub Release 的实际资产及 SHA256 为准；不发布公共 registry。
+
+SDK 入口：[接入指南](docs/sdk/getting-started.md)、[迁移](docs/sdk/migration.md)、[验收清单](docs/sdk/release-checklist.md)、[实际 CI](https://github.com/Foodie05/Rosemary-Design-System/actions) 与 [Releases](https://github.com/Foodie05/Rosemary-Design-System/releases/tag/v0.4.0)。
+
+| 实现 | API 与 consumer |
+| --- | --- |
+| React | [packages/react](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.0/packages/react) · 同版 tokens/icons/react tgz |
+| Compose | [platforms/android](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.0/platforms/android) · 本地 Maven ZIP / APK |
+| SwiftUI | [platforms/swiftui](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.0/platforms/swiftui) · 根 Package.swift / RosemaryUI |
+| Flutter | [platforms/flutter](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.0/platforms/flutter) · rosemary_ui / 六目标 consumer |
+
+SDK 共用当前 33 个组件契约和 24 个语义色角色。各端的最低系统、构建、运行和辅助技术覆盖分别记录；组件存在、编译通过或截图可读不等于全部验收。代码与品牌资产许可证分开。
+
+## Rosemary Forma 1.2.0 门户
 
 Rosemary Forma 是 Rosemary 的设计系统门户。它以留白充足的介绍首页连接设计原则、组件、典型案例与实施资源，正文继续使用逐控件独立浏览结构和统一的章节、Tab 动效。
 
@@ -10,7 +25,7 @@ Rosemary Forma 是 Rosemary 的设计系统门户。它以留白充足的介绍�
 
 ## 本版内容
 
-17 个章节：规范总览、品牌原则、Logo、子品牌设计流程、色彩、排版、布局、图标、组件、典型案例、加载、动效、交互流程、文案、可访问性、平台适配、覆盖与维护。
+18 个章节：规范总览、品牌原则、Logo、子品牌设计流程、色彩、排版、布局、图标、组件、典型案例、加载、动效、交互流程、文案、可访问性、平台适配、SDK 接入、覆盖与维护。
 
 - 正式 Logo：原始 PNG，1000 × 1000，颜色、比例和像素内容未修改。
 - 71 枚原创 SVG：可检索、分类、预览尺寸、复制和下载。
@@ -27,7 +42,7 @@ Rosemary Forma 是 Rosemary 的设计系统门户。它以留白充足的介绍�
 - 所有平台自有页面、导航和控件严格统一 Rosemary 规范，系统权限、文件访问、窗口及辅助技术保留可靠平台能力。
 - 深浅主题、系统偏好、减少动态、本地搜索、设计变量与资源下载。
 
-“规格覆盖”不等于已经发布生产组件库。复杂原生组件、真实业务状态和辅助技术仍需要在目标产品中验证。
+门户规格覆盖与 SDK 实现状态分别维护；复杂原生组件、真实业务状态和辅助技术仍需要在目标产品中验证。SDK 栏目的发布状态以实际 CI 和 GitHub Release 为准。
 
 ## 源码结构
 
@@ -43,6 +58,8 @@ Rosemary Forma 是 Rosemary 的设计系统门户。它以留白充足的介绍�
 - `custom-select.js/css`：共享定制下拉与隐藏表单值桥接。
 - `subbrand-page.js/css`：子品牌流程、主题及品牌组合。
 - `case-studies-page.js/css`：四个完整案例及局部交互。
+- `sdk-page.js/css`：SDK 接入、主题、各端 API 与发布边界。
+- `docs/sdk/`：接入、历史迁移与发布验收小型文档。
 - `ui.js`：共享模板、SVG 渲染、正式 Logo 与加载图形。
 - `pages.js`：核心章节及页面元数据。
 - `overview-page.js`、`forma-home.css`：Rosemary Forma 介绍首页、精选入口与响应式展示。

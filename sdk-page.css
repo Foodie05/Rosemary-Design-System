@@ -1,0 +1,15 @@
+.sdk-version-pair,.sdk-platform-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; }
+.sdk-version-pair>div,.sdk-platform { padding:24px; border:1px solid var(--border); border-radius:12px; background:var(--surface); min-width:0; }
+.sdk-version-pair h3 { font-size:24px; margin:8px 0; }
+.sdk-version-pair p,.sdk-platform p { color:var(--muted); line-height:1.7; }
+.sdk-platform h3 { font-size:24px; margin:0 0 8px; }
+.sdk-platform .sdk-requirement { color:var(--ink); font-size:14px; }
+.sdk-platform pre { font-size:12px; max-width:100%; overflow:auto; }
+.sdk-links { display:flex; flex-wrap:wrap; gap:16px 24px; margin:20px 0; }
+.sdk-component-ids { color:var(--muted); line-height:1.9; overflow-wrap:anywhere; }
+@media(max-width:800px) { .sdk-version-pair,.sdk-platform-grid { grid-template-columns:1fr; } }
+@media(max-width:580px) { .sdk-version-pair>div,.sdk-platform { padding:18px; } }
+
+[data-page="sdk"] .data-table { min-width:0; table-layout:fixed; }
+[data-page="sdk"] .data-table th:first-child { width:28%; }
+[data-page="sdk"] .data-table td { overflow-wrap:anywhere; }

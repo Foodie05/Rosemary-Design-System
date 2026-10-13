@@ -16,8 +16,8 @@ ROOT = Path(__file__).resolve().parent
 SCRIPTS = ['assets-data.js', 'icon-library.js', 'component-catalog.js', 'ui.js',
            'motion.js', 'custom-select.js', 'component-demos.js', 'component-viewer.js', 'pages.js', 'overview-page.js',
            'asset-pages.js', 'component-pages.js', 'loading-motion-pages.js',
-           'reference-pages.js', 'subbrand-page.js', 'case-studies-page.js', 'interaction-lab.js', 'app.js']
-STYLES = ['tokens.css', 'styles.css', 'specifications.css', 'component-demos.css', 'navigation.css', 'custom-select.css', 'brand-lockup.css', 'forma-home.css', 'selection-controls.css', 'subbrand-page.css', 'case-studies-page.css']
+           'reference-pages.js', 'subbrand-page.js', 'case-studies-page.js', 'sdk-page.js', 'interaction-lab.js', 'app.js']
+STYLES = ['tokens.css', 'styles.css', 'specifications.css', 'component-demos.css', 'navigation.css', 'custom-select.css', 'brand-lockup.css', 'forma-home.css', 'selection-controls.css', 'subbrand-page.css', 'case-studies-page.css', 'sdk-page.css']
 ZIP_TIMESTAMP = (2026, 10, 11, 0, 0, 0)
 
 
@@ -122,13 +122,14 @@ def build():
     names = ['index.html', '404.html', *STYLES, *SCRIPTS, 'tokens.json', 'brand-guide.md', 'build.py', 'README.md', 'LICENSE', 'BRAND-ASSETS.md',
              'rosemary-design-portal.html', 'rosemary-icons-71.zip', 'rosemary-icons-sprite.svg',
              'assets/rosemary-logo.png', 'assets/logo-source.json', 'research/design-system-reference-review.md',
-             'tests/browser-check.mjs', 'tests/lab-checks.mjs', 'tests/component-browser-checks.mjs', 'tests/navigation-browser-checks.mjs', 'tests/date-picker-browser-checks.mjs', 'tests/static-check.mjs', 'browser-test-report.json', 'local-review-report.json', 'verification.md']
+             'docs/sdk/getting-started.md', 'docs/sdk/migration.md', 'docs/sdk/release-checklist.md',
+             'tests/browser-check.mjs', 'tests/lab-checks.mjs', 'tests/component-browser-checks.mjs', 'tests/navigation-browser-checks.mjs', 'tests/date-picker-browser-checks.mjs', 'tests/static-check.mjs', 'browser-test-report.json', 'local-review-report.json', 'sdk-browser-review.json', 'verification.md']
     names += [str(path.relative_to(ROOT)) for path in sorted((ROOT/'icons').glob('*.svg'))]
     names += [str(path.relative_to(ROOT)) for path in sorted((ROOT/'screenshots').glob('*.png')) if path.name!='failure.png']
     with zipfile.ZipFile(bundle,'w',zipfile.ZIP_DEFLATED) as packaged:
         for name in names:
             path=ROOT/name
-            if path.exists(): packaged.write(path,arcname='rosemary-design-portal/'+name)
+            packaged.write(path,arcname='rosemary-design-portal/'+name)
     print(f'Built {output.name}: {output.stat().st_size:,} bytes')
     print(f'Validated {len(themes["light"])} roles per theme, 71 icons, 33 component specifications and the official logo hash.')
     print(f'Packed {bundle.name}: {bundle.stat().st_size:,} bytes')
