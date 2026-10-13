@@ -13,10 +13,11 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 ROOT = Path(__file__).resolve().parent
-SCRIPTS = ['assets-data.js', 'icon-library.js', 'component-catalog.js', 'ui.js', 'pages.js',
+SCRIPTS = ['assets-data.js', 'icon-library.js', 'component-catalog.js', 'ui.js',
+           'motion.js', 'custom-select.js', 'component-demos.js', 'component-viewer.js', 'pages.js', 'overview-page.js',
            'asset-pages.js', 'component-pages.js', 'loading-motion-pages.js',
-           'reference-pages.js', 'interaction-lab.js', 'app.js']
-STYLES = ['tokens.css', 'styles.css', 'specifications.css']
+           'reference-pages.js', 'subbrand-page.js', 'case-studies-page.js', 'interaction-lab.js', 'app.js']
+STYLES = ['tokens.css', 'styles.css', 'specifications.css', 'component-demos.css', 'navigation.css', 'custom-select.css', 'brand-lockup.css', 'forma-home.css', 'selection-controls.css', 'subbrand-page.css', 'case-studies-page.css']
 ZIP_TIMESTAMP = (2026, 10, 11, 0, 0, 0)
 
 
@@ -92,7 +93,7 @@ def build():
         rules.append(f'{selector} {{\n{declarations}\n}}')
     motion = tokens['motionMs']
     motion_vars = {'feedback': motion['instantFeedback'], 'state': motion['state'],
-                   'enter': motion['transition'], 'exit': motion['exit'], 'layout': motion['layout'],
+                   'enter': motion['transition'], 'page': motion['page'], 'exit': motion['exit'], 'layout': motion['layout'],
                    'fold-cycle': tokens['components']['loading']['cycleMs'],
                    'progress': tokens['components']['progress']['transitionMs']}
     declarations = '\n'.join(f'  --motion-{key}: {value}ms;' for key,value in motion_vars.items())
@@ -118,10 +119,10 @@ def build():
     output = ROOT / 'rosemary-design-portal.html'
     output.write_text(document, encoding='utf-8')
     bundle = ROOT / 'rosemary-design-portal-source.zip'
-    names = ['index.html', *STYLES, *SCRIPTS, 'tokens.json', 'brand-guide.md', 'build.py', 'README.md',
+    names = ['index.html', '404.html', *STYLES, *SCRIPTS, 'tokens.json', 'brand-guide.md', 'build.py', 'README.md', 'LICENSE', 'BRAND-ASSETS.md',
              'rosemary-design-portal.html', 'rosemary-icons-71.zip', 'rosemary-icons-sprite.svg',
              'assets/rosemary-logo.png', 'assets/logo-source.json', 'research/design-system-reference-review.md',
-             'tests/browser-check.mjs', 'tests/lab-checks.mjs', 'tests/static-check.mjs', 'browser-test-report.json', 'verification.md']
+             'tests/browser-check.mjs', 'tests/lab-checks.mjs', 'tests/component-browser-checks.mjs', 'tests/navigation-browser-checks.mjs', 'tests/date-picker-browser-checks.mjs', 'tests/static-check.mjs', 'browser-test-report.json', 'local-review-report.json', 'verification.md']
     names += [str(path.relative_to(ROOT)) for path in sorted((ROOT/'icons').glob('*.svg'))]
     names += [str(path.relative_to(ROOT)) for path in sorted((ROOT/'screenshots').glob('*.png')) if path.name!='failure.png']
     with zipfile.ZipFile(bundle,'w',zipfile.ZIP_DEFLATED) as packaged:

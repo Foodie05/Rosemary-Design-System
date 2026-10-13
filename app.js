@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const {icon, mark, escape, foldLoader} = window.RosemaryUI;
+  const {icon, mark, brandMark, escape, foldLoader} = window.RosemaryUI;
   const {pages, sections, renderers} = window.RosemaryPages;
   const tokens = window.ROSEMARY_TOKENS;
   const main = document.getElementById('main-content');
@@ -12,13 +12,34 @@
   const exampleText = document.getElementById('example-text');
   const themeSelect = document.getElementById('theme-select');
   const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const state = {page: '', entries: [], reminder: false, removed: false, checks: []};
+  const reducedMotion = window.RosemaryMotion.reduced;
+  const state = {page: '', entries: [], removed: false, checks: []};
   let toastTimer;
   let syncTimer;
   let lastExampleOpener;
   let searchOpener;
   let navOpener;
+  let selectsCleanup;
+  let navAnimation,navGeneration=0,navOpening=false;
+  function transitionNav(open,opener) {
+    if(open){navOpener=opener||navOpener;if(!navDialog.open)navDialog.showModal();}
+    else if(!navDialog.open)return;
+    navOpening=open;
+    const generation=++navGeneration;
+    const current=navAnimation?getComputedStyle(navDialog).transform:open?'translateX(-100%)':'translateX(0)';
+    navAnimation?.cancel();
+    navDialog.dataset.opening=String(open);
+    const finish=()=>{if(generation!==navGeneration)return;navAnimation=null;if(!open){navDialog.close();if(!navOpener)moveFocus(main.querySelector('h1'));}};
+    if(open)navDialog.querySelector('[aria-current="page"]')?.focus({preventScroll:true});
+    if(reducedMotion.matches){finish();return;}
+    navAnimation=navDialog.animate([{transform:current},{transform:open?'translateX(0)':'translateX(-100%)'}],{duration:open?220:180,easing:tokens.motionEasing,fill:'both'});
+    navAnimation.onfinish=()=>{const animation=navAnimation;finish();animation?.cancel();};
+    if(open)navDialog.querySelector('[aria-current="page"]')?.focus({preventScroll:true});
+  }
+  navDialog.addEventListener('cancel',event=>{event.preventDefault();transitionNav(false);});
+  navDialog.addEventListener('click',event=>{if(event.target===navDialog){const r=navDialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)transitionNav(false);}});
+  reducedMotion.addEventListener('change',()=>{if(reducedMotion.matches&&navAnimation)transitionNav(navOpening);});
+  window.addEventListener('resize',()=>{if(innerWidth>=800&&navDialog.open)transitionNav(false);});
 
   function readPreference(key, fallback) {
     try { const value = localStorage.getItem(key); return value === null ? fallback : value; }
@@ -73,6 +94,8 @@
   document.getElementById('desktop-nav').innerHTML = navMarkup();
   document.getElementById('mobile-nav').innerHTML = navMarkup();
   document.querySelectorAll('.brand-symbol').forEach(el => { if (!el.innerHTML) el.innerHTML = mark(); });
+  const shellBrand = document.querySelector('[data-shell-brand]');
+  if (shellBrand) shellBrand.innerHTML = brandMark('forma',{size:32,label:true,className:'shell-brand'});
   document.querySelectorAll('.search-icon').forEach(el => { el.innerHTML = icon('search'); });
   document.querySelector('.mobile-menu').innerHTML = icon('menu');
   document.querySelector('.dialog-symbol').innerHTML = icon('pencil');
@@ -93,21 +116,28 @@
   function renderRoute(initial = false) {
     const route = parseRoute();
     const page = pages.find(p=>p.id === route.slug);
-    if (state.page !== route.slug) { clearTimeout(syncTimer); window.RosemaryLabs?.destroy(); }
+    const changed = state.page !== route.slug;
+    if (changed) {
+      selectsCleanup?.();selectsCleanup=null;
+      window.RosemaryCases?.destroy();
+      window.RosemaryMotion.cancelTree(main);
+      window.RosemaryComponentView.destroy();
+      clearTimeout(syncTimer);
+      window.RosemaryLabs.destroy();
+    }
     if (!page) {
       state.page = 'not-found';
       main.innerHTML = `<article class="page"><header class="page-header"><div class="page-kicker">${icon('book')}尚未收录</div><h1 class="page-title" tabindex="-1">未找到该章节</h1><p class="page-description">可以回到首页，或搜索你想了解的规范。</p></header><div class="button-row"><a href="#/overview" class="button primary">回到首页</a><button class="button secondary" data-action="open-search">搜索规范</button></div></article>`;
-      document.title = '尚未收录 · Rosemary 设计规范';
+      document.title = '尚未收录 · Rosemary Forma';
       document.getElementById('current-page-name').textContent = '尚未收录';
       document.querySelectorAll('[data-page-link]').forEach(a=>a.removeAttribute('aria-current'));
-      if (!initial) { window.scrollTo({top:0,behavior:'instant'}); moveFocus(main.querySelector('h1')); }
+      if (!initial) { window.scrollTo({top:0,behavior:'instant'});moveFocus(main.querySelector('h1'));window.RosemaryMotion.enter(main.firstElementChild,{kind:'page'}); }
       return;
     }
-    const changed = state.page !== page.id;
     if (changed) {
       state.page = page.id;
       main.innerHTML = renderers[page.id]();
-      document.title = `${page.title} · Rosemary 设计规范`;
+      document.title = `${page.title} · Rosemary Forma`;
       document.getElementById('current-page-name').textContent = page.title;
       document.querySelectorAll('[data-page-link]').forEach(a => {
         if (a.dataset.pageLink === page.id) a.setAttribute('aria-current','page');
@@ -115,11 +145,13 @@
       });
       initializePage();
     }
-    window.RosemaryLabs?.locationChanged();
-    if (navDialog.open) navDialog.close();
+    if(page.id==='components')window.RosemaryComponentView.sync();
+    if (navDialog.open) { if(changed)navOpener=null;transitionNav(false); }
     if (route.section) {
       requestAnimationFrame(() => {
-        const target = document.getElementById(route.section);
+        const latest=parseRoute();
+        if(latest.slug!==page.id || latest.section!==route.section)return;
+        const target=document.getElementById(route.section);
         if (target && main.contains(target)) {
           target.scrollIntoView({block:'start',behavior:initial || reducedMotion.matches ? 'instant' : 'smooth'});
           if (!initial) moveFocus(target.querySelector('h2') || target);
@@ -129,20 +161,23 @@
       window.scrollTo({top:0,behavior:'instant'});
       moveFocus(main.querySelector('h1'));
     }
+    if(changed && !initial)window.RosemaryMotion.enter(main.firstElementChild,{kind:'page'});
   }
   function initializePage() {
     applyTheme();
     restoreEntries();
     updateUndo();
-    updateReminder();
     updateChecklist();
     updateMotionPreference();
-    window.RosemaryLabs?.init(state.page);
+    window.RosemaryLabs.init(state.page);
+    if(state.page==='components')window.RosemaryComponentView.init();
+    if(state.page==='cases')window.RosemaryCases?.init();
+    selectsCleanup=window.RosemarySelect.mountWithin(main);
   }
   window.addEventListener('hashchange', () => renderRoute());
   document.addEventListener('click', event => {
     const anchor = event.target.closest('a[href^="#/"]');
-    if (anchor && navDialog.open) navDialog.close();
+    if (anchor && navDialog.open) { navOpener=null;transitionNav(false); }
     if (anchor && anchor.getAttribute('href') === location.hash) {
       event.preventDefault();
       renderRoute();
@@ -151,11 +186,12 @@
 
   const searchIndex = [...pages.map(p=>({title:p.title,summary:p.description,terms:p.keywords,route:p.id,icon:p.icon})),
     ...Object.entries(sections).flatMap(([id,items])=>items.map(s=>({title:s.name,summary:pages.find(p=>p.id===id).title,terms:s.name,route:`${id}?section=${s.id}`,icon:pages.find(p=>p.id===id).icon}))),
-    ...Object.values(window.RosemaryComponentCatalog).map(item=>({title:item.title+'规格',summary:item.use,terms:item.title+' '+item.anatomy,route:`components?section=reference&component=${item.id}`,icon:'grid'}))];
+    ...Object.values(window.RosemaryComponentCatalog).map(item=>({title:item.title+'规格',summary:item.use,terms:item.id+' '+item.title+' '+item.anatomy,route:`components?component=${item.id}`,icon:'grid'}))];
   function updateSearch() {
     const query = searchInput.value.trim().toLowerCase();
     const words = query.split(/\s+/).filter(Boolean);
-    const results = query ? searchIndex.filter(r => words.every(w => `${r.title} ${r.summary} ${r.terms}`.toLowerCase().includes(w))).slice(0,10) : searchIndex.filter(r=>['philosophy','colors','components','patterns','governance'].includes(r.route));
+    const score = r => r.title.toLowerCase()===query ? 3 : r.title.toLowerCase().startsWith(query) ? 2 : r.title.toLowerCase().includes(query) ? 1 : 0;
+    const results = query ? searchIndex.filter(r => words.every(w => `${r.title} ${r.summary} ${r.terms}`.toLowerCase().includes(w))).sort((a,b)=>score(b)-score(a)).slice(0,10) : searchIndex.filter(r=>['philosophy','colors','components','patterns','governance'].includes(r.route));
     searchResults.innerHTML = results.length ? results.map(r => `<button type="button" class="search-result" data-search-route="${r.route}">${icon(r.icon)}<span><strong>${r.title}</strong><small>${r.summary}</small></span></button>`).join('') : `<div class="no-results">没有找到“${escape(searchInput.value.trim())}”。<br>可以试试更短的词，例如“保存”或“按钮”。</div>`;
   }
   function openSearch(opener = document.activeElement) {
@@ -181,6 +217,7 @@
     const result = event.target.closest('[data-search-route]');
     if (!result) return;
     const route = '#/' + result.dataset.searchRoute;
+    searchOpener=null;
     searchDialog.close();
     if (location.hash === route) renderRoute();
     else location.hash = route;
@@ -192,22 +229,6 @@
       event.preventDefault();
       if (searchDialog.open) searchDialog.close(); else openSearch();
     }
-    if (event.key === 'Escape' && !document.querySelector('dialog[open]')) {
-      document.querySelectorAll('.demo-menu[open]').forEach(menu => { menu.open=false; menu.querySelector('summary').focus(); });
-    }
-    if (event.target.matches('[data-segment]')) {
-      const tabs = [...event.target.parentElement.querySelectorAll('[data-segment]')];
-      const index = tabs.indexOf(event.target);
-      let next;
-      if (event.key==='ArrowRight') next=(index+1)%tabs.length;
-      if (event.key==='ArrowLeft') next=(index+tabs.length-1)%tabs.length;
-      if (event.key==='Home') next=0;
-      if (event.key==='End') next=tabs.length-1;
-      if (next !== undefined) { event.preventDefault(); chooseSegment(tabs[next]); tabs[next].focus(); }
-    }
-  });
-  document.addEventListener('pointerdown', event => {
-    document.querySelectorAll('.demo-menu[open]').forEach(menu => { if (!menu.contains(event.target)) menu.open=false; });
   });
 
   function luminance(hex) {
@@ -235,20 +256,6 @@
     if (label) label.textContent=reducedMotion.matches ? '当前系统已开启减少动态效果：演示保留结果，不播放位移动画。' : '当前未开启减少动态效果；系统偏好改变后会自动响应。';
   }
   reducedMotion.addEventListener('change',updateMotionPreference);
-  function chooseSegment(tab) {
-    const group=tab.parentElement;
-    group.querySelectorAll('[data-segment]').forEach(item => { const selected=item===tab;item.setAttribute('aria-selected',String(selected));item.tabIndex=selected?0:-1; });
-    const content=document.getElementById('segment-content');
-    const copy={all:'显示所有演示记录，包括已收藏内容和未提交草稿。',kept:'只显示已收藏的演示记录。',draft:'显示尚未提交的演示草稿。'};
-    content.textContent=copy[tab.dataset.segment];
-    content.setAttribute('aria-labelledby',tab.id);
-  }
-  function updateReminder() {
-    const control=document.querySelector('[data-action="toggle-reminder"]');
-    if (!control) return;
-    control.setAttribute('aria-checked',String(state.reminder));
-    document.getElementById('switch-description').textContent=state.reminder ? '演示已开启。不会发送真实系统通知。' : '未开启。不发送任何系统通知。';
-  }
   function updateUndo() {
     const item=document.getElementById('undo-item'), banner=document.getElementById('undo-banner');
     if (!item || !banner) return;
@@ -282,7 +289,7 @@
     event.preventDefault();const text=exampleText.value.trim();if (!text) return;
     state.entries.unshift(text);exampleText.value='';document.getElementById('example-submit').disabled=true;
     exampleDialog.close();restoreEntries();
-    notify(state.page==='components' ? '已添加到本页演示，刷新后清除。' : '记录保留在本页内存，可到组件规范页查看；刷新后清除。');
+    notify('已添加演示记录，内容仅保留在页面内存中，刷新后清除。');
   });
   window.addEventListener('beforeunload',event=> { if (exampleText.value.trim() || state.entries.length) {event.preventDefault();event.returnValue='';} });
 
@@ -321,50 +328,26 @@
   document.addEventListener('click',event=> {
     const tokenButton=event.target.closest('[data-copy-token]');
     if (tokenButton) { copyToken(tokenButton.dataset.copyToken);return; }
-    const segment=event.target.closest('[data-segment]');
-    if (segment) {chooseSegment(segment);return;}
     const trigger=event.target.closest('[data-action]');
     if (!trigger || trigger.disabled || trigger.getAttribute('aria-disabled')==='true') return;
     const action=trigger.dataset.action;
     if (action==='open-search') openSearch(trigger);
     else if (action==='close-search') searchDialog.close();
-    else if (action==='open-nav') {navOpener=trigger;navDialog.showModal();navDialog.querySelector('[aria-current="page"]')?.focus();}
-    else if (action==='close-nav') navDialog.close();
+    else if (action==='open-nav') transitionNav(true,trigger);
+    else if (action==='close-nav') transitionNav(false);
     else if (action==='open-example') openExample(trigger);
     else if (action==='close-example') exampleDialog.close();
     else if (action==='demo-saved') notify('这是按钮反馈演示，没有修改真实内容。');
     else if (action==='demo-preview') notify('次要按钮适合预览、返回等辅助动作。','info');
     else if (action==='demo-later') notify('你可以稍后继续；普通退出不需要情绪化挽留。','info');
-    else if (action==='demo-loading') {
-      trigger.style.minWidth=trigger.getBoundingClientRect().width+'px';trigger.setAttribute('aria-disabled','true');trigger.setAttribute('aria-busy','true');trigger.innerHTML=foldLoader('small is-running')+'处理中…';
-      setTimeout(()=>{if(trigger.isConnected){trigger.removeAttribute('aria-disabled');trigger.removeAttribute('aria-busy');trigger.textContent='再次演示加载';notify('演示完成。加载期间已阻止重复提交。');}},900);
-    }
-    else if (action==='toggle-reminder') {state.reminder=!state.reminder;updateReminder();}
-    else if (action==='scroll-undo') {document.querySelectorAll('.demo-menu[open]').forEach(m=>m.open=false);location.hash='/patterns?section=undo';}
-    else if (action==='menu-rename') {trigger.closest('details').open=false;notify('重命名应在对象附近完成，并保留原名称作为编辑起点。这里仅演示菜单反馈。','info');}
-    else if (action==='menu-export') {trigger.closest('details').open=false;downloadFile('rosemary-example.txt','留在窗边的下午\n\n阳光挪到了桌沿。喝完这杯茶，再去河边走走。\n\n这是一份 Rosemary 门户的虚构演示内容。','text/plain;charset=utf-8');}
-    else if (action==='add-sample') {
-      document.getElementById('empty-demo').innerHTML=`<div class="empty-symbol">${icon('check')}</div><h3>已添加示例记录</h3><p>散步回来，给窗边的植物浇了水。</p><button class="button quiet" data-action="reset-empty" type="button">回到空状态</button>`;
-      document.querySelector('[data-action="reset-empty"]').focus();
-    }
-    else if (action==='reset-empty') {
-      document.getElementById('empty-demo').innerHTML=`<div class="empty-symbol">${icon('book')}</div><h3>还没有记录</h3><p>添加第一条记录，或导入已有内容。</p><button class="button secondary" data-action="add-sample" type="button">添加示例记录</button>`;
-      document.querySelector('[data-action="add-sample"]').focus();
-    }
-    else if (action==='clear-entries') {state.entries=[];restoreEntries();moveFocus(document.getElementById('feedback')?.querySelector('h2'));notify('演示记录已清空。');}
-    else if (action==='replay-motion') {
-      const card=document.getElementById('motion-card');const duration=document.getElementById('motion-duration').value;
-      card.style.setProperty('--demo-duration',duration+'ms');card.classList.remove('replay');
-      requestAnimationFrame(()=>requestAnimationFrame(()=>{if(card.isConnected)card.classList.add('replay');}));
-      if(reducedMotion.matches)notify('已尊重减少动态偏好：内容保持可见，不播放位移动画。','info');
-    }
+    else if (action==='clear-entries') {state.entries=[];restoreEntries();moveFocus(document.getElementById('resize')?.querySelector('h2'));notify('演示记录已清空。');}
     else if (action==='sync-success') setSync('success');
     else if (action==='sync-failure') setSync('failure');
     else if (action==='sync-reset') setSync('reset');
     else if (action==='remove-item') {state.removed=true;updateUndo();document.querySelector('[data-action="undo-remove"]').focus();notify('已从演示列表移除。撤销入口会保持可见。');}
     else if (action==='undo-remove') {state.removed=false;updateUndo();const restored=document.getElementById('undo-item');restored.classList.remove('restored');requestAnimationFrame(()=>restored.classList.add('restored'));document.querySelector('[data-action="remove-item"]').focus();notify('已恢复这条示例。');}
-    else if (action==='download-tokens') downloadFile('rosemary-tokens-v1.json',JSON.stringify(tokens,null,2),'application/json;charset=utf-8');
-    else if (action==='download-guide') downloadFile('rosemary-brand-guide-v1.md',window.ROSEMARY_GUIDE,'text/markdown;charset=utf-8');
+    else if (action==='download-tokens') downloadFile('rosemary-forma-tokens-v1.2.0.json',JSON.stringify(tokens,null,2),'application/json;charset=utf-8');
+    else if (action==='download-guide') downloadFile('rosemary-forma-guide-v1.2.0.md',window.ROSEMARY_GUIDE,'text/markdown;charset=utf-8');
     else if (action==='reset-checklist') {state.checks=Array(8).fill(false);writePreference('rosemary-design-checks-v1',JSON.stringify(state.checks));updateChecklist();}
   });
   document.addEventListener('change',event=> {
@@ -382,16 +365,8 @@
       document.getElementById('access-content').style.setProperty('--demo-font',size+'px');
       document.getElementById('text-size-value').value=size+'px';
     }
-    if(event.target.id==='collection-name' && event.target.getAttribute('aria-invalid')==='true' && event.target.value.trim()) {
-      event.target.removeAttribute('aria-invalid');document.getElementById('collection-error').replaceChildren();
-    }
-  });
-  document.addEventListener('submit',event=> {
-    if(event.target.id!=='collection-form')return;
-    event.preventDefault();const input=document.getElementById('collection-name');const error=document.getElementById('collection-error');
-    if(!input.value.trim()) {input.setAttribute('aria-invalid','true');error.innerHTML=icon('info')+'请写一个方便你找到的名字。';input.focus();return;}
-    input.removeAttribute('aria-invalid');error.replaceChildren();notify(`示例名称“${input.value.trim()}”已确认，仅用于本页演示。`);
   });
   window.RosemaryPortal = {notify, downloadFile};
+  window.RosemarySelect.mountWithin(document.querySelector('.topbar-actions'));
   renderRoute(true);
 })();

@@ -5,6 +5,9 @@ import path from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 import {runLabChecks} from './lab-checks.mjs';
+import {runComponentChecks} from './component-browser-checks.mjs';
+import {runNavigationChecks} from './navigation-browser-checks.mjs';
+import {runDatePickerChecks} from './date-picker-browser-checks.mjs';
 import assert from 'node:assert/strict';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -29,7 +32,7 @@ let nextID=0;
 const pending=new Map();
 const exceptions=[];
 const checks=[];
-const routes=['overview','philosophy','identity','colors','typography','layout','icons','components','loading','motion','patterns','content','accessibility','platforms','governance'];
+const routes=['overview','philosophy','identity','subbrand','colors','typography','layout','icons','components','cases','loading','motion','patterns','content','accessibility','platforms','governance'];
 function check(name, value) { assert.ok(value,name);checks.push(name); }
 function send(method,params={}) {
   return new Promise((resolve,reject)=> {
@@ -66,14 +69,16 @@ async function click(selector) {
 async function key(key,code,modifiers=0) {
   const codes={Escape:27,Enter:13,ArrowLeft:37,ArrowUp:38,ArrowRight:39,ArrowDown:40,Home:36,End:35,Tab:9};
   const windowsVirtualKeyCode=codes[key] || key.toUpperCase().charCodeAt(0);
-  await send('Input.dispatchKeyEvent',{type:'keyDown',key,code,modifiers,windowsVirtualKeyCode});
+  // Enter's default button activation needs the corresponding character event;
+  // CDP keyDown without text only exercises keydown listeners on macOS Chrome.
+  await send('Input.dispatchKeyEvent',{type:'keyDown',key,code,modifiers,windowsVirtualKeyCode,...(key==='Enter'?{text:'\r',unmodifiedText:'\r'}:{})});
   await send('Input.dispatchKeyEvent',{type:'keyUp',key,code,modifiers,windowsVirtualKeyCode});
   await delay(50);
 }
 async function screenshot(name, full=true) {
   await until('!document.getElementById("toast-region") || document.getElementById("toast-region").children.length===0',8000);
   await evaluate('window.scrollTo({top:0,behavior:"instant"})');
-  await delay(100);
+  await delay(340);
   const metrics=await send('Page.getLayoutMetrics');
   const params={format:'png',captureBeyondViewport:full,fromSurface:true};
   if(full)params.clip={x:0,y:0,width:metrics.cssContentSize.width,height:metrics.cssContentSize.height,scale:1};
@@ -99,8 +104,9 @@ try {
   });
   await send('Runtime.enable');await send('Page.enable');
   await send('Browser.setDownloadBehavior',{behavior:'allow',downloadPath:downloads});
-  await until('Boolean(window.RosemaryPages && document.querySelector(".hero"))');
-  check('Portal exposes 15 complete pages',await evaluate('RosemaryPages.pages.length===15'));
+  await until('Boolean(window.RosemaryPages && document.querySelector("main h1"))');
+  check('Portal exposes 17 complete pages',await evaluate('RosemaryPages.pages.length===17'));
+  await runDatePickerChecks({route,click,key,evaluate,delay,check,send,screenshot,viewport});
   for(const width of [1440,375]) {
     for(const theme of ['light','dark']) {
       await viewport(width,width===375?812:1000,theme);
@@ -134,33 +140,8 @@ try {
   check('Search finds relevant content',await evaluate(`document.querySelector('.search-result').textContent.includes('交互')||document.querySelector('.search-result').textContent.includes('恢复')`));
   await key('Enter','Enter');await delay(100);
   check('Search result navigates and closes dialog',await evaluate(`location.hash.includes('patterns')&&!document.getElementById('search-dialog').open`));
-  await route('components');
-  await evaluate(`document.getElementById('collection-name').value='';document.getElementById('collection-form').requestSubmit()`);
-  check('Empty form provides associated error without losing focus',await evaluate(`document.getElementById('collection-name').getAttribute('aria-invalid')==='true'&&document.activeElement.id==='collection-name'&&document.getElementById('collection-error').textContent.includes('名字')`));
-  await evaluate(`document.getElementById('collection-name').value='周末';document.getElementById('collection-name').dispatchEvent(new Event('input',{bubbles:true}));document.getElementById('collection-form').requestSubmit()`);
-  check('Valid input clears the error',await evaluate(`!document.getElementById('collection-name').hasAttribute('aria-invalid')`));
-  await click('[data-action="toggle-reminder"]');
-  check('Switch exposes the changed state and demo scope',await evaluate(`document.querySelector('[role="switch"]').getAttribute('aria-checked')==='true'&&document.getElementById('switch-description').textContent.includes('不会发送')`));
-  await evaluate(`document.getElementById('segment-all').focus()`);await key('ArrowRight','ArrowRight');
-  check('Tab arrows update selection, focus and panel labeling',await evaluate(`document.activeElement.id==='segment-kept'&&document.getElementById('segment-kept').getAttribute('aria-selected')==='true'&&document.getElementById('segment-content').getAttribute('aria-labelledby')==='segment-kept'`));
-  await click('[data-action="open-example"]');
-  check('Dialog initially focuses the input',await evaluate(`document.activeElement.id==='example-text'&&document.getElementById('example-dialog').open`));
-  await send('Input.insertText',{text:'这是浏览器验证中的一段临时记录。'});
-  await key('Escape','Escape');
-  check('Escape preserves the draft and returns focus',await evaluate(`!document.getElementById('example-dialog').open&&document.getElementById('example-text').value.includes('临时记录')&&document.activeElement.dataset.action==='open-example'`));
-  await click('[data-action="open-example"]');await click('#example-submit');
-  check('Submitted demo entry is visible and treated as text',await evaluate(`document.querySelector('.demo-entry').textContent.includes('临时记录')&&!document.getElementById('example-dialog').open`));
-  await click('[data-action="clear-entries"]');
-  await click('[data-action="add-sample"]');check('Empty state can become content',await evaluate(`!!document.querySelector('[data-action="reset-empty"]')`));
-  await click('[data-action="reset-empty"]');
-  await click('.demo-menu summary');
-  check('Menu is not clipped by its demo container',await evaluate(`getComputedStyle(document.querySelector('.demo-menu').closest('.demo')).overflow==='visible'`));
-  await key('Escape','Escape');check('Escape closes disclosure menu',await evaluate(`!document.querySelector('.demo-menu').open`));
-  await evaluate(`document.getElementById('loading-button').focus()`);
-  const loadingWidth=await evaluate(`document.getElementById('loading-button').getBoundingClientRect().width`);
-  await click('#loading-button');check('Loading prevents duplicate action',await evaluate(`document.getElementById('loading-button').getAttribute('aria-disabled')==='true'&&document.getElementById('loading-button').getAttribute('aria-busy')==='true'`));
-  check('Loading retains readable contrast, width and keyboard focus',await evaluate(`getComputedStyle(document.getElementById('loading-button')).opacity==='1'&&document.activeElement.id==='loading-button'&&Math.abs(document.getElementById('loading-button').getBoundingClientRect().width-${loadingWidth})<1`));
-  await until(`!document.getElementById('loading-button').hasAttribute('aria-disabled')`);
+  const {resizeMeasurements}=await runNavigationChecks({route,click,key,evaluate,until,delay,check,send,screenshot,viewport});
+  await runComponentChecks({route,click,key,evaluate,until,delay,check,send,screenshot});
   await route('patterns?section=undo');await click('[data-action="remove-item"]');
   check('Removal exposes a persistent undo action',await evaluate(`document.getElementById('undo-item').hidden&&!document.getElementById('undo-banner').hidden&&document.activeElement.dataset.action==='undo-remove'`));
   await click('[data-action="undo-remove"]');check('Undo restores content and focus',await evaluate(`!document.getElementById('undo-item').hidden&&document.activeElement.dataset.action==='remove-item'`));
@@ -172,35 +153,45 @@ try {
   await route('accessibility');
   await evaluate(`document.getElementById('text-size').value='32';document.getElementById('text-size').dispatchEvent(new Event('input',{bubbles:true}))`);
   check('Text size demo reflows at 200%',await evaluate(`getComputedStyle(document.getElementById('access-content')).fontSize==='32px'&&document.documentElement.scrollWidth<=innerWidth`));
+  await click('[data-action="open-example"]');
+  check('Dialog initially focuses the input',await evaluate(`document.activeElement.id==='example-text'&&document.getElementById('example-dialog').open`));
+  await send('Input.insertText',{text:'这是浏览器验证中的一段临时记录。'});
+  await key('Escape','Escape');
+  check('Escape preserves the draft and returns focus',await evaluate(`!document.getElementById('example-dialog').open&&document.getElementById('example-text').value.includes('临时记录')&&document.activeElement.dataset.action==='open-example'`));
+  await click('[data-action="open-example"]');await click('#example-submit');
+  check('Submitted demo entry is visible and treated as text',await evaluate(`document.querySelector('.demo-entry').textContent.includes('临时记录')&&!document.getElementById('example-dialog').open`));
+  await click('[data-action="clear-entries"]');
+
   await runLabChecks({route,click,key,evaluate,until,delay,check,send,screenshot});
   await route('governance');await click('[data-release-check="0"]');
   check('Checklist stores only the local boolean selection',await evaluate(`JSON.parse(localStorage.getItem('rosemary-design-checks-v1'))[0]===true`));
   await click('[data-action="reset-checklist"]');
   for(const action of ['download-tokens','download-guide','download-logo','download-icons','download-sprite','download-references']){await click(`[data-action="${action}"]`);await delay(180);}
   const downloaded=await readdir(downloads);
-  check('All six resource types are generated', ['rosemary-tokens-v1.json','rosemary-brand-guide-v1.md','rosemary-logo.png','rosemary-icons-71.zip','rosemary-icons-sprite.svg','rosemary-reference-review.md'].every(n=>downloaded.includes(n)));
+  check('All six resource types are generated', ['rosemary-forma-tokens-v1.2.0.json','rosemary-forma-guide-v1.2.0.md','rosemary-logo.png','rosemary-icons-71.zip','rosemary-icons-sprite.svg','rosemary-reference-review.md'].every(n=>downloaded.includes(n)));
   const sourceLogo=await readFile(path.join(root,'assets/rosemary-logo.png'));
   const downloadedLogo=await readFile(path.join(downloads,'rosemary-logo.png'));
   check('Downloaded official logo is byte-for-byte identical',createHash('sha256').update(sourceLogo).digest('hex')===createHash('sha256').update(downloadedLogo).digest('hex'));
-  const downloadedTokens=JSON.parse(await readFile(path.join(downloads,'rosemary-tokens-v1.json'),'utf8'));
+  const downloadedTokens=JSON.parse(await readFile(path.join(downloads,'rosemary-forma-tokens-v1.2.0.json'),'utf8'));
   check('Downloaded tokens preserve both themes',downloadedTokens.themes.light.primary==='#614578'&&downloadedTokens.themes.dark.primary==='#CDB5EA');
   await viewport(1440,1000,'dark');await route('overview');await screenshot('home-dark.png');
   await viewport(375,812,'light');await route('overview');await screenshot('home-mobile.png');
   await click('[data-action="open-nav"]');
   check('Mobile navigation opens with active chapter focus',await evaluate(`document.getElementById('nav-dialog').open&&document.activeElement.getAttribute('aria-current')==='page'`));
   await click('#mobile-nav [data-page-link="components"]');
-  check('Mobile chapter choice navigates and closes drawer',await evaluate(`!document.getElementById('nav-dialog').open&&location.hash.includes('components')`));
+  await until('!document.getElementById("nav-dialog").open');
+  check('Mobile chapter choice navigates, closes drawer and focuses the new heading',await evaluate(`!document.getElementById('nav-dialog').open&&location.hash.includes('components')&&document.activeElement===document.querySelector('main h1')`));
   await screenshot('components-mobile.png');
   const offline=path.join(profile,'portal-offline.html');await writeFile(offline,await readFile(path.join(root,'rosemary-design-portal.html')));
   await send('Page.navigate',{url:pathToFileURL(offline).href});
-  await until(`Boolean(window.RosemaryPages&&document.querySelector('.hero'))`);
-  check('Self-contained HTML also opens from a local file URL',await evaluate(`location.protocol==='file:'&&RosemaryPages.pages.length===15`));
+  await until(`Boolean(window.RosemaryPages&&document.querySelector('main h1'))`);
+  check('Self-contained HTML also opens from a local file URL',await evaluate(`location.protocol==='file:'&&RosemaryPages.pages.length===17`));
   await route('icons');
   check('Offline icon and embedded-logo resources work without a server',await evaluate(`document.querySelectorAll('[data-icon-id]').length===71&&document.querySelector('.official-logo').src.startsWith('data:image/png')`));
   check('No uncaught browser runtime exceptions',exceptions.length===0);
-  const report={passed:checks.length,layoutCombinations:routes.length*4,checks,sampledStyles,runtimeExceptions:exceptions,screenshots:(await readdir(shots)).filter(name=>name!=='failure.png')};
+  const report={passed:checks.length,layoutCombinations:routes.length*4,componentPreviewCombinations:33*4,resizeMeasurements,checks,sampledStyles,runtimeExceptions:exceptions,screenshots:(await readdir(shots)).filter(name=>name!=='failure.png')};
   await writeFile(path.join(root,'browser-test-report.json'),JSON.stringify(report,null,2)+'\n');
-  console.log(JSON.stringify({passed:checks.length,layoutCombinations:routes.length*4,screenshots:report.screenshots,runtimeExceptions:exceptions},null,2));
+  console.log(JSON.stringify({passed:checks.length,layoutCombinations:routes.length*4,componentPreviewCombinations:33*4,screenshots:report.screenshots,runtimeExceptions:exceptions},null,2));
 } catch(error) {
   console.error(error.stack || error);
   console.error('Chrome log excerpt:',stderr.slice(-2500));
