@@ -238,6 +238,7 @@ class _DateState extends State<RosemaryDate> {
     },
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: RosemaryTokens.spacing[1],
       children: [
         Focus(
           onKeyEvent: (node, event) {
@@ -249,6 +250,7 @@ class _DateState extends State<RosemaryDate> {
             return KeyEventResult.ignored;
           },
           child: Column(
+            spacing: RosemaryTokens.spacing[1],
             children: [
               if (dateMode)
                 RosemaryInput(
@@ -335,43 +337,47 @@ class _DateState extends State<RosemaryDate> {
                       RosemaryTokens.controlRadius,
                     ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      if (dateMode)
-                        RosemaryCalendar(
-                          value: draft,
-                          onChanged: (v) => setState(() {
-                            draft = v;
-                            dateText = v.toString();
-                            error = null;
-                          }),
-                        ),
-                      if (timeMode)
-                        RosemaryTimeColumns(
-                          value: timeDraft,
-                          onChanged: (v) => setState(() {
-                            timeDraft = v;
-                            timeText = v.toString();
-                            error = null;
-                          }),
-                        ),
-                      const SizedBox(height: 12),
-                      Wrap(
-                        spacing: 8,
-                        children: [
-                          RosemaryButton(
-                            label: rString(context, 'Cancel'),
-                            onPressed: () => changeOpen(false),
-                            variant: RosemaryButtonVariant.secondary,
+                  child: Padding(
+                    padding: EdgeInsets.all(RosemaryTokens.spacing[2]),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      spacing: RosemaryTokens.spacing[2],
+                      children: [
+                        if (dateMode)
+                          RosemaryCalendar(
+                            value: draft,
+                            onChanged: (v) => setState(() {
+                              draft = v;
+                              dateText = v.toString();
+                              error = null;
+                            }),
                           ),
-                          RosemaryButton(
-                            label: rString(context, 'Apply'),
-                            onPressed: apply,
+                        if (timeMode)
+                          RosemaryTimeColumns(
+                            value: timeDraft,
+                            onChanged: (v) => setState(() {
+                              timeDraft = v;
+                              timeText = v.toString();
+                              error = null;
+                            }),
                           ),
-                        ],
-                      ),
-                    ],
+                        Wrap(
+                          spacing: RosemaryTokens.spacing[1],
+                          runSpacing: RosemaryTokens.spacing[1],
+                          children: [
+                            RosemaryButton(
+                              label: rString(context, 'Cancel'),
+                              onPressed: () => changeOpen(false),
+                              variant: RosemaryButtonVariant.secondary,
+                            ),
+                            RosemaryButton(
+                              label: rString(context, 'Apply'),
+                              onPressed: apply,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -882,7 +888,9 @@ class _TimeColumnsState extends State<RosemaryTimeColumns> {
                                   width: 2,
                                 ),
                               ),
-                              child: Text(index.toString().padLeft(2, '0')),
+                              child: RosemaryText(
+                                index.toString().padLeft(2, '0'),
+                              ),
                             ),
                           ),
                         );

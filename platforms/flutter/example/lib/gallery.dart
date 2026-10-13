@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rosemary_ui/rosemary_ui.dart';
 import 'main.dart' show paletteFromJson;
 
@@ -97,73 +98,87 @@ class _GalleryState extends State<RosemaryGallery> {
                 )
               : null,
           child: Builder(
-            builder: (context) => Scaffold(
-              backgroundColor: RosemaryThemeData.of(context).canvas,
-              body: SafeArea(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const RosemaryText(
-                        'Rosemary · Flutter SDK 0.4.0',
-                        role: 'heading',
+            builder: (context) => AnnotatedRegion<SystemUiOverlayStyle>(
+              value:
+                  (dark
+                          ? SystemUiOverlayStyle.light
+                          : SystemUiOverlayStyle.dark)
+                      .copyWith(
+                        statusBarColor: Colors.transparent,
+                        systemNavigationBarColor: RosemaryThemeData.of(
+                          context,
+                        ).canvas,
                       ),
-                      Wrap(
-                        spacing: 12,
-                        children: [
-                          RosemarySwitch(
-                            value: chinese,
-                            onChanged: (v) => setState(() => chinese = v),
-                            label: '中文',
-                          ),
-                          RosemarySwitch(
-                            value: dark,
-                            onChanged: (v) => setState(() => dark = v),
-                            label: 'Dark',
-                          ),
-                          RosemarySwitch(
-                            value: custom,
-                            onChanged: widget.vigilo == null
-                                ? (_) {}
-                                : (v) => setState(() => custom = v),
-                            label: 'Vigilo',
-                            enabled: widget.vigilo != null,
-                          ),
-                          RosemarySwitch(
-                            value: rtl,
-                            onChanged: (v) => setState(() => rtl = v),
-                            label: 'RTL',
-                          ),
-                          RosemarySwitch(
-                            value: reduced,
-                            onChanged: (v) => setState(() => reduced = v),
-                            label: 'Reduce motion',
-                          ),
-                          RosemarySwitch(
-                            value: highContrast,
-                            onChanged: (v) => setState(() => highContrast = v),
-                            label: 'High contrast',
-                          ),
-                        ],
-                      ),
-                      RosemarySelect(
-                        key: const ValueKey('gallery-selector'),
-                        value: selected,
-                        onChanged: (v) => setState(() => selected = v),
-                        options: [
-                          for (final id in componentIds) RosemaryOption(id, id),
-                        ],
-                        label: 'Component',
-                      ),
-                      const SizedBox(height: 20),
-                      Demo(key: ValueKey(selected), id: selected),
-                      const SizedBox(height: 24),
-                      const RosemaryText(
-                        'Installed rosemary_ui consumer · local state only',
-                        role: 'caption',
-                      ),
-                    ],
+              child: Scaffold(
+                backgroundColor: RosemaryThemeData.of(context).canvas,
+                body: SafeArea(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const RosemaryText(
+                          'Rosemary · Flutter SDK 0.4.0',
+                          role: 'heading',
+                        ),
+                        Wrap(
+                          spacing: 12,
+                          children: [
+                            RosemarySwitch(
+                              value: chinese,
+                              onChanged: (v) => setState(() => chinese = v),
+                              label: '中文',
+                            ),
+                            RosemarySwitch(
+                              value: dark,
+                              onChanged: (v) => setState(() => dark = v),
+                              label: 'Dark',
+                            ),
+                            RosemarySwitch(
+                              value: custom,
+                              onChanged: widget.vigilo == null
+                                  ? (_) {}
+                                  : (v) => setState(() => custom = v),
+                              label: 'Vigilo',
+                              enabled: widget.vigilo != null,
+                            ),
+                            RosemarySwitch(
+                              value: rtl,
+                              onChanged: (v) => setState(() => rtl = v),
+                              label: 'RTL',
+                            ),
+                            RosemarySwitch(
+                              value: reduced,
+                              onChanged: (v) => setState(() => reduced = v),
+                              label: 'Reduce motion',
+                            ),
+                            RosemarySwitch(
+                              value: highContrast,
+                              onChanged: (v) =>
+                                  setState(() => highContrast = v),
+                              label: 'High contrast',
+                            ),
+                          ],
+                        ),
+                        RosemarySelect(
+                          key: const ValueKey('gallery-selector'),
+                          value: selected,
+                          onChanged: (v) => setState(() => selected = v),
+                          options: [
+                            for (final id in componentIds)
+                              RosemaryOption(id, id),
+                          ],
+                          label: 'Component',
+                        ),
+                        const SizedBox(height: 20),
+                        Demo(key: ValueKey(selected), id: selected),
+                        const SizedBox(height: 24),
+                        const RosemaryText(
+                          'Installed rosemary_ui consumer · local state only',
+                          role: 'caption',
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

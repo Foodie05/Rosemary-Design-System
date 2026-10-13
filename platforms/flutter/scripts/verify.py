@@ -13,6 +13,7 @@ mode=sys.argv[1] if len(sys.argv)>1 else 'test'
 base.mkdir(parents=True,exist_ok=True);artifacts.mkdir(parents=True,exist_ok=True)
 (artifacts/'evidence').mkdir(exist_ok=True)
 evidence_key=os.environ.get('ROSEMARY_DEVICE_EVIDENCE_KEY',mode) if mode=='device' else mode
+theme_asset_evidence=None
 log=(artifacts/'evidence'/f'{evidence_key}.log').open('w',encoding='utf-8')
 ignore={'.dart_tool','build','.git','Pods','.symlinks','ephemeral','Flutter-Generated.xcconfig','flutter_export_environment.sh','Generated.xcconfig','local.properties','.flutter-plugins-dependencies','__pycache__'}
 def included(path):return not any(part in ignore for part in path.parts) and not path.is_symlink()
@@ -44,6 +45,7 @@ def prepare():
   source.extractall(vendor)
  shutil.copytree(repo/'platforms/flutter/example',example,dirs_exist_ok=True,ignore=lambda folder,names:[name for name in names if name in ignore or pathlib.Path(folder,name).is_symlink()])
  themes=root/'design/themes';themes.mkdir(parents=True,exist_ok=True);shutil.copy2(repo/'design/themes/vigilo.json',themes/'vigilo.json')
+ assets=example/'assets';assets.mkdir(parents=True,exist_ok=True);shutil.copy2(repo/'design/themes/vigilo.json',assets/'vigilo.json')
  run('flutter','pub','get')
 def evidence(result):
  head=command('git','rev-parse','HEAD')
@@ -62,6 +64,7 @@ def evidence(result):
   except json.JSONDecodeError:pass
  data.update({'version':'0.4.0','head':head,'githubSha':os.environ.get('GITHUB_SHA'),'githubRunId':os.environ.get('GITHUB_RUN_ID'),'githubRunAttempt':os.environ.get('GITHUB_RUN_ATTEMPT'),'dirtyWorkingTree':dirty,'sourceDigest':source_digest,'sourceInputs':inputs,'sourceArchiveSha256':sha(archive) if archive.exists() else None,'toolchain':{'os':platform.platform(),'flutter':flutter,'java':command('java','-version'),'xcode':command('xcodebuild','-version') if sys.platform=='darwin' else None},'consumer':'deterministic source archive extracted to isolated path dependency'})
  phase={'result':result,'device':os.environ.get('ROSEMARY_FLUTTER_DEVICE','emulator-5554') if mode=='device' else None,'log':'evidence/'+evidence_key+'.log'}
+ if theme_asset_evidence:phase['packagedThemeAsset']=theme_asset_evidence
  if mode=='device':phase['availableDevices']=command('flutter','devices','--machine')
  data.setdefault('phases',{})[os.environ.get('ROSEMARY_DEVICE_EVIDENCE_KEY',mode) if mode=='device' else mode]=phase
  data['unverified']=['Manual screen reader audit across six platforms','Signed iOS physical-device distribution','Final release requires clean integrated HEAD and all CI target phases passed']
@@ -78,6 +81,22 @@ def zip_output(source,name):
   with zipfile.ZipFile(target,'w',zipfile.ZIP_DEFLATED) as out:
    for p in source.rglob('*'):
     if p.is_file():out.write(p,p.relative_to(source.parent))
+def verify_theme_asset(target):
+ global theme_asset_evidence
+ expected=(repo/'design/themes/vigilo.json').read_bytes()
+ if target.name.endswith('.tar.gz'):
+  with tarfile.open(target) as bundle:
+   entries=[member for member in bundle.getmembers() if member.isfile() and member.name.endswith('/assets/vigilo.json')]
+   if len(entries)!=1:raise RuntimeError('Expected one bundled Vigilo asset in '+str(target))
+   entry=entries[0].name;actual=bundle.extractfile(entries[0]).read()
+ else:
+  with zipfile.ZipFile(target) as bundle:
+   entries=[name for name in bundle.namelist() if name.endswith('/assets/vigilo.json')]
+   if len(entries)!=1:raise RuntimeError('Expected one bundled Vigilo asset in '+str(target))
+   entry=entries[0];actual=bundle.read(entry)
+ if actual!=expected:raise RuntimeError('Bundled Vigilo asset differs from canonical theme')
+ theme_asset_evidence={'archive':target.name,'entry':entry,'sha256':hashlib.sha256(actual).hexdigest(),'canonical':'design/themes/vigilo.json'}
+ log.write('Packaged Vigilo theme matches canonical bytes: '+entry+'\n');log.flush()
 def smoke(target):
  installed=base/'installed'/mode
  if installed.exists():shutil.rmtree(installed)
@@ -92,7 +111,8 @@ def smoke(target):
  else:binary=installed/'rosemary_gallery/rosemary_gallery'
  args=[str(binary)]
  if mode=='linux':args=['xvfb-run','-a',*args]
- with (artifacts/'evidence'/f'{mode}-installed-launch.log').open('w') as output:
+ launch_log=artifacts/'evidence'/f'{mode}-installed-launch.log'
+ with launch_log.open('w',encoding='utf-8',errors='replace') as output:
   process=subprocess.Popen(args,cwd=binary.parent,stdout=output,stderr=subprocess.STDOUT,start_new_session=sys.platform!='win32')
   try:
    time.sleep(5)
@@ -102,7 +122,9 @@ def smoke(target):
     if sys.platform=='win32':process.terminate()
     else:os.killpg(process.pid,signal.SIGTERM)
     process.wait(timeout=15)
- log.write('Installed archive launch smoke passed; representative interactions are a separate device phase.\n')
+ startup=launch_log.read_text(encoding='utf-8',errors='replace')
+ if any(marker in startup for marker in ['Unhandled Exception','Unable to load asset','EXCEPTION CAUGHT BY','ERROR:flutter/runtime/dart_vm_initializer']):raise RuntimeError('Installed archive reported a Flutter startup exception; inspect '+str(launch_log))
+ log.write('Installed archive launch survived without reported Flutter startup exceptions; actual main/asset/theme/native interactions are verified by the separate device phase.\n')
 outcome='failed'
 try:
  if mode=='pack':pack()
@@ -113,8 +135,8 @@ try:
  elif mode=='android':
   prepare();run('flutter','build','apk','--debug');shutil.copy2(example/'build/app/outputs/flutter-apk/app-debug.apk',artifacts/'rosemary-flutter-0.4.0-android.apk')
  elif mode=='web':prepare();run('flutter','build','web');zip_output(example/'build/web','rosemary-flutter-0.4.0-web.zip')
- elif mode=='macos':prepare();run('flutter','build','macos','--debug');zip_output(example/'build/macos/Build/Products/Debug','rosemary-flutter-0.4.0-macos.zip');smoke(artifacts/'rosemary-flutter-0.4.0-macos.zip')
- elif mode=='ios':prepare();run('flutter','build','ios','--simulator','--debug');zip_output(example/'build/ios/iphonesimulator','rosemary-flutter-0.4.0-ios-simulator.zip')
+ elif mode=='macos':prepare();run('flutter','build','macos','--debug');zip_output(example/'build/macos/Build/Products/Debug/rosemary_gallery.app','rosemary-flutter-0.4.0-macos.zip');smoke(artifacts/'rosemary-flutter-0.4.0-macos.zip')
+ elif mode=='ios':prepare();run('flutter','build','ios','--simulator','--debug');zip_output(example/'build/ios/iphonesimulator/Runner.app','rosemary-flutter-0.4.0-ios-simulator.zip')
  elif mode=='windows':prepare();run('flutter','build','windows','--release');zip_output(example/'build/windows/x64/runner/Release','rosemary-flutter-0.4.0-windows.zip');smoke(artifacts/'rosemary-flutter-0.4.0-windows.zip')
  elif mode=='linux':
   prepare();run('flutter','build','linux','--release')
@@ -122,7 +144,8 @@ try:
   smoke(artifacts/'rosemary-flutter-0.4.0-linux.tar.gz')
  elif mode=='device':prepare();run('flutter','test','integration_test/gallery_test.dart','-d',os.environ.get('ROSEMARY_FLUTTER_DEVICE','emulator-5554'))
  else:raise SystemExit('Expected pack|prepare|test|android|web|macos|ios|windows|linux|device')
-
+ outputs={'android':'android.apk','web':'web.zip','macos':'macos.zip','ios':'ios-simulator.zip','windows':'windows.zip','linux':'linux.tar.gz'}
+ if mode in outputs:verify_theme_asset(artifacts/('rosemary-flutter-0.4.0-'+outputs[mode]))
  outcome='passed'
 finally:
  log.close();evidence(outcome)

@@ -213,6 +213,7 @@ const RosemaryActionSurface({
     this.link = false,
     this.button = true,
     this.enabled = true,
+    this.dimWhenDisabled = true,
     this.radius,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.semanticsKey,
@@ -733,3 +734,45 @@ const RosemaryText(
 ```
 
 Menu options use stable IDs. Opening initially or through controlled state establishes menu focus. Arrow/Home/End/typeahead skip disabled items and reveal the active row in a scrollable popup. Dynamic replacement preserves the active ID when possible, otherwise moves to the first enabled item; Enter cannot submit a removed/disabled row. Tab proposes closing and continues native traversal.
+
+## Contract state reachability
+
+Pointer, press and focus states are native transient interaction states. The table distinguishes public UI state from application composition; a component does not infer network outcomes or own a business state machine. All application callbacks are proposals: the host can accept or refuse them by preserving the supplied value.
+
+| Contract | Public UI state | Host composition |
+| --- | --- | --- |
+| button | `enabled`, `busy`, variant and focus/press | Success/failure use associated Alert/Toast content. |
+| link | `current`; native focus/link activation | Track visited destinations in host navigation; use local Theme and Semantics for an applicable visited indication. |
+| iconButton | `enabled`, `busy`, `pressed` | Host supplies the named action and icon. |
+| input | `value`, `readOnly`, `enabled`, `error` | Validation-in-progress is host feedback; native editing is retained. |
+| textarea | `value`, `readOnly`, `enabled`, `error` | Host owns draft persistence. |
+| select | Local open/close, `enabled`, `error`, selected `value` | `onOpenChanged` observes transient visibility. |
+| search | `query`, `busy`; submit/clear callbacks | Render results, Empty or Alert next to the search from host request state. |
+| checkbox | Nullable `value` gives unchecked/checked/mixed; `enabled` | Group validation belongs to host form. |
+| radio | Selected `value`, option and group enabled flags, `error` | Host supplies the mutually exclusive options. |
+| switch | `value`, `busy`, `error`, `enabled` | Host refuses/reverts unsuccessful persistence. |
+| slider | Controlled value/range, native drag and `onCommit`, `enabled` | Host supplies units and committed effects. |
+| date | `expanded`, mode and local draft; invalid/reversed range feedback; `enabled` | Callbacks commit local date/time/range only after validation. |
+| upload | Per-file typed state/progress/error and Retry/Cancel flags; `enabled` | Aggregate partial/failure means a host-supplied mixture of file states; transport stays outside the library. |
+| tabs | `value`, disabled options, native focus | Loading content is returned by `panelBuilder`, e.g. Skeleton. |
+| breadcrumb | Final item is current; preceding items navigate | Host owns the hierarchy. |
+| pagination | `page`/`count` determine first/last; `busy`, `error` | Host loads pages and can refuse proposed page changes. |
+| menu | Controlled `open`, disabled items; focus/typeahead | Host supplies a disabled trigger to block opening the whole menu. |
+| tooltip | Hover/focus opens; Escape dismisses; `onOpenChanged` | Necessary information remains in host visible labels. |
+| popover | Controlled `open`, dismiss/open callbacks | Invalid state uses an Input error or Alert in `child`. |
+| dialog | Controlled `open`; reversible opening/closing animation | Submitting/invalid state uses busy Button/Input/Alert in `child`; dismiss can be refused. |
+| drawer | Same controlled states and dismiss rules as Dialog; optional nonmodal | Host owns draft and loading/error child content. |
+| toast | Mounted visibility, `paused`, scoped timeout and `onDismiss` | Remove the Toast when the host accepts dismissal. |
+| alert | `tone` info/success/warning/danger, optional action | Host selects the message and recovery operation. |
+| card | `selected`, optional activation and `child` | Loading/error contents are Skeleton/Alert supplied as child. |
+| list | Supplied items/selected IDs, optional empty widget | Branch to Skeleton or Alert for host loading/error, retaining ready data where appropriate. |
+| table | Supplied rows, empty widget, sorting and selection callbacks | Loading/error use host composition; actual row data is never fabricated. |
+| badge | `tone` neutral/info/success/warning/danger | Labels describe host status. |
+| avatar | Optional ImageProvider, image failure/null initials fallback | Host loading state can show a same-size Skeleton until an image is available. |
+| empty | Host title/description/action | First-use/filtered/offline/denied are distinct host messages and recovery actions. |
+| skeleton | Mounted placeholder geometry and label | Replace with actual content on finished or Alert on error; no synthetic timer. |
+| loading | Typed idle/running/completed/error/cancelled/timeout | Host supplies final state; 300ms appearance delay and cleanup are local. |
+| progress | Nullable value for unknown, max and typed running/idle/paused/cancelled/completed/error | Partial progress is an actual value between zero/max; cancellation retains it and stops flow. |
+| stepper | Typed notStarted/current/completed/error/unavailable, per-step enabled | Host owns progression and can refuse onChanged. |
+
+For example, a host can preserve its search query while switching only the result region between `RosemarySkeleton`, `RosemaryEmpty`, `RosemaryAlert` and `RosemaryList`. That composition exposes the contract states without putting request data or transport into the library.

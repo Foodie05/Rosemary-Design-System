@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:rosemary_gallery/main.dart';
+import 'package:rosemary_gallery/main.dart' as gallery;
 import 'package:rosemary_ui/rosemary_ui.dart';
 
 void main() {
@@ -9,14 +9,42 @@ void main() {
   testWidgets(
     'installed sample native editing date cancellation and stopped progress',
     (tester) async {
-      await tester.pumpWidget(const GalleryApp(initialComponent: 'input'));
-      await tester.pumpAndSettle();
+      await gallery.main();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      final vigilo = await gallery.loadVigiloTheme();
       final selector = find.byKey(const ValueKey('gallery-selector'));
+      await tester.tap(
+        find.descendant(of: selector, matching: find.text('button')),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.ensureVisible(find.text('input'));
+      await tester.tap(find.text('input'));
+      await tester.pumpAndSettle();
       await tester.enterText(find.byType(EditableText), 'Rosemary');
       await tester.pumpAndSettle();
       expect(find.text('Rosemary'), findsOneWidget);
       FocusManager.instance.primaryFocus?.unfocus();
       await tester.pumpAndSettle();
+      await tester.tap(find.text('Vigilo'));
+      await tester.pumpAndSettle();
+      expect(
+        RosemaryThemeData.of(
+          tester.element(find.byType(EditableText)),
+        ).colors.toMap(),
+        gallery
+            .paletteFromJson(vigilo['light'] as Map<String, dynamic>)
+            .toMap(),
+      );
+      await tester.tap(find.text('Dark'));
+      await tester.pumpAndSettle();
+      expect(
+        RosemaryThemeData.of(
+          tester.element(find.byType(EditableText)),
+        ).colors.toMap(),
+        gallery.paletteFromJson(vigilo['dark'] as Map<String, dynamic>).toMap(),
+      );
       await tester.tap(
         find.descendant(of: selector, matching: find.text('input')),
       );

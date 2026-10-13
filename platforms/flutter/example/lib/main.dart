@@ -4,14 +4,16 @@ import 'package:flutter/services.dart';
 import 'package:rosemary_ui/rosemary_ui.dart';
 import 'gallery.dart';
 
+Future<Map<String, dynamic>> loadVigiloTheme() async {
+  final json =
+      jsonDecode(await rootBundle.loadString('assets/vigilo.json'))
+          as Map<String, dynamic>;
+  return json['themes'] as Map<String, dynamic>;
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final json =
-      jsonDecode(
-            await rootBundle.loadString('../../../design/themes/vigilo.json'),
-          )
-          as Map<String, dynamic>;
-  runApp(GalleryApp(vigilo: json['themes'] as Map<String, dynamic>));
+  runApp(GalleryApp(vigilo: await loadVigiloTheme()));
 }
 
 RosemaryColors paletteFromJson(Map<String, dynamic> json) {

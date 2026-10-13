@@ -222,6 +222,10 @@ void main() {
   testWidgets(
     'nonmodal ISO field commits directly; outside and Tab discard picker draft',
     (tester) async {
+      tester.view.physicalSize = const Size(320, 640);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
       var date = RosemaryLocalDate(2026, 1, 1);
       var commits = 0;
       await tester.pumpWidget(
@@ -253,6 +257,10 @@ void main() {
       expect(find.byType(RosemaryCalendar), findsNothing);
       await tester.tap(find.text('Choose'));
       await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: '320px open date panel');
+      final panel = tester.getRect(find.byType(RosemaryCalendar));
+      expect(panel.left, greaterThanOrEqualTo(0));
+      expect(panel.right, lessThanOrEqualTo(320));
       await tester.ensureVisible(find.text('Background action'));
       await tester.tap(find.text('Background action'));
       await tester.pumpAndSettle();

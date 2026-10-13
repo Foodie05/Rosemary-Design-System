@@ -158,7 +158,7 @@ class RosemaryBreadcrumb extends StatelessWidget {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         for (var i = 0; i < items.length; i++) ...[
-          if (i != 0) const ExcludeSemantics(child: Text(' / ')),
+          if (i != 0) const ExcludeSemantics(child: RosemaryText(' / ')),
           RosemaryLink(
             label: items[i].label,
             current: i == items.length - 1,
@@ -263,9 +263,10 @@ class _MenuState extends State<RosemaryMenu> {
   void initState() {
     super.initState();
     normalize();
-    if (widget.open) WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && widget.open) scope.requestFocus();
-    });
+    if (widget.open)
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && widget.open) scope.requestFocus();
+      });
   }
 
   @override
