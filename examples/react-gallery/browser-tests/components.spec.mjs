@@ -258,6 +258,18 @@ test("drawer actual 220/180ms completion and interruption, modal=false, narrow r
           new DOMMatrixReadOnly(getComputedStyle(element).transform).isIdentity,
       ),
   ).toBe(true);
+  await section(page, "loading")
+    .getByRole("button", { name: "切换加载状态" })
+    .click();
+  const stopped = section(page, "loading").locator(".rm-loading");
+  await expect(stopped).toHaveAttribute("data-visible", "true");
+  await expect(stopped).toHaveAttribute("data-active", "false");
+  await expect(stopped).not.toHaveAttribute("aria-busy", "true");
+  await expect(stopped).not.toHaveAttribute("role", "status");
+  await expect(stopped.locator(".rm-fold-front")).toHaveCSS(
+    "animation-name",
+    "none",
+  );
   const bounds = await section(page, "progress")
     .getByRole("progressbar")
     .boundingBox();

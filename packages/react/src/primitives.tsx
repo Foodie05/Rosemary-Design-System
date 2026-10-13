@@ -401,6 +401,7 @@ export function Slider({
   );
 }
 export interface LoadingProps extends HTMLAttributes<HTMLSpanElement> {
+  idlePresentation?: "static" | "hidden";
   delay?: number;
   label?: string;
   size?: "small" | "medium" | "large";
@@ -410,6 +411,7 @@ export function Loading({
   label,
   size = "medium",
   active = true,
+  idlePresentation = "static",
   delay = componentTokens.loading.appearanceDelayMs,
   className,
   ...props
@@ -436,10 +438,10 @@ export function Loading({
     <span
       {...props}
       className={cx("loading", className)}
-      role={shown && resolvedLabel ? "status" : undefined}
-      aria-label={shown ? resolvedLabel || undefined : undefined}
+      role={active && shown && resolvedLabel ? "status" : undefined}
+      aria-label={active && shown ? resolvedLabel || undefined : undefined}
       data-size={size}
-      data-visible={shown}
+      data-visible={shown || (!active && idlePresentation === "static")}
       aria-busy={active || undefined}
       data-active={active && visible && shown}
     >

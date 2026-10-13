@@ -34,7 +34,7 @@ This table maps every `design/contracts.json` state key to a reachable React API
 | avatar | loading/image/fallback: pending image, load event, missing/failed source; source changes reset the attempt; pending state has aria-busy |
 | empty | first-use/filtered/offline/denied: supplied title/description/icon/action; host picks the cause and next action |
 | skeleton | loading: active; finished/error: host replaces it with content/Alert. `active={false}` only freezes its animation |
-| loading | idle/finished/cancelled: host `active={false}` or unmount; running: active after delay; error/timeout: host stops it and renders an associated Alert/action |
+| loading | idle/finished/cancelled: `active={false}` keeps the static brand pose without busy/live semantics; `idlePresentation="hidden"` or unmount removes it; running: active after delay; error/timeout: host stops it and renders an associated Alert/action |
 | progress | idle/running/partial/finished: actual numeric value; unknown: omitted value; cancelled/error: host `flowing={false}` plus text/Alert; no inferred successful completion |
 | stepper | upcoming/current/complete: current item ordering defaults; error/unavailable: item.state with visible text/icon and unavailable activation blocked. Explicit item.state can override a derived presentation state; current still identifies the navigation step |
 

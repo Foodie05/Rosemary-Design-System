@@ -823,6 +823,32 @@ test("feedback, card/list/table data, badges/avatar/empty/skeleton/loading/progr
     await new Promise((resolve) => setTimeout(resolve, 40));
   });
   assert.equal(screen.queryByRole("status"), null);
+  assert.equal(
+    loader.container.querySelector(".rm-loading").dataset.visible,
+    "true",
+  );
+  assert.equal(
+    loader.container.querySelector(".rm-loading").dataset.active,
+    "false",
+  );
+  assert.equal(
+    loader.container.querySelector(".rm-loading").hasAttribute("aria-busy"),
+    false,
+  );
+  loader.rerender(
+    wrap(
+      h(UI.Loading, {
+        label: "Delayed loading",
+        delay: 30,
+        active: false,
+        idlePresentation: "hidden",
+      }),
+    ),
+  );
+  assert.equal(
+    loader.container.querySelector(".rm-loading").dataset.visible,
+    "false",
+  );
   loader.rerender(
     wrap(h(UI.Loading, { label: "Delayed loading", delay: 30, active: true })),
   );
