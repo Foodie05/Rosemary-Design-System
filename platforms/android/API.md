@@ -291,7 +291,7 @@ RosemaryPopover(open:Boolean,onDismiss:(RosemaryDismissReason)->Unit,modifier:Mo
 ### RosemaryDialog
 
 ```kotlin
-RosemaryDialog(open:Boolean,title:String,onDismiss:(RosemaryDismissReason)->Unit,modifier:Modifier=Modifier,content:@Composable ColumnScope.()->Unit)
+RosemaryDialog(open:Boolean,title:String,onDismiss:(RosemaryDismissReason)->Unit,modifier:Modifier=Modifier,onAnimationFinished:(Boolean)->Unit={},content:@Composable ColumnScope.()->Unit)
 ```
 
 **Contract states:** 打开、编辑、提交中、错误、关闭。
@@ -459,7 +459,7 @@ RosemaryLoading(size:Dp=32.dp,label:String="Loading",modifier:Modifier=Modifier,
 ### RosemaryProgress
 
 ```kotlin
-RosemaryProgress(value:Float?,max:Float=100f,label:String="Progress",modifier:Modifier=Modifier,status:String?=null,onCancel:(()->Unit)?=null,onRetry:(()->Unit)?=null)
+RosemaryProgress(value:Float?,max:Float=100f,label:String="Progress",modifier:Modifier=Modifier,status:String?=null,onCancel:(()->Unit)?=null,onRetry:(()->Unit)?=null,state:RosemaryProgressState=RosemaryProgressState.Running)
 ```
 
 **Contract states:** 未开始、进行、暂停／取消、完成、部分失败。
@@ -502,3 +502,9 @@ Automated Compose semantics and focus tests are not TalkBack certification. API2
 ## Vigilo complete palette
 
 The consumer sample bundles `design/themes/vigilo.json` as a build-time asset and loads all 24 roles with `VigiloTheme.colors(context, dark)`. Select Vigilo independently of light/dark. It does not approximate the subbrand by replacing one accent. This JSON is the same source used by the portal and shared contrast validation. Use the same host JSON loader pattern for additional projects, then pass the resulting `RosemaryColors` to `RosemaryTheme(colors = …)`.
+
+Shared typography is consumed by `rosemaryTextStyle(role, color, size)` and `RosemaryText(role = …)`. Type size, line height and weight come from generated roles. Family identifiers map to Android system sans/serif/monospace; no proprietary font is bundled. Field editing uses the same body style. Control radii/touch targets and drawer/tabs/selection/loading/progress durations read shared component/motion data. `RosemaryProgressState` exposes Running/Idle/Paused/Cancelled/Completed/Error; only Running unfinished work animates, and actual measured value remains intact on cancellation. The sample cancels/retries by changing state.
+
+Loading uses the shared 300ms appearance delay: a Running task completed before the delay never flashes a facet. A separately mounted Idle/Completed instance presents its static identity. Toast timeout pauses when any action descendant has focus. Dialog animates its own scrim and content over shared 260ms/160ms enter/exit durations; the scrim is not an extra keyboard Tab stop. `onAnimationFinished` reports the latest reached open/closed endpoint.
+
+Verification emits `verification.json` and `SHA256SUMS` with actual tool versions, source inputs, Git HEAD/dirty state, artifact hashes, and device API/XML results. Dirty local development outputs are not final release evidence. Native binary and sources distributions include byte-checked MIT and brand notices.

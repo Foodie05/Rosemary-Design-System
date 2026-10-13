@@ -22,7 +22,7 @@ JDK17, Gradle8.13, AGP8.13.2, Kotlin/Compose compiler2.3.20, Compose BOM2025.10.
 ./gradlew :rosemary-compose:connectedDebugAndroidTest
 ```
 
-Run the first command before configuring/building the sample: sample depends on `design.rosemary:rosemary-compose:0.4.0` in the local Maven repository, never a project dependency. Publish output is `$ROSEMARY_ARTIFACT_ROOT/android/maven`; transfer the Maven ZIP, extract it into a local repository, and add `maven { url = uri("/path/to/maven") }` to a consumer's repositories. The ZIP includes AAR, POM, Gradle module metadata and sources. The debug sample APK is installable with `adb install -r …/sample-debug.apk`.
+Run the first command before configuring/building the sample: sample depends on `design.rosemary:rosemary-compose:0.4.0` in the local Maven repository, never a project dependency. Publish output is `$ROSEMARY_ARTIFACT_ROOT/android/maven`; transfer the Maven ZIP, extract it into a local repository, and add `maven { url = uri("/path/to/maven") }` to a consumer's repositories. The ZIP includes AAR, POM, Gradle module metadata, sources and MIT/brand notices. The AAR and sources JAR also contain the notices. The debug sample APK is installable with `adb install -r …/sample-debug.apk`.
 
 Instrumented tests must run on an API26+ device. Semantics checks are automated evidence, not screen-reader certification. Windows/Linux CI can assemble and run API26/36 x86_64 emulator tests; local Apple Silicon uses API36 arm64. Release APK signing and external deployment are host application concerns.
 

@@ -47,10 +47,11 @@ RosemaryColors paletteFromJson(Map<String, dynamic> json) {
 
 class GalleryApp extends StatelessWidget {
   final Map<String, dynamic>? vigilo;
-  const GalleryApp({super.key, this.vigilo});
+  final String initialComponent;
+  const GalleryApp({super.key, this.vigilo, this.initialComponent = 'button'});
   @override
   Widget build(BuildContext context) => MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: RosemaryGallery(vigilo: vigilo),
+    home: RosemaryGallery(vigilo: vigilo, initialComponent: initialComponent),
   );
 }

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Package source, extract it, and verify an isolated real package consumer."""
 import gzip,hashlib,json,os,pathlib,platform,shutil,signal,subprocess,sys,tarfile,time,zipfile
+for stream in (sys.stdout,sys.stderr):
+ if hasattr(stream,'reconfigure'):stream.reconfigure(encoding='utf-8',errors='replace')
 repo=pathlib.Path(__file__).resolve().parents[3]
 base=pathlib.Path(os.environ.get('ROSEMARY_BUILD_ROOT',repo/'.sdk-build'))/'flutter'
 artifacts=pathlib.Path(os.environ.get('ROSEMARY_ARTIFACT_ROOT',repo/'.sdk-artifacts'))/'flutter'

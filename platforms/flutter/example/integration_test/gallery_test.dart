@@ -9,27 +9,30 @@ void main() {
   testWidgets(
     'installed sample native editing date cancellation and stopped progress',
     (tester) async {
-      await tester.pumpWidget(const GalleryApp());
+      await tester.pumpWidget(const GalleryApp(initialComponent: 'input'));
       await tester.pumpAndSettle();
       final selector = find.byKey(const ValueKey('gallery-selector'));
-      await tester.tap(
-        find.descendant(of: selector, matching: find.text('button')),
-      );
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('input'));
-      await tester.pumpAndSettle();
       await tester.enterText(find.byType(EditableText), 'Rosemary');
       await tester.pumpAndSettle();
       expect(find.text('Rosemary'), findsOneWidget);
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pumpAndSettle();
       await tester.tap(
         find.descendant(of: selector, matching: find.text('input')),
       );
       await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('date'));
       await tester.tap(find.text('date'));
       await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Choose'));
       await tester.tap(find.text('Choose'));
       await tester.pumpAndSettle();
-      await tester.enterText(find.byType(EditableText).first, '0001-01-01');
+      final nextDay = find.descendant(
+        of: find.byType(RosemaryCalendar),
+        matching: find.text('14'),
+      );
+      await tester.ensureVisible(nextDay);
+      await tester.tap(nextDay);
       await tester.pumpAndSettle();
       await tester.ensureVisible(find.text('Cancel'));
       await tester.tap(find.text('Cancel'));

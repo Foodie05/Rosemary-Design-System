@@ -10,11 +10,18 @@ Widget host(Widget child) => MaterialApp(
 void main() {
   WidgetController.hitTestWarningShouldBeFatal = true;
   testWidgets(
-    'two-route Back refusal keeps route; repeated Escape can close controlled dialog',
+    'two-route local overlay refuses Back/Escape, retains editing and restores trigger',
     (tester) async {
-      final navigator = GlobalKey<NavigatorState>();
-      bool open = true;
+      final navigator = GlobalKey<NavigatorState>(),
+          trigger = FocusNode(),
+          editor = FocusNode();
+      bool open = false;
       var calls = 0;
+      var value = 'draft';
+      RosemaryThemeData? observed;
+      final palette = RosemaryTokens.dark.copyWith(
+        primary: const Color(0xFF9BD6C0),
+      );
       await tester.pumpWidget(
         MaterialApp(
           navigatorKey: navigator,
@@ -23,26 +30,54 @@ void main() {
       );
       navigator.currentState!.push(
         MaterialPageRoute<void>(
-          builder: (context) => RosemaryTheme(
-            reduceMotion: true,
-            child: StatefulBuilder(
-              builder: (context, setState) => Scaffold(
-                body: Column(
-                  children: [
-                    const Text('Foreground route'),
-                    RosemaryDialog(
-                      open: open,
-                      title: 'Refusal review',
-                      onDismiss: (_) {
-                        calls++;
-                        if (calls >= 3) setState(() => open = false);
-                      },
-                      child: RosemaryButton(
-                        label: 'Continue editing',
-                        onPressed: () {},
+          builder: (context) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: const TextScaler.linear(1.3)),
+            child: RosemaryTheme(
+              colors: palette,
+              locale: const Locale('zh'),
+              direction: TextDirection.rtl,
+              reduceMotion: true,
+              child: StatefulBuilder(
+                builder: (context, setState) => Scaffold(
+                  body: Column(
+                    children: [
+                      const Text('Foreground route'),
+                      RosemaryButton(
+                        label: 'Open review',
+                        focusNode: trigger,
+                        onPressed: () => setState(() => open = true),
                       ),
-                    ),
-                  ],
+                      RosemaryDialog(
+                        open: open,
+                        title: 'Refusal review',
+                        onDismiss: (_) {
+                          calls++;
+                          if (calls >= 3) setState(() => open = false);
+                        },
+                        child: Builder(
+                          builder: (context) {
+                            observed = RosemaryThemeData.of(context);
+                            return Column(
+                              children: [
+                                RosemaryInput(
+                                  value: value,
+                                  onChanged: (v) => setState(() => value = v),
+                                  label: 'Draft',
+                                  focusNode: editor,
+                                ),
+                                RosemaryButton(
+                                  label: 'Continue editing',
+                                  onPressed: () {},
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -50,24 +85,42 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
+      trigger.requestFocus();
+      await tester.pump();
+      await tester.tap(find.text('Open review'));
+      await tester.pumpAndSettle();
+      expect(observed?.primary, palette.primary);
+      expect(find.text('Refusal review'), findsOneWidget);
+      final ctx = tester.element(find.text('Refusal review'));
+      expect(Directionality.of(ctx), TextDirection.rtl);
+      expect(Localizations.localeOf(ctx), const Locale('zh'));
+      expect(MediaQuery.textScalerOf(ctx).scale(10), 13);
+      await tester.enterText(find.byType(EditableText), 'retained');
+      await tester.pumpAndSettle();
+      expect(editor.hasFocus, isTrue);
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
       expect(calls, 1);
+      expect(editor.hasFocus, isTrue);
       expect(find.text('Foreground route'), findsOneWidget);
-      expect(find.text('Refusal review'), findsOneWidget);
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pumpAndSettle();
       expect(calls, 2);
-      await tester.tap(find.text('Continue editing'));
-      await tester.pump();
+      expect(editor.hasFocus, isTrue);
+      await tester.enterText(find.byType(EditableText), 'edited again');
+      await tester.pumpAndSettle();
+      expect(value, 'edited again');
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pumpAndSettle();
       expect(calls, 3);
       expect(find.text('Refusal review'), findsNothing);
-      expect(find.text('Foreground route'), findsOneWidget);
+      expect(trigger.hasFocus, isTrue);
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
       expect(find.text('Background route'), findsOneWidget);
+      await tester.pumpWidget(const SizedBox.shrink());
+      trigger.dispose();
+      editor.dispose();
     },
   );
   testWidgets(

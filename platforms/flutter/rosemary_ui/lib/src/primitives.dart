@@ -14,7 +14,7 @@ class RosemaryActionSurface extends StatefulWidget {
   final FocusNode? focusNode;
   final String? label;
   final Color? background, foreground, border;
-  final bool selected, link, button, enabled;
+  final bool selected, link, button, enabled, dimWhenDisabled;
   final double? radius;
   final EdgeInsetsGeometry padding;
   final Key? semanticsKey;
@@ -31,6 +31,7 @@ class RosemaryActionSurface extends StatefulWidget {
     this.link = false,
     this.button = true,
     this.enabled = true,
+    this.dimWhenDisabled = true,
     this.radius,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.semanticsKey,
@@ -97,8 +98,9 @@ class _ActionSurfaceState extends State<RosemaryActionSurface> {
             ),
             child: Opacity(
               opacity:
-                  (!widget.enabled ||
-                      (widget.button && widget.onActivate == null))
+                  widget.dimWhenDisabled &&
+                      (!widget.enabled ||
+                          (widget.button && widget.onActivate == null))
                   ? 0.55
                   : pressed
                   ? 0.8
@@ -154,6 +156,7 @@ class RosemaryButton extends StatelessWidget {
       value: busy ? rString(context, 'Loading') : null,
       child: RosemaryActionSurface(
         label: semanticLabel,
+        dimWhenDisabled: !busy,
         onActivate: busy ? null : onPressed,
         enabled: enabled && !busy,
         focusNode: focusNode,
