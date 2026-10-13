@@ -119,7 +119,7 @@ def build():
     output = ROOT / 'rosemary-design-portal.html'
     output.write_text(document, encoding='utf-8')
     bundle = ROOT / 'rosemary-design-portal-source.zip'
-    names = ['index.html', '404.html', *STYLES, *SCRIPTS, 'tokens.json', 'brand-guide.md', 'build.py', 'README.md',
+    names = ['index.html', '404.html', *STYLES, *SCRIPTS, 'tokens.json', 'brand-guide.md', 'build.py', 'README.md', 'LICENSE', 'BRAND-ASSETS.md',
              'rosemary-design-portal.html', 'rosemary-icons-71.zip', 'rosemary-icons-sprite.svg',
              'assets/rosemary-logo.png', 'assets/logo-source.json', 'research/design-system-reference-review.md',
              'tests/browser-check.mjs', 'tests/lab-checks.mjs', 'tests/component-browser-checks.mjs', 'tests/navigation-browser-checks.mjs', 'tests/date-picker-browser-checks.mjs', 'tests/static-check.mjs', 'browser-test-report.json', 'local-review-report.json', 'verification.md']
