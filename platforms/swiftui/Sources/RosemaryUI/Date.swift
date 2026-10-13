@@ -215,7 +215,7 @@ public struct RosemaryDate: View {
       RosemaryButton(String(cursor.year), variant: .quiet) {
         mode = .years
         yearText = String(cursor.year)
-      }.fixedSize(horizontal: true, vertical: false).accessibilityLabel(p.format("Year %d", cursor.year))
+      }.fixedSize(horizontal: true, vertical: false).accessibilityLabel(p.format("Year %@", String(cursor.year)))
       RosemaryButton(String(cursor.month), variant: .quiet) { mode = .months }.fixedSize(
         horizontal: true, vertical: false).accessibilityLabel(p.format("Month %d", cursor.month))
     }

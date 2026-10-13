@@ -117,6 +117,13 @@ final class GalleryUITests: XCTestCase {
     app.buttons["Open dialog"].tap()
     XCTAssertTrue(app.buttons["关闭 Confirm changes"].waitForExistence(timeout: 3))
     app.buttons["关闭 Confirm changes"].tap()
+    app.terminate()
+    app.launchArguments = ["--capture", "nested-theme"]
+    app.launch()
+    let host = app.staticTexts["host-appearance"]
+    XCTAssertTrue(host.waitForExistence(timeout: 10))
+    XCTAssertEqual(app.staticTexts["dark-subtree-appearance"].label, "dark")
+    XCTAssertEqual(app.staticTexts["system-subtree-appearance"].label, host.label)
   }
   func testAnchoredSelectDoesNotReflowAndPointerSelectionCommits() {
     let app = XCUIApplication()

@@ -114,6 +114,12 @@ struct Gallery: View {
               Text("Anchored inside the usable viewport")
             }
           }
+        } else if kind == "nested-theme" {
+          Text(systemScheme == .dark ? "dark" : "light").accessibilityIdentifier("host-appearance")
+          VStack(spacing: 12) {
+            AppearanceProbe(identifier: "dark-subtree-appearance")
+            AppearanceProbe(identifier: "system-subtree-appearance").rosemaryTheme(.system)
+          }.rosemaryTheme(RosemaryThemeMode.dark)
         } else if kind == "toast" {
           RosemaryToast("Timed notification", isPresented: $toast, duration: toastDuration,
             isPaused: toastPaused) { toastDismissals += 1 }
@@ -406,6 +412,16 @@ private struct DialogEditor: View {
         dismiss(.confirm)
       }
       RosemaryButton("Cancel dialog", variant: .quiet) { dismiss(.cancel) }
+    }
+  }
+}
+
+private struct AppearanceProbe: View {
+  let identifier: String
+  @Environment(\.colorScheme) private var appearance
+  var body: some View {
+    RosemaryCard {
+      Text(appearance == .dark ? "dark" : "light").accessibilityIdentifier(identifier)
     }
   }
 }

@@ -157,8 +157,13 @@ public struct RosemaryTheme {
   }
 }
 private struct ThemeKey: EnvironmentKey { static let defaultValue: RosemaryTheme? = nil }
+private struct SystemAppearanceKey: EnvironmentKey { static let defaultValue: ColorScheme? = nil }
 private struct MotionKey: EnvironmentKey { static let defaultValue = false }
 extension EnvironmentValues {
+  fileprivate var rosemarySystemAppearance: ColorScheme? {
+    get { self[SystemAppearanceKey.self] }
+    set { self[SystemAppearanceKey.self] = newValue }
+  }
   public var rosemaryTheme: RosemaryTheme? {
     get { self[ThemeKey.self] }
     set { self[ThemeKey.self] = newValue }
@@ -206,14 +211,25 @@ extension View {
 }
 private struct ThemeModeModifier: ViewModifier {
   let mode: RosemaryThemeMode
-  func body(content: Content) -> some View {
+  @Environment(\.colorScheme) private var hostAppearance
+  @Environment(\.rosemarySystemAppearance) private var inheritedSystemAppearance
+  init(mode: RosemaryThemeMode) { self.mode = mode }
+  private var systemAppearance: ColorScheme { inheritedSystemAppearance ?? hostAppearance }
+  @ViewBuilder private func themed(_ content: Content) -> some View {
     switch mode {
     case .light: content.environment(\.rosemaryTheme, .light).environment(\.colorScheme, .light)
     case .dark: content.environment(\.rosemaryTheme, .dark).environment(\.colorScheme, .dark)
-    case .system: content.environment(\.rosemaryTheme, nil)
+    case .system:
+      content.environment(\.rosemaryTheme, nil).environment(\.colorScheme, systemAppearance)
     }
   }
+  func body(content: Content) -> some View {
+    // Preserve the appearance entering the outermost Rosemary theme. An explicit
+    // local dark/light mode must not become the baseline of a nested system mode.
+    themed(content).environment(\.rosemarySystemAppearance, systemAppearance)
+  }
 }
+
 struct RosemaryFieldFrame: ViewModifier {
   private var p = RosemaryPalette()
   var invalid = false
