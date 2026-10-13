@@ -92,7 +92,7 @@ node tests/browser-check.mjs http://127.0.0.1:5181/
 
 ## 许可证
 
-本仓库当前未声明开源许可证。公开浏览和下载门户资源不代表授予复制、修改、分发或商用许可；需要在其他项目中使用时，请先取得仓库所有者授权。
+源代码采用 [MIT License](LICENSE)。Rosemary 名称、官方 Logo、产品徽记与其他品牌资产不随 MIT License 授权，使用边界见 [BRAND-ASSETS.md](BRAND-ASSETS.md)。
 
 ## 参考
 

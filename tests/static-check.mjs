@@ -57,6 +57,7 @@ const notFound=fs.readFileSync(path.join(root,'404.html'),'utf8');
 assert.ok(notFound.includes('<title>页面未找到 · Rosemary Forma</title>'));
 assert.ok(notFound.includes('href="/#/overview"'),'404 page returns to the canonical overview route');
 assert.ok(!/(?:src|href)=["']https?:\/\//.test(notFound),'404 page has no remote dependency');
+assert.ok(notFound.includes('M15 16h15v15H15V16'),'404 page reuses the Forma product-mark geometry');
 function lum(hex){const c=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);return c[0]*.2126+c[1]*.7152+c[2]*.0722;}
 const pairs=[['ink','canvas'],['muted','canvas'],['ink','surface'],['muted','surface'],['on-primary','primary'],['primary','primary-soft'],['on-sun','sun'],['on-sky','sky'],['success','success-soft'],['warning','warning-soft'],['danger','danger-soft'],['info','info-soft'],['on-danger','danger']];
 for(const [theme,tokens] of Object.entries(w.ROSEMARY_TOKENS.themes))for(const [fg,bg] of pairs){const a=lum(tokens[fg]),b=lum(tokens[bg]);assert.ok((Math.max(a,b)+.05)/(Math.min(a,b)+.05)>=4.5,`${theme} ${fg}/${bg}`);}
