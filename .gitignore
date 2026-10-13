@@ -27,3 +27,6 @@ examples/*/dist/
 artifacts/
 playwright-report/
 test-results/
+
+# Build directories can be external symlinks on development hosts
+**/build
