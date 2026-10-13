@@ -3,6 +3,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useSyncExternalStore,
 } from "react";
 import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
@@ -224,9 +225,24 @@ export function ThemeProvider({
     [mode, parent, effectiveMode, dark, colors],
   );
   const diagnostics = useMemo(() => validateTheme(palette), [palette]);
+  const paletteKey = (
+    Object.keys(defaultThemes.light) as (keyof RosemaryColors)[]
+  )
+    .map((role) => palette[role].toUpperCase())
+    .join(";");
+  const diagnosticCallback = useRef(onDiagnostics);
+  const notifiedPalette = useRef<string | undefined>(undefined);
+  const hasDiagnosticCallback = !!onDiagnostics;
   useEffect(() => {
-    onDiagnostics?.(diagnostics);
-  }, [diagnostics, onDiagnostics]);
+    diagnosticCallback.current = onDiagnostics;
+  }, [onDiagnostics]);
+  useEffect(() => {
+    if (!diagnosticCallback.current || notifiedPalette.current === paletteKey)
+      return;
+    // Record before calling the host, which may synchronously update parent state.
+    notifiedPalette.current = paletteKey;
+    diagnosticCallback.current(diagnostics);
+  }, [diagnostics, paletteKey, hasDiagnosticCallback]);
   const value = useMemo(
     () => ({
       colors: palette,

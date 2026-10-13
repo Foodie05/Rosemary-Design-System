@@ -187,10 +187,10 @@ async function validateEvidence(files, kind, head, artifactName) {
       kind === "android"
         ? ["library", "consumer", "device"]
         : artifactName.endsWith("linux-web-android")
-          ? ["test", "linux", "web", "android", "device"]
+          ? ["test", "linux", "web", "android", "device-linux", "device"]
           : artifactName.endsWith("macos-ios")
-            ? ["test", "macos", "ios"]
-            : ["test", "windows"];
+            ? ["test", "macos", "ios", "device-macOS"]
+            : ["test", "windows", "device-Windows"];
     for (const phase of phases)
       requireThat(
         record.phases?.[phase]?.result === "passed",
@@ -407,6 +407,7 @@ async function main() {
               ? [
                   "rosemary-compose-0.4.0-maven.zip",
                   "rosemary-compose-0.4.0.aar",
+                  "rosemary-compose-0.4.0-sources.jar",
                   "rosemary-compose-sample-0.4.0.apk",
                 ]
               : kind === "flutter"
@@ -426,7 +427,7 @@ async function main() {
                 : [];
       const packageDigests = [];
       for (const file of files.filter((f) =>
-        /\.(tgz|aar|apk|zip|tar\.gz)$/.test(f),
+        /\.(tgz|aar|jar|apk|zip|tar\.gz)$/.test(f),
       ))
         packageDigests.push({
           path: path.relative(directory, file).replaceAll(path.sep, "/"),

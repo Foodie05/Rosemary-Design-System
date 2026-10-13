@@ -118,6 +118,53 @@ test("SSR and nested providers preserve independent colors, report contrast, hon
       ),
     /Invalid theme color/,
   );
+  cleanup();
+  let reports = 0;
+  const reportedRevisions = [];
+  function ReportingHost() {
+    const [diagnostics, setDiagnostics] = useState([]);
+    const [primary, setPrimary] = useState("#FFFFFF");
+    const [focus, setFocus] = useState(defaultThemes.light.focus);
+    const [revision, setRevision] = useState(0);
+    return wrap(
+      h(
+        "div",
+        null,
+        h("output", { "data-testid": "diagnostics" }, diagnostics.length),
+        h("output", { "data-testid": "revision" }, revision),
+        h("button", { onClick: () => setRevision((n) => n + 1) }, "Rerender"),
+        h("button", { onClick: () => setPrimary("#614578") }, "Change primary"),
+        h("button", { onClick: () => setFocus("#FFFFFF") }, "Change focus"),
+      ),
+      {
+        mode: "light",
+        colors: { primary, focus },
+        onDiagnostics: (next) => {
+          reports++;
+          reportedRevisions.push(revision);
+          // Bound a regression instead of letting a broken provider hang the suite.
+          assert.ok(
+            reports <= 3,
+            "Equal palette/callback identities must not renotify",
+          );
+          setDiagnostics([...next]);
+        },
+      },
+    );
+  }
+  render(h(React.StrictMode, null, h(ReportingHost)));
+  assert.equal(reports, 1);
+  assert.ok(Number(screen.getByTestId("diagnostics").textContent) > 0);
+  fireEvent.click(screen.getByRole("button", { name: "Rerender" }));
+  assert.equal(reports, 1);
+  assert.equal(screen.getByTestId("revision").textContent, "1");
+  fireEvent.click(screen.getByRole("button", { name: "Change primary" }));
+  assert.equal(reports, 2);
+  assert.equal(screen.getByTestId("diagnostics").textContent, "0");
+  fireEvent.click(screen.getByRole("button", { name: "Change focus" }));
+  assert.equal(reports, 3);
+  assert.deepEqual(reportedRevisions, [0, 1, 1]);
+  assert.ok(Number(screen.getByTestId("diagnostics").textContent) > 0);
 });
 test("buttons, link and 71 original icons expose real semantics; busy actions refuse duplicate activation", () => {
   let clicks = 0;

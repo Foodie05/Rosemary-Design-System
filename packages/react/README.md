@@ -7,16 +7,18 @@ npm install ./rosemary-ui-tokens-0.4.0.tgz ./rosemary-ui-icons-0.4.0.tgz ./rosem
 ```
 
 ```tsx
-import { useState } from 'react';
-import { RosemaryProvider, Input, Button } from '@rosemary-ui/react';
-import '@rosemary-ui/react/css';
+import { useState } from "react";
+import { RosemaryProvider, Input, Button } from "@rosemary-ui/react";
+import "@rosemary-ui/react/css";
 
 export function RecordForm() {
-  const [name, setName] = useState('');
-  return <RosemaryProvider mode="system" language="en">
-    <Input label="Name" value={name} onValueChange={setName} />
-    <Button onClick={() => saveRecord(name)}>Save</Button>
-  </RosemaryProvider>;
+  const [name, setName] = useState("");
+  return (
+    <RosemaryProvider mode="system" language="en">
+      <Input label="Name" value={name} onValueChange={setName} />
+      <Button onClick={() => saveRecord(name)}>Save</Button>
+    </RosemaryProvider>
+  );
 }
 ```
 
@@ -24,7 +26,7 @@ The application owns network calls, persistence, business validation and every p
 
 ## Theme, language and direction
 
-`RosemaryProvider` (`ThemeProvider` alias) accepts `mode: 'light' | 'dark' | 'system'`, partial `colors`, `direction: 'ltr' | 'rtl'`, `language`, partial `strings`, `reducedMotion`, and `onDiagnostics`. Omitted mode and direction inherit the nearest provider. An explicit mode uses its complete built-in palette; color overrides merge into that palette once. Missing/invalid complete palettes and unsupported colors throw. Contrast failures report foreground/background role, measured ratio and target; colors are never silently changed. In production, supply `onDiagnostics` when accepting user palettes.
+`RosemaryProvider` (`ThemeProvider` alias) accepts `mode: 'light' | 'dark' | 'system'`, partial `colors`, `direction: 'ltr' | 'rtl'`, `language`, partial `strings`, `reducedMotion`, and `onDiagnostics`. Omitted mode and direction inherit the nearest provider. An explicit mode uses its complete built-in palette; color overrides merge into that palette once. Missing/invalid complete palettes and unsupported colors throw. Contrast failures report foreground/background role, measured ratio and target; colors are never silently changed. In production, supply `onDiagnostics` when accepting user palettes. It reports the initial effective palette and subsequent changes to any of its 24 color values, using the latest callback. Equivalent inline color objects and new callback identities do not repeat the report; updating parent state from the callback is supported.
 
 All 24 roles use camelCase in TypeScript (for example `onPrimary`, `primarySoft`, `successSoft`) and raw role names in the source JSON/CSS (`on-primary`, `primary-soft`, `success-soft`). Complete vigilo light/dark examples live in `design/themes/vigilo.json`; their 44 contrast checks run in `design:check`. Local themes remain independent, and menus, popovers and native dialog top layers inherit their enclosing provider's variables. Keep components inside a provider and import the CSS exactly once.
 
@@ -34,41 +36,41 @@ System or parent reduced motion always wins over an application `false`. Server 
 
 All exported prop interfaces are included in the package declarations. Input-like controls require an accessible label. Arbitrary DOM props/ref are supported on basic controls. Collections use stable consumer keys. The complete catalog maps to these APIs:
 
-| Catalog ID | React API and principal controlled input |
-| --- | --- |
-| button | `Button`, `variant`, `size`, `loading`, `onClick` (busy suppresses duplicate clicks) |
-| link | `Link`, ordinary anchor `href` |
-| iconButton | `IconButton`, required `icon`, `label`, `onClick` |
-| input | `Input`, `value`, `onValueChange`, `label`, `description`, `error` |
-| textarea | `Textarea`, same field contract, editable multiline text |
-| select | `Select`, `value`, `options`, `onValueChange` |
-| search | `Search`, field contract plus `onSearch` on explicit submit |
-| checkbox | `Checkbox`, `checked: boolean | 'mixed'`, `onCheckedChange` |
-| radio | `Radio`, `value`, `options`, `onValueChange` |
-| switch | `Switch`, `checked`, `onCheckedChange`; render a visible text label nearby (its required `label` supplies its accessible name) |
-| slider | `Slider`, numeric `value`, `min`, `max`, `step`, `onValueChange`, optional `valueText` |
-| date | `DatePicker` / `TimePicker` / `DateRange`, direct local text and custom panel; local ISO `value: string | null`, `onValueChange`, optional `min`, `max`, `withTime`, `time`, `onTimeChange` |
-| upload | `Upload`, `files`, `onFilesChange`, limits/`onReject`, optional `fileStates`, `onRetry(file)`, `onCancel(file)` |
-| tabs | `Tabs`, `value`, `items`, `onValueChange`, `activation: 'automatic' | 'manual'` |
-| breadcrumb | `Breadcrumb`, `items` with optional destinations; final item marks current page |
-| pagination | `Pagination`, `page`, `pageCount`, `onPageChange` (pages are one-based) |
-| menu | `Menu`, `open`, `onOpenChange`, `items` with `onSelect` actions |
-| tooltip | `Tooltip`, `content`, one accessible focusable React child, optional hover `delay` |
-| popover | `Popover`, `label`, `open`, `onOpenChange`, interactive children |
-| dialog | `Dialog`, `open`, `onOpenChange(open, reason)`, title/description/body/footer |
-| drawer | `Drawer`, dialog contract plus `modal` (default true), actual `onAnimationComplete` |
-| toast | `Toast`, `open`, tone/title/content and `onDismiss`; host owns its lifetime |
-| alert | `Alert`, tone/title/content, optional `onDismiss` |
-| card | `Card`, semantic article with content |
-| list | `List`, immutable `items` with id/content/description/action |
-| table | `Table<T>`, immutable `rows`, `rowKey`, `columns`, controlled `sort`, `onSortChange` |
-| badge | `Badge`, text and semantic `tone` |
-| avatar | `Avatar`, accessible `name`, optional `src`, initials/error fallback |
-| empty | `Empty`, title/description/icon/consumer action |
-| skeleton | `Skeleton`, label, `lines` (integer 1–100), `active` |
-| loading | `Loading`, label/size/active; Rosemary's exact two-card 3D folding geometry |
-| progress | `Progress`, label, `value`, `max`, `flowing`; omit value for indeterminate progress |
-| stepper | `Stepper`, `items` with optional `state`, `current` id and optional `onStepChange`; error/unavailable are explicit |
+| Catalog ID | React API and principal controlled input                                                                                       |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| button     | `Button`, `variant`, `size`, `loading`, `onClick` (busy suppresses duplicate clicks)                                           |
+| link       | `Link`, ordinary anchor `href`                                                                                                 |
+| iconButton | `IconButton`, required `icon`, `label`, `onClick`                                                                              |
+| input      | `Input`, `value`, `onValueChange`, `label`, `description`, `error`                                                             |
+| textarea   | `Textarea`, same field contract, editable multiline text                                                                       |
+| select     | `Select`, `value`, `options`, `onValueChange`                                                                                  |
+| search     | `Search`, field contract plus `onSearch` on explicit submit                                                                    |
+| checkbox   | `Checkbox`, `checked: boolean                                                                                                  | 'mixed'`, `onCheckedChange`                                                       |
+| radio      | `Radio`, `value`, `options`, `onValueChange`                                                                                   |
+| switch     | `Switch`, `checked`, `onCheckedChange`; render a visible text label nearby (its required `label` supplies its accessible name) |
+| slider     | `Slider`, numeric `value`, `min`, `max`, `step`, `onValueChange`, optional `valueText`                                         |
+| date       | `DatePicker` / `TimePicker` / `DateRange`, direct local text and custom panel; local ISO `value: string                        | null`, `onValueChange`, optional `min`, `max`, `withTime`, `time`, `onTimeChange` |
+| upload     | `Upload`, `files`, `onFilesChange`, limits/`onReject`, optional `fileStates`, `onRetry(file)`, `onCancel(file)`                |
+| tabs       | `Tabs`, `value`, `items`, `onValueChange`, `activation: 'automatic'                                                            | 'manual'`                                                                         |
+| breadcrumb | `Breadcrumb`, `items` with optional destinations; final item marks current page                                                |
+| pagination | `Pagination`, `page`, `pageCount`, `onPageChange` (pages are one-based)                                                        |
+| menu       | `Menu`, `open`, `onOpenChange`, `items` with `onSelect` actions                                                                |
+| tooltip    | `Tooltip`, `content`, one accessible focusable React child, optional hover `delay`                                             |
+| popover    | `Popover`, `label`, `open`, `onOpenChange`, interactive children                                                               |
+| dialog     | `Dialog`, `open`, `onOpenChange(open, reason)`, title/description/body/footer                                                  |
+| drawer     | `Drawer`, dialog contract plus `modal` (default true), actual `onAnimationComplete`                                            |
+| toast      | `Toast`, `open`, tone/title/content and `onDismiss`; host owns its lifetime                                                    |
+| alert      | `Alert`, tone/title/content, optional `onDismiss`                                                                              |
+| card       | `Card`, semantic article with content                                                                                          |
+| list       | `List`, immutable `items` with id/content/description/action                                                                   |
+| table      | `Table<T>`, immutable `rows`, `rowKey`, `columns`, controlled `sort`, `onSortChange`                                           |
+| badge      | `Badge`, text and semantic `tone`                                                                                              |
+| avatar     | `Avatar`, accessible `name`, optional `src`, initials/error fallback                                                           |
+| empty      | `Empty`, title/description/icon/consumer action                                                                                |
+| skeleton   | `Skeleton`, label, `lines` (integer 1–100), `active`                                                                           |
+| loading    | `Loading`, label/size/active; Rosemary's exact two-card 3D folding geometry                                                    |
+| progress   | `Progress`, label, `value`, `max`, `flowing`; omit value for indeterminate progress                                            |
+| stepper    | `Stepper`, `items` with optional `state`, `current` id and optional `onStepChange`; error/unavailable are explicit             |
 
 `Icon` renders one of the 71 shared Rosemary paths, with decorative default semantics or `label` for an image name. `BrandBadge` renders the five current product marks (`forma`, `epass`, `lilt`, `vigilo`, `folio`) in the current primary hue; a local provider supplies another approved theme. `RosemaryLogo` includes the unchanged official PNG. Brand names, badges and PNG are subject to [BRAND-ASSETS.md](./BRAND-ASSETS.md), separate from MIT code and functional icons.
 
@@ -94,18 +96,22 @@ On a fresh source checkout, run `pnpm build:shared` before `pnpm test:shared`; t
 
 This 0.4.0 API replaces the historical private Vite demonstration app; no prior publicly installable Web SDK API existed. Applications must adopt controlled props and the 24-role theme contract instead of importing portal globals/CSS classes.
 
-
 ## Per-file transfer state
 
 `Upload` accepts `fileStates?: ReadonlyMap<File, UploadFileState>`. Map keys use the same stable `File` objects present in `files`; retained retries preserve that identity. A file state is `{status: 'uploading', progress?: number, message?}`, `{status: 'failed', error}`, or `{status: 'selected' | 'complete' | 'cancelled', message?}`. Progress is 0–100; omitted progress is indeterminate. Completed and failed files together display a partial batch. Errors are associated with their file row and accompanied by text/icons.
 
 ```tsx
 const states = new Map<File, UploadFileState>([
-  [selectedFile, {status: 'failed', error: 'Connection lost'}],
+  [selectedFile, { status: "failed", error: "Connection lost" }],
 ]);
-<Upload label="Attachments" files={[selectedFile]} fileStates={states}
-  onFilesChange={setFiles} onRetry={file => retryTransfer(file)}
-  onCancel={file => cancelTransfer(file)} />;
+<Upload
+  label="Attachments"
+  files={[selectedFile]}
+  fileStates={states}
+  onFilesChange={setFiles}
+  onRetry={(file) => retryTransfer(file)}
+  onCancel={(file) => cancelTransfer(file)}
+/>;
 ```
 
 Import `UploadFileState` from the package. `onRetry` and `onCancel` do not optimistically alter the visible state or remove files. The host updates `fileStates` only after accepting the action. No files are transmitted by this component.
