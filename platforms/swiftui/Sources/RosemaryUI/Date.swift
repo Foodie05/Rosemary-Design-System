@@ -82,11 +82,8 @@ public struct RosemaryDate: View {
       dayFocus = next.day
     }
   }
-  private var weekStart: Int {
-    var calendar = Calendar(identifier: .gregorian)
-    calendar.locale = p.locale
-    return calendar.firstWeekday - 1
-  }
+  // Calendar UI follows the shared Monday-first contract; model weekday remains Sunday=0.
+  private let weekStart = 1
   private var firstWeekday: Int {
     (RosemaryLocalDate(year: cursor.year, month: cursor.month, day: 1)!.weekday - weekStart + 7) % 7
   }
@@ -178,7 +175,8 @@ public struct RosemaryDate: View {
           Color.clear.contentShape(Rectangle()).frame(width: 4000, height: 4000).onTapGesture(
             perform: cancel
           ).accessibilityHidden(true)
-        }.accessibilityLabel("\(p.text("Choose")) \(label)").onKeyPress(.escape) {
+        }.accessibilityElement(children: .contain)
+          .accessibilityLabel("\(p.text("Choose")) \(label)").onKeyPress(.escape) {
           cancel()
           return .handled
         }

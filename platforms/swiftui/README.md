@@ -3,12 +3,12 @@
 RosemaryUI supports iOS 17+ (Swift tools 5.9+, Swift 5 language mode). The root `Package.swift` exposes product/module `RosemaryUI`; the checked-in sample consumes that product through a local package reference to the repository root. macOS 14 is also declared to allow host-side SwiftPM compilation and model tests. iOS simulator build and UI tests are separate checks.
 
 ```swift
-.package(url: "<your Git remote URL>", exact: "0.4.0")
-// Add .product(name: "RosemaryUI", package: "rosemary-design-system-sdk") to your target.
+.package(url: "https://github.com/Foodie05/Rosemary-Design-System.git", exact: "0.4.0")
+// Add .product(name: "RosemaryUI", package: "rosemary-design-system") to your target.
 import RosemaryUI
 ```
 
-Use your actual remote and release tag; no public registry publication is performed. Source is MIT; see repository `BRAND-ASSETS.md` for separate brand asset terms.
+The planned release tag is `v0.4.0`; the exact-version example resolves only after that tag is created following final acceptance. Until then use the candidate branch or a local root package. No public registry publication is performed. Source is MIT; see repository `BRAND-ASSETS.md` for separate brand asset terms.
 
 ## Theme, localization and accessibility
 
@@ -67,7 +67,7 @@ All business data stays in the consumer. Values are controlled by `Binding`; cal
 
 ## Civil date values and commit boundaries
 
-`RosemaryLocalDate` accepts strict ASCII `YYYY-MM-DD`, Gregorian year 1–9999. `RosemaryLocalTime` accepts strict `HH:mm` (00:00–23:59). Their Codable representation is that string. Neither converts to `Date`, UTC, or a timezone. `RosemaryLocalDate.weekday` is Sunday=0; the calendar UI orders headings by the locale's first weekday. Day/month arithmetic returns nil beyond year boundaries and for `Int.min/max` deltas. `RosemaryLocalDateRange` rejects reversed ranges, including during decoding.
+`RosemaryLocalDate` accepts strict ASCII `YYYY-MM-DD`, Gregorian year 1–9999. `RosemaryLocalTime` accepts strict `HH:mm` (00:00–23:59). Their Codable representation is that string. Neither converts to `Date`, UTC, or a timezone. `RosemaryLocalDate.weekday` is Sunday=0; the calendar UI starts on Monday in every locale, matching the shared component contract. Day/month arithmetic returns nil beyond year boundaries and for `Int.min/max` deltas. `RosemaryLocalDateRange` rejects reversed ranges, including during decoding.
 
 ```swift
 @State var date: RosemaryLocalDate? = RosemaryLocalDate("2026-10-13")

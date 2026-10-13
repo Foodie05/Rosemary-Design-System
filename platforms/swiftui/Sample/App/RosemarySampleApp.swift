@@ -177,7 +177,7 @@ struct Gallery: View {
             }
             Text(result).font(.caption).accessibilityIdentifier("result")
           }.padding(16)
-        }
+        }.scrollDismissesKeyboard(.interactively).accessibilityIdentifier("gallery-scroll")
       }.padding(.horizontal, 12)
     }.foregroundStyle(currentColors.ink)
       .background(currentColors.canvas)

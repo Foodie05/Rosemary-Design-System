@@ -1,6 +1,6 @@
 # SwiftUI 0.4.0 verification — 2026-10-13
 
-The root SwiftPM product is consumed by the checked-in iOS sample. Deployment minimum is iOS 17.0; local validation used Xcode 27 beta (Swift 6.4, Swift 5 language mode). Stable Xcode 26.3/macOS 15 CI is configured in `sdk-swiftui.yml`; its result remains pending.
+The root SwiftPM product is consumed by the checked-in iOS sample. Deployment minimum is iOS 17.0; local validation used Xcode 27 beta (Swift 6.4, Swift 5 language mode). Stable Xcode 26.3/macOS 15 CI is configured in `sdk-swiftui.yml`. Run 38408120416 on PR head 132d945 compiled the consumer and executed tests; its two failing UI paths are being repaired, so the stable release gate is not yet passed.
 
 | Check | Actual local result |
 |---|---|
@@ -12,6 +12,8 @@ The root SwiftPM product is consumed by the checked-in iOS sample. Deployment mi
 | Representative screenshots | Saved and visually inspected: light, dark, local Vigilo theme, Gregorian day/month/year views, time, drawer, RTL with accessibility3 text, accessibility3 date, busy buttons; latest long-select and bottom/right anchored popover |
 | Local iOS unit/UI execution | **Not passed.** Runner service initialization/authorization prevents execution of test assertions |
 
+Stable CI [run 38408120416](https://github.com/Foodie05/Rosemary-Design-System/actions/runs/38408120416) passed all six host and six simulator model tests, then executed seven UI tests. Five passed: anchored select/pointer commit without reflow, bottom/right popover, drawer reopen/dismiss, modal containment/cancellation, and theme/locale/sections. Date and checkbox paths failed (three assertions across two test functions). The date accessibility hierarchy showed the panel label overriding header button names; the panel now creates a containing accessibility element. The scroll helper had repeatedly overshot an offscreen checkbox, although its subsequent native tap and binding assertion succeeded; it now scrolls towards the target and retains the hittable assertion. The sample identifies its scroll viewport and dismisses the keyboard interactively. These fixes and Monday-first placement await the next stable CI run.
+
 The six passing host XCTest functions verify:
 
 - Gregorian 1–9999 boundaries, century leap rules, strict timezone-free serialization, extreme arithmetic deltas.
@@ -21,11 +23,11 @@ The six passing host XCTest functions verify:
 - Anchored placement flips above the trigger and clamps to the viewport, including RTL positioning.
 - Fold rest state, bounded keyframes/layer exchange and progress derived from actual values, plus unknown progress without a numeric fraction.
 
-Seven iOS UI tests compile and are configured for CI: consumer input/checkbox bindings; modal containment/cancellation; drawer reopen/dismiss; date cancellation/invalid input; theme/locale and all sample sections; pointer select without reflow; bottom/right popover containment. Compilation is not execution. No assertion from those tests is claimed as a local pass.
+Seven iOS UI tests compile and are configured for CI: consumer input/checkbox bindings; modal containment/cancellation; drawer reopen/dismiss; date cancellation/invalid input and Monday-first day placement; theme/locale and all sample sections; pointer select without reflow; bottom/right popover containment. The five stable-CI paths above executed successfully; no assertion from these tests is claimed as a local pass.
 
 Local execution attempts on iOS 26.5/27 recorded `DTServiceHubClient failed to bless service hub`. Xcode `-checkFirstLaunchStatus` returns 69. Authorized `-runFirstLaunch` remained blocked in `AuthorizationCopyRights`/Security XPC (process sample preserved), and was stopped without bypassing authorization or deleting simulators. The final UI-only attempt failed installing/launching `design.rosemary.sample.uitests.xctrunner` with `Unknown application display identifier`. The final failed xcresult and logs are retained in release evidence. No additional runner retries are planned before stable CI.
 
-Screenshots demonstrate actual simulator rendering, including 2026-10-01 in Thursday's column, logical RTL fill and switch thumb, unmirrored fold geometry, and native theme colors. Accessibility3 day columns retain readable scaled cells in a horizontal ScrollView; this is not a claim of manually tested scroll gestures. Busy primary/danger buttons use their foreground colors for the loader.
+Screenshots demonstrate actual simulator rendering, including a Monday-first calendar with 2026-10-01 in Thursday's column, logical RTL fill and switch thumb, unmirrored fold geometry, and native theme colors. Accessibility3 day columns retain readable scaled cells in a horizontal ScrollView; this is not a claim of manually tested scroll gestures. Busy primary/danger buttons use their foreground colors for the loader.
 
 Manual VoiceOver, external keyboard traversal, pointer edge placement, maximum accessibility text, device execution and an actual iOS 17 runtime have not been tested. The produced zip contains an unsigned installable simulator `.app`, not a device IPA. Source archive and simulator zip are verified with SHA256 checksums. No public registry publication is performed.
 

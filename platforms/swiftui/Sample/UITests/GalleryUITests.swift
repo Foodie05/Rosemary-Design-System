@@ -9,9 +9,16 @@ final class GalleryUITests: XCTestCase {
     return app
   }
   private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
+    let gallery = app.scrollViews["gallery-scroll"]
+    let container = gallery.exists ? gallery : app
     for _ in 0..<12 {
       if element.exists && element.isHittable { return }
-      app.swipeUp()
+      // Move towards the element instead of repeatedly overshooting it.
+      if element.exists && element.frame.maxY < container.frame.midY {
+        container.swipeDown()
+      } else {
+        container.swipeUp()
+      }
     }
     XCTAssertTrue(element.isHittable)
   }
@@ -22,7 +29,6 @@ final class GalleryUITests: XCTestCase {
     input.typeText("Rosemary")
     XCTAssertTrue(app.staticTexts["Name value: Rosemary"].exists)
     app.buttons["Forms"].tap()
-    app.swipeUp()
     let checkbox = app.descendants(matching: .any).matching(identifier: "checkbox").firstMatch
     reveal(checkbox, in: app)
     checkbox.tap()
@@ -58,6 +64,12 @@ final class GalleryUITests: XCTestCase {
     let trigger = app.buttons["Choose Date"]
     reveal(trigger, in: app)
     trigger.tap()
+    let monday = app.buttons["2026-10-05"]
+    reveal(monday, in: app)
+    let sunday = app.buttons["2026-10-04"]
+    XCTAssertTrue(sunday.exists)
+    XCTAssertLessThan(monday.frame.minX, sunday.frame.minX)
+    XCTAssertGreaterThan(app.buttons["2026-10-01"].frame.minX, monday.frame.minX)
     let next = app.buttons["Next month"]
     reveal(next, in: app)
     next.tap()
