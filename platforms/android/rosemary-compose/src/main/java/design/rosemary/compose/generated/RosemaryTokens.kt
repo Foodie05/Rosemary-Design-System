@@ -35,7 +35,7 @@ data class RosemaryColors(
   fun toMap(): Map<String,Color> = mapOf("canvas" to canvas, "surface" to surface, "raised" to raised, "ink" to ink, "muted" to muted, "border" to border, "control" to control, "primary" to primary, "on-primary" to onPrimary, "primary-soft" to primarySoft, "sun" to sun, "on-sun" to onSun, "sky" to sky, "on-sky" to onSky, "success" to success, "success-soft" to successSoft, "warning" to warning, "warning-soft" to warningSoft, "danger" to danger, "danger-soft" to dangerSoft, "on-danger" to onDanger, "info" to info, "info-soft" to infoSoft, "focus" to focus)
 }
 object RosemaryTokens {
-    const val sdkVersion = "0.4.0"
+    const val sdkVersion = "0.4.1"
     const val specVersion = "1.2.0"
     val light = RosemaryColors(
       canvas = Color(0xFFF8F7FB),

@@ -109,7 +109,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: rosemary-flutter-0.4.0-${{ matrix.target }}
+          name: rosemary-flutter-0.4.1-${{ matrix.target }}
           include-hidden-files: true
           if-no-files-found: error
           path: .sdk-artifacts/flutter/

@@ -24,7 +24,7 @@ const files = ["tokens", "icons", "react"].map((name) =>
   path.join(
     artifactRoot,
     name === "react" ? "react" : "shared",
-    `rosemary-ui-${name}-0.4.0.tgz`,
+    `rosemary-ui-${name}-0.4.1.tgz`,
   ),
 );
 files.forEach((file) => readFileSync(file));

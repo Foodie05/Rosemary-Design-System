@@ -193,17 +193,85 @@ class InteractionTest {
                 )
             }
         }
+        val trigger = compose.onNodeWithText("Alpha")
+        trigger.assertContentDescriptionEquals("Section")
+        trigger.assert(
+            SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Collapsed")
+        )
+        // Sample only the reserved 18dp icon box inside 12dp padding: no field border,
+        // label or adjacent option. Count contrasting stroke geometry, not anti-alias shades.
+        fun assertTrailingGlyph(node: SemanticsNodeInteraction, label: String) {
+            val pixels = node.captureToImage().toPixelMap()
+            val density = compose.activity.resources.displayMetrics.density
+            val left = pixels.width - (30 * density).toInt()
+            val right = pixels.width - (12 * density).toInt()
+            val top = pixels.height / 2 - (9 * density).toInt()
+            val bottom = pixels.height / 2 + (9 * density).toInt()
+            val samples =
+                (top until bottom).flatMap { y ->
+                    (left until right).map { x -> Triple(x, y, pixels[x, y]) }
+                }
+            val background = samples.groupingBy { it.third }.eachCount().maxBy { it.value }.key
+            val stroke = samples.filter { (_, _, color) ->
+                color.alpha > .5f &&
+                    maxOf(
+                        kotlin.math.abs(color.red - background.red),
+                        kotlin.math.abs(color.green - background.green),
+                        kotlin.math.abs(color.blue - background.blue),
+                    ) > .08f
+            }
+            val rows = stroke.map { it.second }.toSet().size
+            val columns = stroke.map { it.first }.toSet().size
+            assertTrue(
+                "$label: strokePixels=${stroke.size}, rows=$rows, columns=$columns, background=$background, box=[$left,$top,$right,$bottom]",
+                stroke.size >= 9 && rows >= 3 && columns >= 3,
+            )
+        }
+        assertTrailingGlyph(trigger, "Select displays a trailing disclosure glyph")
         compose.onNodeWithText("Alpha").performSemanticsAction(SemanticsActions.RequestFocus) {
             it()
         }
         compose.onNodeWithText("Alpha").performKeyInput { pressKey(Key.DirectionDown) }
         compose.onNodeWithText("Blocked").assertIsNotEnabled()
-        compose.onAllNodesWithText("Alpha").onLast().performKeyInput {
-            pressKey(Key.DirectionDown)
+        val selectedOption = compose.onAllNodesWithText("Alpha").onLast()
+        selectedOption.assertIsSelected()
+        assertTrailingGlyph(selectedOption, "Committed option displays its check glyph")
+        selectedOption.performKeyInput { pressKey(Key.DirectionDown) }
+        selectedOption.assertIsSelected()
+        compose.onNodeWithText("Charlie").assertIsNotSelected().performKeyInput {
             pressKey(Key.Enter)
         }
         compose.runOnIdle { assertEquals("c", chosen) }
         compose.onNodeWithText("Charlie").assertIsFocused()
+    }
+
+    @Test
+    fun disablingAnOpenSelectClosesItsPopupAndPreventsActivation() {
+        var disable: (() -> Unit)? = null
+        var opens = 0
+        compose.setContent {
+            var enabled by remember { mutableStateOf(true) }
+            disable = { enabled = false }
+            RosemaryTheme {
+                RosemarySelect(
+                    "a",
+                    {},
+                    listOf(RosemaryOption("a", "Alpha"), RosemaryOption("b", "Beta")),
+                    "Section",
+                    enabled = enabled,
+                    onOpenChange = { if (it) opens++ },
+                )
+            }
+        }
+        compose.onNodeWithText("Alpha").performClick()
+        compose.onNodeWithText("Beta").assertIsDisplayed()
+        compose.runOnIdle { disable!!() }
+        compose.onNodeWithText("Beta").assertDoesNotExist()
+        compose.onNodeWithText("Alpha").assertIsNotEnabled()
+        compose
+            .onNodeWithText("Alpha")
+            .assert(SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Collapsed"))
+        compose.runOnIdle { assertEquals(1, opens) }
     }
 
     @Test

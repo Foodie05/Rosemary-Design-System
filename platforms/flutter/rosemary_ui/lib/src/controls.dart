@@ -52,11 +52,15 @@ class RosemaryCheckbox extends StatelessWidget {
               child: ExcludeSemantics(
                 child: value == false
                     ? null
-                    : RosemaryIcon(
-                        value == null ? 'minus' : 'check',
-                        size: 20,
-                        color: c.onPrimary,
-                      ),
+                    : value == null
+                    ? Center(
+                        child: Container(
+                          width: 10,
+                          height: 2,
+                          color: c.onPrimary,
+                        ),
+                      )
+                    : RosemaryIcon('check', size: 20, color: c.onPrimary),
               ),
             ),
             const SizedBox(width: 10),
@@ -459,7 +463,8 @@ class _SelectState extends State<RosemarySelect> {
                                     widget.options[i].id,
                                     () => GlobalKey(),
                                   ),
-                                  selected: i == active,
+                                  selected:
+                                      widget.options[i].id == widget.value,
                                   enabled: widget.options[i].enabled,
                                   background: i == active
                                       ? RosemaryThemeData.of(
@@ -470,7 +475,26 @@ class _SelectState extends State<RosemarySelect> {
                                     widget.onChanged(widget.options[i].id);
                                     _close();
                                   },
-                                  child: Text(widget.options[i].label),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: RosemaryText(
+                                          widget.options[i].label,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      SizedBox.square(
+                                        dimension: 18,
+                                        child:
+                                            widget.options[i].id == widget.value
+                                            ? const RosemaryIcon(
+                                                'check',
+                                                size: 18,
+                                              )
+                                            : null,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                             ],
                           ),
@@ -609,12 +633,46 @@ class _SelectState extends State<RosemarySelect> {
           Semantics(
             expanded: entry != null,
             value: selected?.label ?? rString(context, 'Choose'),
-            child: RosemaryButton(
-              label: selected?.label ?? rString(context, 'Choose'),
-              onPressed: entry == null ? _open : _close,
-              enabled: widget.enabled,
-              focusNode: trigger,
-              variant: RosemaryButtonVariant.secondary,
+            child: Opacity(
+              opacity: widget.enabled ? 1 : .65,
+              child: RosemaryActionSurface(
+                label:
+                    '${widget.label}: ${selected?.label ?? rString(context, 'Choose')}',
+                onActivate: entry == null ? _open : _close,
+                enabled: widget.enabled,
+                dimWhenDisabled: false,
+                focusNode: trigger,
+                background: !widget.enabled
+                    ? RosemaryThemeData.of(context).canvas
+                    : widget.error != null
+                    ? RosemaryThemeData.of(context).dangerSoft
+                    : RosemaryThemeData.of(context).surface,
+                foreground: widget.enabled
+                    ? RosemaryThemeData.of(context).ink
+                    : RosemaryThemeData.of(context).muted,
+                border: widget.error != null
+                    ? RosemaryThemeData.of(context).danger
+                    : RosemaryThemeData.of(context).control,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: RosemaryText(
+                        selected?.label ?? rString(context, 'Choose'),
+                        color: widget.enabled
+                            ? RosemaryThemeData.of(context).ink
+                            : RosemaryThemeData.of(context).muted,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const RosemaryIcon('down', size: 18),
+                  ],
+                ),
+              ),
             ),
           ),
           if (widget.error != null)

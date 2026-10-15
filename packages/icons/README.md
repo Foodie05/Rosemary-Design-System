@@ -1,4 +1,4 @@
-# @rosemary-ui/icons 0.4.0
+# @rosemary-ui/icons 0.4.1
 
 71 original functional icons, MIT licensed. Import `iconNames`, `IconName`,
 `iconMarkup`, `iconMetadata`, `iconGeometry`, and `getIconSvg(name)`.

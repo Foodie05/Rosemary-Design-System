@@ -2,12 +2,51 @@ package design.rosemary.compose
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.colorspace.ColorSpaces
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntRect
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import design.rosemary.compose.generated.*
 import java.time.LocalDate
 import org.junit.Assert.*
 import org.junit.Test
 
 class ContractLogicTest {
+    @Test
+    fun anchoredPopupsPreferBelowFlipAboveAndRespectRtlWindowEdges() {
+        val position = RosemaryAnchoredPopupPosition(4)
+        val window = IntSize(400, 800)
+        val popup = IntSize(220, 200)
+        fun at(anchor: IntRect, rtl: Boolean = false) =
+            position.calculatePosition(
+                anchor,
+                window,
+                if (rtl) LayoutDirection.Rtl else LayoutDirection.Ltr,
+                popup,
+            )
+        assertEquals(IntOffset(20, 148), at(IntRect(20, 100, 320, 144)))
+        assertEquals(IntOffset(100, 148), at(IntRect(20, 100, 320, 144), true))
+        assertEquals(IntOffset(176, 496), at(IntRect(300, 700, 390, 744)))
+        assertEquals(
+            IntOffset(0, 596),
+            position.calculatePosition(
+                IntRect(0, 10, 400, 700),
+                window,
+                LayoutDirection.Ltr,
+                IntSize(500, 200),
+            ),
+        )
+        assertEquals(
+            IntOffset(20, 16),
+            position.calculatePosition(
+                IntRect(20, 300, 320, 344),
+                window,
+                LayoutDirection.Ltr,
+                IntSize(220, 780),
+            ),
+        )
+    }
+
     @Test
     fun dateBoundariesAndLeapYearsAreStrict() {
         assertEquals(LocalDate.of(1, 1, 1), RosemaryDateRules.parse("0001-01-01"))

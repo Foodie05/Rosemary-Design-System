@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -228,7 +229,11 @@ private fun Field(
                     if (error != null) c.danger else c.control,
                     RoundedCornerShape(rosemaryRadius("input")),
                 )
-                .background(c.surface, RoundedCornerShape(rosemaryRadius("input")))
+                .background(
+                    if (!enabled) c.canvas else if (error != null) c.dangerSoft else c.surface,
+                    RoundedCornerShape(rosemaryRadius("input")),
+                )
+                .alpha(if (enabled) 1f else .65f)
                 .padding(12.dp)
                 .semantics {
                     contentDescription = label
@@ -236,7 +241,7 @@ private fun Field(
                 },
             enabled = enabled,
             readOnly = readOnly,
-            textStyle = rosemaryTextStyle(color = c.ink),
+            textStyle = rosemaryTextStyle(color = if (enabled) c.ink else c.muted),
             keyboardOptions = options,
             keyboardActions = KeyboardActions(onDone = { onCommit() }, onSearch = { onCommit() }),
             singleLine = minLines == 1,
@@ -298,16 +303,18 @@ fun RosemarySelect(
             itemFocus[index].requestFocus()
         }
     }
-    Column(modifier) {
+    LaunchedEffect(enabled) {
+        if (!enabled && open) {
+            open = false
+            onOpenChange(false)
+        }
+    }
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
         RosemaryText(label, size = 14.sp)
         Box {
-            RosemaryButton(
-                options.find { it.id == value }?.label ?: rString("Choose…"),
-                {
-                    open = !open
-                    onOpenChange(open)
-                },
+            Row(
                 Modifier.fillMaxWidth()
+                    .heightIn(min = rosemaryDimension("input", "minTouchTarget"))
                     .focusRequester(triggerFocus)
                     .onPreviewKeyEvent {
                         if (
@@ -320,14 +327,42 @@ fun RosemarySelect(
                             true
                         } else false
                     }
+                    .rosemaryFocus()
+                    .clip(RoundedCornerShape(rosemaryRadius("input")))
+                    .background(
+                        if (!enabled) c.canvas else if (error != null) c.dangerSoft else c.surface
+                    )
+                    .alpha(if (enabled) 1f else .65f)
+                    .border(
+                        1.dp,
+                        if (error != null) c.danger else c.control,
+                        RoundedCornerShape(rosemaryRadius("input")),
+                    )
+                    .clickable(enabled = enabled, role = Role.Button) {
+                        open = !open
+                        onOpenChange(open)
+                    }
                     .semantics {
+                        contentDescription = label
                         stateDescription = strings.text(if (open) "Expanded" else "Collapsed")
                         if (error != null) error(error)
-                    },
-                enabled = enabled,
-                variant = RosemaryButtonVariant.Secondary,
-            )
-            if (open)
+                    }
+                    .padding(horizontal = 12.dp, vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                RosemaryText(
+                    options.find { it.id == value }?.label ?: rString("Choose…"),
+                    Modifier.weight(1f),
+                    color = if (!enabled || value == null) c.muted else c.ink,
+                )
+                RosemaryIcon(
+                    "down",
+                    Modifier.size(18.dp),
+                    tint = if (enabled) c.muted else c.control,
+                )
+            }
+            if (open && enabled)
                 RosemaryPopup(
                     onDismissRequest = { close() },
                     properties = PopupProperties(focusable = true),
@@ -409,8 +444,7 @@ fun RosemarySelect(
                                 group = option.group
                                 group?.let { RosemaryText(it, size = 12.sp) }
                             }
-                            RosemaryText(
-                                option.label,
+                            Row(
                                 Modifier.fillMaxWidth()
                                     .heightIn(min = rosemaryDimension("input", "minTouchTarget"))
                                     .focusRequester(itemFocus[index])
@@ -427,7 +461,23 @@ fun RosemarySelect(
                                         if (option.id == value) c.primarySoft else Color.Transparent
                                     )
                                     .padding(12.dp),
-                            )
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                RosemaryText(
+                                    option.label,
+                                    Modifier.weight(1f),
+                                    color = if (option.enabled) c.ink else c.muted,
+                                )
+                                Box(Modifier.size(18.dp)) {
+                                    if (option.id == value)
+                                        RosemaryIcon(
+                                            "check",
+                                            Modifier.fillMaxSize(),
+                                            tint = c.primary,
+                                        )
+                                }
+                            }
                         }
                         if (options.isEmpty())
                             RosemaryButton(

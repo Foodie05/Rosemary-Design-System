@@ -1,14 +1,14 @@
-# RosemaryUI 0.4.0 — SwiftUI
+# RosemaryUI 0.4.1 — SwiftUI
 
 RosemaryUI supports iOS 17+ (Swift tools 5.9+, Swift 5 language mode). The root `Package.swift` exposes product/module `RosemaryUI`; the checked-in sample consumes that product through a local package reference to the repository root. macOS 14 is also declared to allow host-side SwiftPM compilation and model tests. iOS simulator build and UI tests are separate checks.
 
 ```swift
-.package(url: "https://github.com/Foodie05/Rosemary-Design-System.git", exact: "0.4.0")
+.package(url: "https://github.com/Foodie05/Rosemary-Design-System.git", exact: "0.4.1")
 // Add .product(name: "RosemaryUI", package: "rosemary-design-system") to your target.
 import RosemaryUI
 ```
 
-Installation is pinned to the `v0.4.0` Git tag. Check the corresponding GitHub Release assets and SHA256 manifest, or extract `RosemaryUI-0.4.0-source.tar.gz` and consume its root package through a local path. No public registry publication is performed. Source is MIT; see repository `BRAND-ASSETS.md` for separate brand asset terms.
+Installation is pinned to the `v0.4.1` Git tag. Check the corresponding GitHub Release assets and SHA256 manifest, or extract `RosemaryUI-0.4.1-source.tar.gz` and consume its root package through a local path. No public registry publication is performed. Source is MIT; see repository `BRAND-ASSETS.md` for separate brand asset terms.
 
 ## Theme, localization and accessibility
 

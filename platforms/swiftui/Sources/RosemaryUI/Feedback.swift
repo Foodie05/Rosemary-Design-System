@@ -332,17 +332,25 @@ public struct RosemaryToast: View {
 }
 public struct RosemarySkeleton: View {
   private var p = RosemaryPalette()
+  @Environment(\.scenePhase) private var scene
   let lines: Int
-  public init(lines: Int = 3) {
+  let running: Bool
+  public init(lines: Int = 3, isRunning: Bool = true) {
     precondition(lines > 0)
     self.lines = lines
+    running = isRunning
   }
+  private var active: Bool { running && !p.reduce && scene == .active }
   public var body: some View {
-    VStack(alignment: .leading, spacing: 12) {
-      ForEach(0..<lines, id: \.self) { n in
-        RoundedRectangle(cornerRadius: 4).fill(p.colors.border).frame(height: 14).padding(
-          .trailing, n == lines - 1 ? 48 : 0)
-      }
+    TimelineView(.animation(paused: !active)) { context in
+      let cycle = RosemaryNativeMetrics.duration("skeletonCycleMs")
+      let t = context.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: cycle) / cycle
+      VStack(alignment: .leading, spacing: 12) {
+        ForEach(0..<lines, id: \.self) { n in
+          RoundedRectangle(cornerRadius: 4).fill(p.colors.border).frame(height: 14).padding(
+            .trailing, n == lines - 1 ? 48 : 0)
+        }
+      }.opacity(active ? 0.75 - 0.2 * cos(t * 2 * .pi) : 1)
     }.accessibilityHidden(true)
   }
 }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.*
@@ -112,7 +113,7 @@ fun Gallery(
                     .padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                RosemaryText("Rosemary · Compose SDK 0.4.0", size = 28.sp)
+                RosemaryText("Rosemary · Compose SDK 0.4.1", size = 28.sp)
                 Row(Modifier.horizontalScroll(rememberScrollState())) {
                     RosemarySwitch(chinese, { chinese = it }, "中文")
                     RosemarySwitch(dark, { dark = it }, "Dark")
@@ -265,7 +266,17 @@ private fun Demo(id: String) {
                     ),
                     { text = it },
                 ) {
-                    RosemaryButton("Actions", { open = !open })
+                    RosemaryButton(
+                        "Actions",
+                        { open = !open },
+                        trailing = {
+                            RosemaryIcon(
+                                "down",
+                                Modifier.size(18.dp).rotate(if (open) 180f else 0f),
+                                tint = RosemaryTheme.colors.onPrimary,
+                            )
+                        },
+                    )
                 }
                 RosemaryText(text)
             }

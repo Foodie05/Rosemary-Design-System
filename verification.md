@@ -39,7 +39,7 @@
 本轮验证为 Chrome 本地 Web 与离线页面。尚未覆盖 Safari、Firefox、真实移动设备及人工读屏，不等于生产跨平台组件库或 WCAG 认证。音乐进度、账户格式、权限和搜索均为明确标注的本地示例。
 
 
-## SDK 0.4.0 接入栏目 · 最终离线验证
+## SDK 0.4.0 接入栏目 · 历史离线验证（2026-10-13）
 
 新增第 18 章“SDK 接入”，分别说明规范 1.2.0 和 SDK 0.4.0、四端安装、主题与状态、API、CI 及许可证。安装/API 链接固定到 v0.4.0，采用“以 Release 实际资产及 SHA256 为准”的中性说明；页面部署由 Release 完成后的流程处理。小型接入/迁移/验收文档加入源码 ZIP，SDK 大产物留在 GitHub Release。
 
@@ -48,3 +48,9 @@
 最终静态检查通过 18 页、71 图标、33 规格与独立预览、26 对比检查、原始 Logo 哈希及离线无外部脚本/样式/图片依赖，同时检查生成 HTML 含 SDK 注册、固定资产路径与主题诊断内容。最终文档/报告写入后再次生成 HTML/source ZIP；ZIP 全部条目 CRC 和工作目录逐字节对照通过，三个 `docs/sdk` 小型文档、SDK 页面/样式、最新测试/报告和 10 张 SDK 截图均在包内。旧 17 页 / 77 项记录仍是历史基线，未机械重跑 645 项旧矩阵。
 
 SwiftUI 稳定 Xcode 26.3 [CI 38417217654](https://github.com/Foodie05/Rosemary-Design-System/actions/runs/38417217654) 真实执行 6 个 host、6 个 simulator 模型测试与 8 个 UI 测试，全部通过；实际 source tar 外置解包测试和 simulator consumer build 均通过，来源干净、同 CI SHA、两项归档消费 exit status 为 0。这里记录的是 PR a1a44ec 的 merge checkout f20d31cc570ee270fbcd43b1b3e462b1ff079b5c；最终发布资产以 Release manifest 所绑定的 main commit、CI 和 SHA 为准。SwiftUI 本机 UI host 受权限限制、iOS 17 runtime 未执行、人工读屏未覆盖；Flutter 六目标与 Compose 的实际结果分别见各端报告，不能从门户截图或某一端结果推广。
+
+## SDK 0.4.1 接入栏目 · 本次文档验证（2026-10-15）
+
+规范版本保持1.2.0。重新生成自包含HTML，静态检查通过：18页面、71图标、33组件规格及独立预览、26组对比度、24语义角色、离线资源和官方Logo哈希。源码入口、本地HTTP自包含HTML与file:离线HTML分别执行10项SDK页面检查，均通过且0运行时异常；检查范围为固定v0.4.1 Release与16个平台资产链接、路由/导航/主题深链接、1440px浅色与375px深色的布局和边界。实际查看桌面安装与窄屏深色主题截图。
+
+本次未重跑历史645项门户矩阵或此前77项针对性操作，不将历史结果计入本次通过数。`sdk-browser-review.json`为本次离线SDK页报告；其他历史报告仍按各自日期解释。Release资产尚未公开抓取，`releaseAssetsFetched:false`；此处是构建与文档浏览器验收，未远端部署。详细证据目录：`/Volumes/MacData/Rosemary/artifacts/portal-0.4.1-consistency-20261015`。

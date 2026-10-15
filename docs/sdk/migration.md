@@ -1,6 +1,10 @@
-# 从历史 prototype 迁移到 SDK 0.4.0
+# 从历史 prototype 迁移到 SDK 0.4.1
 
-Rosemary Forma 规范保持 1.2.0；SDK 0.4.0 是新的组件代码版本。历史 `v0.3.0-prototype.2` tag 保留用于比较，不承诺源码兼容。安装固定到 `v0.4.0`，以对应 Release 的实际资产与 SHA256 为准。
+Rosemary Forma 规范保持 1.2.0；SDK 0.4.1 是当前组件代码修复版本。历史 `v0.3.0-prototype.2` tag 保留用于比较，不承诺源码兼容。安装固定到 `v0.4.1`，以对应 Release 的实际资产与 SHA256 为准。
+
+## 从 0.4.0 更新
+
+0.4.1 修复选择器展开提示、字段状态与已确认的原生呈现问题，保持现有调用兼容；SwiftUI Skeleton 另提供可选的 `isRunning` 参数以停止非必要动效。四端代码与 tokens/icons 需同版更新；设计规范仍为 1.2.0。旧 0.4.0 tag、资产及验收记录保留。实际修复和验证边界见 [一致性审查记录](0.4.1-consistency-review.md)。
 
 ## 确认范围
 
@@ -24,16 +28,16 @@ Rosemary Forma 规范保持 1.2.0；SDK 0.4.0 是新的组件代码版本。历�
 
 旧 chart、disabled、overlay 或更细文字层级不作一对一保证。审查产品自己的组合，使用实际背景和状态建立映射。新增 `on-danger`、`sun/on-sun`、`sky/on-sky` 等角色不能以同一个 accent 填满。
 
-结构缺失、无效或不支持的颜色必须处理错误；22 对对比诊断按每个 mode 记录。诊断不自动改色。原生 Color 需要在指定 appearance 下解析，不将动态、透明或不可解析颜色默认为合格。完整 [Vigilo JSON](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.0/design/themes/vigilo.json) 作为样例资源，由 consumer 加载。
+结构缺失、无效或不支持的颜色必须处理错误；22 对对比诊断按每个 mode 记录。诊断不自动改色。原生 Color 需要在指定 appearance 下解析，不将动态、透明或不可解析颜色默认为合格。完整 [Vigilo JSON](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.1/design/themes/vigilo.json) 作为样例资源，由 consumer 加载。
 
 ## 公共 API 变化
 
 | 实现 | 变化 | 迁移入口 |
 | --- | --- | --- |
-| React | 以受控值 / open 状态及回调接业务数据；样式通过独立 CSS 入口；tokens/icons/react 同版安装 | [API](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.0/packages/react/README.md)、[状态映射](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.0/packages/react/STATE-MAPPING.md) |
-| Compose | `dark` Boolean / Material 包装迁移至 `RosemaryThemeMode` 与完整语义色；旧 TextField/TextArea overload 改为 Input/Textarea 的 String 值与回调 | [API](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.0/platforms/android/API.md)、[迁移说明](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.0/platforms/android/README.md) |
-| SwiftUI | 根包 product/module `RosemaryUI`；iOS deployment 15 → 17；旧 `RosemaryTextField(value:)` 改用 `RosemaryInput(text:)`；Button `busy` 改为 `isLoading`；动效偏好改为 `rosemaryReduceMotion` | [API](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.0/platforms/swiftui/README.md) |
-| Flutter | 旧 `rosemary_reference` / `rosemary.dart` 改为 `rosemary_ui` / `rosemary_ui.dart`；旧 ThemeExtension 改为 `RosemaryTheme` provider 与 `RosemaryThemeData`，TextField 改用受控 Input，Button.loading 改为 busy；不要按其他端同名组件推测 Dart 参数 | [API](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.0/platforms/flutter/API.md) |
+| React | 以受控值 / open 状态及回调接业务数据；样式通过独立 CSS 入口；tokens/icons/react 同版安装 | [API](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.1/packages/react/README.md)、[状态映射](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.1/packages/react/STATE-MAPPING.md) |
+| Compose | `dark` Boolean / Material 包装迁移至 `RosemaryThemeMode` 与完整语义色；旧 TextField/TextArea overload 改为 Input/Textarea 的 String 值与回调 | [API](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.1/platforms/android/API.md)、[迁移说明](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.1/platforms/android/README.md) |
+| SwiftUI | 根包 product/module `RosemaryUI`；iOS deployment 15 → 17；旧 `RosemaryTextField(value:)` 改用 `RosemaryInput(text:)`；Button `busy` 改为 `isLoading`；动效偏好改为 `rosemaryReduceMotion` | [API](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.1/platforms/swiftui/README.md) |
+| Flutter | 旧 `rosemary_reference` / `rosemary.dart` 改为 `rosemary_ui` / `rosemary_ui.dart`；旧 ThemeExtension 改为 `RosemaryTheme` provider 与 `RosemaryThemeData`，TextField 改用受控 Input，Button.loading 改为 busy；不要按其他端同名组件推测 Dart 参数 | [API](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.1/platforms/flutter/API.md) |
 
 SwiftUI 根包 macOS 14 用于宿主编译和模型检查，不等于本次交付了一套已验收 macOS 原生应用。Flutter 六目标 consumer 的最低系统、编译和运行证据分别记录，不从模板推断全部平台支持。
 

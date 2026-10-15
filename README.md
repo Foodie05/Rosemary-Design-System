@@ -1,15 +1,15 @@
 # Rosemary Design System
 
-本仓库同时维护 **Rosemary Forma 1.2.0 设计规范**与 **Rosemary SDK 0.4.0 组件代码**。安装固定到 `v0.4.0`，以 GitHub Release 的实际资产及 SHA256 为准；不发布公共 registry。
+本仓库同时维护 **Rosemary Forma 1.2.0 设计规范**与 **Rosemary SDK 0.4.1 组件代码**。安装固定到 `v0.4.1`，以 GitHub Release 的实际资产及 SHA256 为准；不发布公共 registry。
 
-SDK 入口：[接入指南](docs/sdk/getting-started.md)、[迁移](docs/sdk/migration.md)、[验收清单](docs/sdk/release-checklist.md)、[实际 CI](https://github.com/Foodie05/Rosemary-Design-System/actions) 与 [Releases](https://github.com/Foodie05/Rosemary-Design-System/releases/tag/v0.4.0)。
+SDK 入口：[接入指南](docs/sdk/getting-started.md)、[迁移](docs/sdk/migration.md)、[验收清单](docs/sdk/release-checklist.md)、[实际 CI](https://github.com/Foodie05/Rosemary-Design-System/actions) 与 [Releases](https://github.com/Foodie05/Rosemary-Design-System/releases/tag/v0.4.1)。
 
 | 实现 | API 与 consumer |
 | --- | --- |
-| React | [packages/react](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.0/packages/react) · 同版 tokens/icons/react tgz |
-| Compose | [platforms/android](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.0/platforms/android) · 本地 Maven ZIP / APK |
-| SwiftUI | [platforms/swiftui](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.0/platforms/swiftui) · 根 Package.swift / RosemaryUI |
-| Flutter | [platforms/flutter](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.0/platforms/flutter) · rosemary_ui / 六目标 consumer |
+| React | [packages/react](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.1/packages/react) · 同版 tokens/icons/react tgz |
+| Compose | [platforms/android](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.1/platforms/android) · 本地 Maven ZIP / APK |
+| SwiftUI | [platforms/swiftui](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.1/platforms/swiftui) · 根 Package.swift / RosemaryUI |
+| Flutter | [platforms/flutter](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.1/platforms/flutter) · rosemary_ui / 六目标 consumer |
 
 SDK 共用当前 33 个组件契约和 24 个语义色角色。各端的最低系统、构建、运行和辅助技术覆盖分别记录；组件存在、编译通过或截图可读不等于全部验收。代码与品牌资产许可证分开。
 

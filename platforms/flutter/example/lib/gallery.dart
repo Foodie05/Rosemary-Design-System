@@ -118,7 +118,7 @@ class _GalleryState extends State<RosemaryGallery> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         const RosemaryText(
-                          'Rosemary · Flutter SDK 0.4.0',
+                          'Rosemary · Flutter SDK 0.4.1',
                           role: 'heading',
                         ),
                         Wrap(
@@ -350,6 +350,7 @@ class _DemoState extends State<Demo> {
         onOpenChanged: (v) => update(() => open = v),
         trigger: RosemaryButton(
           label: 'Actions',
+          trailing: const RosemaryIcon('down', size: 18),
           onPressed: () => update(() => open = !open),
         ),
         items: const [

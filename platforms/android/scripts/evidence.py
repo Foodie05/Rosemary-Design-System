@@ -27,7 +27,7 @@ for parent in ['platforms','build-tools','platform-tools','emulator','cmdline-to
  folder=sdk/parent
  for props in ([folder/'source.properties'] if (folder/'source.properties').exists() else sorted(folder.glob('*/source.properties'))):
   packages[str(props.parent.relative_to(sdk))]=dict(line.strip().split('=',1) for line in props.read_text().splitlines() if '=' in line and line.startswith(('Pkg.Revision','AndroidVersion.ApiLevel')))
-data.update({'version':'0.4.0','head':head,'githubSha':os.environ.get('GITHUB_SHA'),'githubRunId':os.environ.get('GITHUB_RUN_ID'),'githubRunAttempt':os.environ.get('GITHUB_RUN_ATTEMPT'),'dirtyWorkingTree':bool(cmd(['git','status','--porcelain','--untracked-files=no'])) or bool(untracked),'sourceDigest':source_digest,'sourceInputs':paths,'toolchain':{'os':platform.platform(),'java':cmd(['java','-version']),'gradle':cmd([str(repo/'platforms/android/gradlew'),'-p',str(repo/'platforms/android'),'--version']),'adb':cmd(['adb','version']),'emulator':cmd(['emulator','-version']),'sdkPackages':packages}})
+data.update({'version':'0.4.1','head':head,'githubSha':os.environ.get('GITHUB_SHA'),'githubRunId':os.environ.get('GITHUB_RUN_ID'),'githubRunAttempt':os.environ.get('GITHUB_RUN_ATTEMPT'),'dirtyWorkingTree':bool(cmd(['git','status','--porcelain','--untracked-files=no'])) or bool(untracked),'sourceDigest':source_digest,'sourceInputs':paths,'toolchain':{'os':platform.platform(),'java':cmd(['java','-version']),'gradle':cmd([str(repo/'platforms/android/gradlew'),'-p',str(repo/'platforms/android'),'--version']),'adb':cmd(['adb','version']),'emulator':cmd(['emulator','-version']),'sdkPackages':packages}})
 phase={'result':result}
 if mode=='device':
  devices=cmd(['adb','devices']);serial=os.environ.get('ANDROID_SERIAL')
