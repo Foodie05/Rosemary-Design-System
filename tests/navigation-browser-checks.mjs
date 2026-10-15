@@ -141,6 +141,15 @@ export async function runAppearanceChecks({route,click,key,evaluate,until,delay,
   await send('Emulation.setDeviceMetricsOverride',{width:375,height:812,deviceScaleFactor:1,mobile:true});await delay(80);
   const cycle='.topbar [data-theme-cycle]';
   check('Narrow navigation has one 44px cycle target and hides the radio group',await evaluate(`(()=>{const b=document.querySelector('${cycle}'),r=b.getBoundingClientRect();return r.width>=44&&r.height>=44&&getComputedStyle(document.querySelector('${group}')).display==='none'&&document.documentElement.scrollWidth<=innerWidth+1})()`));
+  for(const width of [375,320]) {
+    await send('Emulation.setDeviceMetricsOverride',{width,height:812,deviceScaleFactor:1,mobile:true});await delay(80);
+    check(`Narrow ${width}px language retains a visible dropdown cue without overflow`,await evaluate(`(()=>{const b=document.querySelector('.topbar .language-control .rm-select-trigger'),a=b.querySelector(':scope>.icon'),r=b.getBoundingClientRect();return r.width===56&&r.height>=44&&a.checkVisibility()&&a.getBoundingClientRect().width===12&&document.documentElement.scrollWidth<=innerWidth+1})()`));
+    await evaluate(`document.querySelector('.topbar .language-control .rm-select-trigger').focus()`);
+    await click('.topbar .language-control .rm-select-trigger');
+    check(`Narrow ${width}px language opens its actual locale option`,await evaluate(`document.querySelector('.topbar .language-control .rm-select-trigger').getAttribute('aria-expanded')==='true'&&[...document.querySelectorAll('[role=option]')].some(n=>n.checkVisibility()&&n.textContent.includes('简体中文'))`));
+    await key('Escape','Escape');
+  }
+  await send('Emulation.setDeviceMetricsOverride',{width:375,height:812,deviceScaleFactor:1,mobile:true});await delay(80);
   await click(cycle);check('Narrow dark cycles to system using preference rather than resolved color',await evaluate(`document.documentElement.dataset.themePreference==='system'&&document.querySelector('${cycle}').dataset.currentMode==='system'`));
   await click(cycle);check('Narrow system cycles to light',await evaluate(`document.documentElement.dataset.themePreference==='light'`));
   await click(cycle);check('Narrow light cycles to dark',await evaluate(`document.documentElement.dataset.themePreference==='dark'&&document.querySelector('${cycle}').getAttribute('aria-label').includes('跟随系统')`));
