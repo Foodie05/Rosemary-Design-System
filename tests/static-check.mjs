@@ -11,7 +11,9 @@ for(const file of scripts)vm.runInContext(fs.readFileSync(path.join(root,file),'
 const w=context.window;
 assert.equal(w.ROSEMARY_TOKENS.version,'1.2.0');
 assert.equal(w.RosemaryPages.pages.length,18);
-assert.equal(Object.keys(w.RosemaryIconLibrary.icons).length,71);
+const iconCount=Object.keys(w.RosemaryIconLibrary.icons).length;
+assert.equal(iconCount,Object.keys(JSON.parse(fs.readFileSync(path.join(root,'design/icons.json'),'utf8'))).length);
+for(const name of ['moon','theme-system','globe'])assert.ok(w.RosemaryIconLibrary.icons[name],'Navigation icon '+name+' exists');
 assert.equal(Object.keys(w.RosemaryComponentCatalog).length,33);
 assert.deepEqual([...w.RosemaryComponentDemos.ids].sort(),Object.keys(w.RosemaryComponentCatalog).sort());
 for(const id of w.RosemaryComponentDemos.ids){
@@ -49,7 +51,7 @@ for(const page of w.RosemaryPages.pages){
 const required=['title','use','anatomy','variants','dimensions','states','behavior','keyboard','semantics','motion','good','bad','responsive','maturity','validation','implementation'];
 for(const [id,spec] of Object.entries(w.RosemaryComponentCatalog))for(const key of required)assert.ok(typeof spec[key]==='string'&&spec[key].length>0,id+'.'+key);
 const iconPaths=Object.values(w.RosemaryIconLibrary.icons).map(i=>i.paths);
-assert.equal(new Set(iconPaths).size,71,'Every icon has distinct markup');
+assert.equal(new Set(iconPaths).size,iconCount,'Every icon has distinct markup');
 const logo=Buffer.from(w.ROSEMARY_LOGO_DATA.split(',')[1],'base64');
 const metadata=JSON.parse(fs.readFileSync(path.join(root,'assets/logo-source.json'),'utf8'));
 assert.equal(crypto.createHash('sha256').update(logo).digest('hex'),metadata.sha256);
@@ -70,4 +72,4 @@ assert.ok(notFound.includes('M15 16h15v15H15V16'),'404 page reuses the Forma pro
 function lum(hex){const c=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);return c[0]*.2126+c[1]*.7152+c[2]*.0722;}
 const pairs=[['ink','canvas'],['muted','canvas'],['ink','surface'],['muted','surface'],['on-primary','primary'],['primary','primary-soft'],['on-sun','sun'],['on-sky','sky'],['success','success-soft'],['warning','warning-soft'],['danger','danger-soft'],['info','info-soft'],['on-danger','danger']];
 for(const [theme,tokens] of Object.entries(w.ROSEMARY_TOKENS.themes))for(const [fg,bg] of pairs){const a=lum(tokens[fg]),b=lum(tokens[bg]);assert.ok((Math.max(a,b)+.05)/(Math.min(a,b)+.05)>=4.5,`${theme} ${fg}/${bg}`);}
-console.log(JSON.stringify({pages:18,icons:71,componentSpecifications:33,isolatedVisualPreviews:33,completeFields:required.length,contrastPairs:26,officialLogo:'unchanged',offlineResources:true},null,2));
+console.log(JSON.stringify({pages:18,icons:iconCount,componentSpecifications:33,isolatedVisualPreviews:33,completeFields:required.length,contrastPairs:26,officialLogo:'unchanged',offlineResources:true},null,2));

@@ -30,5 +30,11 @@
   const rules = (good, bad) => `<div class="two-rules"><div class="rule do"><h3>${icon('check')}Do · 推荐</h3><p>${good}</p></div><div class="rule avoid"><h3>${icon('close')}Don’t · 避免</h3><p>${bad}</p></div></div>`;
   const demo = (body, caption, extra = '') => `<div class="demo"><div class="demo-stage ${extra}">${body}</div><div class="demo-caption">${caption}</div></div>`;
   const code = text => `<pre><code>${escape(text)}</code></pre>`;
-  window.RosemaryUI = {icon,mark,productMark,brandLockup,brandMark,link,button,note,section,table,list,rules,demo,code,escape,foldLoader,svgSource,compare};
+  const themeModes=['system','light','dark'];
+  const themeNames={system:'跟随系统',light:'浅色',dark:'深色'};
+  const themeIcons={system:'theme-system',light:'sun',dark:'moon'};
+  function appearanceControls({language=true,preference='system'}={}) {
+    return `<div class="appearance-controls">${language?`<label class="language-control"><span class="sr-only">界面语言（当前仅提供简体中文）</span><span class="language-icon">${icon('globe')}</span><select aria-label="界面语言（当前仅提供简体中文）"><option value="zh-CN">简体中文</option></select></label>`:''}<div class="appearance-theme"><div class="theme-segments" role="radiogroup" aria-label="外观主题">${themeModes.map(mode=>`<button type="button" role="radio" data-tab-key="${mode}" data-theme-mode="${mode}" aria-label="${themeNames[mode]}" title="${themeNames[mode]}" aria-checked="${preference===mode}" tabindex="${preference===mode?0:-1}">${icon(themeIcons[mode])}</button>`).join('')}</div><button type="button" class="theme-cycle" data-theme-cycle></button></div></div>`;
+  }
+  window.RosemaryUI = {appearanceControls,icon,mark,productMark,brandLockup,brandMark,link,button,note,section,table,list,rules,demo,code,escape,foldLoader,svgSource,compare};
 })();

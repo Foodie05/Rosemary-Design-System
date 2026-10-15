@@ -49,7 +49,7 @@
   }
   function appHeader(name, context,{entry=false}={}) {
     const identity=entry?`<span class="cs-entry-brand-full">${fullBrand(name)}</span><span class="cs-entry-brand-compact">${compactBrand(name)}</span>`:compactBrand(name);
-    return `<header class="cs-app-header">${identity}<div class="cs-app-context"><span>${escape(context)}</span><span class="cs-demo-pill">本地演示</span></div></header>`;
+    return `<header class="cs-app-header">${identity}<div class="cs-app-context"><span>${escape(context)}</span><span class="cs-demo-pill">本地演示</span></div>${window.RosemaryUI.appearanceControls({preference:window.RosemaryAppearance?.preference()||'system'})}</header>`;
   }
   function music() {
     const track=tracks[state.track];

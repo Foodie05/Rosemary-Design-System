@@ -18,14 +18,8 @@ SCRIPTS = ['assets-data.js', 'icon-library.js', 'component-catalog.js', 'ui.js',
            'asset-pages.js', 'component-pages.js', 'loading-motion-pages.js',
            'reference-pages.js', 'subbrand-page.js', 'case-studies-page.js', 'sdk-page.js', 'interaction-lab.js', 'app.js']
 STYLES = ['tokens.css', 'styles.css', 'specifications.css', 'component-demos.css', 'navigation.css', 'custom-select.css', 'brand-lockup.css', 'forma-home.css', 'selection-controls.css', 'subbrand-page.css', 'case-studies-page.css', 'sdk-page.css']
+ICON_COUNT = len(json.loads((ROOT / 'design/icons.json').read_text(encoding='utf-8')))
 ZIP_TIMESTAMP = (2026, 10, 11, 0, 0, 0)
-
-
-def write_zip_entry(archive, name, data):
-    info = zipfile.ZipInfo(name, date_time=ZIP_TIMESTAMP)
-    info.compress_type = zipfile.ZIP_DEFLATED
-    info.external_attr = 0o100644 << 16
-    archive.writestr(info, data)
 
 
 def authored_registry(filename, expression):
@@ -37,34 +31,28 @@ def authored_registry(filename, expression):
 def icon_resources():
     icons = authored_registry('icon-library.js', 'context.window.RosemaryIconLibrary.icons')
     catalog = authored_registry('component-catalog.js', 'context.window.RosemaryComponentCatalog')
-    if len(icons) != 71 or len(catalog) != 33:
+    if len(icons) != ICON_COUNT or len(catalog) != 33:
         raise ValueError('Unexpected icon or component catalog count.')
-    allowed_tags = {'svg', 'title', 'path', 'circle', 'rect', 'line', 'polyline', 'polygon', 'ellipse', 'g'}
-    symbols = []
-    archive_buffer = io.BytesIO()
-    with zipfile.ZipFile(archive_buffer, 'w', zipfile.ZIP_DEFLATED) as archive:
-        for name, item in icons.items():
-            if not re.fullmatch(r'[a-z0-9-]+', name):
-                raise ValueError('Unsafe icon ID.')
-            path = ROOT / 'icons' / f'{name}.svg'
-            raw = path.read_text(encoding='utf-8')
-            tree = ET.fromstring(raw)
+    # Shared generator owns the current icon archive and sprite, including LICENSE.
+    payload = (ROOT / f'rosemary-icons-{ICON_COUNT}.zip').read_bytes()
+    with zipfile.ZipFile(io.BytesIO(payload)) as archive:
+        if {name for name in archive.namelist() if name.endswith('.svg')} != {f'rosemary-icons/{name}.svg' for name in icons}:
+            raise ValueError('Icon archive does not match the shared catalog.')
+        for name in icons:
+            expected = (ROOT / 'packages/icons/svg' / f'{name}.svg').read_bytes()
+            tree = ET.fromstring(expected)
             if tree.attrib.get('viewBox') != '0 0 24 24':
                 raise ValueError(f'Unexpected icon viewBox: {name}')
             for node in tree.iter():
-                if node.tag.split('}')[-1] not in allowed_tags:
+                if node.tag.split('}')[-1] not in {'svg','title','path','circle','rect','line','polyline','polygon','ellipse','g'}:
                     raise ValueError(f'Unexpected SVG element: {name}')
                 if any(key.lower().startswith('on') or key.split('}')[-1] in ('href','src') for key in node.attrib):
                     raise ValueError(f'Unexpected active SVG attribute: {name}')
-            write_zip_entry(archive, f'rosemary-icons/{name}.svg', raw)
-            symbols.append(f'<symbol id="rosemary-{name}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><title>{html.escape(item["label"])}</title>{item["paths"]}</symbol>')
-        manifest = {name: {key: item[key] for key in ('label','category','usage')} for name,item in icons.items()}
-        write_zip_entry(archive, 'rosemary-icons/manifest.json', json.dumps(manifest, ensure_ascii=False, indent=2))
-        write_zip_entry(archive, 'rosemary-icons/README.md', '# Rosemary 功能图标\n\n71 枚原创 SVG，24×24 网格，1.6px 圆角描边，使用 currentColor。图标按钮仍需可访问名称。正式品牌 Logo 不包含在这个图标包中。\n')
-    payload = archive_buffer.getvalue()
-    (ROOT / 'rosemary-icons-71.zip').write_bytes(payload)
-    sprite = '<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="display:none">' + ''.join(symbols) + '</svg>'
-    (ROOT / 'rosemary-icons-sprite.svg').write_text(sprite, encoding='utf-8')
+            if archive.read(f'rosemary-icons/{name}.svg') != expected:
+                raise ValueError(f'Icon archive differs from shared source: {name}')
+        if archive.read('rosemary-icons/LICENSE') != (ROOT / 'LICENSE').read_bytes():
+            raise ValueError('Icon archive license differs from source.')
+    sprite = (ROOT / 'rosemary-icons-sprite.svg').read_text(encoding='utf-8')
     return payload, sprite
 
 
@@ -120,19 +108,19 @@ def build():
     output.write_text(document, encoding='utf-8')
     bundle = ROOT / 'rosemary-design-portal-source.zip'
     names = ['index.html', '404.html', *STYLES, *SCRIPTS, 'tokens.json', 'brand-guide.md', 'build.py', 'README.md', 'LICENSE', 'BRAND-ASSETS.md',
-             'rosemary-design-portal.html', 'rosemary-icons-71.zip', 'rosemary-icons-sprite.svg',
-             'assets/rosemary-logo.png', 'assets/logo-source.json', 'research/design-system-reference-review.md',
+             'rosemary-design-portal.html', f'rosemary-icons-{ICON_COUNT}.zip', 'rosemary-icons-sprite.svg',
+             'assets/rosemary-logo.png', 'assets/logo-source.json', 'design/icons.json', 'research/design-system-reference-review.md',
              'docs/sdk/getting-started.md', 'docs/sdk/migration.md', 'docs/sdk/release-checklist.md',
              'docs/sdk/0.4.1-consistency-review.md', 'docs/sdk/flutter-review.md',
              'tests/browser-check.mjs', 'tests/lab-checks.mjs', 'tests/component-browser-checks.mjs', 'tests/navigation-browser-checks.mjs', 'tests/date-picker-browser-checks.mjs', 'tests/static-check.mjs', 'browser-test-report.json', 'local-review-report.json', 'sdk-browser-review.json', 'verification.md']
-    names += [str(path.relative_to(ROOT)) for path in sorted((ROOT/'icons').glob('*.svg'))]
+    names += [str(path.relative_to(ROOT)) for path in sorted((ROOT/'packages/icons/svg').glob('*.svg'))]
     names += [str(path.relative_to(ROOT)) for path in sorted((ROOT/'screenshots').glob('*.png')) if path.name!='failure.png']
     with zipfile.ZipFile(bundle,'w',zipfile.ZIP_DEFLATED) as packaged:
         for name in names:
             path=ROOT/name
             packaged.write(path,arcname='rosemary-design-portal/'+name)
     print(f'Built {output.name}: {output.stat().st_size:,} bytes')
-    print(f'Validated {len(themes["light"])} roles per theme, 71 icons, 33 component specifications and the official logo hash.')
+    print(f'Validated {len(themes["light"])} roles per theme, {ICON_COUNT} icons, 33 component specifications and the official logo hash.')
     print(f'Packed {bundle.name}: {bundle.stat().st_size:,} bytes')
 
 
