@@ -10,7 +10,7 @@ trap 'result=$?; if [ "$result" -eq 0 ]; then outcome=passed; else outcome=faile
 case "$mode" in
  library) ./gradlew :rosemary-compose:assembleRelease :rosemary-compose:testDebugUnitTest :rosemary-compose:lint :rosemary-compose:localMavenZip --console=plain | tee "$ROSEMARY_ARTIFACT_ROOT/android/evidence/library.log" ;;
  consumer) ./gradlew :sample:assembleDebug :sample:lint --console=plain | tee "$ROSEMARY_ARTIFACT_ROOT/android/evidence/consumer.log"
-  cp "$ROSEMARY_BUILD_ROOT/android/sample/outputs/apk/debug/sample-debug.apk" "$ROSEMARY_ARTIFACT_ROOT/android/rosemary-compose-sample-0.4.1.apk" ;;
+  cp "$ROSEMARY_BUILD_ROOT/android/sample/outputs/apk/debug/sample-debug.apk" "$ROSEMARY_ARTIFACT_ROOT/android/rosemary-compose-sample-0.4.2.apk" ;;
  device) ./gradlew :rosemary-compose:connectedDebugAndroidTest :sample:connectedDebugAndroidTest --console=plain | tee "$ROSEMARY_ARTIFACT_ROOT/android/evidence/device.log" ;;
  *) echo "Usage: $0 library|consumer|device" >&2; exit 2 ;;
 esac

@@ -1,4 +1,4 @@
-# Compose API 0.4.1
+# Compose API 0.4.2
 
 All values and business operations belong to the host. Internal popup visibility and drafts are transient. Every composable accepts a `Modifier`; labels are supplied by the host. Lists use stable host IDs. Disabled and busy controls do not emit activation. Callbacks do not perform networking or create a global timer.
 

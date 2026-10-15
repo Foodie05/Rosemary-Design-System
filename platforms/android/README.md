@@ -1,4 +1,4 @@
-# Rosemary Compose 0.4.1
+# Rosemary Compose 0.4.2
 
 API 26+, Compose foundation UI primitives, Gregorian local date/time, host-controlled values. This module implements the 33 contracts in `design/contracts.json`. Theme roles and icon geometry come from generated shared design data.
 
@@ -22,7 +22,7 @@ JDK17, Gradle8.13, AGP8.13.2, Kotlin/Compose compiler2.3.20, Compose BOM2025.10.
 ./gradlew :rosemary-compose:connectedDebugAndroidTest
 ```
 
-Run the first command before configuring/building the sample: sample depends on `design.rosemary:rosemary-compose:0.4.1` in the local Maven repository, never a project dependency. Publish output is `$ROSEMARY_ARTIFACT_ROOT/android/maven`; transfer the Maven ZIP, extract it into a local repository, and add `maven { url = uri("/path/to/maven") }` to a consumer's repositories. The ZIP includes AAR, POM, Gradle module metadata, sources and MIT/brand notices. The AAR and sources JAR also contain the notices. The debug sample APK is installable with `adb install -r …/sample-debug.apk`.
+Run the first command before configuring/building the sample: sample depends on `design.rosemary:rosemary-compose:0.4.2` in the local Maven repository, never a project dependency. Publish output is `$ROSEMARY_ARTIFACT_ROOT/android/maven`; transfer the Maven ZIP, extract it into a local repository, and add `maven { url = uri("/path/to/maven") }` to a consumer's repositories. The ZIP includes AAR, POM, Gradle module metadata, sources and MIT/brand notices. The AAR and sources JAR also contain the notices. The debug sample APK is installable with `adb install -r …/sample-debug.apk`.
 
 Instrumented tests must run on an API26+ device. Semantics checks are automated evidence, not screen-reader certification. Windows/Linux CI can assemble and run API26/36 x86_64 emulator tests; local Apple Silicon uses API36 arm64. Release APK signing and external deployment are host application concerns.
 
@@ -38,4 +38,4 @@ This is a breaking API migration, not a compatibility release. The historical ta
 - Old `RosemaryDatePicker(valueMillis: Long?)` delegated to Material3 `DatePicker` and `RosemaryTimePicker(hour, minute)` delegated to Material3 `TimePicker`. Use `RosemaryDate` with `LocalDate`/`LocalTime` and the required mode. Convert milliseconds using your application's intended calendar/date semantics; do not assume a timezone conversion. The custom year/month/day and hour/minute views buffer drafts until Apply; Cancel discards them.
 - Old `RosemarySpinner(label, reducedMotion)` is replaced by controlled `RosemaryLoading(state = …)`. The 0.4.0 visual is the two-facet long-axis 1200ms motion and a static brand pose on reduced motion or stopped states. `RosemaryProgress` now receives actual completed work and `max`, with null for indeterminate work; check its new signature.
 - Historical extra components are outside the 33 foundation scope. Verified examples with no direct replacement: `RosemaryButtonGroup`, `RosemarySplitButton`, `RosemaryFloatingActionButton`, `RosemaryColorPicker`, `RosemarySidebar`, `RosemaryTopNavigation`, `RosemaryBottomNavigation`, `RosemaryDescriptionList`, `RosemaryDataGrid`, `RosemaryAccordion`, `RosemaryResizablePanels`, `RosemaryMetricCard`, `RosemaryProberStatus` and `RosemaryFileRow`. Build host composition from the current primitives or retain those features in application code; same-name historical APIs can also have changed signatures. Consult API.md for every current signature rather than assuming source compatibility.
-- Build the 0.4.1 local Maven ZIP first, extract it into a consumer repository and depend on `design.rosemary:rosemary-compose:0.4.1`. The sample itself consumes that published artifact. Do not copy old sources or substitute `project(":rosemary-compose")` when validating delivery.
+- Build the 0.4.2 local Maven ZIP first, extract it into a consumer repository and depend on `design.rosemary:rosemary-compose:0.4.2`. The sample itself consumes that published artifact. Do not copy old sources or substitute `project(":rosemary-compose")` when validating delivery.

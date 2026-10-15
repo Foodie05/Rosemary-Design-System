@@ -191,7 +191,7 @@ Rosemary 的折面加载参考 Logo 的几何关系，但不直接动画 Logo �
 
 ## SDK 接入与版本
 
-Rosemary Forma 1.2.0 是规范版本；SDK 0.4.1 是当前四端组件代码版本，安装固定到 v0.4.1，以 GitHub Release 的实际资产与 SHA256 为准。当前 33 个基础组件采用同一 24-role light/dark 语义主题与 74 枚功能图标；宿主提供业务数据、翻译、请求与文件传输。完整主题与局部继承分别验证结构和实际对比度，诊断不自动改色。
+Rosemary Forma 1.2.0 是规范版本；SDK 0.4.2 是当前四端组件代码版本，安装固定到 v0.4.2，以 GitHub Release 的实际资产与 SHA256 为准。当前 33 个基础组件采用同一 24-role light/dark 语义主题与 74 枚功能图标；宿主提供业务数据、翻译、请求与文件传输。完整主题与局部继承分别验证结构和实际对比度，诊断不自动改色。
 
 门户“SDK 接入”提供 React、Compose、SwiftUI 和 Flutter 的安装方式、公开 API、系统/深浅/局部主题、CN/EN、RTL 和减少动态。详细指南见 docs/sdk/getting-started.md；旧 prototype 额外组件和 breaking API 见 docs/sdk/migration.md。组件 API、自动测试、截图、最低系统与人工读屏结果分别记录，不据编译结果宣称平台完整验收。SDK 代码、tokens、功能图标与文档采用 MIT，品牌名称、官方原图、产品徽记和字标另遵守 BRAND-ASSETS.md。
 

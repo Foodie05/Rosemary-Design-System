@@ -1,7 +1,7 @@
 name: rosemary_gallery
-description: "Independent Rosemary 0.4.1 SDK consumer gallery."
+description: "Independent Rosemary 0.4.2 SDK consumer gallery."
 publish_to: 'none'
-version: 0.4.1+1
+version: 0.4.2+1
 
 environment:
   sdk: ^3.12.2

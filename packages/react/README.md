@@ -1,9 +1,9 @@
-# @rosemary-ui/react 0.4.1
+# @rosemary-ui/react 0.4.2
 
 Rosemary Forma 1.2.0 components for React 18.3.1 and 19.2.8. Install the three supplied tarballs together; packages are not published to a public registry.
 
 ```sh
-npm install ./rosemary-ui-tokens-0.4.1.tgz ./rosemary-ui-icons-0.4.1.tgz ./rosemary-ui-react-0.4.1.tgz react@19.2.8 react-dom@19.2.8
+npm install ./rosemary-ui-tokens-0.4.2.tgz ./rosemary-ui-icons-0.4.2.tgz ./rosemary-ui-react-0.4.2.tgz react@19.2.8 react-dom@19.2.8
 ```
 
 ```tsx

@@ -89,7 +89,7 @@ struct Gallery: View {
   @ViewBuilder private func captureScreen(_ kind: String) -> some View {
     ScrollView {
       VStack(alignment: .leading, spacing: 18) {
-        Text("Rosemary SDK 0.4.1 · \(kind)").font(.title2.weight(.semibold))
+        Text("Rosemary SDK 0.4.2 · \(kind)").font(.title2.weight(.semibold))
         if ["date", "year", "month"].contains(kind) {
           RosemaryDate(
             "Local date", value: $date, isExpanded: $dateOpen, initialMonth: seed,
@@ -185,7 +185,7 @@ struct Gallery: View {
   }
   private var galleryScreen: some View {
     VStack(spacing: 12) {
-      Text("Rosemary SDK 0.4.1").font(.title2.weight(.semibold)).padding(.top)
+      Text("Rosemary SDK 0.4.2").font(.title2.weight(.semibold)).padding(.top)
       HStack(spacing: 0) {
         RosemaryButton(theme.rawValue.capitalized, variant: .quiet) {
           theme = theme == .system ? .light : theme == .light ? .dark : .system

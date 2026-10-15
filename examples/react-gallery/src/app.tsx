@@ -83,7 +83,7 @@ function Gallery() {
         <header className="gallery-hero">
           <div>
             <R.BrandBadge product="forma" size={64} label="Forma" />
-            <span>ROSEMARY FORMA · SDK 0.4.1</span>
+            <span>ROSEMARY FORMA · SDK 0.4.2</span>
           </div>
           <h1>
             Components that belong
