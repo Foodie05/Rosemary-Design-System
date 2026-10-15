@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "specVersion": "1.2.0",
-  "sdkVersion": "0.4.1",
+  "sdkVersion": "0.4.2",
   "name": "vigilo",
   "source": "subbrand-page.js: vigilo palette; added roles inherit default status and neutral roles. Color role keys match design/tokens.json.",
   "themes": {

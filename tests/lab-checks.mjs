@@ -3,9 +3,9 @@ export async function runLabChecks({route,click,key,evaluate,until,delay,check,s
   await until(`document.querySelector('.logo-image-frame img').naturalWidth===1000`);
   check('Official logo loads unchanged as the provided raster asset',await evaluate(`document.querySelector('.logo-image-frame img').src===window.ROSEMARY_LOGO_DATA&&document.querySelector('.logo-image-frame img').naturalHeight===1000`));
   await route('icons');
-  check('All 71 icons are available in the gallery',await evaluate(`document.querySelectorAll('[data-icon-id]').length===71`));
+  check('All shared icons are available in the gallery',await evaluate(`document.querySelectorAll('[data-icon-id]').length===Object.keys(window.RosemaryIconLibrary.icons).length`));
   await evaluate(`document.getElementById('icon-query').value='日历';document.getElementById('icon-query').dispatchEvent(new Event('input',{bubbles:true}))`);
-  check('Icon query filters by readable names',await evaluate(`document.querySelectorAll('[data-icon-id]').length>0&&document.querySelectorAll('[data-icon-id]').length<71`));
+  check('Icon query filters by readable names',await evaluate(`document.querySelectorAll('[data-icon-id]').length>0&&document.querySelectorAll('[data-icon-id]').length<Object.keys(window.RosemaryIconLibrary.icons).length`));
   await evaluate(`document.getElementById('icon-category').value='文件';document.getElementById('icon-category').dispatchEvent(new Event('change',{bubbles:true}))`);
   check('Icon filtering has an explicit no-result state',await evaluate(`document.querySelectorAll('[data-icon-id]').length===0&&document.getElementById('icon-catalog').textContent.includes('没有符合')`));
   await evaluate(`document.getElementById('icon-query').value='';document.getElementById('icon-query').dispatchEvent(new Event('input',{bubbles:true}));document.getElementById('icon-category').value='all';document.getElementById('icon-category').dispatchEvent(new Event('change',{bubbles:true}));document.getElementById('icon-size').value='32';document.getElementById('icon-size').dispatchEvent(new Event('change',{bubbles:true}))`);
@@ -73,5 +73,5 @@ export async function runLabChecks({route,click,key,evaluate,until,delay,check,s
   await click('[data-lab-action="reset-motion-rows"]');
   await screenshot('motion-desktop.png');
   await route('loading');await click('[data-lab-action="start-fold"]');await route('icons');await delay(450);
-  check('Leaving a lab removes its active UI and callbacks safely',await evaluate(`!document.getElementById('fold-demo-stage')&&document.querySelectorAll('[data-icon-id]').length===71`));
+  check('Leaving a lab removes its active UI and callbacks safely',await evaluate(`!document.getElementById('fold-demo-stage')&&document.querySelectorAll('[data-icon-id]').length===Object.keys(window.RosemaryIconLibrary.icons).length`));
 }

@@ -169,7 +169,7 @@
     const action=actionButton.dataset.labAction||actionButton.dataset.action;
     if(action==='copy-selected-icon')copyText(svgSource(gallery.selected));
     else if(action==='download-selected-icon')portal().downloadFile(`rosemary-${gallery.selected}.svg`,svgSource(gallery.selected),'image/svg+xml;charset=utf-8');
-    else if(action==='download-icons')downloadDataURL('rosemary-icons-71.zip',window.ROSEMARY_ICON_ARCHIVE_DATA);
+    else if(action==='download-icons')downloadDataURL('rosemary-icons-74.zip',window.ROSEMARY_ICON_ARCHIVE_DATA);
     else if(action==='download-sprite')portal().downloadFile('rosemary-icons-sprite.svg',window.ROSEMARY_ICON_SPRITE,'image/svg+xml;charset=utf-8');
     else if(action==='download-logo')downloadDataURL('rosemary-logo.png',window.ROSEMARY_LOGO_DATA);
     else if(action==='download-references')portal().downloadFile('rosemary-reference-review.md',window.ROSEMARY_REFERENCE_REVIEW,'text/markdown;charset=utf-8');

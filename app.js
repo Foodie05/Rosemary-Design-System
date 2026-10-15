@@ -71,21 +71,66 @@
   function activeTheme() { return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'; }
   let preference = readPreference('rosemary-design-theme-v1', 'system');
   if (!['system','light','dark'].includes(preference)) preference = 'system';
-  themeSelect.value = preference;
+  const themeModes = ['system','light','dark'];
+  const themeNames = {system:'跟随系统',light:'浅色',dark:'深色'};
+  const themeIcons = {system:'theme-system',light:'sun',dark:'moon'};
+  const appearanceBindings = new Map(), languageBindings = new Map();
+  const appearanceMarkup = (options={}) => window.RosemaryUI.appearanceControls({...options,preference});
   function applyTheme() {
     const theme = preference === 'system' ? (systemTheme.matches ? 'dark' : 'light') : preference;
+    themeSelect.value = preference;
     document.documentElement.dataset.theme = theme;
+    document.documentElement.dataset.themePreference = preference;
+    for (const [group,binding] of appearanceBindings) if(group.isConnected) binding.select(preference);
+    document.querySelectorAll('[data-theme-cycle]').forEach(button=>{
+      const next=themeModes[(themeModes.indexOf(preference)+1)%3];
+      button.dataset.currentMode=preference;
+      button.setAttribute('aria-label',`外观主题：${themeNames[preference]}；点击切换为${themeNames[next]}`);
+      button.title=`${themeNames[preference]}；下一项：${themeNames[next]}`;
+      button.innerHTML=icon(themeIcons[preference]);
+    });
     document.querySelectorAll('[data-token-value]').forEach(el => {
       el.textContent = tokens.themes[theme][el.dataset.tokenValue];
     });
     updateContrast();
   }
-  themeSelect.addEventListener('change', () => {
-    preference = themeSelect.value;
-    writePreference('rosemary-design-theme-v1', preference);
+  function chooseTheme(mode) {
+    if(!themeModes.includes(mode))return;
+    preference=mode;
+    writePreference('rosemary-design-theme-v1',preference);
     applyTheme();
+  }
+  function mountAppearance() {
+    for(const [group,binding] of appearanceBindings) if(!group.isConnected){binding();appearanceBindings.delete(group);}
+    document.querySelectorAll('.theme-segments').forEach(group=>{
+      if(appearanceBindings.has(group))return;
+      const binding=window.RosemaryMotion.bindRadioGroup(group,{initialKey:preference,onChange(mode,button,{initial}){if(!initial&&mode!==preference)chooseTheme(mode);}});
+      appearanceBindings.set(group,binding);
+    });
+    for(const [select,cleanup] of languageBindings) if(!select.isConnected){cleanup();languageBindings.delete(select);}
+    document.querySelectorAll('.language-control select').forEach(select=>{if(!languageBindings.has(select))languageBindings.set(select,window.RosemarySelect.mountWithin(select.parentElement));});
+    document.querySelectorAll('[data-theme-cycle]').forEach(button=>{
+      if(button.dataset.currentMode)return;
+      const next=themeModes[(themeModes.indexOf(preference)+1)%3];
+      button.dataset.currentMode=preference;button.setAttribute('aria-label',`外观主题：${themeNames[preference]}；点击切换为${themeNames[next]}`);button.innerHTML=icon(themeIcons[preference]);
+    });
+  }
+  window.RosemaryAppearance={markup:appearanceMarkup,preference:()=>preference};
+  document.getElementById('appearance-controls').outerHTML=appearanceMarkup();
+  themeSelect.addEventListener('change',()=>chooseTheme(themeSelect.value));
+  document.addEventListener('click',event=>{if(event.target.closest('[data-theme-cycle]'))chooseTheme(themeModes[(themeModes.indexOf(preference)+1)%3]);});
+  systemTheme.addEventListener('change',applyTheme);
+  matchMedia('(max-width:580px)').addEventListener('change',event=>{
+    const active=document.activeElement,container=active?.closest('.appearance-theme');
+    if(!container)return;
+    if(event.matches&&active.matches('[role=radio]'))container.querySelector('[data-theme-cycle]').focus();
+    else if(!event.matches&&active.matches('[data-theme-cycle]'))container.querySelector('[aria-checked=true]').focus();
   });
-  systemTheme.addEventListener('change', applyTheme);
+  window.addEventListener('storage',event=>{if(event.key==='rosemary-design-theme-v1'){preference=themeModes.includes(event.newValue)?event.newValue:'system';applyTheme();}});
+  const appearanceObserver=new MutationObserver(mountAppearance);
+  appearanceObserver.observe(document.body,{childList:true,subtree:true});
+  mountAppearance();
+
 
   const groups = [...new Set(pages.map(p=>p.group))];
   function navMarkup() {

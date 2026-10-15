@@ -1,11 +1,11 @@
 # Rosemary SDK shared contracts
 
-SDK version **0.4.1** implements Forma specification **1.2.0**. `tokens.json`
+SDK version **0.4.2** implements Forma specification **1.2.0**. `tokens.json`
 and `contracts.json` are authoritative SDK sources. Their JSON Schemas validate
 the machine-readable structure. The original portal remains a reference, not
 a runtime dependency of the SDK.
 
-Run `pnpm design:generate` to generate the 24-role typed palettes and 71 icon
+Run `pnpm design:generate` to generate the 24-role typed palettes and 74 icon
 resources for TypeScript, Compose, SwiftUI and Flutter. `pnpm design:check`
 validates schemas, semantic references, contrast, asset hashes and generated
 file equality. Run `pnpm build:shared` before `pnpm test:shared`.

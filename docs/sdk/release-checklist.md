@@ -1,11 +1,11 @@
-# SDK 0.4.1 发布验收清单
+# SDK 0.4.2 发布验收清单
 
-规范版本为 1.2.0，SDK tag 为 `v0.4.1`。本文件说明门槛，不把未勾选项写成通过。动态 CI 和各端报告是结果来源，最终发布记录需固定 commit、运行链接与资产 SHA256。
+规范版本为 1.2.0，SDK tag 为 `v0.4.2`。本文件说明门槛，不把未勾选项写成通过。动态 CI 和各端报告是结果来源，最终发布记录需固定 commit、运行链接与资产 SHA256。
 
 ## 源码和契约
 
 - [ ] 当前 33 个组件的公开 API、Binding/回调、状态约束与可访问语义有文档；`design/contracts.json` 的 stateKeys 可经内建状态或明确的宿主组合达到。
-- [ ] light/dark 的 24 个角色、71 枚图标与排版/尺寸/动效来自共享生成源；无不存在的内置图标引用。
+- [ ] light/dark 的 24 个角色、74 枚图标与排版/尺寸/动效来自共享生成源；无不存在的内置图标引用。
 - [ ] 自定义完整主题和局部继承均消费实际颜色；结构/颜色错误明确失败，22 对对比诊断按每个 mode 保留，不静默改色。
 - [ ] CN/EN 状态字符串覆盖、RTL、文字缩放、系统/宿主减少动态及高对比有明确边界。
 - [ ] 宿主控制数据和提交；取消草稿不提交；Upload 不网络传输；日期/时间不隐式跨时区。
@@ -20,7 +20,7 @@
 | SwiftUI | 根 SwiftPM 编译/模型、真正 root-package sample、稳定 Xcode 26.3 build/test、simapp/source、xcresult、环境与 HEAD | 本机 Xcode 27 beta 附加兼容不替代稳定 CI；iOS 17 runtime、本机受限 UI host、人工 VoiceOver |
 | Flutter | package analyze/test、六目标真实 consumer runner、各平台构建/运行与源码及安装产物、SHA256 | Android/iOS/macOS/Windows/Linux/Web 分别报告；编译不等于运行；OS 下限和读屏不能推断 |
 
-稳定 CI 入口：[GitHub Actions](https://github.com/Foodie05/Rosemary-Design-System/actions)。实现明细：[实施状态](https://github.com/Foodie05/Rosemary-Design-System/blob/main/docs/sdk/implementation-status.md)。各端证据：[React](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.1/packages/react/README.md)、[Compose](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.1/platforms/android/README.md)、[SwiftUI](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.1/platforms/swiftui/VERIFICATION.md)、[Flutter](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.1/platforms/flutter/README.md)。
+稳定 CI 入口：[GitHub Actions](https://github.com/Foodie05/Rosemary-Design-System/actions)。实现明细：[实施状态](https://github.com/Foodie05/Rosemary-Design-System/blob/main/docs/sdk/implementation-status.md)。各端证据：[React](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.2/packages/react/README.md)、[Compose](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.2/platforms/android/README.md)、[SwiftUI](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.2/platforms/swiftui/VERIFICATION.md)、[Flutter](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.2/platforms/flutter/README.md)。
 
 ## 产物与发布
 

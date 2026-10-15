@@ -3,7 +3,7 @@ import java.util.zip.ZipInputStream
 
 plugins { id("com.android.library"); id("org.jetbrains.kotlin.android"); id("org.jetbrains.kotlin.plugin.compose"); id("maven-publish") }
 group = "design.rosemary"
-version = "0.4.1"
+version = "0.4.2"
 val sdkRoot = rootProject.projectDir.parentFile.parentFile
 val licenseResource = layout.projectDirectory.file("src/main/resources/META-INF/Rosemary-LICENSE")
 val brandResource = layout.projectDirectory.file("src/main/resources/META-INF/Rosemary-BRAND-ASSETS.md")
@@ -52,7 +52,7 @@ val localMavenZip = tasks.register<Zip>("localMavenZip") {
  from(System.getenv("ROSEMARY_ARTIFACT_ROOT")?.let { "$it/android/maven" } ?: rootProject.layout.buildDirectory.dir("repository").get().asFile)
  from(sdkRoot.resolve("LICENSE"))
  from(sdkRoot.resolve("BRAND-ASSETS.md"))
- archiveFileName.set("rosemary-compose-0.4.1-maven.zip")
+ archiveFileName.set("rosemary-compose-0.4.2-maven.zip")
  destinationDirectory.set(file(System.getenv("ROSEMARY_ARTIFACT_ROOT")?.let { "$it/android" } ?: rootProject.layout.buildDirectory.dir("artifacts").get().asFile))
 }
 val verifyPackagedLicenses = tasks.register("verifyPackagedLicenses") {

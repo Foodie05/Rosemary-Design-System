@@ -24,4 +24,4 @@ jobs:
       - name: Validate pages, assets, specifications, and contrast
         run: node tests/static-check.mjs
       - name: Confirm committed generated files are current
-        run: git diff --exit-code -- tokens.css assets-data.js rosemary-design-portal.html rosemary-icons-71.zip rosemary-icons-sprite.svg
+        run: git diff --exit-code -- tokens.css assets-data.js rosemary-design-portal.html 'rosemary-icons-*.zip' rosemary-icons-sprite.svg

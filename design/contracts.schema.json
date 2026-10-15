@@ -14,7 +14,7 @@
       "const": 1
     },
     "sdkVersion": {
-      "const": "0.4.1"
+      "const": "0.4.2"
     },
     "specVersion": {
       "const": "1.2.0"

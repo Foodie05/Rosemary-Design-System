@@ -1,4 +1,4 @@
-# @rosemary-ui/tokens 0.4.1
+# @rosemary-ui/tokens 0.4.2
 
 Shared Forma 1.2.0 theme roles, component tokens, motion and local date helpers.
 Import `defaultThemes`, `createTheme`, `resolveTheme`, `validateTheme`,

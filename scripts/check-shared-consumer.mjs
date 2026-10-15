@@ -9,7 +9,7 @@ const buildRoot = process.env.ROSEMARY_BUILD_ROOT || os.tmpdir();
 mkdirSync(buildRoot, { recursive: true });
 const fixture = mkdtempSync(path.join(buildRoot, "shared-consumer-"));
 const files = ["tokens", "icons"].map((name) =>
-  path.join(artifactRoot, "shared", `rosemary-ui-${name}-0.4.1.tgz`),
+  path.join(artifactRoot, "shared", `rosemary-ui-${name}-0.4.2.tgz`),
 );
 for (const file of files) readFileSync(file);
 writeFileSync(
@@ -36,7 +36,8 @@ const require=createRequire(import.meta.url);
 assert.equal(validateTheme(defaultThemes.dark).length,0);
 assert.equal(createTheme(defaultThemes.dark,{surface:'#25212D'}).primary,defaultThemes.dark.primary);
 assert.equal(formatLocalDate(parseLocalDate('0001-01-01')),'0001-01-01');
-assert.equal(iconNames.length,71);
+assert.deepEqual(iconNames,${JSON.stringify(Object.keys(JSON.parse(readFileSync(new URL('../design/icons.json', import.meta.url), 'utf8'))))});
+for (const name of ['moon','theme-system','globe']) assert.match(getIconSvg(name), /viewBox="0 0 24 24"/);
 assert.match(getIconSvg('calendar'),/viewBox="0 0 24 24"/);
 assert.match(fs.readFileSync(require.resolve('@rosemary-ui/tokens/css'),'utf8'),/--rm-primary:/);
 assert.match(fs.readFileSync(require.resolve('@rosemary-ui/icons/svg/leaf.svg'),'utf8'),/<svg/);

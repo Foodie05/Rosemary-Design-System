@@ -168,7 +168,7 @@ try {
   await click('[data-action="reset-checklist"]');
   for(const action of ['download-tokens','download-guide','download-logo','download-icons','download-sprite','download-references']){await click(`[data-action="${action}"]`);await delay(180);}
   const downloaded=await readdir(downloads);
-  check('All six resource types are generated', ['rosemary-forma-tokens-v1.2.0.json','rosemary-forma-guide-v1.2.0.md','rosemary-logo.png','rosemary-icons-71.zip','rosemary-icons-sprite.svg','rosemary-reference-review.md'].every(n=>downloaded.includes(n)));
+  check('All six resource types are generated', ['rosemary-forma-tokens-v1.2.0.json','rosemary-forma-guide-v1.2.0.md','rosemary-logo.png',`rosemary-icons-${Object.keys(JSON.parse(await readFile(path.join(root,'design/icons.json'),'utf8'))).length}.zip`,'rosemary-icons-sprite.svg','rosemary-reference-review.md'].every(n=>downloaded.includes(n)));
   const sourceLogo=await readFile(path.join(root,'assets/rosemary-logo.png'));
   const downloadedLogo=await readFile(path.join(downloads,'rosemary-logo.png'));
   check('Downloaded official logo is byte-for-byte identical',createHash('sha256').update(sourceLogo).digest('hex')===createHash('sha256').update(downloadedLogo).digest('hex'));
@@ -187,7 +187,7 @@ try {
   await until(`Boolean(window.RosemaryPages&&document.querySelector('main h1'))`);
   check('Self-contained HTML also opens from a local file URL',await evaluate(`location.protocol==='file:'&&RosemaryPages.pages.length===18`));
   await route('icons');
-  check('Offline icon and embedded-logo resources work without a server',await evaluate(`document.querySelectorAll('[data-icon-id]').length===71&&document.querySelector('.official-logo').src.startsWith('data:image/png')`));
+  check('Offline icon and embedded-logo resources work without a server',await evaluate(`document.querySelectorAll('[data-icon-id]').length===Object.keys(window.RosemaryIconLibrary.icons).length&&document.querySelector('.official-logo').src.startsWith('data:image/png')`));
   check('No uncaught browser runtime exceptions',exceptions.length===0);
   const report={passed:checks.length,layoutCombinations:routes.length*4,componentPreviewCombinations:33*4,resizeMeasurements,checks,sampledStyles,runtimeExceptions:exceptions,screenshots:(await readdir(shots)).filter(name=>name!=='failure.png')};
   await writeFile(path.join(root,'browser-test-report.json'),JSON.stringify(report,null,2)+'\n');

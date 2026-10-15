@@ -58,8 +58,10 @@ test('normalization preserves relative endpoints, smooth tangent and arc endpoin
   assert.throws(()=>normalizePath('M0 0 Q1 2 3 4'),/Unsupported/);
   assert.throws(()=>normalizeSvgElements('<script/>'),/Unrecognized/);
 });
-test('all 71 renderer paths have finite, complete commands and SVG semantics',()=> {
-  assert.equal(iconNames.length,71);assert.equal(new Set(iconNames).size,71);
+test('all shared renderer paths have finite, complete commands and SVG semantics',()=> {
+  const source=JSON.parse(fs.readFileSync(new URL('../design/icons.json',import.meta.url),'utf8'));
+  assert.deepEqual(iconNames,Object.keys(source));assert.equal(new Set(iconNames).size,iconNames.length);
+  for(const name of ['sun','moon','theme-system','globe'])assert.ok(iconNames.includes(name));
   for(const name of iconNames) {
     assert.match(getIconSvg(name),/viewBox="0 0 24 24"/);
     for(const path of iconGeometry[name]) {

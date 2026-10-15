@@ -8,7 +8,7 @@ base=pathlib.Path(os.environ.get('ROSEMARY_BUILD_ROOT',repo/'.sdk-build'))/'flut
 artifacts=pathlib.Path(os.environ.get('ROSEMARY_ARTIFACT_ROOT',repo/'.sdk-artifacts'))/'flutter'
 package=repo/'platforms/flutter/rosemary_ui'
 example=base/'consumer/platforms/flutter/example'
-archive=artifacts/'rosemary-ui-0.4.1-source.tar.gz'
+archive=artifacts/'rosemary-ui-0.4.2-source.tar.gz'
 mode=sys.argv[1] if len(sys.argv)>1 else 'test'
 base.mkdir(parents=True,exist_ok=True);artifacts.mkdir(parents=True,exist_ok=True)
 (artifacts/'evidence').mkdir(exist_ok=True)
@@ -62,7 +62,7 @@ def evidence(result):
  if isinstance(flutter,str):
   try:flutter=json.loads(flutter)
   except json.JSONDecodeError:pass
- data.update({'version':'0.4.1','head':head,'githubSha':os.environ.get('GITHUB_SHA'),'githubRunId':os.environ.get('GITHUB_RUN_ID'),'githubRunAttempt':os.environ.get('GITHUB_RUN_ATTEMPT'),'dirtyWorkingTree':dirty,'sourceDigest':source_digest,'sourceInputs':inputs,'sourceArchiveSha256':sha(archive) if archive.exists() else None,'toolchain':{'os':platform.platform(),'flutter':flutter,'java':command('java','-version'),'xcode':command('xcodebuild','-version') if sys.platform=='darwin' else None},'consumer':'deterministic source archive extracted to isolated path dependency'})
+ data.update({'version':'0.4.2','head':head,'githubSha':os.environ.get('GITHUB_SHA'),'githubRunId':os.environ.get('GITHUB_RUN_ID'),'githubRunAttempt':os.environ.get('GITHUB_RUN_ATTEMPT'),'dirtyWorkingTree':dirty,'sourceDigest':source_digest,'sourceInputs':inputs,'sourceArchiveSha256':sha(archive) if archive.exists() else None,'toolchain':{'os':platform.platform(),'flutter':flutter,'java':command('java','-version'),'xcode':command('xcodebuild','-version') if sys.platform=='darwin' else None},'consumer':'deterministic source archive extracted to isolated path dependency'})
  phase={'result':result,'device':os.environ.get('ROSEMARY_FLUTTER_DEVICE','emulator-5554') if mode=='device' else None,'log':'evidence/'+evidence_key+'.log'}
  if theme_asset_evidence:phase['packagedThemeAsset']=theme_asset_evidence
  if mode=='device':phase['availableDevices']=command('flutter','devices','--machine')
@@ -133,19 +133,19 @@ try:
   run('flutter','pub','get',cwd=package);run('flutter','analyze',cwd=package);run('flutter','test','--reporter','expanded',cwd=package)
   prepare();run('flutter','pub','get',cwd=example.parent/'rosemary_ui');run('flutter','test','test/review_regressions_test.dart','--reporter','expanded',cwd=example.parent/'rosemary_ui');run('flutter','analyze');run('flutter','test','--reporter','expanded')
  elif mode=='android':
-  prepare();run('flutter','build','apk','--debug');shutil.copy2(example/'build/app/outputs/flutter-apk/app-debug.apk',artifacts/'rosemary-flutter-0.4.1-android.apk')
- elif mode=='web':prepare();run('flutter','build','web');zip_output(example/'build/web','rosemary-flutter-0.4.1-web.zip')
- elif mode=='macos':prepare();run('flutter','build','macos','--debug');zip_output(example/'build/macos/Build/Products/Debug/rosemary_gallery.app','rosemary-flutter-0.4.1-macos.zip');smoke(artifacts/'rosemary-flutter-0.4.1-macos.zip')
- elif mode=='ios':prepare();run('flutter','build','ios','--simulator','--debug');zip_output(example/'build/ios/iphonesimulator/Runner.app','rosemary-flutter-0.4.1-ios-simulator.zip')
- elif mode=='windows':prepare();run('flutter','build','windows','--release');zip_output(example/'build/windows/x64/runner/Release','rosemary-flutter-0.4.1-windows.zip');smoke(artifacts/'rosemary-flutter-0.4.1-windows.zip')
+  prepare();run('flutter','build','apk','--debug');shutil.copy2(example/'build/app/outputs/flutter-apk/app-debug.apk',artifacts/'rosemary-flutter-0.4.2-android.apk')
+ elif mode=='web':prepare();run('flutter','build','web');zip_output(example/'build/web','rosemary-flutter-0.4.2-web.zip')
+ elif mode=='macos':prepare();run('flutter','build','macos','--debug');zip_output(example/'build/macos/Build/Products/Debug/rosemary_gallery.app','rosemary-flutter-0.4.2-macos.zip');smoke(artifacts/'rosemary-flutter-0.4.2-macos.zip')
+ elif mode=='ios':prepare();run('flutter','build','ios','--simulator','--debug');zip_output(example/'build/ios/iphonesimulator/Runner.app','rosemary-flutter-0.4.2-ios-simulator.zip')
+ elif mode=='windows':prepare();run('flutter','build','windows','--release');zip_output(example/'build/windows/x64/runner/Release','rosemary-flutter-0.4.2-windows.zip');smoke(artifacts/'rosemary-flutter-0.4.2-windows.zip')
  elif mode=='linux':
   prepare();run('flutter','build','linux','--release')
-  with tarfile.open(artifacts/'rosemary-flutter-0.4.1-linux.tar.gz','w:gz') as out:out.add(example/'build/linux/x64/release/bundle',arcname='rosemary_gallery')
-  smoke(artifacts/'rosemary-flutter-0.4.1-linux.tar.gz')
+  with tarfile.open(artifacts/'rosemary-flutter-0.4.2-linux.tar.gz','w:gz') as out:out.add(example/'build/linux/x64/release/bundle',arcname='rosemary_gallery')
+  smoke(artifacts/'rosemary-flutter-0.4.2-linux.tar.gz')
  elif mode=='device':prepare();run('flutter','test','integration_test/gallery_test.dart','-d',os.environ.get('ROSEMARY_FLUTTER_DEVICE','emulator-5554'))
  else:raise SystemExit('Expected pack|prepare|test|android|web|macos|ios|windows|linux|device')
  outputs={'android':'android.apk','web':'web.zip','macos':'macos.zip','ios':'ios-simulator.zip','windows':'windows.zip','linux':'linux.tar.gz'}
- if mode in outputs:verify_theme_asset(artifacts/('rosemary-flutter-0.4.1-'+outputs[mode]))
+ if mode in outputs:verify_theme_asset(artifacts/('rosemary-flutter-0.4.2-'+outputs[mode]))
  outcome='passed'
 finally:
  log.close();evidence(outcome)

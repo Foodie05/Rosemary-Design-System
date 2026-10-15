@@ -84,7 +84,7 @@ public struct RosemaryColors {
   public func toMap() -> [String:Color] { ["canvas": canvas, "surface": surface, "raised": raised, "ink": ink, "muted": muted, "border": border, "control": control, "primary": primary, "on-primary": onPrimary, "primary-soft": primarySoft, "sun": sun, "on-sun": onSun, "sky": sky, "on-sky": onSky, "success": success, "success-soft": successSoft, "warning": warning, "warning-soft": warningSoft, "danger": danger, "danger-soft": dangerSoft, "on-danger": onDanger, "info": info, "info-soft": infoSoft, "focus": focus] }
 }
 public enum RosemaryTokens {
-  public static let sdkVersion = "0.4.1"
+  public static let sdkVersion = "0.4.2"
   public static let specVersion = "1.2.0"
   public static let light = RosemaryColors(
     canvas: Color(.sRGB, red: 248/255.0, green: 247/255.0, blue: 251/255.0, opacity: 1),

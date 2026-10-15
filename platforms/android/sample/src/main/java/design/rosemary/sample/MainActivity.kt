@@ -113,7 +113,7 @@ fun Gallery(
                     .padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                RosemaryText("Rosemary · Compose SDK 0.4.1", size = 28.sp)
+                RosemaryText("Rosemary · Compose SDK 0.4.2", size = 28.sp)
                 Row(Modifier.horizontalScroll(rememberScrollState())) {
                     RosemarySwitch(chinese, { chinese = it }, "中文")
                     RosemarySwitch(dark, { dark = it }, "Dark")

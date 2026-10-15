@@ -1,6 +1,6 @@
-# @rosemary-ui/icons 0.4.1
+# @rosemary-ui/icons 0.4.2
 
-71 original functional icons, MIT licensed. Import `iconNames`, `IconName`,
+74 functional icons (the original 71 plus `moon`, `theme-system` and `globe`), MIT licensed. Import `iconNames`, `IconName`,
 `iconMarkup`, `iconMetadata`, `iconGeometry`, and `getIconSvg(name)`.
 SVG source files are available through `@rosemary-ui/icons/svg/<name>.svg`.
 

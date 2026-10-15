@@ -1,15 +1,15 @@
 # Rosemary Design System
 
-本仓库同时维护 **Rosemary Forma 1.2.0 设计规范**与 **Rosemary SDK 0.4.1 组件代码**。安装固定到 `v0.4.1`，以 GitHub Release 的实际资产及 SHA256 为准；不发布公共 registry。
+本仓库同时维护 **Rosemary Forma 1.2.0 设计规范**与 **Rosemary SDK 0.4.2 组件代码**。安装固定到 `v0.4.2`，以 GitHub Release 的实际资产及 SHA256 为准；不发布公共 registry。
 
-SDK 入口：[接入指南](docs/sdk/getting-started.md)、[迁移](docs/sdk/migration.md)、[验收清单](docs/sdk/release-checklist.md)、[实际 CI](https://github.com/Foodie05/Rosemary-Design-System/actions) 与 [Releases](https://github.com/Foodie05/Rosemary-Design-System/releases/tag/v0.4.1)。
+SDK 入口：[接入指南](docs/sdk/getting-started.md)、[迁移](docs/sdk/migration.md)、[验收清单](docs/sdk/release-checklist.md)、[实际 CI](https://github.com/Foodie05/Rosemary-Design-System/actions) 与 [Releases](https://github.com/Foodie05/Rosemary-Design-System/releases/tag/v0.4.2)。
 
 | 实现 | API 与 consumer |
 | --- | --- |
-| React | [packages/react](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.1/packages/react) · 同版 tokens/icons/react tgz |
-| Compose | [platforms/android](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.1/platforms/android) · 本地 Maven ZIP / APK |
-| SwiftUI | [platforms/swiftui](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.1/platforms/swiftui) · 根 Package.swift / RosemaryUI |
-| Flutter | [platforms/flutter](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.1/platforms/flutter) · rosemary_ui / 六目标 consumer |
+| React | [packages/react](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.2/packages/react) · 同版 tokens/icons/react tgz |
+| Compose | [platforms/android](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.2/platforms/android) · 本地 Maven ZIP / APK |
+| SwiftUI | [platforms/swiftui](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.2/platforms/swiftui) · 根 Package.swift / RosemaryUI |
+| Flutter | [platforms/flutter](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.2/platforms/flutter) · rosemary_ui / 六目标 consumer |
 
 SDK 共用当前 33 个组件契约和 24 个语义色角色。各端的最低系统、构建、运行和辅助技术覆盖分别记录；组件存在、编译通过或截图可读不等于全部验收。代码与品牌资产许可证分开。
 
@@ -28,10 +28,11 @@ Rosemary Forma 是 Rosemary 的设计系统门户。它以留白充足的介绍�
 18 个章节：规范总览、品牌原则、Logo、子品牌设计流程、色彩、排版、布局、图标、组件、典型案例、加载、动效、交互流程、文案、可访问性、平台适配、SDK 接入、覆盖与维护。
 
 - 正式 Logo：原始 PNG，1000 × 1000，颜色、比例和像素内容未修改。
-- 71 枚原创 SVG：可检索、分类、预览尺寸、复制和下载。
+- 74 枚原创 SVG：可检索、分类、预览尺寸、复制和下载。
 - 33 个独立可视化：选择控件后只显示其自身预览；“预览与状态”“使用规范”“交互与实现”三组内容通过 Tab 切换。
 - 控件预览包含相应的真实交互、变体和状态。切换控件会清理旧监听、定时器、动画及打开的对话框。
-- 主题、组件目录、图标筛选与尺寸、颜色对比和组件示例统一使用 Rosemary 定制分组下拉；方向键、首尾、键入定位、确认、取消、外部收起和表单值同步。隐藏的 select 仅持有值，不弹出系统菜单。
+- 主题采用 system/light/dark 图标分段，窄屏点击单按钮按所选模式循环；语言下拉仅展示实际支持的简体中文。
+- 组件目录、图标筛选与尺寸、颜色对比和组件示例统一使用 Rosemary 定制分组下拉；方向键、首尾、键入定位、确认、取消、外部收起和表单值同步。隐藏的 select 仅持有值，不弹出系统菜单。
 - 日期与时间使用统一的定制月历和小时／分钟双列，支持键盘、直接输入、确认／取消与区间校验；按本地日期、24 小时时间保留原值，不转换时区。窄屏选择面板随字段展开；点击年／月进入专门视图，可直接输入 1–9999 年快速跳转。
 - 章节内容采用 220ms 的短距离淡入；文档 Tab、标签页组件和动效演示共用 180ms 定位条与内容淡入。
 - 移动导航滑入／滑出，快速开关可中断，退出完成后收起并恢复焦点。组件示例中的右侧记录抽屉以 220ms 进入、180ms 退出；关闭、Escape、保存与点击遮罩均在退场后收起，快速重开可中断退出。
@@ -49,7 +50,7 @@ Rosemary Forma 是 Rosemary 的设计系统门户。它以留白充足的介绍�
 - `tokens.json`：语义色、字号、间距、圆角、组件与动效变量。
 - `styles.css`：原有门户布局与基础样式。
 - `specifications.css`：新增规范、图标库、组件与动效样式。
-- `icon-library.js`、`icons/`：71 枚图标的语义元数据与独立 SVG。
+- `icon-library.js`、`packages/icons/svg/`：74 枚图标的语义元数据与独立 SVG。
 - `component-catalog.js`：33 类组件的结构化规格。
 - `component-demos.js/css`：每个控件的独立可视化与局部交互。
 - `component-viewer.js`、`component-pages.js`：控件选择、深链接、文档 Tab 与示例生命周期。
@@ -81,7 +82,7 @@ Rosemary Forma 是 Rosemary 的设计系统门户。它以留白充足的介绍�
 python3 -I build.py
 ```
 
-构建会验证正式 Logo 的 SHA256、71 个 SVG 的结构、33 个组件规格数量与深浅主题角色一致性。旧四片页形探索标记已从门户和发布资源中移除；工作目录的 archive 中仅保留历史文件，不作为正式资产发布。
+构建会验证正式 Logo 的 SHA256、74 个 SVG 的结构、33 个组件规格数量与深浅主题角色一致性。旧四片页形探索标记已从门户和发布资源中移除；工作目录的 archive 中仅保留历史文件，不作为正式资产发布。
 
 ## 验证
 

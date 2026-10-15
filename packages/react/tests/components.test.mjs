@@ -166,7 +166,7 @@ test("SSR and nested providers preserve independent colors, report contrast, hon
   assert.deepEqual(reportedRevisions, [0, 1, 1]);
   assert.ok(Number(screen.getByTestId("diagnostics").textContent) > 0);
 });
-test("buttons, link and 71 original icons expose real semantics; busy actions refuse duplicate activation", () => {
+test("buttons, link and shared icons expose real semantics; busy actions refuse duplicate activation", () => {
   let clicks = 0;
   render(
     wrap(
@@ -194,7 +194,7 @@ test("buttons, link and 71 original icons expose real semantics; busy actions re
   );
   assert.equal(
     icons.getByTestId("all-icons").querySelectorAll("svg").length,
-    71,
+    iconNames.length,
   );
   for (const name of iconNames)
     assert.ok(

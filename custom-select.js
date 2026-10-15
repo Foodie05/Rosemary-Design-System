@@ -104,5 +104,5 @@
     const api={button,sync,close,destroy(){if(disposed)return;disposed=true;close();abort.abort();observer.disconnect();popup.remove();wrapper.remove();select.hidden=previousHidden;select.tabIndex=previousTabIndex;delete select.dataset.customSelect;bindings.delete(select);}};
     bindings.set(select,api);sync();return api;
   }
-  window.RosemarySelect={mountWithin(root){const items=[...root.querySelectorAll('select')].map(mount);return()=>items.forEach(item=>item.destroy());},refresh(select){bindings.get(select)?.sync();},control(select){return bindings.get(select)?.button||select;},close(){opened?.close();}};
+  window.RosemarySelect={mountWithin(root){const items=[...root.querySelectorAll('select:not([data-appearance-value])')].map(mount);return()=>items.forEach(item=>item.destroy());},refresh(select){bindings.get(select)?.sync();},control(select){return bindings.get(select)?.button||select;},close(){opened?.close();}};
 })();

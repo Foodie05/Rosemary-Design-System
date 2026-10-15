@@ -24,12 +24,12 @@ TEST_STATUS=0
 xcodebuild -project platforms/swiftui/Sample/RosemarySample.xcodeproj -scheme RosemarySample -parallel-testing-enabled NO -destination "$DESTINATION" -derivedDataPath "$BUILD_ROOT/sample" -resultBundlePath "$RESULT" test CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$ARTIFACT_ROOT/xcode-test.log" || TEST_STATUS=$?
 if [[ -d "$RESULT" ]]; then cp -R "$RESULT" "$ARTIFACT_ROOT/"; fi
 APP="$BUILD_ROOT/sample/Build/Products/Debug-iphonesimulator/RosemarySample.app"
-if [[ -f "$APP/RosemarySample" ]]; then ditto -c -k --keepParent "$APP" "$ARTIFACT_ROOT/RosemarySample-0.4.1-simulator.zip"; fi
-tar --exclude='*.xcuserstate' --exclude='xcuserdata' -czf "$ARTIFACT_ROOT/RosemaryUI-0.4.1-source.tar.gz" Package.swift LICENSE BRAND-ASSETS.md platforms/swiftui .github/workflows/sdk-swiftui.yml
+if [[ -f "$APP/RosemarySample" ]]; then ditto -c -k --keepParent "$APP" "$ARTIFACT_ROOT/RosemarySample-0.4.2-simulator.zip"; fi
+tar --exclude='*.xcuserstate' --exclude='xcuserdata' -czf "$ARTIFACT_ROOT/RosemaryUI-0.4.2-source.tar.gz" Package.swift LICENSE BRAND-ASSETS.md platforms/swiftui .github/workflows/sdk-swiftui.yml
 
 # Consume the actual distribution archive in an unrelated directory; no repository fallback.
 CONSUMER_ROOT=$(mktemp -d "$BUILD_ROOT/archive-consumer.XXXXXX")
-tar -xzf "$ARTIFACT_ROOT/RosemaryUI-0.4.1-source.tar.gz" -C "$CONSUMER_ROOT"
+tar -xzf "$ARTIFACT_ROOT/RosemaryUI-0.4.2-source.tar.gz" -C "$CONSUMER_ROOT"
 ARCHIVE_PACKAGE_STATUS=0
 swift test --package-path "$CONSUMER_ROOT" --scratch-path "$BUILD_ROOT/archive-swiftpm" 2>&1 | tee "$ARTIFACT_ROOT/archive-swift-test.log" || ARCHIVE_PACKAGE_STATUS=$?
 ARCHIVE_SAMPLE_STATUS=0
@@ -69,8 +69,8 @@ record = {'gitHead': subprocess.check_output(['git','rev-parse','HEAD'],cwd=root
 (out/'provenance.json').write_text(json.dumps(record,indent=2)+'\n')
 PY_PROVENANCE
 cd "$ARTIFACT_ROOT"
-shasum -a 256 RosemaryUI-0.4.1-source.tar.gz > SHA256SUMS
-if [[ -f RosemarySample-0.4.1-simulator.zip ]]; then shasum -a 256 RosemarySample-0.4.1-simulator.zip >> SHA256SUMS; fi
+shasum -a 256 RosemaryUI-0.4.2-source.tar.gz > SHA256SUMS
+if [[ -f RosemarySample-0.4.2-simulator.zip ]]; then shasum -a 256 RosemarySample-0.4.2-simulator.zip >> SHA256SUMS; fi
 shasum -a 256 -c SHA256SUMS
 if [[ "$TEST_STATUS" != 0 ]]; then exit "$TEST_STATUS"; fi
 if [[ "$ARCHIVE_PACKAGE_STATUS" != 0 ]]; then exit "$ARCHIVE_PACKAGE_STATUS"; fi

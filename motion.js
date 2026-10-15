@@ -34,16 +34,19 @@
     return animation;
   }
 
-  function bindTabs(tablist, {onChange, panel, initialKey} = {}) {
+  function bindTabs(tablist, {onChange, panel, initialKey, selectionRole='tab'} = {}) {
     if (!tablist) return () => {};
     const abort = new AbortController();
-    const tabs = [...tablist.querySelectorAll('[role="tab"][data-tab-key]')];
+    const selector = `[role="${selectionRole}"][data-tab-key]`;
+    const selectedAttribute = selectionRole === 'radio' ? 'aria-checked' : 'aria-selected';
+    const tabs = [...tablist.querySelectorAll(selector)];
     let disposed = false;
     let current = null;
     let resetFrame = 0;
     let resizeObserver;
     tablist.classList.add('rm-tabs');
-    tablist.dataset.motionTabs = 'shared';
+    if (selectionRole === 'tab') tablist.dataset.motionTabs = 'shared';
+    else tablist.dataset.motionSelection = 'shared';
     const marker = document.createElement('span');
     marker.className = 'rm-tab-indicator';
     marker.setAttribute('aria-hidden','true');
@@ -75,7 +78,7 @@
       current = tab;
       for (const item of tabs) {
         const selected = item === tab;
-        item.setAttribute('aria-selected',String(selected));
+        item.setAttribute(selectedAttribute,String(selected));
         item.tabIndex = selected ? 0 : -1;
       }
       let target = resolvePanel(tab);
@@ -106,7 +109,7 @@
     }
 
     tablist.addEventListener('click',event => {
-      const tab = event.target.closest('[role="tab"][data-tab-key]');
+      const tab = event.target.closest(selector);
       if (tabs.includes(tab)) activate(tab);
     },{signal:abort.signal});
     tablist.addEventListener('keydown',event => {
@@ -123,7 +126,7 @@
       if (next !== undefined) { event.preventDefault(); activate(items[next],{focus:true}); }
     },{signal:abort.signal});
 
-    const first = enabled().find(tab=>tab.dataset.tabKey===initialKey) || enabled().find(tab=>tab.getAttribute('aria-selected')==='true') || enabled()[0];
+    const first = enabled().find(tab=>tab.dataset.tabKey===initialKey) || enabled().find(tab=>tab.getAttribute(selectedAttribute)==='true') || enabled()[0];
     activate(first,{animate:false,initial:true});
     const refresh = () => positionMarker(false);
     if (window.ResizeObserver) {
@@ -165,5 +168,5 @@
   reduced.addEventListener('change',()=>{
     if (reduced.matches) for (const element of [...active.keys()]) cancel(element);
   });
-  window.RosemaryMotion = {reduced,enter,bindTabs,progress,cancel,cancelTree};
+  window.RosemaryMotion = {reduced,enter,bindTabs,bindRadioGroup:(group,options={})=>bindTabs(group,{...options,selectionRole:'radio'}),progress,cancel,cancelTree};
 })();

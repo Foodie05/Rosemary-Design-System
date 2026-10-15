@@ -36,7 +36,7 @@ class RosemaryColors {
   Map<String,Color> toMap() => {'canvas': canvas, 'surface': surface, 'raised': raised, 'ink': ink, 'muted': muted, 'border': border, 'control': control, 'primary': primary, 'on-primary': onPrimary, 'primary-soft': primarySoft, 'sun': sun, 'on-sun': onSun, 'sky': sky, 'on-sky': onSky, 'success': success, 'success-soft': successSoft, 'warning': warning, 'warning-soft': warningSoft, 'danger': danger, 'danger-soft': dangerSoft, 'on-danger': onDanger, 'info': info, 'info-soft': infoSoft, 'focus': focus};
 }
 class RosemaryTokens {
-  static const sdkVersion = '0.4.1';
+  static const sdkVersion = '0.4.2';
   static const specVersion = '1.2.0';
   static const light = RosemaryColors(
     canvas: Color(0xFFF8F7FB),

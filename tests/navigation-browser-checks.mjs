@@ -1,4 +1,5 @@
 export async function runNavigationChecks({route,click,key,evaluate,until,delay,check,send,screenshot,viewport}) {
+  await runAppearanceChecks({route,click,key,evaluate,until,delay,check,send,screenshot,viewport});
   const resizeMeasurements=[];
   const ids=await evaluate('Object.keys(RosemaryComponentCatalog)');
   for(const width of [1440,375]) {
@@ -25,7 +26,7 @@ export async function runNavigationChecks({route,click,key,evaluate,until,delay,
   }
   await viewport(1440,1000,'light');
   await route('overview');
-  check('Overview contains useful destinations without unrelated artwork',await evaluate(`!document.querySelector('.hero-art,.entry-drawing,.manifesto-mark')&&document.querySelectorAll('.overview-component-links a').length===6`));
+  check('Overview retains the current Forma component and case destinations',await evaluate(`document.querySelector('.forma-paths a[href="#/components"]')&&document.querySelector('.forma-paths a[href="#/cases"]')`));
   const chromeBefore=await evaluate(`({top:document.querySelector('.topbar').getBoundingClientRect().top,side:document.querySelector('.sidebar').getBoundingClientRect().left})`);
   await route('colors');
   const pageMotion=await evaluate(`document.querySelector('main').firstElementChild.getAnimations().map(a=>({duration:a.effect.getTiming().duration,frames:a.effect.getKeyframes(),state:a.playState}))`);
@@ -118,4 +119,48 @@ export async function runNavigationChecks({route,click,key,evaluate,until,delay,
   await route('components?component=progress');await screenshot('component-progress-desktop.png');
   await route('overview');await screenshot('home-desktop.png');
   return {resizeMeasurements};
+}
+
+export async function runAppearanceChecks({route,click,key,evaluate,until,delay,check,send,screenshot,viewport}) {
+  await viewport(1440,1000,'light');
+  await route('overview');
+  const group='.topbar .theme-segments';
+  const mode=async(value)=>{await click(`${group} [data-theme-mode="${value}"]`);await until(`document.documentElement.dataset.themePreference==='${value}'`);};
+  check('Appearance uses three radios with one selection and no legacy theme combobox',await evaluate(`document.querySelectorAll('${group} [role=radio]').length===3&&document.querySelectorAll('${group} [aria-checked=true]').length===1&&!document.querySelector('#theme-select + .rm-select')&&document.getElementById('theme-select').hidden&&!document.querySelector('${group} [role=tab]')`));
+  check('Wide language and appearance outer frames both measure 48px',await evaluate(`document.querySelector('.topbar .language-control .rm-select-trigger').getBoundingClientRect().height===48&&document.querySelector('.topbar .theme-segments').getBoundingClientRect().height===48`));
+  check('Language exposes only the actual supported locale with globe and dropdown cues',await evaluate(`document.querySelector('.topbar .language-icon svg')&&document.querySelector('.topbar .language-control .rm-select-trigger>.icon')&&document.querySelectorAll('.topbar .language-control option').length===1&&document.querySelector('.topbar .language-control option').value==='zh-CN'`));
+  await mode('light');
+  await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:'dark'}]});await delay(80);
+  check('Explicit light ignores a runtime system-dark change',await evaluate(`document.documentElement.dataset.theme==='light'&&document.documentElement.dataset.themePreference==='light'`));
+  await mode('system');await until(`document.documentElement.dataset.theme==='dark'`);
+  await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:'light'}]});await until(`document.documentElement.dataset.theme==='light'`);
+  check('System follows both media states while retaining the system selection',await evaluate(`document.documentElement.dataset.themePreference==='system'&&document.querySelector('${group} [data-theme-mode=system]').getAttribute('aria-checked')==='true'`));
+  await evaluate(`document.querySelector('${group} [data-theme-mode=system]').focus()`);await key('ArrowRight','ArrowRight');
+  check('Radio keyboard selection moves focus and preference without a tabpanel',await evaluate(`document.activeElement.dataset.themeMode==='light'&&document.documentElement.dataset.themePreference==='light'&&!document.activeElement.hasAttribute('aria-controls')`));
+  await mode('dark');await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:'light'}]});await delay(80);
+  check('Explicit dark ignores system light and persists the compatible preference key',await evaluate(`document.documentElement.dataset.theme==='dark'&&localStorage.getItem('rosemary-design-theme-v1')==='dark'`));
+  await send('Emulation.setDeviceMetricsOverride',{width:375,height:812,deviceScaleFactor:1,mobile:true});await delay(80);
+  const cycle='.topbar [data-theme-cycle]';
+  check('Narrow navigation has one 44px cycle target and hides the radio group',await evaluate(`(()=>{const b=document.querySelector('${cycle}'),r=b.getBoundingClientRect();return r.width>=44&&r.height>=44&&getComputedStyle(document.querySelector('${group}')).display==='none'&&document.documentElement.scrollWidth<=innerWidth+1})()`));
+  for(const width of [375,320]) {
+    await send('Emulation.setDeviceMetricsOverride',{width,height:812,deviceScaleFactor:1,mobile:true});await delay(80);
+    check(`Narrow ${width}px language retains a visible dropdown cue without overflow`,await evaluate(`(()=>{const b=document.querySelector('.topbar .language-control .rm-select-trigger'),a=b.querySelector(':scope>.icon'),r=b.getBoundingClientRect();return r.width===56&&r.height===44&&document.querySelector('.topbar [data-theme-cycle]').getBoundingClientRect().height===44&&a.checkVisibility()&&a.getBoundingClientRect().width===12&&document.documentElement.scrollWidth<=innerWidth+1})()`));
+    await evaluate(`document.querySelector('.topbar .language-control .rm-select-trigger').focus()`);
+    await click('.topbar .language-control .rm-select-trigger');
+    check(`Narrow ${width}px language opens its actual locale option`,await evaluate(`document.querySelector('.topbar .language-control .rm-select-trigger').getAttribute('aria-expanded')==='true'&&[...document.querySelectorAll('[role=option]')].some(n=>n.checkVisibility()&&n.textContent.includes('简体中文'))`));
+    await key('Escape','Escape');
+  }
+  await send('Emulation.setDeviceMetricsOverride',{width:375,height:812,deviceScaleFactor:1,mobile:true});await delay(80);
+  await click(cycle);check('Narrow dark cycles to system using preference rather than resolved color',await evaluate(`document.documentElement.dataset.themePreference==='system'&&document.querySelector('${cycle}').dataset.currentMode==='system'`));
+  await click(cycle);check('Narrow system cycles to light',await evaluate(`document.documentElement.dataset.themePreference==='light'`));
+  await click(cycle);check('Narrow light cycles to dark',await evaluate(`document.documentElement.dataset.themePreference==='dark'&&document.querySelector('${cycle}').getAttribute('aria-label').includes('跟随系统')`));
+  if(screenshot)await screenshot('appearance-navigation-375-dark.png');
+  await send('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});await delay(100);
+  check('Widening restores the correct selected radio and marker geometry',await evaluate(`(()=>{const b=document.querySelector('${group} [data-theme-mode=dark]'),m=document.querySelector('${group} .rm-tab-indicator');return b.getAttribute('aria-checked')==='true'&&Math.abs(b.getBoundingClientRect().left-m.getBoundingClientRect().left)<1})()`));
+  await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'},{name:'forced-colors',value:'active'}]});
+  check('Appearance honors reduced motion and forced-color selection boundaries',await evaluate(`getComputedStyle(document.querySelector('${group} .rm-tab-indicator')).transitionDuration==='0s'&&getComputedStyle(document.querySelector('${group} .rm-tab-indicator')).outlineStyle!=='none'`));
+  await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:'light'},{name:'prefers-reduced-motion',value:'no-preference'},{name:'forced-colors',value:'none'}]});
+  await mode('light');if(screenshot)await screenshot('appearance-navigation-1440-light.png');
+  await route('cases');await until(`document.querySelector('.cs-app-header .theme-segments')!==null`);
+  check('Typical case navigation uses the same language and appearance controls',await evaluate(`document.querySelector('.cs-app-header .language-control')&&document.querySelectorAll('.cs-app-header [role=radio]').length===3`));
 }

@@ -45,7 +45,7 @@ export function validateContrast(colors) {
   });
 }
 export function validateSource(tokens,contracts) {
-  if(tokens.sdkVersion!=='0.4.1'||tokens.specVersion!=='1.2.0')throw new Error('SDK/spec versions must remain distinct');
+  if(tokens.sdkVersion!=='0.4.2'||tokens.specVersion!=='1.2.0')throw new Error('SDK/spec versions must remain distinct');
   if(JSON.stringify(Object.keys(tokens.themes).sort())!==JSON.stringify(['dark','light']))throw new Error('Required modes are light and dark');
   for(const [mode,colors] of Object.entries(tokens.themes)) {
     const failures=validateContrast(resolveAliases(colors));

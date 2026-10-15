@@ -11,7 +11,9 @@ for(const file of scripts)vm.runInContext(fs.readFileSync(path.join(root,file),'
 const w=context.window;
 assert.equal(w.ROSEMARY_TOKENS.version,'1.2.0');
 assert.equal(w.RosemaryPages.pages.length,18);
-assert.equal(Object.keys(w.RosemaryIconLibrary.icons).length,71);
+const iconCount=Object.keys(w.RosemaryIconLibrary.icons).length;
+assert.equal(iconCount,Object.keys(JSON.parse(fs.readFileSync(path.join(root,'design/icons.json'),'utf8'))).length);
+for(const name of ['moon','theme-system','globe'])assert.ok(w.RosemaryIconLibrary.icons[name],'Navigation icon '+name+' exists');
 assert.equal(Object.keys(w.RosemaryComponentCatalog).length,33);
 assert.deepEqual([...w.RosemaryComponentDemos.ids].sort(),Object.keys(w.RosemaryComponentCatalog).sort());
 for(const id of w.RosemaryComponentDemos.ids){
@@ -24,9 +26,9 @@ const home=w.RosemaryPages.renderers.overview();
 assert.ok(!home.includes('hero-art')&&!home.includes('一页日常'),'No irrelevant hero illustration');
 assert.ok(home.includes('#/components')&&home.includes('#/cases'),'Forma overview links to components and typical cases');
 const sdkPage=w.RosemaryPages.renderers.sdk();
-assert.ok(sdkPage.includes('Forma 1.2.0')&&sdkPage.includes('SDK 0.4.1'),'SDK and specification versions stay distinct');
-assert.ok(sdkPage.includes('/releases/tag/v0.4.1')&&sdkPage.includes('SHA256'),'SDK installation links to a fixed Release and checksums');
-for(const name of ['rosemary-ui-react-0.4.1.tgz','rosemary-compose-0.4.1-maven.zip','rosemary-compose-0.4.1-sources.jar','RosemaryUI-0.4.1-source.tar.gz','RosemarySample-0.4.1-simulator.zip','rosemary-ui-0.4.1-source.tar.gz','rosemary-flutter-0.4.1-windows.zip'])assert.ok(sdkPage.includes('/releases/download/v0.4.1/'+name),'SDK asset link is version-fixed '+name);
+assert.ok(sdkPage.includes('Forma 1.2.0')&&sdkPage.includes('SDK 0.4.2'),'SDK and specification versions stay distinct');
+assert.ok(sdkPage.includes('/releases/tag/v0.4.2')&&sdkPage.includes('SHA256'),'SDK installation links to a fixed Release and checksums');
+for(const name of ['rosemary-ui-react-0.4.2.tgz','rosemary-compose-0.4.2-maven.zip','rosemary-compose-0.4.2-sources.jar','RosemaryUI-0.4.2-source.tar.gz','RosemarySample-0.4.2-simulator.zip','rosemary-ui-0.4.2-source.tar.gz','rosemary-flutter-0.4.2-windows.zip'])assert.ok(sdkPage.includes('/releases/download/v0.4.2/'+name),'SDK asset link is version-fixed '+name);
 for(const target of ['packages/react/README.md','platforms/android/API.md','platforms/swiftui/README.md','platforms/flutter/API.md'])assert.ok(sdkPage.includes(target),'SDK page exposes actual platform API entry '+target);
 assert.ok(sdkPage.includes('onDiagnostics')&&sdkPage.includes('onContrastDiagnostics'),'Theme examples expose contrast diagnostics');
 const componentPage=w.RosemaryPages.renderers.components();
@@ -49,7 +51,7 @@ for(const page of w.RosemaryPages.pages){
 const required=['title','use','anatomy','variants','dimensions','states','behavior','keyboard','semantics','motion','good','bad','responsive','maturity','validation','implementation'];
 for(const [id,spec] of Object.entries(w.RosemaryComponentCatalog))for(const key of required)assert.ok(typeof spec[key]==='string'&&spec[key].length>0,id+'.'+key);
 const iconPaths=Object.values(w.RosemaryIconLibrary.icons).map(i=>i.paths);
-assert.equal(new Set(iconPaths).size,71,'Every icon has distinct markup');
+assert.equal(new Set(iconPaths).size,iconCount,'Every icon has distinct markup');
 const logo=Buffer.from(w.ROSEMARY_LOGO_DATA.split(',')[1],'base64');
 const metadata=JSON.parse(fs.readFileSync(path.join(root,'assets/logo-source.json'),'utf8'));
 assert.equal(crypto.createHash('sha256').update(logo).digest('hex'),metadata.sha256);
@@ -60,7 +62,7 @@ const html=fs.readFileSync(path.join(root,'rosemary-design-portal.html'),'utf8')
 assert.ok(!/<script[^>]+src=/.test(html),'No external script dependency');
 assert.ok(!/<link[^>]+rel="stylesheet"/.test(html),'No external stylesheet dependency');
 assert.ok(!/src=["']https?:\/\//.test(html),'No remote image dependency');
-assert.ok(html.includes('sections.sdk')&&html.includes('/releases/download/v0.4.1/')&&html.includes('RosemaryUI-0.4.1-source.tar.gz'),'Generated offline HTML contains the SDK route and fixed installation assets');
+assert.ok(html.includes('sections.sdk')&&html.includes('/releases/download/v0.4.2/')&&html.includes('RosemaryUI-0.4.2-source.tar.gz'),'Generated offline HTML contains the SDK route and fixed installation assets');
 assert.ok(html.includes('高对比')&&html.includes('onContrastDiagnostics'),'Generated SDK guide retains theme and diagnostic content');
 const notFound=fs.readFileSync(path.join(root,'404.html'),'utf8');
 assert.ok(notFound.includes('<title>页面未找到 · Rosemary Forma</title>'));
@@ -70,4 +72,4 @@ assert.ok(notFound.includes('M15 16h15v15H15V16'),'404 page reuses the Forma pro
 function lum(hex){const c=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);return c[0]*.2126+c[1]*.7152+c[2]*.0722;}
 const pairs=[['ink','canvas'],['muted','canvas'],['ink','surface'],['muted','surface'],['on-primary','primary'],['primary','primary-soft'],['on-sun','sun'],['on-sky','sky'],['success','success-soft'],['warning','warning-soft'],['danger','danger-soft'],['info','info-soft'],['on-danger','danger']];
 for(const [theme,tokens] of Object.entries(w.ROSEMARY_TOKENS.themes))for(const [fg,bg] of pairs){const a=lum(tokens[fg]),b=lum(tokens[bg]);assert.ok((Math.max(a,b)+.05)/(Math.min(a,b)+.05)>=4.5,`${theme} ${fg}/${bg}`);}
-console.log(JSON.stringify({pages:18,icons:71,componentSpecifications:33,isolatedVisualPreviews:33,completeFields:required.length,contrastPairs:26,officialLogo:'unchanged',offlineResources:true},null,2));
+console.log(JSON.stringify({pages:18,icons:iconCount,componentSpecifications:33,isolatedVisualPreviews:33,completeFields:required.length,contrastPairs:26,officialLogo:'unchanged',offlineResources:true},null,2));
