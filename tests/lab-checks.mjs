@@ -1,4 +1,5 @@
 export async function runLabChecks({route,click,key,evaluate,until,delay,check,send,screenshot}) {
+  await runErrorGuidanceChecks({route,click,key,evaluate,until,delay,check,send,screenshot});
   await route('identity');
   await until(`document.querySelector('.logo-image-frame img').naturalWidth===1000`);
   check('Official logo loads unchanged as the provided raster asset',await evaluate(`document.querySelector('.logo-image-frame img').src===window.ROSEMARY_LOGO_DATA&&document.querySelector('.logo-image-frame img').naturalHeight===1000`));
@@ -74,4 +75,39 @@ export async function runLabChecks({route,click,key,evaluate,until,delay,check,s
   await screenshot('motion-desktop.png');
   await route('loading');await click('[data-lab-action="start-fold"]');await route('icons');await delay(450);
   check('Leaving a lab removes its active UI and callbacks safely',await evaluate(`!document.getElementById('fold-demo-stage')&&document.querySelectorAll('[data-icon-id]').length===Object.keys(window.RosemaryIconLibrary.icons).length`));
+}
+
+export async function runErrorGuidanceChecks({route,click,key,evaluate,until,delay,check,send,screenshot}) {
+  for(const width of [1440,375]) {
+    await send('Emulation.setDeviceMetricsOverride',{width,height:1000,deviceScaleFactor:1,mobile:width<600});
+    await route('patterns?section=errors');
+    await until(`!!document.getElementById('friendly-error-scenario')`);
+    await evaluate(`document.getElementById('friendly-error-draft').value='尚未提交的测试草稿';document.getElementById('friendly-error-draft').dispatchEvent(new Event('input',{bubbles:true}))`);
+    for(const id of ['session','forbidden','missing','limited','server','offline','timeout','maintenance']) {
+      await evaluate(`(()=>{const s=document.getElementById('friendly-error-scenario');s.value=${JSON.stringify(id)};s.dispatchEvent(new Event('change',{bubbles:true}))})()`);await delay(60);
+      check(`${width}px ${id}: persistent authored error, actionable recovery and draft retained`,await evaluate(`(()=>{const c=document.getElementById('friendly-error-card');return c.checkVisibility()&&c.querySelector('h3').textContent===RosemaryPages.errorScenarios[${JSON.stringify(id)}].title&&c.querySelector('a,button')&&document.getElementById('friendly-error-draft').value==='尚未提交的测试草稿'&&document.getElementById('friendly-error-status').textContent.includes('当前输入保留')&&c.querySelector('.rm-product-logo')&&c.textContent.includes('参考编号：DEMO-7K2Q')&&!c.textContent.includes('虚构随机')&&!c.querySelector('pre')&&document.documentElement.scrollWidth<=innerWidth+1})()`));
+      if(['limited','server','offline','timeout'].includes(id)) {
+        await evaluate(`document.querySelector('[data-error-retry]').focus()`);await key('Enter','Enter');
+        check(`${width}px ${id}: keyboard retry keeps unknown outcome visible and focuses summary`,await evaluate(`document.activeElement.id==='friendly-error-title'&&document.getElementById('friendly-error-status').textContent.includes('没有发起网络请求，尚未收到完成确认')&&document.getElementById('friendly-error-draft').value==='尚未提交的测试草稿'`));
+      }
+    }
+    await evaluate(`document.getElementById('friendly-error-scenario').value='offline';document.getElementById('friendly-error-scenario').dispatchEvent(new Event('change',{bubbles:true}))`);
+    await screenshot(`friendly-error-${width}.png`);
+    await click('#friendly-error-card a[href="#/overview"]');
+    await until(`document.querySelector('main [data-page=overview]')!==null`);
+    check(`${width}px recovery link reaches the actual overview`,await evaluate(`location.hash==='#/overview'`));
+    await evaluate('history.back()');await until(`!!document.getElementById('friendly-error-draft')`);
+    check(`${width}px returning from recovery preserves the in-memory draft`,await evaluate(`document.getElementById('friendly-error-draft').value==='尚未提交的测试草稿'`));
+  }
+  await route('platforms?section=error-routes');
+  check('Platform guidance separates browser pages from structured API errors',await evaluate(`document.getElementById('error-routes').textContent.includes('API直接访问可以是JSON')&&document.getElementById('error-routes').textContent.includes('状态')`));
+  await route('cases');
+  check('Typical cases link to the error recovery guidance',await evaluate(`!!document.querySelector('#case-connections a[href="#/patterns?section=errors"]')`));
+}
+
+export async function runError404Checks({evaluate,until,send,screenshot,check,baseURL}) {
+  await send('Page.navigate',{url:new URL('missing-error-guidance-example',baseURL).href});
+  await until(`document.title==='页面未找到 · Rosemary Forma'`);
+  check('Direct missing page has branded main content and a real recovery link',await evaluate(`document.querySelector('main h1').textContent==='没有找到这个页面'&&document.querySelector('main .brand').textContent.includes('Forma')&&document.querySelector('a.action').getAttribute('href')==='/#/overview'&&!document.querySelector('pre')&&document.documentElement.scrollWidth<=innerWidth+1`));
+  await screenshot('friendly-404-375.png');
 }

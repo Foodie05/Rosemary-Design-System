@@ -5,6 +5,7 @@
   const timers = new Set();
   const animations = new Set();
   const gallery = {query:'',category:'all',size:24,selected:'book'};
+  let errorDraft = null;
   let foldState = 'idle';
   let foldGeneration = 0;
   let progress = {state:'idle',done:0};
@@ -148,6 +149,7 @@
     byId('insert-motion-row').disabled=false;status('motion-list-status','列表已重置。');
   }
   function init(page){
+    if(page==='patterns'&&errorDraft!==null)byId('friendly-error-draft').value=errorDraft;
     if(page==='icons'){
       byId('icon-query').value=gallery.query;byId('icon-category').value=gallery.category;byId('icon-size').value=String(gallery.size);renderGallery();
     }
@@ -164,6 +166,8 @@
   document.addEventListener('visibilitychange',()=>document.documentElement.classList.toggle('portal-motion-paused',document.hidden));
   reduced.addEventListener('change',()=>{if(reduced.matches){animations.forEach(animation=>animation.cancel());animations.clear();}});
   document.addEventListener('click',event=>{
+    const retry=event.target.closest('[data-error-retry]');
+    if(retry){document.getElementById('friendly-error-status').textContent='演示：没有发起网络请求，尚未收到完成确认。输入仍在本页，请检查结果后再决定是否重试。';document.getElementById('friendly-error-title').focus();return;}
     const iconButton=event.target.closest('[data-icon-id]');if(iconButton){gallery.selected=iconButton.dataset.iconId;document.querySelectorAll('[data-icon-id]').forEach(button=>button.setAttribute('aria-pressed',String(button===iconButton)));renderIconInspector();return;}
     const actionButton=event.target.closest('[data-lab-action],[data-action]');if(!actionButton||actionButton.disabled||actionButton.getAttribute('aria-disabled')==='true')return;
     const action=actionButton.dataset.labAction||actionButton.dataset.action;
@@ -185,9 +189,14 @@
     else if(action==='reset-motion-rows')resetMotionRows();
   });
   document.addEventListener('input',event=>{
+    if(event.target.id==='friendly-error-draft')errorDraft=event.target.value;
     if(event.target.id==='icon-query'){gallery.query=event.target.value;renderGallery();}
   });
   document.addEventListener('change',event=>{
+    if(event.target.id==='friendly-error-scenario'){
+      document.getElementById('friendly-error-card').innerHTML=window.RosemaryPages.errorCard(event.target.value);
+      document.getElementById('friendly-error-status').textContent='演示场景已切换为'+window.RosemaryPages.errorScenarios[event.target.value].label+'。当前输入保留在本页。';
+    }
     if(event.target.id==='icon-category'){gallery.category=event.target.value;renderGallery();}
     if(event.target.id==='icon-size'){gallery.size=Number(event.target.value);renderGallery();}
   });

@@ -64,6 +64,15 @@ assert.ok(!/<link[^>]+rel="stylesheet"/.test(html),'No external stylesheet depen
 assert.ok(!/src=["']https?:\/\//.test(html),'No remote image dependency');
 assert.ok(html.includes('sections.sdk')&&html.includes('/releases/download/v0.4.2/')&&html.includes('RosemaryUI-0.4.2-source.tar.gz'),'Generated offline HTML contains the SDK route and fixed installation assets');
 assert.ok(html.includes('高对比')&&html.includes('onContrastDiagnostics'),'Generated SDK guide retains theme and diagnostic content');
+const patterns=w.RosemaryPages.renderers.patterns();
+assert.equal(Object.keys(w.RosemaryPages.errorScenarios).length,8,'Error recovery covers eight authored situations');
+for(const id of Object.keys(w.RosemaryPages.errorScenarios)){
+  const card=w.RosemaryPages.errorCard(id);
+  assert.ok(card.includes('friendly-error-title')&&card.includes('button'),'Each error has a title and recovery action: '+id);
+  assert.ok(!card.includes('<pre>')&&!card.includes('response.detail'),'Public error cards never interpolate response bodies');
+}
+assert.ok(patterns.includes('API仍使用结构化稳定错误码')&&patterns.includes('访问受控日志'),'API and diagnostic boundaries are documented');
+assert.ok(patterns.includes('friendly-error-draft')&&patterns.includes('纯本地视觉演示'),'Demo makes preservation and simulation scope explicit');
 const notFound=fs.readFileSync(path.join(root,'404.html'),'utf8');
 assert.ok(notFound.includes('<title>页面未找到 · Rosemary Forma</title>'));
 assert.ok(notFound.includes('href="/#/overview"'),'404 page returns to the canonical overview route');
