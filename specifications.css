@@ -36,3 +36,6 @@ html{scrollbar-gutter:stable}body:has(dialog[open]){overflow:hidden}.official-lo
 .page[data-page="patterns"] .flow-demo + .data-table-wrap{margin-top:24px}
 @media(prefers-reduced-motion:reduce){.fold-loader *,.task-progress-fill::after{animation:none!important}.task-progress-fill::after{opacity:0}}
 @media(forced-colors:active){.task-progress-fill{background:Highlight}.task-progress-fill::after{display:none}}
+
+/* Persistent, public-facing error recovery example. */
+.friendly-error-demo{display:grid;gap:16px}.friendly-error-demo>label{display:grid;gap:8px;font-size:14px}.friendly-error-draft textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit}.friendly-error-card{padding:clamp(20px,4vw,36px);border:1px solid var(--border);border-radius:12px;background:var(--surface);overflow-wrap:anywhere}.friendly-error-brand{display:flex;align-items:center;gap:8px;color:var(--primary);font-size:13px}.friendly-error-card h3{font-size:clamp(24px,4vw,32px);line-height:1.4;margin:12px 0}.friendly-error-card p{line-height:1.8}.friendly-error-card .button-row{margin:24px 0 16px}.friendly-error-card:focus-within{outline-color:var(--focus)}.friendly-error-card h3:focus-visible{outline:2px solid var(--focus);outline-offset:4px}

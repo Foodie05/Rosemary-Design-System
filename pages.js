@@ -70,16 +70,48 @@
     section('layers','浮层层级与遮罩',table(['层级','用途','实现要求'],[['内容层','页面与常规内容','不默认添加阴影。'],['固定层','顶栏和粘性导航','不得遮挡键盘焦点、错误提示或锚点标题。'],['轻浮层','菜单、Tooltip、Popover','靠近触发元素；边缘自动避让；不可被父容器裁切。'],['模态层','Dialog、模态 Drawer','阻止背景交互，管理焦点，提供明确关闭方式。'],['状态层','Toast、全局服务状态','不盖住关键操作；需要用户处理的信息不能只短暂出现。']])+note('视觉阴影不代替层级管理','阴影只帮助解释悬浮关系。实现时应明确叠放顺序、遮罩、滚动锁定和焦点策略，避免靠任意增大 z-index 修复冲突。')),
     ['响应式布局','层级与表面','Rosemary 尺度统一']);
 
-  sections.patterns = [jump('save','保存与同步'),jump('undo','删除与撤销'),jump('permission','权限与通知'),jump('leaving','中断与退出')];
+  // Public-facing content is authored here; never interpolate backend response detail.
+  const errorScenarios = {
+    session:{label:'会话过期 / 401',title:'请重新登录后继续',copy:'当前登录已失效。重新登录后再尝试刚才的操作；不要在此页面重复输入密码。',next:'查看登录恢复要求',retry:false},
+    forbidden:{label:'访问受限 / 403',title:'暂时无法访问此内容',copy:'请确认所用账户，或通过产品提供的支持渠道获取帮助。',next:'查看访问恢复要求',retry:false},
+    missing:{label:'页面未找到 / 404',title:'没有找到这个页面',copy:'请检查链接，或从首页重新查找可用内容。',next:'返回规范首页',retry:false},
+    limited:{label:'请求过多 / 429',title:'操作暂时受限',copy:'请稍后再试。暂时不要反复提交相同操作。',next:'重新尝试',retry:true},
+    server:{label:'服务异常 / 5xx',title:'暂时无法完成操作',copy:'服务暂时未能完成请求。请稍后重试；涉及支付或创建记录时，先确认结果，避免重复操作。',next:'重新尝试',retry:true},
+    offline:{label:'网络离线',title:'目前无法连接',copy:'请检查网络连接后再试。尚未确认这次操作是否完成；当前输入仍留在本页。',next:'重新尝试',retry:true},
+    timeout:{label:'请求超时',title:'还没有收到处理结果',copy:'请先检查结果再决定是否重试。超时不代表操作一定失败，不要直接重复付款或提交。',next:'重新尝试',retry:true},
+    maintenance:{label:'计划维护',title:'服务正在维护',copy:'请稍后再访问。目前尚无确认的恢复时间。',next:'查看维护恢复要求',retry:false}
+  };
+  function errorCard(key='session') {
+    const item=errorScenarios[key]||errorScenarios.session;
+    return `<div class="friendly-error-brand">${window.RosemaryUI.brandMark('forma',{size:28,label:false})} Rosemary Forma</div><p class="eyebrow">${item.label}</p><h3 id="friendly-error-title" tabindex="-1">${item.title}</h3><p>${item.copy}</p><div class="button-row">${item.retry?'<button class="button primary" type="button" data-error-retry>重新尝试</button>':`<a class="button primary" href="${key==='missing'?'#/overview':'#/patterns?section=error-recovery'}">${item.next}</a>`}${key==='missing'?'':'<a class="button secondary" href="#/overview">返回规范首页</a>'}</div><p class="field-help">参考编号：DEMO-7K2Q</p>`;
+  }
+  const errorGuidance = () => `<div class="prose"><p>所有用户可能遇到的错误必须有友好、可访问的界面：浏览器入口、深链接、认证回调及代理或网关失败使用品牌化页面；列表、表单和局部请求失败就近保留上下文。不能让用户停在裸露的原始 JSON、服务端 detail 或默认调试页。</p><p>页面先说明简明问题、影响与实际可行的下一步；重试、返回、重新登录或联系支持必须真正可用。无法恢复时说明限制，不承诺已保存、自动恢复或数据不会丢失。页面只呈现经过设计的公开文案。</p></div>`;
+  function errorDemo() {
+    return `<div class="friendly-error-demo"><label>选择演示场景<select id="friendly-error-scenario">${Object.entries(errorScenarios).map(([id,item])=>`<option value="${id}">${item.label}</option>`).join('')}</select></label><p class="field-help">纯本地视觉演示，不发起请求、不验证登录、不联系支持；切换场景不清除下面的输入，普通站内导航与返回时保留在当前标签页内存；刷新或关闭后清除，不写入持久存储。参考编号为虚构示例，不含账户、路径或内部结构。</p><label class="friendly-error-draft">任务上下文 · 本页临时草稿<textarea id="friendly-error-draft" rows="2">周末记录：等网络恢复后再检查同步结果。</textarea></label><section class="friendly-error-card" aria-labelledby="friendly-error-title" id="friendly-error-card">${errorCard()}</section><p id="friendly-error-status" class="status-line" role="status" aria-live="polite"></p></div>`;
+  }
+  sections.patterns = [jump('save','保存与同步'),jump('undo','删除与撤销'),jump('permission','权限与通知'),jump('errors','友好错误页面'),jump('error-recovery','恢复与安全边界'),jump('leaving','中断与退出')];
   renderers.patterns = () => pageShell('patterns','跨产品交互流程','统一相同操作的含义、状态和后果，尤其是保存、同步、删除与退出。各产品在统一页面骨架内按任务与空间调整排列，但不能对同一个词给出互相矛盾的行为。',
     section('save','保存与同步状态',`<div class="flow-demo"><div class="flow-head"><h3>周末记录</h3><span>状态演示</span></div><p class="flow-body-text">本例用于演示本地保存与远端同步的区别，不进行实际写入或网络请求。</p><p class="status-line" id="sync-status" aria-live="polite">${icon('check')}示例状态：已保存到此设备，等待同步。</p><div class="button-row">${button('模拟同步成功','sync-success','primary')}${button('模拟连接失败','sync-failure','secondary')}${button('恢复初始状态','sync-reset','quiet')}</div></div>`+table(['状态','表达与行为'],[['本地正在写入','显示“正在保存到此设备”，尚不能显示完成。'],['本地完成，远端未确认','显示“已保存到此设备，等待同步”。'],['远端确认成功','显示“已同步”。'],['远端失败，本地已确认','说明同步失败、本地是否仍有副本，以及重试路径。'],['结果未知','明确尚未确认，保留当前内容并提供检查方式，不保证不存在丢失。']])+note('并发与重试','真实产品还需规定重复提交、离线队列、版本冲突、重试次数和取消后果。重试应尽量幂等，不能重复创建用户不知情的内容。'))+
     section('undo','按后果选择确认与恢复',`<div id="undo-demo"><div class="undo-item" id="undo-item"><div><h3>散步照片 · 示例</h3><p>可撤销的移除操作，不影响真实文件。</p></div>${button(`${icon('trash')}移除`,'remove-item','secondary small')}</div><div class="undo-banner" id="undo-banner" hidden><span>已从演示列表移除。</span>${button(`${icon('undo')}撤销`,'undo-remove','quiet small')}</div><p class="field-help" style="margin-top:12px">本例的撤销入口持续可见。真实产品应说明撤销窗口及到期后的恢复方法。</p></div>`+rules('低后果操作优先提供撤销。永久删除说明对象、数量、影响范围和是否可恢复。','所有操作都弹确认，或用同一个“删除”同时表示回收站和不可恢复的清除。')+`<ol class="pattern-steps" style="margin-top:25px"><li><h3>判断影响</h3><p>区分个人局部修改、批量操作、影响他人及支付或安全后果。</p></li><li><h3>说明对象与后果</h3><p>确认文案必须让用户知道会改变什么，不只问“确定吗”。</p></li><li><h3>恢复并说明结果</h3><p>撤销后恢复内容与合理焦点；恢复失败时解释实际状态，不虚报成功。</p></li></ol>`)+
     section('permission','权限、共享与通知',`<div class="prose"><p>在用户开始相关任务时解释权限用途和访问范围，再调用平台授权。拒绝后提供手动选择、受限模式或稍后设置等可行路径，不反复请求直到用户同意。</p><p>共享前显示对象、内容和权限范围。事务提醒、风险通知和运营消息分别管理；用户主动设置的时效提醒按其选择执行，非必要通知默认克制。</p><p>同属 Rosemary 不代表默认汇集跨产品私人数据。账户体系可以统一，但数据用途、保留期限和共享授权必须明确。</p></div>`+table(['场景','必须说明'],[['共享','谁能查看或编辑、共享哪些内容、如何撤回。'],['敏感通知','锁屏预览内容与关闭方式。'],['权限拒绝','受影响的功能、可替代路径与设置入口。'],['后台任务','是否继续执行、是否耗费流量或资源、如何停止。']]))+
+    section('errors','所有可达错误都要有下一步',errorGuidance()+errorDemo())+
+    section('error-recovery','错误恢复与公开信息边界',table(['场景','用户引导与实现要求'],[
+      ['会话过期 / 401','说明需要重新登录，提供真实登录入口；受控保存允许保留的上下文，登录后只返回经验证的站内目标。不得把密码或令牌存入恢复草稿。'],
+      ['403 / 404','按实际安全需要使用中性说明，避免确认受保护资源存在。提供账户检查、可访问首页或真实支持入口；不向无权限者提供资源所有人等信息。'],
+      ['429','停止重复提交。按可信服务端信号给出等待时间或恢复入口；缺少时间时说稍后重试，不编造倒计时。'],
+      ['5xx / 维护','使用品牌化错误或维护页面；仅在确认后说明恢复时间。重试前检查非幂等操作结果，真实支持渠道和服务状态入口须可达。'],
+      ['离线 / 超时','区分无法连接和结果未知。保留可保留的输入、筛选和位置，说明保留范围与时限；本地未确认写入不能说已保存。'],
+      ['HTML / API 边界','浏览器页面不能裸露原始JSON；API仍使用结构化稳定错误码，不用HTML替换API响应。客户端按公开错误码映射文案，未知错误使用安全兜底；状态码正确，不用200掩盖错误。'],
+      ['诊断与隐私','不向用户输出堆栈、内部路径、SQL、数据库或服务端detail、调试配置、凭证、令牌、个人信息。详细诊断进入访问受控日志并遵守脱敏与保留规则。'],
+      ['关联编号','可提供不含敏感信息且不泄露内部结构的随机关联编号供支持查找；编号不是访问凭证，不能凭编号读取他人诊断。'],
+      ['验收范围','覆盖浏览器入口、深链接、会话中断、局部请求、反向代理/网关、离线及维护路径；直接访问和刷新也要测试。API按契约测试；不能用单个toast代替必须处理的错误。']
+    ])+note('演示与真实产品的边界','本例不连接真实身份或服务。产品必须把示例下一步接入实际登录、结果检查与支持能力；不能把模拟重试当作恢复成功。'))+
     section('leaving','中断、支付与退出',list(['中断与恢复：在合适的隐私保护下保留草稿、位置与上下文，不把回归界面做成积压通知清单。','未保存退出：说明是否会丢失工作；Esc、返回与关闭不应无提示丢弃内容。','付费：购买前说明价格、周期、自动续费、试用到期与功能限制。取消入口应容易找到。','导出与删除：区分取消订阅、退出登录、删除账户和删除内容，说明格式、保留规则与恢复期限。','长期离开：不使用羞辱或亲密关系暗示挽留，不以用户内容扣留作为继续使用的条件。'])),
     ['真实状态','失败恢复','隐私与退出']);
 
-  sections.content = [jump('voice','写作要求'),jump('examples','推荐与错误示例'),jump('structure','信息结构')];
+  sections.content = [jump('safe-errors','错误文案与诊断边界'),jump('voice','写作要求'),jump('examples','推荐与错误示例'),jump('structure','信息结构')];
   renderers.content = () => pageShell('content','清楚、准确的界面文案','说明应让用户直接知道当前状态、操作条件和预期结果。使用完整句子组织相关信息，不用诗意标题、抽象比喻或过多短句代替具体要求。',
+    section('safe-errors','用户文案与内部诊断分开',errorGuidance()+rules('无法完成请求。请稍后重试，或通过产品内支持入口提供关联编号。','直接呈现服务端detail、异常堆栈、SQL、内部路径或账户信息。')+`<p>${link('patterns?section=errors','查看错误场景与可操作示例')}</p>`)+
     section('voice','写作要求',`<div class="prose"><p>规范正文优先使用可执行的描述。例如“关闭对话框后将焦点返回触发按钮”，比“给用户一条回去的路”更准确。品牌表达可以保留少量情绪，但功能标签、错误、权限和参数说明应直接。</p><p>相关说明写成完整段落；只有步骤、互斥选项或检查项需要列表。同一动作在按钮、过程和结果中使用相同名称。只有实际能力支持时，才可以承诺已保存、可恢复、加密或不会丢失。</p><p>人文关怀体现在尊重和帮助，不在于过度亲密。避免评价用户、自行判断情绪，以及用感叹号或赞美掩盖信息不足。</p></div>`+rules('写明条件和行为：“网络恢复后自动重试。你也可以现在手动重试。”','使用含糊表达：“让同步重新流动起来。”或将一段简单说明拆成多个口号。'))+
     section('examples','情境示例',[
       ['规范标题','让错误也被温柔接住','错误处理与恢复要求'],
@@ -93,9 +125,9 @@
 
   sections.accessibility = [jump('baseline','基础要求'),jump('resize','文字缩放'),jump('test','验证方法')];
   renderers.accessibility = () => pageShell('accessibility','可访问性要求与验证','可访问性需要在组件、页面和完整流程三个层面验证。对比度检查、语义标记和原生控件能降低风险，但不能单独证明整个产品符合标准。',
-    section('baseline','基础要求',table(['维度','检查要求'],[['文字与颜色','普通文字以 4.5:1 为基线；适用的大字和必要非文本信息按对应标准验证。状态不只靠颜色。'],['键盘与焦点','核心任务可用键盘完成，焦点顺序合理且可见，不被固定内容遮挡。'],['语义','控件有名称、角色和状态；输入有标签；错误与结果有适度的可感知反馈。'],['目标大小','触屏主要自定义目标以约 44 CSS px（Web）或相应原生平台 44pt 为起点；单位不可直接互换。'],['重排','验证 200% 文字放大和窄屏重排，核心操作不被截断或隐藏。'],['动态','尊重减少动态和适用平台的高对比、减少透明度偏好。闪烁、运动或声音不作为唯一信息。'],['恢复','失败、超时、权限不足与输入错误必须提供可访问的说明和处理路径。']])+note('标准与产品测试的关系','具体合规条件、例外与适用等级需要结合 WCAG 版本和产品环境确定。这里提供设计基线，不是认证声明。'))+
+    section('baseline','基础要求',table(['维度','检查要求'],[['文字与颜色','普通文字以 4.5:1 为基线；适用的大字和必要非文本信息按对应标准验证。状态不只靠颜色。'],['键盘与焦点','核心任务可用键盘完成。全页错误有明确标题与主区域；局部失败与操作区域关联，动态摘要适度播报且持续可见。恢复后焦点返回合理位置，不只靠toast或颜色。'],['语义','控件有名称、角色和状态；输入有标签；错误与结果有适度的可感知反馈。'],['目标大小','触屏主要自定义目标以约 44 CSS px（Web）或相应原生平台 44pt 为起点；单位不可直接互换。'],['重排','验证 200% 文字放大和窄屏重排，核心操作不被截断或隐藏。'],['动态','尊重减少动态和适用平台的高对比、减少透明度偏好。闪烁、运动或声音不作为唯一信息。'],['恢复','失败、超时、权限不足与输入错误必须提供可访问的说明和处理路径。']])+note('标准与产品测试的关系','具体合规条件、例外与适用等级需要结合 WCAG 版本和产品环境确定。这里提供设计基线，不是认证声明。'))+
     section('resize','文字放大与重排演示',`<div class="access-demo"><label class="access-label" for="text-size">示例文字大小<input type="range" id="text-size" min="16" max="32" value="16" step="2"><output id="text-size-value" for="text-size">16px</output></label><div class="access-demo-content" id="access-content"><h3>添加记录</h3><p>输入可以暂时保留为草稿。字号增加时，容器应随内容增高，按钮标签不能被裁掉。</p>${button('打开对话框','open-example','primary')}</div></div><div id="demo-entries" aria-live="polite"></div><p class="field-help" style="margin-top:13px">此处演示局部重排，不替代浏览器缩放、系统字号或屏幕阅读器测试。</p>`)+
     section('test','验证方法',list(['只用键盘完成导航、输入、提交、取消和恢复，检查可见焦点及合适顺序。','打开模态后确认背景不可交互；关闭后焦点返回合理位置；非模态内容不应制造焦点陷阱。','用屏幕阅读器检查标题层级、控件名称、错误关联与状态播报，避免每帧或每个动画周期重复播报。','检查长中文、长英文、空内容、混合文本和错误信息，验证窄屏与放大后的操作完整性。','分别验证浅色、深色、减少动态和高对比环境；自动测试后补充真实用户或辅助技术人工测试。'])+`<div style="margin-top:24px">${link('colors?section=contrast','打开色对检查')}</div>`),['键盘与焦点','语义与状态','缩放与动态偏好']);
 
-  window.RosemaryPages = {pages, sections, renderers, pageShell, jump};
+  window.RosemaryPages = {pages, sections, renderers, pageShell, jump, errorScenarios, errorCard};
 })();

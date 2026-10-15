@@ -115,3 +115,9 @@ node tests/browser-check.mjs http://127.0.0.1:5181/
 ## 参考
 
 已核对 Carbon 的组件清单、加载、动效等正文，以及 Atlassian 的按钮、可访问性、动效和发布阶段。Apple HIG 与 Material 3 的目录／主题已核对，但本环境未可靠提取其客户端正文；不把 Rosemary 参数冒充官方条款。
+
+### 2026-10-15 错误体验补充验证
+
+规范仍为1.2.0、SDK仍为0.4.2。本次只修订门户规范、错误示例与404页面。现有 `node tests/browser-check.mjs` 主链通过 `runLabChecks` 自动执行八场景错误恢复检查，覆盖宽窄屏、临时草稿、真实恢复链接与键盘重试反馈。演示不连接后台，不代表真实身份、服务或人工读屏验收。
+
+独立404验证可由现有浏览器测试工具导入 `tests/lab-checks.mjs` 的 `runError404Checks({...helpers, baseURL})`，导航到缺失地址并检查品牌页面及恢复入口；部署环境另外用 `curl -o /tmp/forma-404.html -w '%{http_code}' https://<portal-host>/missing-error-guidance-example` 确认404状态与交付的404.html字节。本地预览需明确配置自定义404处理，不能把直接访问404.html时的200当成缺失资源状态。
