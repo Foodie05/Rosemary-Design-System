@@ -199,4 +199,4 @@ Rosemary Forma 1.2.0 是规范版本；SDK 0.4.1 是当前四端组件代码版�
 
 首页、子品牌与任务导航统一使用有边框的语言下拉：共享globe图标、当前语言全名、down提示。选项必须来自实际翻译能力；仅支持简体中文时不得展示虚假的其他语言。窄屏可收起语言文字，保留图标、名称与44 CSS px触达范围。
 
-宽屏外观设置采用柔和底三图标互斥分段，固定顺序system/theme-system、light/sun、dark/moon。以radiogroup/radio、aria-checked及单一Tab入口表达设置，用共享选中标记动效；不得使用页面tab/tabpanel语义。窄屏（门户580px及以下）改为44×44 CSS px单图标按钮，点击按选择模式system→light→dark→system循环，名称包含当前与下一模式。system图标不随解析出的明暗改变，实际颜色随系统变化；显式light/dark不受系统覆盖。沿用持久化偏好、键盘焦点、减少动态与强制颜色边界。
+语言与主题外框必须等高：宽屏统一48 CSS px（主题按钮44px、容器内边距2px），窄屏统一44 CSS px；窄屏语言宽56px并保留globe与down。宽屏外观设置采用柔和底三图标互斥分段，固定顺序system/theme-system、light/sun、dark/moon。以radiogroup/radio、aria-checked及单一Tab入口表达设置，用共享选中标记动效；不得使用页面tab/tabpanel语义。窄屏（门户580px及以下）改为44×44 CSS px单图标按钮，点击按选择模式system→light→dark→system循环，名称包含当前与下一模式。system图标不随解析出的明暗改变，实际颜色随系统变化；显式light/dark不受系统覆盖。沿用持久化偏好、键盘焦点、减少动态与强制颜色边界。
