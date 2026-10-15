@@ -72,7 +72,7 @@ All exported prop interfaces are included in the package declarations. Input-lik
 | progress   | `Progress`, label, `value`, `max`, `flowing`; omit value for indeterminate progress                                            |
 | stepper    | `Stepper`, `items` with optional `state`, `current` id and optional `onStepChange`; error/unavailable are explicit             |
 
-`Icon` renders one of the 71 shared Rosemary paths, with decorative default semantics or `label` for an image name. `BrandBadge` renders the five current product marks (`forma`, `epass`, `lilt`, `vigilo`, `folio`) in the current primary hue; a local provider supplies another approved theme. `RosemaryLogo` includes the unchanged official PNG. Brand names, badges and PNG are subject to [BRAND-ASSETS.md](./BRAND-ASSETS.md), separate from MIT code and functional icons.
+`Icon` renders one of the shared Rosemary paths, including `sun`, `moon`, `theme-system` and `globe`, with decorative default semantics or `label` for an image name. `BrandBadge` renders the five current product marks (`forma`, `epass`, `lilt`, `vigilo`, `folio`) in the current primary hue; a local provider supplies another approved theme. `RosemaryLogo` includes the unchanged official PNG. Brand names, badges and PNG are subject to [BRAND-ASSETS.md](./BRAND-ASSETS.md), separate from MIT code and functional icons.
 
 All contract states are mapped to concrete API props or host composition in [STATE-MAPPING.md](./STATE-MAPPING.md). Search/card/list/table loading and errors, modal submitting, toast lifetime and failure/timeout outcomes use the documented host composition; they are not inferred by the SDK.
 

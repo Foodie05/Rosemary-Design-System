@@ -1,3 +1,4 @@
+// Generated from design/icons.json. Do not edit.
 (() => {
   const icons = {
     leaf: {
@@ -425,6 +426,24 @@
       category: '生活与媒体',
       paths: '<path d="M12 22s7-6 7-13a7 7 0 0 0-14 0c0 7 7 13 7 13Z"/><circle cx="12" cy="9" r="2.5"/>',
       usage: '用于标记地点或位置。'
+    },
+    moon: {
+      label: '月亮',
+      category: '状态与隐私',
+      paths: '<path d="M21 12.8C20.6 17.4 16.8 21 12 21C7 21 3 17 3 12C3 7.2 6.6 3.4 11.2 3C8.5 6 8.7 10.5 11.5 13C14.1 15.3 18.3 15.3 21 12.8Z"/>',
+      usage: '用于选择深色模式，或表示夜晚与夜间显示。'
+    },
+    'theme-system': {
+      label: '跟随系统',
+      category: '状态与隐私',
+      paths: '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><circle cx="12" cy="10.5" r="3.5"/><path d="M12 7v7"/>',
+      usage: '用于让明暗主题跟随设备系统设置；不表示手动切换到浅色或深色。'
+    },
+    globe: {
+      label: '语言与地区',
+      category: '导航',
+      paths: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3C7 8 7 16 12 21C17 16 17 8 12 3Z"/>',
+      usage: '用于选择语言或地区，也可表示全球内容；不表示定位当前位置。'
     }
   };
 
