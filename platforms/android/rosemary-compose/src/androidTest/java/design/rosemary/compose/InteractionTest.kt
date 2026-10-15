@@ -198,21 +198,36 @@ class InteractionTest {
         trigger.assert(
             SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Collapsed")
         )
-        // Check actual trailing glyph pixels, excluding the field border and label. This fails
-        // when the trigger regresses to a text-only button even if its semantics remain correct.
-        val pixels = trigger.captureToImage().toPixelMap()
-        val density = compose.activity.resources.displayMetrics.density
-        val trailingStart = pixels.width - (30 * density).toInt()
-        val trailingEnd = pixels.width - (12 * density).toInt()
-        val center = pixels.height / 2
-        val half = (9 * density).toInt()
-        val glyphColors =
-            (center - half until center + half)
-                .flatMap { y ->
-                    (trailingStart until trailingEnd).map { x -> pixels[x, y] }
+        // Sample only the reserved 18dp icon box inside 12dp padding: no field border,
+        // label or adjacent option. Count contrasting stroke geometry, not anti-alias shades.
+        fun assertTrailingGlyph(node: SemanticsNodeInteraction, label: String) {
+            val pixels = node.captureToImage().toPixelMap()
+            val density = compose.activity.resources.displayMetrics.density
+            val left = pixels.width - (30 * density).toInt()
+            val right = pixels.width - (12 * density).toInt()
+            val top = pixels.height / 2 - (9 * density).toInt()
+            val bottom = pixels.height / 2 + (9 * density).toInt()
+            val samples =
+                (top until bottom).flatMap { y ->
+                    (left until right).map { x -> Triple(x, y, pixels[x, y]) }
                 }
-                .toSet()
-        assertTrue("Select displays a trailing disclosure glyph", glyphColors.size > 3)
+            val background = samples.groupingBy { it.third }.eachCount().maxBy { it.value }.key
+            val stroke = samples.filter { (_, _, color) ->
+                color.alpha > .5f &&
+                    maxOf(
+                        kotlin.math.abs(color.red - background.red),
+                        kotlin.math.abs(color.green - background.green),
+                        kotlin.math.abs(color.blue - background.blue),
+                    ) > .08f
+            }
+            val rows = stroke.map { it.second }.toSet().size
+            val columns = stroke.map { it.first }.toSet().size
+            assertTrue(
+                "$label: strokePixels=${stroke.size}, rows=$rows, columns=$columns, background=$background, box=[$left,$top,$right,$bottom]",
+                stroke.size >= 9 && rows >= 3 && columns >= 3,
+            )
+        }
+        assertTrailingGlyph(trigger, "Select displays a trailing disclosure glyph")
         compose.onNodeWithText("Alpha").performSemanticsAction(SemanticsActions.RequestFocus) {
             it()
         }
@@ -220,16 +235,7 @@ class InteractionTest {
         compose.onNodeWithText("Blocked").assertIsNotEnabled()
         val selectedOption = compose.onAllNodesWithText("Alpha").onLast()
         selectedOption.assertIsSelected()
-        val selectedPixels = selectedOption.captureToImage().toPixelMap()
-        val checkColors =
-            (selectedPixels.height / 2 - half until selectedPixels.height / 2 + half)
-                .flatMap { y ->
-                    (selectedPixels.width - (30 * density).toInt() until
-                            selectedPixels.width - (12 * density).toInt())
-                        .map { x -> selectedPixels[x, y] }
-                }
-                .toSet()
-        assertTrue("Committed option displays its check glyph", checkColors.size > 3)
+        assertTrailingGlyph(selectedOption, "Committed option displays its check glyph")
         selectedOption.performKeyInput { pressKey(Key.DirectionDown) }
         selectedOption.assertIsSelected()
         compose.onNodeWithText("Charlie").assertIsNotSelected().performKeyInput {
