@@ -9,7 +9,7 @@ const buildRoot = process.env.ROSEMARY_BUILD_ROOT || os.tmpdir();
 mkdirSync(buildRoot, { recursive: true });
 const fixture = mkdtempSync(path.join(buildRoot, "shared-consumer-"));
 const files = ["tokens", "icons"].map((name) =>
-  path.join(artifactRoot, "shared", `rosemary-ui-${name}-0.4.0.tgz`),
+  path.join(artifactRoot, "shared", `rosemary-ui-${name}-0.4.1.tgz`),
 );
 for (const file of files) readFileSync(file);
 writeFileSync(

@@ -10,6 +10,99 @@ Widget host(Widget child) => MaterialApp(
 void main() {
   WidgetController.hitTestWarningShouldBeFatal = true;
   testWidgets(
+    'mixed checkbox renders a dash and select uses field error and disabled colors',
+    (tester) async {
+      await tester.pumpWidget(
+        host(RosemaryCheckbox(value: null, label: 'Mixed', onChanged: (_) {})),
+      );
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(
+        host(
+          RosemarySelect(
+            value: null,
+            label: 'Category',
+            error: 'Required',
+            onChanged: (_) {},
+            options: const [RosemaryOption('a', 'A')],
+          ),
+        ),
+      );
+      var surface = tester.widget<RosemaryActionSurface>(
+        find.byType(RosemaryActionSurface),
+      );
+      expect(surface.background, RosemaryTokens.light.dangerSoft);
+      expect(surface.border, RosemaryTokens.light.danger);
+      await tester.pumpWidget(
+        host(
+          RosemarySelect(
+            value: null,
+            enabled: false,
+            label: 'Category',
+            onChanged: (_) {},
+            options: const [RosemaryOption('a', 'A')],
+          ),
+        ),
+      );
+      surface = tester.widget<RosemaryActionSurface>(
+        find.byType(RosemaryActionSurface),
+      );
+      expect(surface.background, RosemaryTokens.light.canvas);
+      expect(surface.foreground, RosemaryTokens.light.muted);
+      expect(surface.dimWhenDisabled, false);
+      final opacity = find.ancestor(
+        of: find.byType(RosemaryActionSurface),
+        matching: find.byType(Opacity),
+      );
+      expect(tester.widget<Opacity>(opacity).opacity, .65);
+    },
+  );
+  testWidgets(
+    'select keeps committed check while navigating and retains dropdown cue',
+    (tester) async {
+      await tester.pumpWidget(
+        host(
+          RosemarySelect(
+            value: 'one',
+            label: 'Category',
+            onChanged: (_) {},
+            options: const [
+              RosemaryOption('one', 'First'),
+              RosemaryOption('two', 'Second'),
+            ],
+          ),
+        ),
+      );
+      final arrow = find.byWidgetPredicate(
+        (w) => w is RosemaryIcon && w.name == 'down',
+      );
+      expect(arrow, findsOneWidget);
+      await tester.tap(find.text('First'));
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      await tester.pumpAndSettle();
+      final check = find.byWidgetPredicate(
+        (w) => w is RosemaryIcon && w.name == 'check',
+      );
+      expect(check, findsOneWidget);
+      expect(
+        find.descendant(
+          of: find
+              .ancestor(of: check, matching: find.byType(RosemaryActionSurface))
+              .first,
+          matching: find.text('First'),
+        ),
+        findsOneWidget,
+      );
+      expect(arrow, findsOneWidget);
+      expect(find.byType(AnimatedRotation), findsNothing);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(check, findsNothing);
+      expect(arrow, findsOneWidget);
+      expect(find.byType(AnimatedRotation), findsNothing);
+    },
+  );
+  testWidgets(
     'two-route local overlay refuses Back/Escape, retains editing and restores trigger',
     (tester) async {
       final navigator = GlobalKey<NavigatorState>(),

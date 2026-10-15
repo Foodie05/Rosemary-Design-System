@@ -34,6 +34,6 @@ jobs:
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
-          name: rosemary-swiftui-0.4.0
+          name: rosemary-swiftui-0.4.1
           path: ${{ runner.temp }}/rosemary-artifacts/ios
           if-no-files-found: warn

@@ -298,6 +298,8 @@ class _DateState extends State<RosemaryDate> {
           onPressed: () => changeOpen(!open),
           enabled: widget.enabled,
           focusNode: trigger,
+          leading: RosemaryIcon(timeMode ? 'clock' : 'calendar', size: 18),
+          trailing: const RosemaryIcon('down', size: 18),
           variant: RosemaryButtonVariant.secondary,
         ),
         if (error != null)
@@ -528,6 +530,7 @@ class _CalendarState extends State<RosemaryCalendar> {
           children: [
             RosemaryButton(
               label: year.toString().padLeft(4, '0'),
+              trailing: const RosemaryIcon('down', size: 18),
               onPressed: () => setState(() {
                 view = 'years';
                 yearPage = ((year - 1) ~/ 12) * 12 + 1;
@@ -537,6 +540,7 @@ class _CalendarState extends State<RosemaryCalendar> {
             ),
             RosemaryButton(
               label: '$month',
+              trailing: const RosemaryIcon('down', size: 18),
               onPressed: () => setState(() => view = 'months'),
               variant: RosemaryButtonVariant.secondary,
             ),

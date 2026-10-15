@@ -72,6 +72,7 @@ struct Gallery: View {
     let mode: RosemaryThemeMode = args.contains("--dark") ? .dark : .system
     _theme = State(initialValue: mode)
     _rtl = State(initialValue: args.contains("--rtl"))
+    _reduced = State(initialValue: args.contains("--reduced"))
     let kind: String? = {
       guard let i = args.firstIndex(of: "--capture"), args.indices.contains(i + 1) else {
         return nil
@@ -88,7 +89,7 @@ struct Gallery: View {
   @ViewBuilder private func captureScreen(_ kind: String) -> some View {
     ScrollView {
       VStack(alignment: .leading, spacing: 18) {
-        Text("Rosemary SDK 0.4.0 · \(kind)").font(.title2.weight(.semibold))
+        Text("Rosemary SDK 0.4.1 · \(kind)").font(.title2.weight(.semibold))
         if ["date", "year", "month"].contains(kind) {
           RosemaryDate(
             "Local date", value: $date, isExpanded: $dateOpen, initialMonth: seed,
@@ -103,6 +104,17 @@ struct Gallery: View {
               RosemaryOption("choice-\($0)", label: "Choice \($0)", disabled: $0 == 2)
             })
           Text("Following content stays in place").accessibilityIdentifier("select-following")
+        } else if kind == "disclosures" {
+          RosemarySelect("Status", selection: $select, isExpanded: $selectOpen,
+            options: [RosemaryOption("draft", label: "Draft"), RosemaryOption("ready", label: "Ready")])
+          RosemaryMenu("More actions", isExpanded: $menu,
+            actions: [RosemaryMenuAction("save", title: "Save record") { result = "Saved record" }])
+          Text(result).accessibilityIdentifier("disclosure-result")
+          RosemaryInput("Unavailable field", text: .constant("Offline")).disabled(true)
+          RosemaryInput("Invalid field", text: .constant("Invalid"), error: "Check this value")
+          RosemaryCheckbox("Unavailable checkbox", isChecked: .constant(true)).disabled(true)
+          RosemaryRadio("Unavailable radio", value: "draft", selection: .constant("draft")).disabled(true)
+          RosemarySwitch("Unavailable switch", isOn: .constant(true)).disabled(true)
         } else if kind == "edge-popover" {
           Spacer().frame(height: 490)
           HStack {
@@ -130,6 +142,11 @@ struct Gallery: View {
             toast = true
           }
           Text("Dismissals: \(toastDismissals)")
+        } else if kind == "skeleton" {
+          Text("Loading content")
+          RosemarySkeleton()
+          Text("Stopped content")
+          RosemarySkeleton(isRunning: false)
         } else if kind == "busy" {
           RosemaryButton("Saving", isLoading: true) {}
           RosemaryButton("Removing", variant: .danger, isLoading: true) {}
@@ -160,7 +177,7 @@ struct Gallery: View {
       RosemaryList(records) { row in Text(row.name) }
       RosemaryButton("Done") { drawer = false }
     }
-    .rosemaryTheme(theme).environment(\.layoutDirection, rtl ? .rightToLeft : .leftToRight)
+    .rosemaryTheme(theme).rosemaryReduceMotion(reduced).environment(\.layoutDirection, rtl ? .rightToLeft : .leftToRight)
     .dynamicTypeSize(
       ProcessInfo.processInfo.arguments.contains("--large") ? .accessibility3 : .large
     )
@@ -168,7 +185,7 @@ struct Gallery: View {
   }
   private var galleryScreen: some View {
     VStack(spacing: 12) {
-      Text("Rosemary SDK 0.4.0").font(.title2.weight(.semibold)).padding(.top)
+      Text("Rosemary SDK 0.4.1").font(.title2.weight(.semibold)).padding(.top)
       HStack(spacing: 0) {
         RosemaryButton(theme.rawValue.capitalized, variant: .quiet) {
           theme = theme == .system ? .light : theme == .light ? .dark : .system

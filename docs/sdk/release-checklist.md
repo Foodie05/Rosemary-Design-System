@@ -1,6 +1,6 @@
-# SDK 0.4.0 发布验收清单
+# SDK 0.4.1 发布验收清单
 
-规范版本为 1.2.0，SDK tag 为 `v0.4.0`。本文件说明门槛，不把未勾选项写成通过。动态 CI 和各端报告是结果来源，最终发布记录需固定 commit、运行链接与资产 SHA256。
+规范版本为 1.2.0，SDK tag 为 `v0.4.1`。本文件说明门槛，不把未勾选项写成通过。动态 CI 和各端报告是结果来源，最终发布记录需固定 commit、运行链接与资产 SHA256。
 
 ## 源码和契约
 
@@ -20,7 +20,7 @@
 | SwiftUI | 根 SwiftPM 编译/模型、真正 root-package sample、稳定 Xcode 26.3 build/test、simapp/source、xcresult、环境与 HEAD | 本机 Xcode 27 beta 附加兼容不替代稳定 CI；iOS 17 runtime、本机受限 UI host、人工 VoiceOver |
 | Flutter | package analyze/test、六目标真实 consumer runner、各平台构建/运行与源码及安装产物、SHA256 | Android/iOS/macOS/Windows/Linux/Web 分别报告；编译不等于运行；OS 下限和读屏不能推断 |
 
-稳定 CI 入口：[GitHub Actions](https://github.com/Foodie05/Rosemary-Design-System/actions)。实现明细：[实施状态](https://github.com/Foodie05/Rosemary-Design-System/blob/main/docs/sdk/implementation-status.md)。各端证据：[React](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.0/packages/react/README.md)、[Compose](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.0/platforms/android/README.md)、[SwiftUI](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.0/platforms/swiftui/VERIFICATION.md)、[Flutter](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.0/platforms/flutter/README.md)。
+稳定 CI 入口：[GitHub Actions](https://github.com/Foodie05/Rosemary-Design-System/actions)。实现明细：[实施状态](https://github.com/Foodie05/Rosemary-Design-System/blob/main/docs/sdk/implementation-status.md)。各端证据：[React](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.1/packages/react/README.md)、[Compose](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.1/platforms/android/README.md)、[SwiftUI](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.1/platforms/swiftui/VERIFICATION.md)、[Flutter](https://github.com/Foodie05/Rosemary-Design-System/blob/v0.4.1/platforms/flutter/README.md)。
 
 ## 产物与发布
 

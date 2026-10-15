@@ -1,6 +1,6 @@
 {
-  "source": "rosemary-design-portal.html / self-contained offline SDK page",
-  "completedUTC": "2026-10-13T15:11:36.819Z",
+  "source": "file:///Users/studio/Desktop/Playground/rosemary-design-system-sdk/rosemary-design-portal.html",
+  "completedUTC": "2026-10-15T07:02:56.602Z",
   "releaseAssetsFetched": false,
   "checks": [
     "SDK route has correct title",
@@ -27,5 +27,10 @@
     "sdk-versions-1440-light.png",
     "sdk-versions-375-dark.png"
   ],
-  "htmlSHA256": "8b9ef028dcf7498dc4710c0e579cf26b3bb1b1ee6ea92d74f795d837c775be41"
+  "sdkVersion": "0.4.1",
+  "specVersion": "1.2.0",
+  "scope": "SDK documentation route only; not the historic full portal regression matrix",
+  "htmlSHA256": "5478396d4eb4ff05b07b15942792080e90b1866646e6777649ae54fdedeb1d56",
+  "sourceEntryReport": "/Volumes/MacData/Rosemary/artifacts/portal-0.4.1-consistency-20261015/127.0.0.1/browser-review.json",
+  "selfContainedHTTPReport": "/Volumes/MacData/Rosemary/artifacts/portal-0.4.1-consistency-20261015/offline-html/browser-review.json"
 }

@@ -83,7 +83,7 @@ function Gallery() {
         <header className="gallery-hero">
           <div>
             <R.BrandBadge product="forma" size={64} label="Forma" />
-            <span>ROSEMARY FORMA · SDK 0.4.0</span>
+            <span>ROSEMARY FORMA · SDK 0.4.1</span>
           </div>
           <h1>
             Components that belong
@@ -686,8 +686,83 @@ function GeometryFixture() {
     </R.RosemaryProvider>
   );
 }
+function FieldFixture() {
+  const params = new URLSearchParams(window.location.search);
+  const [value, setValue] = useState("draft");
+  const [open, setOpen] = useState(false);
+  return (
+    <R.RosemaryProvider
+      language="en"
+      mode={params.get("theme") === "dark" ? "dark" : "light"}
+    >
+      <main
+        style={{
+          padding: 24,
+          maxWidth: 420,
+          minHeight: "100vh",
+          alignContent: "start",
+          display: "grid",
+          gap: 16,
+        }}
+      >
+        <h1>Field states</h1>
+        <R.Input
+          label="Read only"
+          value="Saved record"
+          readOnly
+          onValueChange={() => {}}
+        />
+        <R.Input
+          label="Unavailable"
+          value="Offline"
+          disabled
+          onValueChange={() => {}}
+        />
+        <R.Textarea
+          label="Unavailable notes"
+          value="Offline notes"
+          disabled
+          onValueChange={() => {}}
+        />
+        <R.Input
+          label="Invalid"
+          value="Invalid record"
+          error="Check this value"
+          onValueChange={() => {}}
+        />
+        <R.Input
+          label="Placeholder"
+          value=""
+          placeholder="Enter a record name"
+          onValueChange={() => {}}
+        />
+        <R.Select
+          label="Long choice"
+          value={value}
+          onValueChange={setValue}
+          options={[
+            {
+              value: "draft",
+              label:
+                "A deliberately long record classification without truncation",
+            },
+            { value: "ready", label: "Ready" },
+          ]}
+        />
+        <R.Menu
+          label="More actions for this deliberately long record name"
+          open={open}
+          onOpenChange={setOpen}
+          items={[{ id: "save", label: "Save record", onSelect: () => {} }]}
+        />
+      </main>
+    </R.RosemaryProvider>
+  );
+}
 createRoot(document.getElementById("root")!).render(
-  window.location.search.includes("geometry") ? (
+  window.location.search.includes("fields") ? (
+    <FieldFixture />
+  ) : window.location.search.includes("geometry") ? (
     <GeometryFixture />
   ) : (
     <Gallery />

@@ -189,7 +189,9 @@ export function Select({
           }
         }}
       >
-        {selected?.label ?? placeholder ?? strings.chooseOption}
+        <span className="rm-disclosure-label">
+          {selected?.label ?? placeholder ?? strings.chooseOption}
+        </span>
         <Icon name="down" size={18} />
       </button>
       {open && (
@@ -536,7 +538,7 @@ export function Menu({ label, items, open, onOpenChange }: MenuProps) {
           }
         }}
       >
-        {label}
+        <span className="rm-disclosure-label">{label}</span>
         <Icon name="down" size={16} />
       </Button>
       {open && (

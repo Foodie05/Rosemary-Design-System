@@ -1,5 +1,5 @@
 // Generated from design/tokens.json. Do not edit; run pnpm design:generate.
-export const sdkVersion='0.4.0' as const;
+export const sdkVersion='0.4.1' as const;
 export const specVersion='1.2.0' as const;
 export const colorRoles=["canvas","surface","raised","ink","muted","border","control","primary","on-primary","primary-soft","sun","on-sun","sky","on-sky","success","success-soft","warning","warning-soft","danger","danger-soft","on-danger","info","info-soft","focus"] as const;
 export type RosemaryColorRole=typeof colorRoles[number];

@@ -106,8 +106,23 @@ fun RosemaryDate(
                     time?.format(DateTimeFormatter.ofPattern("HH:mm")) ?: rString("Choose time")
                 else value?.let(RosemaryDateRules::format) ?: rString("Choose date"),
                 { setOpen(true) },
+                modifier =
+                    Modifier.semantics {
+                        contentDescription = label
+                        stateDescription =
+                            strings.text(if (open && enabled) "Expanded" else "Collapsed")
+                    },
                 enabled = enabled,
                 variant = RosemaryButtonVariant.Secondary,
+                trailing = {
+                    RosemaryIcon(
+                        if (actualMode == RosemaryDateMode.Time) "clock" else "calendar",
+                        Modifier.size(18.dp),
+                        tint =
+                            if (enabled) RosemaryTheme.colors.muted
+                            else RosemaryTheme.colors.control,
+                    )
+                },
             )
             if (open && enabled)
                 key(value, time, end, actualMode) {
@@ -575,6 +590,9 @@ fun RosemaryUpload(
             rString("Choose files"),
             { if (multiple) many.launch(mimeTypes) else single.launch(mimeTypes) },
             variant = RosemaryButtonVariant.Secondary,
+            leading = {
+                RosemaryIcon("upload", Modifier.size(18.dp), tint = RosemaryTheme.colors.primary)
+            },
         )
         files.forEach { file ->
             RosemaryCard {

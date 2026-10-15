@@ -118,8 +118,22 @@
   color: var(--rm-ink);
   padding: 9px 12px;
 }
+input.rm-input:read-only,
+textarea.rm-input:read-only {
+  background: var(--rm-canvas);
+}
+.rm-input:disabled {
+  background: var(--rm-canvas);
+  color: var(--rm-muted);
+  opacity: 0.65;
+}
 .rm-input[aria-invalid="true"] {
   border-color: var(--rm-danger);
+  background: var(--rm-danger-soft);
+}
+.rm-input::placeholder {
+  color: var(--rm-muted);
+  opacity: 1;
 }
 textarea.rm-input {
   min-height: 108px;
@@ -268,6 +282,15 @@ textarea.rm-input {
   align-items: center;
   justify-content: space-between;
   text-align: start;
+  gap: 8px;
+}
+.rm-disclosure-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.rm-select-trigger > svg,
+.rm-menu > .rm-button > svg {
+  flex-shrink: 0;
 }
 .rm-options,
 .rm-popover-panel {

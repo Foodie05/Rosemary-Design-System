@@ -193,17 +193,79 @@ class InteractionTest {
                 )
             }
         }
+        val trigger = compose.onNodeWithText("Alpha")
+        trigger.assertContentDescriptionEquals("Section")
+        trigger.assert(
+            SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Collapsed")
+        )
+        // Check actual trailing glyph pixels, excluding the field border and label. This fails
+        // when the trigger regresses to a text-only button even if its semantics remain correct.
+        val pixels = trigger.captureToImage().toPixelMap()
+        val density = compose.activity.resources.displayMetrics.density
+        val trailingStart = pixels.width - (30 * density).toInt()
+        val trailingEnd = pixels.width - (12 * density).toInt()
+        val center = pixels.height / 2
+        val half = (9 * density).toInt()
+        val glyphColors =
+            (center - half until center + half)
+                .flatMap { y ->
+                    (trailingStart until trailingEnd).map { x -> pixels[x, y] }
+                }
+                .toSet()
+        assertTrue("Select displays a trailing disclosure glyph", glyphColors.size > 3)
         compose.onNodeWithText("Alpha").performSemanticsAction(SemanticsActions.RequestFocus) {
             it()
         }
         compose.onNodeWithText("Alpha").performKeyInput { pressKey(Key.DirectionDown) }
         compose.onNodeWithText("Blocked").assertIsNotEnabled()
-        compose.onAllNodesWithText("Alpha").onLast().performKeyInput {
-            pressKey(Key.DirectionDown)
+        val selectedOption = compose.onAllNodesWithText("Alpha").onLast()
+        selectedOption.assertIsSelected()
+        val selectedPixels = selectedOption.captureToImage().toPixelMap()
+        val checkColors =
+            (selectedPixels.height / 2 - half until selectedPixels.height / 2 + half)
+                .flatMap { y ->
+                    (selectedPixels.width - (30 * density).toInt() until
+                            selectedPixels.width - (12 * density).toInt())
+                        .map { x -> selectedPixels[x, y] }
+                }
+                .toSet()
+        assertTrue("Committed option displays its check glyph", checkColors.size > 3)
+        selectedOption.performKeyInput { pressKey(Key.DirectionDown) }
+        selectedOption.assertIsSelected()
+        compose.onNodeWithText("Charlie").assertIsNotSelected().performKeyInput {
             pressKey(Key.Enter)
         }
         compose.runOnIdle { assertEquals("c", chosen) }
         compose.onNodeWithText("Charlie").assertIsFocused()
+    }
+
+    @Test
+    fun disablingAnOpenSelectClosesItsPopupAndPreventsActivation() {
+        var disable: (() -> Unit)? = null
+        var opens = 0
+        compose.setContent {
+            var enabled by remember { mutableStateOf(true) }
+            disable = { enabled = false }
+            RosemaryTheme {
+                RosemarySelect(
+                    "a",
+                    {},
+                    listOf(RosemaryOption("a", "Alpha"), RosemaryOption("b", "Beta")),
+                    "Section",
+                    enabled = enabled,
+                    onOpenChange = { if (it) opens++ },
+                )
+            }
+        }
+        compose.onNodeWithText("Alpha").performClick()
+        compose.onNodeWithText("Beta").assertIsDisplayed()
+        compose.runOnIdle { disable!!() }
+        compose.onNodeWithText("Beta").assertDoesNotExist()
+        compose.onNodeWithText("Alpha").assertIsNotEnabled()
+        compose
+            .onNodeWithText("Alpha")
+            .assert(SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Collapsed"))
+        compose.runOnIdle { assertEquals(1, opens) }
     }
 
     @Test

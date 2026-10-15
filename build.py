@@ -123,6 +123,7 @@ def build():
              'rosemary-design-portal.html', 'rosemary-icons-71.zip', 'rosemary-icons-sprite.svg',
              'assets/rosemary-logo.png', 'assets/logo-source.json', 'research/design-system-reference-review.md',
              'docs/sdk/getting-started.md', 'docs/sdk/migration.md', 'docs/sdk/release-checklist.md',
+             'docs/sdk/0.4.1-consistency-review.md', 'docs/sdk/flutter-review.md',
              'tests/browser-check.mjs', 'tests/lab-checks.mjs', 'tests/component-browser-checks.mjs', 'tests/navigation-browser-checks.mjs', 'tests/date-picker-browser-checks.mjs', 'tests/static-check.mjs', 'browser-test-report.json', 'local-review-report.json', 'sdk-browser-review.json', 'verification.md']
     names += [str(path.relative_to(ROOT)) for path in sorted((ROOT/'icons').glob('*.svg'))]
     names += [str(path.relative_to(ROOT)) for path in sorted((ROOT/'screenshots').glob('*.png')) if path.name!='failure.png']

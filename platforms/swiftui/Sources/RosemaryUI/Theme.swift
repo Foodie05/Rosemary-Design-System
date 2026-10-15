@@ -231,6 +231,7 @@ private struct ThemeModeModifier: ViewModifier {
 }
 
 struct RosemaryFieldFrame: ViewModifier {
+  @Environment(\.isEnabled) private var enabled
   private var p = RosemaryPalette()
   var invalid = false
   var focused = false
@@ -240,14 +241,15 @@ struct RosemaryFieldFrame: ViewModifier {
   }
   func body(content: Content) -> some View {
     content.padding(12).frame(minHeight: RosemaryNativeMetrics.dimension("input", "minHeight"))
-      .background(p.colors.surface)
+      .background(!enabled ? p.colors.canvas : invalid ? p.colors.dangerSoft : p.colors.surface)
       .clipShape(RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("input")))
       .overlay(
         RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("input")).stroke(
           invalid ? p.colors.danger : focused ? p.colors.focus : p.colors.control,
           lineWidth: focused ? 2 : p.stroke)
       )
-      .foregroundStyle(p.colors.ink)
+      .foregroundStyle(enabled ? p.colors.ink : p.colors.muted)
+      .opacity(enabled ? 1 : 0.65)
   }
 }
 

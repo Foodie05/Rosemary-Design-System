@@ -142,6 +142,25 @@ final class GalleryUITests: XCTestCase {
     XCTAssertTrue(trigger.value as? String == "Choice 3, Collapsed")
     XCTAssertEqual(following.frame.minY, originalY, accuracy: 1)
   }
+  func testDisclosureTriggersRetainLabelsAndMenuActionCloses() {
+    let app = XCUIApplication()
+    app.launchArguments = ["--capture", "disclosures"]
+    app.launch()
+    let menu = app.buttons["More actions"]
+    XCTAssertTrue(menu.waitForExistence(timeout: 10))
+    XCTAssertEqual(menu.value as? String, "Collapsed")
+    menu.tap()
+    XCTAssertEqual(menu.value as? String, "Expanded")
+    app.buttons["Save record"].tap()
+    XCTAssertEqual(menu.value as? String, "Collapsed")
+    XCTAssertTrue(app.staticTexts["Saved record"].exists)
+    XCTAssertFalse(app.textFields["Unavailable field"].isEnabled)
+    let select = app.buttons["Status"]
+    select.tap()
+    app.buttons["Ready"].tap()
+    XCTAssertEqual(select.value as? String, "Ready, Collapsed")
+  }
+
   func testBottomRightPopoverFlipsWithinWindow() {
     let app = XCUIApplication()
     app.launchArguments = ["--capture", "edge-popover"]

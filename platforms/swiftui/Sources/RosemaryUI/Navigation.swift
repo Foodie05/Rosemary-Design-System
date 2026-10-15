@@ -347,7 +347,13 @@ public struct RosemaryMenu: View {
     self.actions = actions
   }
   public var body: some View {
-    RosemaryButton(label, variant: .secondary) { open.toggle() }.focused($triggerFocused)
+    Button { open.toggle() } label: {
+      HStack {
+        Text(label)
+        RosemaryIcon("down")
+      }
+    }.buttonStyle(RosemaryButtonStyle(.secondary)).focused($triggerFocused)
+      .accessibilityLabel(label)
       .accessibilityValue(open ? p.text("Expanded") : p.text("Collapsed"))
       .overlay(alignment: .topLeading) {
         if open {

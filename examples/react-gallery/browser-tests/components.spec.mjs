@@ -491,3 +491,85 @@ test("per-file upload states, controlled progress and retry/cancel, exceptional 
   ).toBeDisabled();
   await expect(steps.getByText("Unavailable", { exact: true })).toBeVisible();
 });
+
+test("field states and long disclosure labels preserve semantic colors and full icon sizes", async ({
+  page,
+}, testInfo) => {
+  for (const theme of ["light", "dark"]) {
+    for (const width of [1280, 375]) {
+      await page.setViewportSize({ width, height: 1100 });
+      await page.goto(`/?fields&theme=${theme}`);
+      const colors = await page.locator(".rm-theme").evaluate((root) => {
+        const resolved = (name) => {
+          const probe = document.createElement("span");
+          probe.style.color = `var(--rm-${name})`;
+          root.append(probe);
+          const color = getComputedStyle(probe).color;
+          probe.remove();
+          return color;
+        };
+        return Object.fromEntries(
+          ["canvas", "muted", "danger-soft"].map((name) => [
+            name,
+            resolved(name),
+          ]),
+        );
+      });
+      await expect(page.getByLabel("Read only", { exact: true })).toHaveCSS(
+        "background-color",
+        colors.canvas,
+      );
+      for (const name of ["Unavailable", "Unavailable notes"]) {
+        const field = page.getByLabel(name, { exact: true });
+        await expect(field).toBeDisabled();
+        await expect(field).toHaveCSS("background-color", colors.canvas);
+        await expect(field).toHaveCSS("color", colors.muted);
+        await expect(field).toHaveCSS("opacity", "0.65");
+      }
+      await expect(page.getByLabel("Invalid", { exact: true })).toHaveCSS(
+        "background-color",
+        colors["danger-soft"],
+      );
+      const select = page.getByRole("combobox", { name: "Long choice" });
+      const menu = page.getByRole("button", {
+        name: "More actions for this deliberately long record name",
+      });
+      for (const [trigger, size] of [
+        [select, 18],
+        [menu, 16],
+      ]) {
+        const geometry = await trigger.evaluate((button) => {
+          const icon = button.querySelector("svg").getBoundingClientRect();
+          const label = button
+            .querySelector(".rm-disclosure-label")
+            .getBoundingClientRect();
+          const box = button.getBoundingClientRect();
+          return {
+            iconWidth: icon.width,
+            iconHeight: icon.height,
+            inside:
+              icon.left >= box.left &&
+              icon.right <= box.right &&
+              label.right <= icon.left,
+          };
+        });
+        expect(geometry.iconWidth).toBe(size);
+        expect(geometry.iconHeight).toBe(size);
+        expect(geometry.inside).toBe(true);
+      }
+      await page.screenshot({
+        path: testInfo.outputPath(`fields-${theme}-${width}.png`),
+        fullPage: true,
+      });
+      await select.click();
+      await page.getByRole("listbox").press("ArrowDown");
+      await page.getByRole("listbox").press("Enter");
+      await expect(select).toHaveText("Ready");
+      await menu.click();
+      await expect(menu).toHaveAttribute("aria-expanded", "true");
+      await page.getByRole("menu").press("Escape");
+      await expect(menu).toHaveAttribute("aria-expanded", "false");
+      await expect(page.locator("body")).toHaveJSProperty("scrollWidth", width);
+    }
+  }
+});
