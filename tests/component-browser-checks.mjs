@@ -174,7 +174,7 @@ export async function runComponentChecks({route,click,key,evaluate,until,delay,c
     await visit('breadcrumb');
     await expect('breadcrumb represents a hierarchy with a non-link current location',`$$('nav ol li').length===3&&$('nav [aria-current="page"]').tagName==='SPAN'&&$('nav a').getAttribute('href')==='#/overview'`);
     await click(`${selector} nav a[href="#/overview"]`);
-    await until(`location.hash==='#/overview'&&document.querySelector('.overview-header')!==null`);
+    await until(`location.hash==='#/overview'&&document.querySelector('main article[data-page=overview].forma-home')!==null`);
     check('Component: breadcrumb ancestor follows a real portal route',await evaluate(`!document.querySelector('[data-component-demo]')`));
 
     await visit('pagination');

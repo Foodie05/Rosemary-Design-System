@@ -187,7 +187,9 @@ try {
   await until(`Boolean(window.RosemaryPages&&document.querySelector('main h1'))`);
   check('Self-contained HTML also opens from a local file URL',await evaluate(`location.protocol==='file:'&&RosemaryPages.pages.length===18`));
   await route('icons');
-  check('Offline icon and embedded-logo resources work without a server',await evaluate(`document.querySelectorAll('[data-icon-id]').length===Object.keys(window.RosemaryIconLibrary.icons).length&&document.querySelector('.official-logo').src.startsWith('data:image/png')`));
+  const offlineIcons=await evaluate(`document.querySelectorAll('[data-icon-id]').length===Object.keys(window.RosemaryIconLibrary.icons).length`);
+  await route('identity');
+  check('Offline icon and embedded-logo resources work without a server',offlineIcons&&await evaluate(`Boolean(document.querySelector('.official-logo')?.src.startsWith('data:image/png'))`));
   check('No uncaught browser runtime exceptions',exceptions.length===0);
   const report={passed:checks.length,layoutCombinations:routes.length*4,componentPreviewCombinations:33*4,resizeMeasurements,checks,sampledStyles,runtimeExceptions:exceptions,screenshots:(await readdir(shots)).filter(name=>name!=='failure.png')};
   await writeFile(path.join(root,'browser-test-report.json'),JSON.stringify(report,null,2)+'\n');
