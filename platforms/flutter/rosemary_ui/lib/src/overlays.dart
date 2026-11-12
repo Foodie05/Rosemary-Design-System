@@ -230,6 +230,13 @@ class _PanelState extends State<RosemaryDialog>
             padding: widget.padding,
             decoration: BoxDecoration(
               color: c.surfaceFloating,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.12),
+                  blurRadius: 16,
+                  offset: const Offset(0, 4),
+                ),
+              ],
               borderRadius: drawer
                   ? null
                   : BorderRadius.circular(RosemaryTokens.dialogRadius),
@@ -408,6 +415,13 @@ class _PopoverState extends State<RosemaryPopover> {
                               color: RosemaryThemeData.of(
                                 context,
                               ).surfaceFloating,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.12),
+                                  blurRadius: 16,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
                               borderRadius: BorderRadius.circular(
                                 RosemaryTokens.contentRadius,
                               ),
@@ -515,6 +529,13 @@ class _TooltipState extends State<RosemaryTooltip> {
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: RosemaryThemeData.of(context).surfaceFloating,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.12),
+                      blurRadius: 16,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                   border: Border.all(
                     color: RosemaryThemeData.of(context).edgeSoft,
                   ),

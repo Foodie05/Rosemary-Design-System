@@ -1,4 +1,6 @@
 import { test, expect } from "@playwright/test";
+import {defaultThemes} from "@rosemary-ui/tokens";
+const rgb = hex => `rgb(${[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)).join(", ")})`;
 const section = (page, id) => page.locator(`[data-component="${id}"]`);
 test("real browser consumes all 33 examples with theme, controlled data and keyboard state changes", async ({
   page,
@@ -131,7 +133,7 @@ test("real browser consumes all 33 examples with theme, controlled data and keyb
   );
   await expect(page.locator(".rm-theme").first()).toHaveCSS(
     "background-color",
-    "rgb(28, 25, 34)",
+    rgb(defaultThemes.dark.canvas),
   );
   await page.getByRole("checkbox", { name: "RTL", exact: true }).check();
   await section(page, "tabs").getByRole("tab", { name: "动态" }).focus();

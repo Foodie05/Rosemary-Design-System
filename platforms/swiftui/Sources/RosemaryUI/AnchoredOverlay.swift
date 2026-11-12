@@ -65,6 +65,7 @@ struct RosemaryAnchoredLayer<Panel: View>: View {
         panel.environment(\.layoutDirection, direction).frame(
           width: placement.size.width, height: placement.size.height, alignment: .topLeading
         )
+        .shadow(color: .black.opacity(0.12), radius: 12, y: 4)
         .offset(x: placement.origin.x, y: placement.origin.y)
       }
       .environment(\.layoutDirection, .leftToRight)

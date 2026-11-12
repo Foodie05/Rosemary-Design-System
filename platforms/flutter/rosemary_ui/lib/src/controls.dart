@@ -445,6 +445,13 @@ class _SelectState extends State<RosemarySelect> {
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
                           color: RosemaryThemeData.of(context).surfaceFloating,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.12),
+                              blurRadius: 16,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                           borderRadius: BorderRadius.circular(
                             RosemaryTokens.controlRadius,
                           ),

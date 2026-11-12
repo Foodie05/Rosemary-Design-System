@@ -416,6 +416,6 @@ public struct RosemaryCard<Content: View>: View {
     ).overlay(
       RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("card")).stroke(
         p.stroke > 1 ? p.colors.control : .clear, lineWidth: p.stroke)
-    ).shadow(color: p.colors.ink.opacity(0.05), radius: 8, y: 2).foregroundStyle(p.colors.ink)
+    ).shadow(color: .black.opacity(0.05), radius: 8, y: 2).foregroundStyle(p.colors.ink)
   }
 }

@@ -254,8 +254,8 @@ private struct RosemaryModalModifier<Panel: View>: ViewModifier {
               RoundedRectangle(
                 cornerRadius: RosemaryNativeMetrics.radius(drawer == nil ? "dialog" : "drawer")
               ).stroke(
-                p.colors.border, lineWidth: p.stroke)
-            ).foregroundStyle(p.colors.ink).opacity(visible ? 1 : 0).offset(offset(g)).padding(
+                p.stroke > 1 ? p.colors.control : p.colors.edgeSoft, lineWidth: p.stroke)
+            ).shadow(color: .black.opacity(0.12), radius: 18, y: 6).foregroundStyle(p.colors.ink).opacity(visible ? 1 : 0).offset(offset(g)).padding(
               drawer == nil ? 12 : 0
             ).accessibilityElement(children: .contain).accessibilityAddTraits(modal ? .isModal : [])
             .onKeyPress(.escape) {
