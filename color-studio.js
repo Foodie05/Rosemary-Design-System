@@ -4,8 +4,8 @@
   const {icon,escape,section,table,note}=window.RosemaryUI;
   const E=window.RosemaryColors;
   const presets=[['紫藤','#614578'],['松针','#24675E'],['海湾','#167F9A'],['暖杏','#B86935'],['莓果','#AD3B72'],['晴蓝','#365CB0']];
-  const labels={'surface-navigation':'导航容器','surface-topbar':'顶栏容器',canvas:'页面底色','surface-group':'内容容器','surface-inset':'内嵌容器','surface-floating':'浮层',primary:'主要操作','primary-soft':'主色柔和容器','secondary-container':'辅助容器','tertiary-container':'点缀容器'};
-  const onRole={'surface-navigation':'on-navigation','surface-topbar':'on-topbar',canvas:'ink','surface-group':'ink','surface-inset':'ink','surface-floating':'ink',primary:'on-primary','primary-soft':'primary','secondary-container':'on-secondary-container','tertiary-container':'on-tertiary-container'};
+  const labels={'navigation-active':'导航选中','surface-navigation':'导航容器','surface-topbar':'顶栏容器',canvas:'页面底色','surface-group':'内容容器','surface-inset':'内嵌容器','surface-floating':'浮层',primary:'主要操作','primary-soft':'主色柔和容器','secondary-container':'辅助容器','tertiary-container':'点缀容器'};
+  const onRole={'navigation-active':'on-navigation-active','surface-navigation':'on-navigation','surface-topbar':'on-topbar',canvas:'ink','surface-group':'ink','surface-inset':'ink','surface-floating':'ink',primary:'on-primary','primary-soft':'primary','secondary-container':'on-secondary-container','tertiary-container':'on-tertiary-container'};
   let cleanup;
   function render(){
     return section('studio','Rosemary 色彩工作台',`<div class="color-studio" data-color-studio><div class="studio-intro"><div><p class="studio-eyebrow">一枚种子色，两种表达</p><h3>让每一层都有合适的颜色。</h3><p>从颜色或图片出发，同时生成深浅主题、容器与内容色，以及可检查的对比度。</p></div><a class="text-link" href="#/colors?section=recipe">了解配色机制${icon('arrow')}</a></div>
@@ -18,7 +18,7 @@
       <details class="studio-tones"><summary>查看完整色调阶</summary><div data-studio-tones></div></details>
       <div class="studio-footer"><p data-studio-checks></p><div class="button-row"><button type="button" class="button primary" data-studio-action="apply">应用到本站</button><button type="button" class="button secondary" data-studio-action="export">导出配色 JSON</button><button type="button" class="button quiet" data-studio-action="reset">恢复 Rosemary</button></div></div></div>`);
   }
-  function recipe(){return section('recipe','从种子色到可用界面',table(['层次','Rosemary 的规则'],[['色彩来源','输入 HEX 或从本机图片提取候选种子色。种子色决定主要色相，不直接当作所有部件的背景。'],['色调阶','采用 Material Color Utilities 的 HCT 色彩计算与 sRGB 色域映射，生成主色、辅助、点缀、表面与导航色调阶。'],['两种配方','沉静使用较克制的彩度；鲜亮提高主辅色彩度与导航色彩强度。浅深主题分别分配明度，仍使用同一组语义角色。'],['容器与内容色','导航、顶栏、页面、内容、内嵌、浮层各有角色；on-* 内容色成对提供。导航比正文更沉，顶栏使用较轻的辅助色调，避免两个区域都压成灰色。'],['状态与对比','危险、成功、警告与信息保留稳定语义色相；每次生成检查文字、焦点和编辑底线对比，低对比组合不交付为通过。'],['应用与导出','预览和应用分开。应用保存在当前浏览器；导出包括深浅角色、表现层角色、色调阶与检查结果，themes 部分保留现有 24-role 结构。']])+note('借鉴计算方法，保留 Rosemary 的设计判断','HCT 来自 <a class="text-link" href="https://github.com/material-foundation/material-color-utilities">Material Color Utilities</a>；容器角色、沉静／鲜亮配方和导航层级由 Rosemary 定义。低彩度种子色使用品牌梅紫色相补足，避免退回整页灰色。颜色对比检查不等同于整站可访问性认证。'))}
+  function recipe(){return section('recipe','从种子色到可用界面',table(['层次','Rosemary 的规则'],[['色彩来源','输入 HEX 或从本机图片提取候选种子色。种子色决定主要色相，不直接当作所有部件的背景。'],['色调阶','采用 Material Color Utilities 的 HCT 色彩计算与 sRGB 色域映射，生成主色、辅助、点缀、表面与导航色调阶。'],['两种配方','沉静使用较克制的彩度；鲜亮增强按钮和小面积重点；两种配方的大面积背景都限制彩度。浅深主题分别分配明度，仍使用同一组语义角色。'],['容器与内容色','导航、顶栏、页面、内容、内嵌、浮层各有角色；on-* 内容色成对提供。导航比正文更沉，顶栏使用较轻的辅助色调，避免两个区域都压成灰色。'],['面积与彩度','页面与内容底色 HCT 彩度不超过 6，导航不超过 10，顶栏不超过 8，柔和与辅助容器不超过 16。图片和 HEX 共用这些上限；鲜亮只增强小面积操作色。'],['状态与对比','危险、成功、警告与信息保留稳定语义色相；每次生成检查文字、焦点和编辑底线对比，低对比组合不交付为通过。'],['应用与导出','预览和应用分开。应用保存在当前浏览器；导出包括深浅角色、表现层角色、色调阶与检查结果，themes 部分保留现有 24-role 结构。']])+note('借鉴计算方法，保留 Rosemary 的设计判断','HCT 来自 <a class="text-link" href="https://github.com/material-foundation/material-color-utilities">Material Color Utilities</a>；容器角色、沉静／鲜亮配方和导航层级由 Rosemary 定义。低彩度种子色使用品牌梅紫色相补足，避免退回整页灰色。颜色对比检查不等同于整站可访问性认证。'))}
   function init(){
     cleanup?.();const root=document.querySelector('[data-color-studio]');if(!root)return;
     const abort=new AbortController();const $=s=>root.querySelector(s);const on=(node,type,fn)=>node.addEventListener(type,fn,{signal:abort.signal});
@@ -34,7 +34,7 @@
     function update(){
       scheme=E.generate(draft);$('#studio-picker').value=draft.seed;$('#studio-hex').value=draft.seed;
       root.querySelectorAll('[data-studio-seed]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.studioSeed.toUpperCase()===draft.seed.toUpperCase())));
-      $('[data-studio-mood-copy]').textContent=draft.mood==='calm'?'柔和色调，适合阅读与长时间专注。':'更鲜明的主辅色，适合表达与有活力的场景。';
+      $('[data-studio-mood-copy]').textContent=draft.mood==='calm'?'柔和色调，适合阅读与长时间专注。':'鲜明的操作色与小面积重点；大面积容器保持柔和。';
       $('[data-studio-previews]').innerHTML=preview('light','浅色')+preview('dark','深色');rolesView();
       const checks=[...scheme.checks.light,...scheme.checks.dark];$('[data-studio-checks]').textContent=`${checks.length} 组对比检查全部通过 · 深浅主题同步生成${scheme.source.neutralFallback?' · 低彩度来源已采用品牌色相':''}`;
       $('#studio-hex').removeAttribute('aria-invalid');

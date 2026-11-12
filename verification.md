@@ -100,3 +100,11 @@ SwiftUI 稳定 Xcode 26.3 [CI 38417217654](https://github.com/Foodie05/Rosemary-
 - 真实滚动：桌面正文 y=960 时导航滚到底继续滚动仍为 960，页面与导航 scrollbar-width 为 none，页面 gutter 为 0；移动导航原生点击、滚到底、Escape 关闭，正文 y=1624 保持不变。案例浮层实测颜色与其本地角色一致。浏览器应用错误记录为 0。
 
 证据：`dynamic-color-review.json`、`screenshots/dynamic-color-studio-light.png`、`screenshots/dynamic-color-studio-dark.png`；研究与复现说明在 `research/dynamic-color-system.md`。此次门户人工读屏、真实移动设备及 Safari／Firefox 视觉检查未执行；操作系统减少动态和强制颜色未切换。SDK CI 的平台结果独立记录，不从门户截图推断。
+
+## 2026-11-12 — 低彩度表面、选中态与共享网格修正
+
+- 大面积表面独立限制彩度，HEX 和图片候选共用配方。额外覆盖 72 个色相 × 3 个输入明度 × 2 种配方，检查两主题的容器彩度上限；原 48 个种子覆盖的 7680 组对比通过，最小文字 5.53:1、状态 3.23:1。每个方案现在有 80 组对比。
+- 新增 navigation-active / on-navigation-active 配对；选中块与导航底色至少 3:1，文字至少 4.5:1。代码、表头与说明改为内嵌表面。
+- 18 章节 × 4 屏宽（390/768/1024/1440）× 2 主题共 144 次浏览器布局检查，无横向溢出；桌面面包屑与正文、品牌区与顶栏中心线均对齐。桌面三列等宽、标题同高，章节标题与首列左边缘一致。见 quiet-surface-review.json。
+- 实际验证 HEX 键盘焦点无整圈轮廓，保留底部提示；搜索框透明无边框和内阴影；输入、方向键选择、回车跳转及原生 Escape 关闭均通过。
+- 荧光绿色 #00FF00 鲜亮配方：页面 rgb(248,251,241)，导航 rgb(221,229,213)，表头／代码 rgb(239,242,232)，选中块 rgb(68,115,57)。这些是实际 DOM 样式读数。

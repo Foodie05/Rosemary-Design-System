@@ -12,8 +12,17 @@ const seeds=['#614578','#24675E','#99502D','#167F9A','#F3CD6B','#365CB0','#AD3B7
 let random=471;
 for(let i=0;i<32;i++){random=(Math.imul(random,1664525)+1013904223)>>>0;seeds.push('#'+(random&0xffffff).toString(16).padStart(6,'0'));}
 let checks=0,minText=Infinity,minState=Infinity;
+const backgroundBudgets={canvas:8,surface:8,raised:8,'surface-navigation':12,'surface-topbar':10,'topbar-control':10,'surface-inset':8,'field-fill':8,'field-hover':8,'primary-soft':16,sun:18,sky:18,'secondary-container':18,'tertiary-container':18,'success-soft':14,'warning-soft':14,'danger-soft':14,'info-soft':14};
+function checkBudgets(generated){for(const c of Object.values(generated.colors))for(const [role,limit] of Object.entries(backgroundBudgets)){
+  const actual=context.window.RosemaryMaterial.Hct.fromInt(context.window.RosemaryMaterial.argbFromHex(c[role])).chroma;
+  assert.ok(actual<=limit,`${generated.config.seed} ${generated.config.mood} ${role} chroma ${actual} exceeds ${limit}`);
+}}
+for(let hue=0;hue<360;hue+=5)for(const tone of [20,50,80])for(const mood of ['calm','vivid']){
+  const M=context.window.RosemaryMaterial;
+  checkBudgets(E.generate({seed:M.hexFromArgb(M.Hct.from(hue,120,tone).toInt()),mood}));
+}
 for(const seed of seeds)for(const mood of ['calm','vivid']){
-  const generated=E.generate({seed,mood});
+  const generated=E.generate({seed,mood});checkBudgets(generated);
   for(const mode of ['light','dark']){
     assert.deepEqual(Object.keys(generated.themes[mode]).sort(),required,'The SDK adapter retains all 24 roles');
     const c=generated.colors[mode];

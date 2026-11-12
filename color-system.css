@@ -151,3 +151,48 @@ html::-webkit-scrollbar,.sidebar::-webkit-scrollbar,#desktop-nav::-webkit-scroll
   .appearance-controls .language-control .rm-select-trigger,.appearance-controls .theme-segments.rm-tabs,.appearance-controls .theme-cycle { border:1px solid ButtonText;background:Canvas;color:ButtonText; }
   .appearance-controls .theme-segments .rm-tab-indicator { background:Canvas;outline:2px solid Highlight;outline-offset:-2px; }
 }
+
+/* Shared page grid: shell, chapter content and footer share the same edges. */
+:root { --content-max:1480px;--grid-gap:24px;--shell-height:76px;--space-section:56px; }
+.page,.home { max-width:var(--content-max); }
+.topbar { height:var(--shell-height);padding-inline:max(var(--space-page),calc((100% - var(--content-max))/2 + var(--space-page))); }
+.sidebar { padding-top:0; }
+.sidebar>.brand-lockup { height:var(--shell-height);min-height:var(--shell-height);padding:0 8px;margin:0; }
+#desktop-nav { padding-top:24px;min-height:0; }
+.split,.three-columns,.component-grid,.two-rules { gap:var(--grid-gap); }
+.section { margin-top:var(--space-section); }
+.section-heading { gap:var(--grid-gap); }
+.nav-link[aria-current=page],.studio-preview-shell>aside .is-current {
+  background:var(--navigation-active);color:var(--on-navigation-active);
+}
+/* Information surfaces use subdued containers, never the source-image accent. */
+.data-table th { background:var(--surface-inset);color:var(--ink); }
+.inline-code,code { background:var(--surface-inset);color:var(--ink); }
+pre code { background:transparent; }
+.note { background:var(--surface-inset);border-left:0;border-radius:10px; }
+/* Editable fields have one integrated focus cue; no detached perimeter ring. */
+input:is(:not([type]),[type=text],[type=email],[type=password],[type=search],[type=url],[type=tel],[type=number]):focus-visible,
+textarea:focus-visible,.field-native:focus-visible,.cd-demo input.cd-input:focus-visible,.cd-demo textarea.cd-input:focus-visible,
+.page[data-page=cases] .cs-input-wrap>input:focus-visible {
+  outline:none;border-color:transparent;border-bottom-color:var(--focus);box-shadow:inset 0 -1px var(--focus);
+}
+/* One continuous search surface, with a quiet input row and no inner frame. */
+.search-dialog { border:0;background:var(--surface-floating);border-radius:16px; }
+.search-dialog-top { margin:12px 12px 0;padding:8px 12px;gap:12px;min-height:60px;border:0;border-radius:10px;background:var(--surface-inset); }
+.search-dialog-top:focus-within { box-shadow:none; }
+.search-dialog #site-search,.search-dialog #site-search:hover,.search-dialog #site-search:focus,.search-dialog #site-search:focus-visible {
+  min-width:0;flex:1;min-height:44px;padding:8px 0;border:0;border-radius:0;background:transparent;box-shadow:none;outline:none;color:var(--ink);
+}
+.search-dialog #site-search::placeholder { color:var(--muted);opacity:1; }
+.search-results { padding:12px; }
+.search-result { padding:14px 12px;gap:14px;border-radius:10px; }
+.search-result:hover,.search-result:focus { background:var(--surface-inset); }
+.search-result:focus-visible { outline:2px solid var(--focus);outline-offset:-2px; }
+.search-help { margin:0 12px;padding:14px 12px;border:0;color:var(--muted); }
+@media(max-width:800px) { :root { --shell-height:66px;--space-section:48px; } }
+@media(max-width:580px) { :root { --shell-height:62px;--grid-gap:16px;--space-section:40px; } .search-dialog-top { margin:8px 8px 0;padding-inline:10px; } }
+@media(forced-colors:active) {
+  .nav-link[aria-current=page],.studio-preview-shell>aside .is-current { background:Highlight;color:HighlightText; }
+  .search-dialog { border:1px solid CanvasText; }
+  input:focus-visible,textarea:focus-visible,.cd-demo input.cd-input:focus-visible,.cd-demo textarea.cd-input:focus-visible { outline:2px solid Highlight;outline-offset:2px; }
+}
