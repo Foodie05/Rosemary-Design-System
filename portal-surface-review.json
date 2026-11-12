@@ -1,0 +1,1159 @@
+{
+  "routes": [
+    {
+      "width": 1440,
+      "groups": [
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "forma-path forma-path-featured",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "forma-path forma-path-case",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "forma-path ",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "forma-path ",
+          "shadow": "none"
+        }
+      ],
+      "overflow": false,
+      "route": "#/overview",
+      "theme": "light",
+      "title": "让每一款 Rosemary 产品，清楚、可靠、彼此一致。"
+    },
+    {
+      "width": 1440,
+      "groups": [
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule avoid",
+          "shadow": "none"
+        }
+      ],
+      "overflow": false,
+      "route": "#/philosophy",
+      "theme": "light",
+      "title": "品牌定位与设计原则"
+    },
+    {
+      "width": 1440,
+      "groups": [
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule avoid",
+          "shadow": "none"
+        }
+      ],
+      "overflow": false,
+      "route": "#/identity",
+      "theme": "light",
+      "title": "正式 Logo 与品牌资产"
+    },
+    {
+      "width": 1440,
+      "groups": [
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "subbrand-brief",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule avoid",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        }
+      ],
+      "overflow": false,
+      "route": "#/subbrand",
+      "theme": "light",
+      "title": "每一款软件，从同一套品牌规则开始"
+    },
+    {
+      "width": 1440,
+      "groups": [
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule avoid",
+          "shadow": "none"
+        }
+      ],
+      "overflow": false,
+      "route": "#/colors",
+      "theme": "light",
+      "title": "色彩角色与主题映射"
+    },
+    {
+      "width": 1440,
+      "groups": [
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule avoid",
+          "shadow": "none"
+        }
+      ],
+      "overflow": false,
+      "route": "#/typography",
+      "theme": "light",
+      "title": "字体、字号与阅读规则"
+    },
+    {
+      "width": 1440,
+      "groups": [
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule avoid",
+          "shadow": "none"
+        }
+      ],
+      "overflow": false,
+      "route": "#/layout",
+      "theme": "light",
+      "title": "布局、间距与视觉层级"
+    },
+    {
+      "width": 1440,
+      "groups": [
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule avoid",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule avoid",
+          "shadow": "none"
+        }
+      ],
+      "overflow": false,
+      "route": "#/icons",
+      "theme": "light",
+      "title": "Rosemary SVG 图标库"
+    },
+    {
+      "width": 1440,
+      "groups": [
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule avoid",
+          "shadow": "none"
+        }
+      ],
+      "overflow": false,
+      "route": "#/components",
+      "theme": "light",
+      "title": "组件规范"
+    },
+    {
+      "width": 1440,
+      "groups": [
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "cs-app cs-theme-lilt",
+          "shadow": "none"
+        }
+      ],
+      "overflow": false,
+      "route": "#/cases",
+      "theme": "light",
+      "title": "把规范放进真实的页面"
+    },
+    {
+      "width": 1440,
+      "groups": [
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule avoid",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule avoid",
+          "shadow": "none"
+        }
+      ],
+      "overflow": false,
+      "route": "#/loading",
+      "theme": "light",
+      "title": "加载与异步反馈"
+    },
+    {
+      "width": 1440,
+      "groups": [
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule avoid",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule avoid",
+          "shadow": "none"
+        }
+      ],
+      "overflow": false,
+      "route": "#/motion",
+      "theme": "light",
+      "title": "得体、有识别度的动效"
+    },
+    {
+      "width": 1440,
+      "groups": [
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule avoid",
+          "shadow": "none"
+        }
+      ],
+      "overflow": false,
+      "route": "#/patterns",
+      "theme": "light",
+      "title": "跨产品交互流程"
+    },
+    {
+      "width": 1440,
+      "groups": [
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule avoid",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule avoid",
+          "shadow": "none"
+        }
+      ],
+      "overflow": false,
+      "route": "#/content",
+      "theme": "light",
+      "title": "清楚、准确的界面文案"
+    },
+    {
+      "width": 1440,
+      "groups": [],
+      "overflow": false,
+      "route": "#/accessibility",
+      "theme": "light",
+      "title": "可访问性要求与验证"
+    },
+    {
+      "width": 1440,
+      "groups": [
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule do",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "rule avoid",
+          "shadow": "none"
+        }
+      ],
+      "overflow": false,
+      "route": "#/platforms",
+      "theme": "light",
+      "title": "平台适配与国际化"
+    },
+    {
+      "width": 1440,
+      "groups": [
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "sdk-platform",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "sdk-platform",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "sdk-platform",
+          "shadow": "none"
+        },
+        {
+          "border": "rgba(0, 0, 0, 0)",
+          "class": "sdk-platform",
+          "shadow": "none"
+        }
+      ],
+      "overflow": false,
+      "route": "#/sdk",
+      "theme": "light",
+      "title": "把 Rosemary 接入产品"
+    },
+    {
+      "width": 1440,
+      "groups": [],
+      "overflow": false,
+      "route": "#/governance",
+      "theme": "light",
+      "title": "规范覆盖、资源与维护"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/overview",
+      "theme": "dark",
+      "title": "让每一款 Rosemary 产品，清楚、可靠、彼此一致。"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/philosophy",
+      "theme": "dark",
+      "title": "品牌定位与设计原则"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/identity",
+      "theme": "dark",
+      "title": "正式 Logo 与品牌资产"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/subbrand",
+      "theme": "dark",
+      "title": "每一款软件，从同一套品牌规则开始"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/colors",
+      "theme": "dark",
+      "title": "色彩角色与主题映射"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/typography",
+      "theme": "dark",
+      "title": "字体、字号与阅读规则"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/layout",
+      "theme": "dark",
+      "title": "布局、间距与视觉层级"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/icons",
+      "theme": "dark",
+      "title": "Rosemary SVG 图标库"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/components",
+      "theme": "dark",
+      "title": "组件规范"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/cases",
+      "theme": "dark",
+      "title": "把规范放进真实的页面"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/loading",
+      "theme": "dark",
+      "title": "加载与异步反馈"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/motion",
+      "theme": "dark",
+      "title": "得体、有识别度的动效"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/patterns",
+      "theme": "dark",
+      "title": "跨产品交互流程"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/content",
+      "theme": "dark",
+      "title": "清楚、准确的界面文案"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/accessibility",
+      "theme": "dark",
+      "title": "可访问性要求与验证"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/platforms",
+      "theme": "dark",
+      "title": "平台适配与国际化"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/sdk",
+      "theme": "dark",
+      "title": "把 Rosemary 接入产品"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "route": "#/governance",
+      "theme": "dark",
+      "title": "规范覆盖、资源与维护"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/overview",
+      "theme": "dark",
+      "title": "让每一款 Rosemary 产品，清楚、可靠、彼此一致。"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/philosophy",
+      "theme": "dark",
+      "title": "品牌定位与设计原则"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/identity",
+      "theme": "dark",
+      "title": "正式 Logo 与品牌资产"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/subbrand",
+      "theme": "dark",
+      "title": "每一款软件，从同一套品牌规则开始"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/colors",
+      "theme": "dark",
+      "title": "色彩角色与主题映射"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/typography",
+      "theme": "dark",
+      "title": "字体、字号与阅读规则"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/layout",
+      "theme": "dark",
+      "title": "布局、间距与视觉层级"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/icons",
+      "theme": "dark",
+      "title": "Rosemary SVG 图标库"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/components",
+      "theme": "dark",
+      "title": "组件规范"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/cases",
+      "theme": "dark",
+      "title": "把规范放进真实的页面"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/loading",
+      "theme": "dark",
+      "title": "加载与异步反馈"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/motion",
+      "theme": "dark",
+      "title": "得体、有识别度的动效"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/patterns",
+      "theme": "dark",
+      "title": "跨产品交互流程"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/content",
+      "theme": "dark",
+      "title": "清楚、准确的界面文案"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/accessibility",
+      "theme": "dark",
+      "title": "可访问性要求与验证"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/platforms",
+      "theme": "dark",
+      "title": "平台适配与国际化"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/sdk",
+      "theme": "dark",
+      "title": "把 Rosemary 接入产品"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/governance",
+      "theme": "dark",
+      "title": "规范覆盖、资源与维护"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/overview",
+      "theme": "light",
+      "title": "让每一款 Rosemary 产品，清楚、可靠、彼此一致。"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/philosophy",
+      "theme": "light",
+      "title": "品牌定位与设计原则"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/identity",
+      "theme": "light",
+      "title": "正式 Logo 与品牌资产"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/subbrand",
+      "theme": "light",
+      "title": "每一款软件，从同一套品牌规则开始"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/colors",
+      "theme": "light",
+      "title": "色彩角色与主题映射"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/typography",
+      "theme": "light",
+      "title": "字体、字号与阅读规则"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/layout",
+      "theme": "light",
+      "title": "布局、间距与视觉层级"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/icons",
+      "theme": "light",
+      "title": "Rosemary SVG 图标库"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/components",
+      "theme": "light",
+      "title": "组件规范"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/cases",
+      "theme": "light",
+      "title": "把规范放进真实的页面"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/loading",
+      "theme": "light",
+      "title": "加载与异步反馈"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/motion",
+      "theme": "light",
+      "title": "得体、有识别度的动效"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/patterns",
+      "theme": "light",
+      "title": "跨产品交互流程"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/content",
+      "theme": "light",
+      "title": "清楚、准确的界面文案"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/accessibility",
+      "theme": "light",
+      "title": "可访问性要求与验证"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/platforms",
+      "theme": "light",
+      "title": "平台适配与国际化"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/sdk",
+      "theme": "light",
+      "title": "把 Rosemary 接入产品"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "route": "#/governance",
+      "theme": "light",
+      "title": "规范覆盖、资源与维护"
+    }
+  ],
+  "scroll": [
+    {
+      "test": "desktop navigation bottom",
+      "before": {
+        "max": 159,
+        "nav": 0,
+        "y": 900
+      },
+      "after": {
+        "max": 159,
+        "nav": 159.5,
+        "y": 900
+      }
+    },
+    {
+      "test": "sidebar brand area",
+      "before": {
+        "max": 159,
+        "nav": 159.5,
+        "y": 900
+      },
+      "after": {
+        "max": 159,
+        "nav": 159.5,
+        "y": 900
+      }
+    },
+    {
+      "test": "sidebar footer area",
+      "before": {
+        "max": 159,
+        "nav": 159.5,
+        "y": 900
+      },
+      "after": {
+        "max": 159,
+        "nav": 159.5,
+        "y": 900
+      }
+    },
+    {
+      "test": "desktop navigation top",
+      "before": {
+        "max": 159,
+        "nav": 0,
+        "y": 900
+      },
+      "after": {
+        "max": 159,
+        "nav": 0,
+        "y": 900
+      }
+    },
+    {
+      "test": "main content remains scrollable",
+      "before": {
+        "max": 159,
+        "nav": 0,
+        "y": 900
+      },
+      "after": {
+        "max": 159,
+        "nav": 0,
+        "y": 1800
+      }
+    },
+    {
+      "test": "mobile native pointer and boundary scroll",
+      "before": {
+        "y": 1624
+      },
+      "open": {
+        "locked": "hidden",
+        "open": true,
+        "y": 1624
+      },
+      "after": {
+        "open": false,
+        "y": 1624
+      }
+    }
+  ],
+  "surfaces": [
+    {
+      "background": "rgb(255, 255, 255)",
+      "selector": ".surface-example",
+      "shadow": "none"
+    },
+    {
+      "background": "color(srgb 0.954784 0.947686 0.968902)",
+      "selector": ".surface-example-inset",
+      "shadow": "none"
+    },
+    {
+      "background": "rgb(255, 255, 255)",
+      "selector": ".surface-example-float",
+      "shadow": "color(srgb 0.188235 0.168627 0.231373 / 0.05) 0px 3px 8px 0px, color(srgb 0.188235 0.168627 0.231373 / 0.1) 0px 14px 36px 0px"
+    }
+  ],
+  "interactions": [
+    {
+      "focus": "name",
+      "locked": "hidden",
+      "open": true,
+      "test": "drawer opened"
+    },
+    {
+      "locked": "visible",
+      "open": false,
+      "test": "drawer closed"
+    },
+    {
+      "expanded": "false",
+      "focus": "combobox",
+      "popupHidden": true,
+      "test": "select escape dismissal"
+    }
+  ],
+  "components": [
+    {
+      "component": "button",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "link",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "iconButton",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "input",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "textarea",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "select",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "search",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "checkbox",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "radio",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "switch",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "slider",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "date",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "upload",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "tabs",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "breadcrumb",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "pagination",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "menu",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "stepper",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "tooltip",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "popover",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "dialog",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "drawer",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "toast",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "alert",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "empty",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "skeleton",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "loading",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "progress",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "card",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "list",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "table",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "badge",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    },
+    {
+      "component": "avatar",
+      "overflow": false,
+      "previews": 1,
+      "width": 375
+    }
+  ],
+  "cases": [
+    {
+      "background": "rgb(56, 44, 35)",
+      "case": "歌曲播放",
+      "overflow": false,
+      "primary": "#F2BC92"
+    },
+    {
+      "background": "rgb(37, 33, 45)",
+      "case": "登录与注册",
+      "overflow": false,
+      "primary": "#CDB5EA"
+    },
+    {
+      "background": "rgb(33, 59, 51)",
+      "case": "用户管理",
+      "overflow": false,
+      "primary": "#97D5C2"
+    },
+    {
+      "background": "rgb(37, 33, 45)",
+      "case": "搜索界面",
+      "overflow": false,
+      "primary": "#CDB5EA"
+    }
+  ],
+  "diagnostics": [
+    {
+      "test": "mobile modal navigation",
+      "before": {
+        "y": 1800
+      },
+      "open": {
+        "locked": "hidden",
+        "navTop": 280,
+        "open": true,
+        "y": 1374.5
+      },
+      "after": {
+        "locked": "visible",
+        "open": false,
+        "y": 1374.5
+      }
+    },
+    {
+      "test": "mobile modal corrected",
+      "before": {
+        "y": 1624
+      },
+      "open": {
+        "locked": "hidden",
+        "open": true,
+        "y": 1198.5
+      },
+      "scroll": {
+        "nav": 280,
+        "y": 1198.5
+      },
+      "after": {
+        "open": false,
+        "y": 1198.5
+      }
+    }
+  ],
+  "consoleErrors": [],
+  "status": "passed",
+  "reviewDate": "2026-11-12",
+  "environment": "Chromium through CUA, production-equivalent self-contained HTML",
+  "limits": [
+    "Safari, Firefox, real mobile hardware and manual screen-reader checks not run",
+    "Reduced-motion transitions verified by lifecycle test; OS preference not toggled",
+    "Forced-colors rules reviewed statically; OS forced-colors rendering not exercised"
+  ],
+  "diagnosticNote": "Locator click auto-scroll moved the document before the handler. The native pointer and real boundary-scroll check preserves scrollY exactly; locator diagnostics are not counted as passing behavior checks."
+}

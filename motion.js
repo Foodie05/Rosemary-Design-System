@@ -22,6 +22,7 @@
     cancel(element);
     element.dataset.motionKind = kind;
     if (reduced.matches || !element.animate) return null;
+    if (element.matches('.cd-menu-panel,.cd-popover,.cd-tooltip,.cd-dialog,.cd-toast')) return surface(element);
     const duration = kind === 'page' ? token('page',220) : token('state',180);
     const frames = kind === 'page'
       ? [{opacity:currentOpacity ?? .35,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}]
@@ -31,6 +32,29 @@
     const release = () => { if (active.get(element) === animation) active.delete(element); };
     animation.addEventListener('finish',release,{once:true});
     animation.addEventListener('cancel',release,{once:true});
+    return animation;
+  }
+
+  // Snapshot before cancellation so a rapid reversal starts at the visible frame.
+  function surface(element, {open=true, kind='popover', onFinish} = {}) {
+    if (!element?.isConnected) return null;
+    const previous = active.get(element);
+    const current = previous ? getComputedStyle(element) : null;
+    const from = current ? {opacity:current.opacity,transform:current.transform} : null;
+    cancel(element);
+    if (reduced.matches || !element.animate) { onFinish?.(); return null; }
+    const offset = kind === 'drawer' ? 'translateX(100%)' : `translateY(${element.dataset.placement === 'above' ? '-4px' : '4px'})`;
+    const rest = {opacity:1,transform:'translate(0)'};
+    const edge = {opacity:0,transform:offset};
+    const animation = element.animate([from || (open ? edge : rest),open ? rest : edge],{
+      duration:open ? token('enter',220) : token('exit',140),easing:easing(),fill:'both'
+    });
+    active.set(element,animation);
+    animation.addEventListener('finish',()=>{
+      if (active.get(element)!==animation) return;
+      active.delete(element);onFinish?.();animation.cancel();
+    },{once:true});
+    animation.addEventListener('cancel',()=>{if(active.get(element)===animation)active.delete(element);},{once:true});
     return animation;
   }
 
@@ -166,7 +190,7 @@
     }
   }
   reduced.addEventListener('change',()=>{
-    if (reduced.matches) for (const element of [...active.keys()]) cancel(element);
+    if (reduced.matches) for (const animation of [...active.values()]) animation.finish();
   });
-  window.RosemaryMotion = {reduced,enter,bindTabs,bindRadioGroup:(group,options={})=>bindTabs(group,{...options,selectionRole:'radio'}),progress,cancel,cancelTree};
+  window.RosemaryMotion = {reduced,enter,surface,bindTabs,bindRadioGroup:(group,options={})=>bindTabs(group,{...options,selectionRole:'radio'}),progress,cancel,cancelTree};
 })();
