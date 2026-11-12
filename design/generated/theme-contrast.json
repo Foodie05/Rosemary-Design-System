@@ -4,337 +4,337 @@
       "foreground": "ink",
       "background": "canvas",
       "target": 4.5,
-      "ratio": 16.227993157447262
+      "ratio": 16.22799316
     },
     {
       "foreground": "muted",
       "background": "canvas",
       "target": 4.5,
-      "ratio": 8.833320105003507
+      "ratio": 8.83332011
     },
     {
       "foreground": "ink",
       "background": "surface",
       "target": 4.5,
-      "ratio": 17.104280611027182
+      "ratio": 17.10428061
     },
     {
       "foreground": "muted",
       "background": "surface",
       "target": 4.5,
-      "ratio": 9.31030623054409
+      "ratio": 9.31030623
     },
     {
       "foreground": "ink",
       "background": "raised",
       "target": 4.5,
-      "ratio": 17.104280611027182
+      "ratio": 17.10428061
     },
     {
       "foreground": "muted",
       "background": "raised",
       "target": 4.5,
-      "ratio": 9.31030623054409
+      "ratio": 9.31030623
     },
     {
       "foreground": "primary",
       "background": "primary-soft",
       "target": 4.5,
-      "ratio": 5.979496989063533
+      "ratio": 5.97949699
     },
     {
       "foreground": "ink",
       "background": "primary-soft",
       "target": 4.5,
-      "ratio": 14.706100929442973
+      "ratio": 14.70610093
     },
     {
       "foreground": "on-primary",
       "background": "primary",
       "target": 4.5,
-      "ratio": 6.954596252564188
+      "ratio": 6.95459625
     },
     {
       "foreground": "on-sun",
       "background": "sun",
       "target": 4.5,
-      "ratio": 11.33508069704023
+      "ratio": 11.3350807
     },
     {
       "foreground": "on-sky",
       "background": "sky",
       "target": 4.5,
-      "ratio": 11.302697228560222
+      "ratio": 11.30269723
     },
     {
       "foreground": "success",
       "background": "success-soft",
       "target": 4.5,
-      "ratio": 7.063423784959324
+      "ratio": 7.06342378
     },
     {
       "foreground": "warning",
       "background": "warning-soft",
       "target": 4.5,
-      "ratio": 7.592378280669168
+      "ratio": 7.59237828
     },
     {
       "foreground": "danger",
       "background": "danger-soft",
       "target": 4.5,
-      "ratio": 7.011358930662571
+      "ratio": 7.01135893
     },
     {
       "foreground": "on-danger",
       "background": "danger",
       "target": 4.5,
-      "ratio": 7.769579381511407
+      "ratio": 7.76957938
     },
     {
       "foreground": "info",
       "background": "info-soft",
       "target": 4.5,
-      "ratio": 7.014019564263001
+      "ratio": 7.01401956
     },
     {
       "foreground": "on-navigation",
       "background": "surface-navigation",
       "target": 4.5,
-      "ratio": 10.76404517298512
+      "ratio": 10.76404517
     },
     {
       "foreground": "on-navigation-active",
       "background": "navigation-active",
       "target": 4.5,
-      "ratio": 5.592613209334694
+      "ratio": 5.59261321
     },
     {
       "foreground": "navigation-muted",
       "background": "surface-navigation",
       "target": 4.5,
-      "ratio": 7.590468886127111
+      "ratio": 7.59046889
     },
     {
       "foreground": "on-topbar",
       "background": "surface-topbar",
       "target": 4.5,
-      "ratio": 11.939563569846145
+      "ratio": 11.93956357
     },
     {
       "foreground": "on-topbar-muted",
       "background": "surface-topbar",
       "target": 4.5,
-      "ratio": 8.40940145683626
+      "ratio": 8.40940146
     },
     {
       "foreground": "navigation-muted",
       "background": "surface-topbar",
       "target": 4.5,
-      "ratio": 8.408831042124344
+      "ratio": 8.40883104
     },
     {
       "foreground": "ink",
       "background": "surface-group",
       "target": 4.5,
-      "ratio": 17.104280611027182
+      "ratio": 17.10428061
     },
     {
       "foreground": "muted",
       "background": "surface-group",
       "target": 4.5,
-      "ratio": 9.31030623054409
+      "ratio": 9.31030623
     },
     {
       "foreground": "ink",
       "background": "surface-inset",
       "target": 4.5,
-      "ratio": 15.116420939560639
+      "ratio": 15.11642094
     },
     {
       "foreground": "muted",
       "background": "surface-inset",
       "target": 4.5,
-      "ratio": 8.228262343075919
+      "ratio": 8.22826234
     },
     {
       "foreground": "ink",
       "background": "surface-floating",
       "target": 4.5,
-      "ratio": 17.104280611027182
+      "ratio": 17.10428061
     },
     {
       "foreground": "muted",
       "background": "surface-floating",
       "target": 4.5,
-      "ratio": 9.31030623054409
+      "ratio": 9.31030623
     },
     {
       "foreground": "on-topbar",
       "background": "topbar-control",
       "target": 4.5,
-      "ratio": 10.497383236414505
+      "ratio": 10.49738324
     },
     {
       "foreground": "on-topbar-muted",
       "background": "topbar-control",
       "target": 4.5,
-      "ratio": 7.393629538035972
+      "ratio": 7.39362954
     },
     {
       "foreground": "primary",
       "background": "canvas",
       "target": 4.5,
-      "ratio": 6.59829799136126
+      "ratio": 6.59829799
     },
     {
       "foreground": "primary",
       "background": "surface",
       "target": 4.5,
-      "ratio": 6.954596252564188
+      "ratio": 6.95459625
     },
     {
       "foreground": "primary",
       "background": "raised",
       "target": 4.5,
-      "ratio": 6.954596252564188
+      "ratio": 6.95459625
     },
     {
       "foreground": "ink",
       "background": "field-fill",
       "target": 4.5,
-      "ratio": 14.725395350287057
+      "ratio": 14.72539535
     },
     {
       "foreground": "muted",
       "background": "field-fill",
       "target": 4.5,
-      "ratio": 8.015416911987229
+      "ratio": 8.01541691
     },
     {
       "foreground": "ink",
       "background": "field-hover",
       "target": 4.5,
-      "ratio": 13.943460395329536
+      "ratio": 13.9434604
     },
     {
       "foreground": "muted",
       "background": "field-hover",
       "target": 4.5,
-      "ratio": 7.589789313342259
+      "ratio": 7.58978931
     },
     {
       "foreground": "on-secondary-container",
       "background": "secondary-container",
       "target": 4.5,
-      "ratio": 11.302697228560222
+      "ratio": 11.30269723
     },
     {
       "foreground": "on-tertiary-container",
       "background": "tertiary-container",
       "target": 4.5,
-      "ratio": 11.33508069704023
+      "ratio": 11.3350807
     },
     {
       "foreground": "navigation-active",
       "background": "surface-navigation",
       "target": 3,
-      "ratio": 4.563605178620223
+      "ratio": 4.56360518
     },
     {
       "foreground": "control",
       "background": "canvas",
       "target": 3,
-      "ratio": 5.119649444970042
+      "ratio": 5.11964944
     },
     {
       "foreground": "control",
       "background": "surface",
       "target": 3,
-      "ratio": 5.396102887600183
+      "ratio": 5.39610289
     },
     {
       "foreground": "control",
       "background": "raised",
       "target": 3,
-      "ratio": 5.396102887600183
+      "ratio": 5.39610289
     },
     {
       "foreground": "field-line",
       "background": "field-fill",
       "target": 3,
-      "ratio": 4.645605984709484
+      "ratio": 4.64560598
     },
     {
       "foreground": "field-line",
       "background": "canvas",
       "target": 3,
-      "ratio": 5.119649444970042
+      "ratio": 5.11964944
     },
     {
       "foreground": "field-line",
       "background": "surface-inset",
       "target": 3,
-      "ratio": 4.768967753578291
+      "ratio": 4.76896775
     },
     {
       "foreground": "field-line-hover",
       "background": "field-hover",
       "target": 3,
-      "ratio": 5.695991431332164
+      "ratio": 5.69599143
     },
     {
       "foreground": "focus",
       "background": "canvas",
       "target": 3,
-      "ratio": 8.88637670554724
+      "ratio": 8.88637671
     },
     {
       "foreground": "focus",
       "background": "raised",
       "target": 3,
-      "ratio": 9.366227808471963
+      "ratio": 9.36622781
     },
     {
       "foreground": "focus",
       "background": "surface-group",
       "target": 3,
-      "ratio": 9.366227808471963
+      "ratio": 9.36622781
     },
     {
       "foreground": "focus",
       "background": "surface-inset",
       "target": 3,
-      "ratio": 8.277684714632265
+      "ratio": 8.27768471
     },
     {
       "foreground": "focus",
       "background": "surface-floating",
       "target": 3,
-      "ratio": 9.366227808471963
+      "ratio": 9.36622781
     },
     {
       "foreground": "focus",
       "background": "field-fill",
       "target": 3,
-      "ratio": 8.063560845212281
+      "ratio": 8.06356085
     },
     {
       "foreground": "focus",
       "background": "surface",
       "target": 3,
-      "ratio": 9.366227808471963
+      "ratio": 9.36622781
     },
     {
       "foreground": "focus",
       "background": "surface-navigation",
       "target": 3,
-      "ratio": 7.642896823176561
+      "ratio": 7.64289682
     },
     {
       "foreground": "focus",
       "background": "surface-topbar",
       "target": 3,
-      "ratio": 8.466911467872706
+      "ratio": 8.46691147
     }
   ],
   "dark": [
@@ -342,337 +342,337 @@
       "foreground": "ink",
       "background": "canvas",
       "target": 4.5,
-      "ratio": 14.457049599959303
+      "ratio": 14.4570496
     },
     {
       "foreground": "muted",
       "background": "canvas",
       "target": 4.5,
-      "ratio": 9.054254585157736
+      "ratio": 9.05425459
     },
     {
       "foreground": "ink",
       "background": "surface",
       "target": 4.5,
-      "ratio": 12.350142840544809
+      "ratio": 12.35014284
     },
     {
       "foreground": "muted",
       "background": "surface",
       "target": 4.5,
-      "ratio": 7.734727384602085
+      "ratio": 7.73472738
     },
     {
       "foreground": "ink",
       "background": "raised",
       "target": 4.5,
-      "ratio": 10.214975200839069
+      "ratio": 10.2149752
     },
     {
       "foreground": "muted",
       "background": "raised",
       "target": 4.5,
-      "ratio": 6.397500777041677
+      "ratio": 6.39750078
     },
     {
       "foreground": "primary",
       "background": "primary-soft",
       "target": 4.5,
-      "ratio": 6.519902030433426
+      "ratio": 6.51990203
     },
     {
       "foreground": "ink",
       "background": "primary-soft",
       "target": 4.5,
-      "ratio": 9.836850297246121
+      "ratio": 9.8368503
     },
     {
       "foreground": "on-primary",
       "background": "primary",
       "target": 4.5,
-      "ratio": 8.187989276426297
+      "ratio": 8.18798928
     },
     {
       "foreground": "on-sun",
       "background": "sun",
       "target": 4.5,
-      "ratio": 8.712277170756483
+      "ratio": 8.71227717
     },
     {
       "foreground": "on-sky",
       "background": "sky",
       "target": 4.5,
-      "ratio": 8.61715777301316
+      "ratio": 8.61715777
     },
     {
       "foreground": "success",
       "background": "success-soft",
       "target": 4.5,
-      "ratio": 7.2378470100242644
+      "ratio": 7.23784701
     },
     {
       "foreground": "warning",
       "background": "warning-soft",
       "target": 4.5,
-      "ratio": 7.659237833802531
+      "ratio": 7.65923783
     },
     {
       "foreground": "danger",
       "background": "danger-soft",
       "target": 4.5,
-      "ratio": 7.275610003086349
+      "ratio": 7.27561
     },
     {
       "foreground": "on-danger",
       "background": "danger",
       "target": 4.5,
-      "ratio": 8.973918372637142
+      "ratio": 8.97391837
     },
     {
       "foreground": "info",
       "background": "info-soft",
       "target": 4.5,
-      "ratio": 7.267153347450776
+      "ratio": 7.26715335
     },
     {
       "foreground": "on-navigation",
       "background": "surface-navigation",
       "target": 4.5,
-      "ratio": 14.839981233862558
+      "ratio": 14.83998123
     },
     {
       "foreground": "on-navigation-active",
       "background": "navigation-active",
       "target": 4.5,
-      "ratio": 5.592613209334694
+      "ratio": 5.59261321
     },
     {
       "foreground": "navigation-muted",
       "background": "surface-navigation",
       "target": 4.5,
-      "ratio": 10.077894523473855
+      "ratio": 10.07789452
     },
     {
       "foreground": "on-topbar",
       "background": "surface-topbar",
       "target": 4.5,
-      "ratio": 13.964674879151568
+      "ratio": 13.96467488
     },
     {
       "foreground": "on-topbar-muted",
       "background": "surface-topbar",
       "target": 4.5,
-      "ratio": 9.484317661137858
+      "ratio": 9.48431766
     },
     {
       "foreground": "navigation-muted",
       "background": "surface-topbar",
       "target": 4.5,
-      "ratio": 9.477172340033142
+      "ratio": 9.47717234
     },
     {
       "foreground": "ink",
       "background": "surface-group",
       "target": 4.5,
-      "ratio": 12.350142840544809
+      "ratio": 12.35014284
     },
     {
       "foreground": "muted",
       "background": "surface-group",
       "target": 4.5,
-      "ratio": 7.734727384602085
+      "ratio": 7.73472738
     },
     {
       "foreground": "ink",
       "background": "surface-inset",
       "target": 4.5,
-      "ratio": 11.672336236312475
+      "ratio": 11.67233624
     },
     {
       "foreground": "muted",
       "background": "surface-inset",
       "target": 4.5,
-      "ratio": 7.310226277942114
+      "ratio": 7.31022628
     },
     {
       "foreground": "ink",
       "background": "surface-floating",
       "target": 4.5,
-      "ratio": 10.214975200839069
+      "ratio": 10.2149752
     },
     {
       "foreground": "muted",
       "background": "surface-floating",
       "target": 4.5,
-      "ratio": 6.397500777041677
+      "ratio": 6.39750078
     },
     {
       "foreground": "on-topbar",
       "background": "topbar-control",
       "target": 4.5,
-      "ratio": 10.784746418639667
+      "ratio": 10.78474642
     },
     {
       "foreground": "on-topbar-muted",
       "background": "topbar-control",
       "target": 4.5,
-      "ratio": 7.324621719758356
+      "ratio": 7.32462172
     },
     {
       "foreground": "primary",
       "background": "canvas",
       "target": 4.5,
-      "ratio": 9.582187813434508
+      "ratio": 9.58218781
     },
     {
       "foreground": "primary",
       "background": "surface",
       "target": 4.5,
-      "ratio": 8.185721948493352
+      "ratio": 8.18572195
     },
     {
       "foreground": "primary",
       "background": "raised",
       "target": 4.5,
-      "ratio": 6.770524663918382
+      "ratio": 6.77052466
     },
     {
       "foreground": "ink",
       "background": "field-fill",
       "target": 4.5,
-      "ratio": 10.861004986010585
+      "ratio": 10.86100499
     },
     {
       "foreground": "muted",
       "background": "field-fill",
       "target": 4.5,
-      "ratio": 6.802100491810182
+      "ratio": 6.80210049
     },
     {
       "foreground": "ink",
       "background": "field-hover",
       "target": 4.5,
-      "ratio": 9.874063442666252
+      "ratio": 9.87406344
     },
     {
       "foreground": "muted",
       "background": "field-hover",
       "target": 4.5,
-      "ratio": 6.183992354854407
+      "ratio": 6.18399235
     },
     {
       "foreground": "on-secondary-container",
       "background": "secondary-container",
       "target": 4.5,
-      "ratio": 8.61715777301316
+      "ratio": 8.61715777
     },
     {
       "foreground": "on-tertiary-container",
       "background": "tertiary-container",
       "target": 4.5,
-      "ratio": 8.712277170756483
+      "ratio": 8.71227717
     },
     {
       "foreground": "navigation-active",
       "background": "surface-navigation",
       "target": 3,
-      "ratio": 3.2518109374109634
+      "ratio": 3.25181094
     },
     {
       "foreground": "control",
       "background": "canvas",
       "target": 3,
-      "ratio": 7.153893068306239
+      "ratio": 7.15389307
     },
     {
       "foreground": "control",
       "background": "surface",
       "target": 3,
-      "ratio": 6.111316188595918
+      "ratio": 6.11131619
     },
     {
       "foreground": "control",
       "background": "raised",
       "target": 3,
-      "ratio": 5.0547547600866265
+      "ratio": 5.05475476
     },
     {
       "foreground": "field-line",
       "background": "field-fill",
       "target": 3,
-      "ratio": 5.374434648441639
+      "ratio": 5.37443465
     },
     {
       "foreground": "field-line",
       "background": "canvas",
       "target": 3,
-      "ratio": 7.153893068306239
+      "ratio": 7.15389307
     },
     {
       "foreground": "field-line",
       "background": "surface-inset",
       "target": 3,
-      "ratio": 5.775911932413278
+      "ratio": 5.77591193
     },
     {
       "foreground": "field-line-hover",
       "background": "field-hover",
       "target": 3,
-      "ratio": 6.183992354854407
+      "ratio": 6.18399235
     },
     {
       "foreground": "focus",
       "background": "canvas",
       "target": 3,
-      "ratio": 11.993781270791741
+      "ratio": 11.99378127
     },
     {
       "foreground": "focus",
       "background": "raised",
       "target": 3,
-      "ratio": 8.474493872233143
+      "ratio": 8.47449387
     },
     {
       "foreground": "focus",
       "background": "surface-group",
       "target": 3,
-      "ratio": 10.24586039276963
+      "ratio": 10.24586039
     },
     {
       "foreground": "focus",
       "background": "surface-inset",
       "target": 3,
-      "ratio": 9.683542051198499
+      "ratio": 9.68354205
     },
     {
       "foreground": "focus",
       "background": "surface-floating",
       "target": 3,
-      "ratio": 8.474493872233143
+      "ratio": 8.47449387
     },
     {
       "foreground": "focus",
       "background": "field-fill",
       "target": 3,
-      "ratio": 9.010449696704104
+      "ratio": 9.0104497
     },
     {
       "foreground": "focus",
       "background": "surface",
       "target": 3,
-      "ratio": 10.24586039276963
+      "ratio": 10.24586039
     },
     {
       "foreground": "focus",
       "background": "surface-navigation",
       "target": 3,
-      "ratio": 13.334007315461388
+      "ratio": 13.33400732
     },
     {
       "foreground": "focus",
       "background": "surface-topbar",
       "target": 3,
-      "ratio": 12.539195068726608
+      "ratio": 12.53919507
     }
   ]
 }
