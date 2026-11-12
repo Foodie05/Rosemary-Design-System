@@ -575,3 +575,25 @@ test("field states and long disclosure labels preserve semantic colors and full 
     }
   }
 });
+
+
+test("semantic floating surfaces retain readable paired content in both appearances", async ({page})=>{
+  await page.goto('/');
+  for(const [label,mode] of [['浅色','light'],['深色','dark']]){
+    await page.getByRole('radio',{name:label,exact:true}).check();
+    const colors=defaultThemes[mode];
+    await section(page,'tooltip').getByRole('button').focus();
+    const tip=section(page,'tooltip').getByRole('tooltip');
+    await expect(tip).toBeVisible();
+    await expect(tip).toHaveCSS('background-color',rgb(colors.surfaceFloating));
+    await expect(tip).toHaveCSS('color',rgb(colors.ink));
+    await section(page,'tooltip').getByRole('button').press('Escape');
+    await section(page,'select').getByRole('combobox').click();
+    await expect(section(page,'select').getByRole('listbox')).toHaveCSS('background-color',rgb(colors.surfaceFloating));
+    await section(page,'select').getByRole('listbox').press('Escape');
+    await expect(section(page,'card').getByRole('article')).toHaveCSS('background-color',rgb(colors.surfaceGroup));
+    await section(page,'input').getByRole('textbox').focus();
+    await expect(section(page,'input').getByRole('textbox')).toHaveCSS('outline-style','none');
+    await expect(section(page,'input').getByRole('textbox')).toHaveCSS('background-color',rgb(colors.fieldFill));
+  }
+});

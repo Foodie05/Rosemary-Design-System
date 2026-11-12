@@ -367,7 +367,7 @@ fun RosemarySelect(
                         Modifier.widthIn(min = 220.dp, max = 340.dp)
                             .heightIn(max = 360.dp)
                             .verticalScroll(rememberScrollState())
-                            .background(c.raised, RoundedCornerShape(rosemaryRadius("input")))
+                            .background(c.surfaceFloating, RoundedCornerShape(rosemaryRadius("input")))
                             .background(c.surfaceInset, RoundedCornerShape(rosemaryRadius("input")))
                             .padding(4.dp)
                             .selectableGroup()
