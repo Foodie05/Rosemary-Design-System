@@ -17,7 +17,7 @@
   ],
   "packageModule": {
     "file": "dist/material-runtime.js",
-    "transformation": "Replace browser global assignment with an ESM default export; algorithm bytes are unchanged.",
-    "sha256": "bc8517614c6aa9eb732f038e58b269a23a1f166cb98249e2a4c266039bcc7dad"
+    "transformation": "Retain upstream copyright and replace browser global assignment with an ESM default export; algorithm bytes are unchanged.",
+    "sha256": "409bf9faf3fa4e00d0863b9bb494c88b0f10e5115d5d34b6f7fbeac99c8cde5b"
   }
 }

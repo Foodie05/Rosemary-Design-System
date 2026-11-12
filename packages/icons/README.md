@@ -1,4 +1,4 @@
-# @rosemary-ui/icons 0.4.2
+# @rosemary-ui/icons 0.5.0
 
 74 functional icons (the original 71 plus `moon`, `theme-system` and `globe`), MIT licensed. Import `iconNames`, `IconName`,
 `iconMarkup`, `iconMetadata`, `iconGeometry`, and `getIconSvg(name)`.

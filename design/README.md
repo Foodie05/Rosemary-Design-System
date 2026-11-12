@@ -1,7 +1,6 @@
 # Rosemary SDK shared contracts
 
-SDK version **0.5.0** implements Forma specification **1.3.0**. `tokens.json`
-and `contracts.json` are authoritative SDK sources. Their JSON Schemas validate
+SDK version **0.5.0** implements Forma specification **1.3.0**. `tokens.json`, `contracts.json`, `color-system.json` and the canonical color recipe are authoritative SDK sources. Their JSON Schemas validate
 the machine-readable structure. The original portal remains a reference, not
 a runtime dependency of the SDK.
 

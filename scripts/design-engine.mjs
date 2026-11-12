@@ -41,7 +41,9 @@ export function validateSource(tokens,contracts) {
   if(tokens.sdkVersion!=='0.5.0'||tokens.specVersion!=='1.3.0')throw new Error('SDK/spec versions must remain distinct');
   if(JSON.stringify(Object.keys(tokens.themes).sort())!==JSON.stringify(['dark','light']))throw new Error('Required modes are light and dark');
   for(const [mode,colors] of Object.entries(tokens.themes)) {
-    const failures=validateContrast(resolveAliases(colors));
+    const resolved=resolveAliases(colors);
+    if(colorRoles.some(role=>resolved[role]!==colorRecipe.generate().colors[mode][role]))throw new Error("Default tokens differ from the canonical color recipe");
+    const failures=validateContrast(resolved);
     if(failures.length)throw new Error(`${mode} contrast: ${JSON.stringify(failures)}`);
   }
   for(const key of ['components']) {

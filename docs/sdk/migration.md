@@ -1,3 +1,5 @@
+> 本页保留历史 prototype → SDK 0.4.2 迁移记录。当前 Forma 1.3.0 / SDK 0.5.0 的 45 色契约及新 API 见 [0.5.0 迁移](0.5.0-migration.md)；旧 24 色说明不适用于新版完整主题。
+
 # 从历史 prototype 迁移到 SDK 0.4.2
 
 Rosemary Forma 规范保持 1.2.0；SDK 0.4.2 是当前组件代码修复版本。历史 `v0.3.0-prototype.2` tag 保留用于比较，不承诺源码兼容。安装固定到 `v0.4.2`，以对应 Release 的实际资产与 SHA256 为准。

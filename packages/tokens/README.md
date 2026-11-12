@@ -1,16 +1,16 @@
-# @rosemary-ui/tokens 0.4.2
+# @rosemary-ui/tokens 0.5.0
 
 > 0.5.0 release candidate implements Forma 1.3.0 with 45 semantic roles and paired scheme imports. See `docs/sdk/0.5.0-migration.md` in the repository. v0.4.2 remains the latest published release; existing historical device evidence below does not establish acceptance for this candidate.
 
 
-Shared Forma 1.2.0 theme roles, component tokens, motion and local date helpers.
+Shared Forma 1.3.0 theme roles, component tokens, motion and local date helpers.
 Import `defaultThemes`, `createTheme`, `resolveTheme`, `validateTheme`,
 `themeCssVariables`, `componentTokens`, `motion` and `metrics` from the package.
 Import CSS from `@rosemary-ui/tokens/css`.
 
 `createTheme(parent, overrides)` merges a local palette with its complete parent.
 Invalid structure/color throws. Call `validateTheme(colors)` for role-pair
-contrast diagnostics; values are never recolored. All 24 opaque sRGB fields are
+contrast diagnostics; values are never recolored. All 45 opaque sRGB fields are
 required for a complete palette. `resolveTheme({mode, systemDark, parent,
 overrides})` supports light/dark/system and inherited palettes. The consumer
 provider observes system changes and exposes contrast diagnostics.

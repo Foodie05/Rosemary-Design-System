@@ -1,3 +1,9 @@
+/* @license
+ * Copyright 2021 Google LLC
+ * Copyright 2024 Google LLC
+ * Licensed under Apache-2.0; see MATERIAL-LICENSE.
+ * Modified by Rosemary: ESM export adapter only.
+ */
 var RosemaryMaterial=(()=>{var gt=Object.defineProperty;var Xt=Object.getOwnPropertyDescriptor;var Jt=Object.getOwnPropertyNames;var $t=Object.prototype.hasOwnProperty;var Zt=(r,t)=>{for(var s in t)gt(r,s,{get:t[s],enumerable:!0})},Qt=(r,t,s,o)=>{if(t&&typeof t=="object"||typeof t=="function")for(let n of Jt(t))!$t.call(r,n)&&n!==s&&gt(r,n,{get:()=>t[n],enumerable:!(o=Xt(t,n))||o.enumerable});return r};var Kt=r=>Qt(gt({},"__esModule",{value:!0}),r);var o0={};Zt(o0,{Hct:()=>O,QuantizerCelebi:()=>lt,Score:()=>N,TonalPalette:()=>ot,argbFromHex:()=>kt,hexFromArgb:()=>qt});/**
  * @license
  * Copyright 2021 Google LLC

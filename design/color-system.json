@@ -36,5 +36,10 @@
     "containChaining": true,
     "scrollbars": "host-platform-policy"
   },
-  "nativeDynamicColors": "Import full paired colors from canonical recipe export; no approximation using platform color generators."
+  "nativeDynamicColors": "Import full paired colors from canonical recipe export; no approximation using platform color generators.",
+  "icons": {
+    "viewBox": 24,
+    "strokeWidth": 1.6,
+    "headerSize": 20
+  }
 }
