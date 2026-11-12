@@ -45,7 +45,7 @@ dependencies {
  debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
 afterEvaluate {
- publishing { publications { create<MavenPublication>("release") { from(components["release"]); artifactId = "rosemary-compose"; pom { name.set("Rosemary Compose"); description.set("Rosemary 1.2 design system for Android Compose"); licenses { license { name.set("MIT"); url.set("https://opensource.org/license/mit") } } } } }; repositories { maven { name = "RosemaryLocal"; url = uri(System.getenv("ROSEMARY_ARTIFACT_ROOT")?.let { "$it/android/maven" } ?: rootProject.layout.buildDirectory.dir("repository").get().asFile) } } }
+ publishing { publications { create<MavenPublication>("release") { from(components["release"]); artifactId = "rosemary-compose"; pom { name.set("Rosemary Compose"); description.set("Rosemary Forma 1.3 design system for Android Compose"); licenses { license { name.set("MIT"); url.set("https://opensource.org/license/mit") } } } } }; repositories { maven { name = "RosemaryLocal"; url = uri(System.getenv("ROSEMARY_ARTIFACT_ROOT")?.let { "$it/android/maven" } ?: rootProject.layout.buildDirectory.dir("repository").get().asFile) } } }
 }
 val localMavenZip = tasks.register<Zip>("localMavenZip") {
  dependsOn("publishReleasePublicationToRosemaryLocalRepository")
