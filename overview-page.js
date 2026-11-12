@@ -41,7 +41,7 @@
         <div class="forma-hero-copy">
           <div class="forma-hero-brand">${brandLockup('forma',{size:64,className:'forma-lockup'})}</div>
           <p class="forma-eyebrow">Rosemary 的设计规范</p>
-          <h1 class="forma-title" tabindex="-1">让每一款 Rosemary 产品，<br>清楚、可靠、彼此一致。</h1>
+          <h1 class="forma-title" tabindex="-1">让每一款 <span class="forma-title-phrase">Rosemary 产品，</span><wbr><span class="forma-title-phrase">清楚、可靠、</span><wbr><span class="forma-title-phrase">彼此一致。</span></h1>
           <p class="forma-lede">Rosemary Forma 汇集品牌、基础、组件和交互规范，帮助设计与开发在不同产品里做出一致、可实现、可访问的界面。</p>
           <div class="forma-actions">
             <a class="button primary" href="#/philosophy">开始使用规范</a>

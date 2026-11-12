@@ -8,7 +8,7 @@ import assert from 'node:assert/strict';
 import {fileURLToPath} from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const context=vm.createContext({window:{}});
-const scripts=['assets-data.js','icon-library.js','component-catalog.js','ui.js','component-demos.js','component-viewer.js','pages.js','overview-page.js','asset-pages.js','component-pages.js','loading-motion-pages.js','reference-pages.js','subbrand-page.js','case-studies-page.js','sdk-page.js'];
+const scripts=['assets-data.js','vendor/material-color-utilities.js','color-engine.js','icon-library.js','component-catalog.js','ui.js','component-demos.js','component-viewer.js','pages.js','color-studio.js','overview-page.js','asset-pages.js','component-pages.js','loading-motion-pages.js','reference-pages.js','subbrand-page.js','case-studies-page.js','sdk-page.js'];
 for(const file of scripts)vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),context,{filename:file});
 const w=context.window;
 assert.equal(w.ROSEMARY_TOKENS.version,'1.2.0');

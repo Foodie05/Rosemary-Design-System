@@ -1,0 +1,18 @@
+{
+  "package": "@material/material-color-utilities",
+  "version": "0.4.0",
+  "license": "Apache-2.0",
+  "source": "https://registry.npmjs.org/@material/material-color-utilities/-/material-color-utilities-0.4.0.tgz",
+  "integrity": "sha512-dlq6VExJReb8dhjj3a/yTigr3ncNwoFmL5Iy2ENtbDX03EmNeOEdZ+vsaGrj7RTuO+mB7L58II4LCsl4NpM8uw==",
+  "sourceSha256": "2f0b759749846357dd2d9ce0e1d5e8071e5b51bda24178b3d24ba75afa7f723d",
+  "bundleSha256": "e175d5035fd4e750cba81a74b59f35fdb2069317d28ea6b17c1807273457e46d",
+  "bundler": "esbuild@0.28.2",
+  "exports": [
+    "Hct",
+    "TonalPalette",
+    "QuantizerCelebi",
+    "Score",
+    "argbFromHex",
+    "hexFromArgb"
+  ]
+}

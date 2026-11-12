@@ -13,11 +13,11 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 ROOT = Path(__file__).resolve().parent
-SCRIPTS = ['assets-data.js', 'icon-library.js', 'component-catalog.js', 'ui.js',
-           'motion.js', 'custom-select.js', 'component-demos.js', 'component-viewer.js', 'pages.js', 'overview-page.js',
+SCRIPTS = ['assets-data.js', 'vendor/material-color-utilities.js', 'color-engine.js', 'icon-library.js', 'component-catalog.js', 'ui.js',
+           'motion.js', 'custom-select.js', 'component-demos.js', 'component-viewer.js', 'pages.js', 'color-studio.js', 'overview-page.js',
            'asset-pages.js', 'component-pages.js', 'loading-motion-pages.js',
            'reference-pages.js', 'subbrand-page.js', 'case-studies-page.js', 'sdk-page.js', 'interaction-lab.js', 'app.js']
-STYLES = ['tokens.css', 'styles.css', 'specifications.css', 'component-demos.css', 'navigation.css', 'custom-select.css', 'brand-lockup.css', 'forma-home.css', 'selection-controls.css', 'subbrand-page.css', 'case-studies-page.css', 'sdk-page.css', 'surfaces.css']
+STYLES = ['tokens.css', 'styles.css', 'specifications.css', 'component-demos.css', 'navigation.css', 'custom-select.css', 'brand-lockup.css', 'forma-home.css', 'selection-controls.css', 'subbrand-page.css', 'case-studies-page.css', 'sdk-page.css', 'surfaces.css', 'color-roles.css', 'color-system.css']
 ICON_COUNT = len(json.loads((ROOT / 'design/icons.json').read_text(encoding='utf-8')))
 ZIP_TIMESTAMP = (2026, 10, 11, 0, 0, 0)
 
@@ -57,6 +57,7 @@ def icon_resources():
 
 
 def build():
+    subprocess.run(['node', str(ROOT/'scripts/generate-portal-colors.mjs'), '--check'],check=True)
     tokens = json.loads((ROOT / 'tokens.json').read_text(encoding='utf-8'))
     guide = (ROOT / 'brand-guide.md').read_text(encoding='utf-8')
     references = (ROOT / 'research/design-system-reference-review.md').read_text(encoding='utf-8')
@@ -112,7 +113,7 @@ def build():
              'assets/rosemary-logo.png', 'assets/logo-source.json', 'design/icons.json', 'research/design-system-reference-review.md',
              'docs/sdk/getting-started.md', 'docs/sdk/migration.md', 'docs/sdk/release-checklist.md',
              'docs/sdk/0.4.1-consistency-review.md', 'docs/sdk/0.4.2-theme-navigation-review.md', 'docs/sdk/flutter-review.md',
-             'tests/browser-check.mjs', 'tests/lab-checks.mjs', 'tests/component-browser-checks.mjs', 'tests/navigation-browser-checks.mjs', 'tests/date-picker-browser-checks.mjs', 'tests/static-check.mjs', 'tests/motion-lifecycle-check.mjs', 'tests/control-surface-check.mjs', 'docs/portal-surface-hierarchy.md', 'research/quiet-controls-review.md', 'quiet-controls-review.json', 'portal-surface-review.json', 'browser-test-report.json', 'local-review-report.json', 'sdk-browser-review.json', 'verification.md']
+             'tests/browser-check.mjs', 'tests/lab-checks.mjs', 'tests/component-browser-checks.mjs', 'tests/navigation-browser-checks.mjs', 'tests/date-picker-browser-checks.mjs', 'tests/static-check.mjs', 'tests/motion-lifecycle-check.mjs', 'tests/control-surface-check.mjs', 'docs/portal-surface-hierarchy.md', 'research/quiet-controls-review.md', 'research/dynamic-color-system.md', 'dynamic-color-review.json', 'quiet-surface-review.json', 'scripts/generate-portal-colors.mjs', 'scripts/vendor-material.mjs', 'vendor/material-color-utilities.json', 'vendor/material-color-utilities.LICENSE', 'vendor/material-color-utilities-0.4.0.tgz', 'quiet-controls-review.json', 'portal-surface-review.json', 'browser-test-report.json', 'local-review-report.json', 'sdk-browser-review.json', 'verification.md']
     names += [str(path.relative_to(ROOT)) for path in sorted((ROOT/'packages/icons/svg').glob('*.svg'))]
     names += [str(path.relative_to(ROOT)) for path in sorted((ROOT/'screenshots').glob('*.png')) if path.name!='failure.png']
     with zipfile.ZipFile(bundle,'w',zipfile.ZIP_DEFLATED) as packaged:
