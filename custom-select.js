@@ -20,10 +20,13 @@
     const previousHidden=select.hidden,previousTabIndex=select.tabIndex;select.hidden=true;select.tabIndex=-1;select.dataset.customSelect='true';
     let cursor=-1,options=[],disposed=false,query='',queryTime=0;
     const enabled=()=>options.map((option,index)=>({option,index})).filter(item=>!item.option.disabled&&!item.option.parentElement.disabled);
-    function close(restore=false) {
+    function close(restore=false,immediate=false) {
       if(opened!==api)return;
       opened=null;button.setAttribute('aria-expanded','false');button.removeAttribute('aria-activedescendant');
-      if(popup.matches(':popover-open'))popup.hidePopover();popup.hidden=true;
+      popup.inert=true;popup.setAttribute('aria-hidden','true');
+      const finish=()=>{if(popup.matches(':popover-open'))popup.hidePopover();popup.hidden=true;};
+      if(immediate||!window.RosemaryMotion?.surface){window.RosemaryMotion?.cancel(popup);finish();}
+      else window.RosemaryMotion.surface(popup,{open:false,onFinish:finish});
       if(restore&&button.isConnected)button.focus({preventScroll:true});
     }
     function position() {
@@ -34,7 +37,8 @@
       const height=Math.min(340,Math.max(96,Math.max(below,above)));
       popup.style.width=width+'px';popup.style.maxHeight=height+'px';
       popup.style.left=Math.max(12,Math.min(box.left,innerWidth-width-12))+'px';
-      popup.style.top=(below>=Math.min(220,above)?Math.min(box.bottom+6,innerHeight-96):Math.max(12,box.top-popup.getBoundingClientRect().height-6))+'px';
+      popup.dataset.placement=below>=Math.min(220,above)?'below':'above';
+      popup.style.top=(popup.dataset.placement==='below'?Math.min(box.bottom+6,innerHeight-96):Math.max(12,box.top-popup.getBoundingClientRect().height-6))+'px';
     }
     function active(index) {
       cursor=index;
@@ -66,7 +70,8 @@
     function open(index) {
       if(button.disabled)return;
       if(opened&&opened!==api)opened.close();
-      sync();opened=api;popup.hidden=false;if(popup.showPopover)popup.showPopover();button.setAttribute('aria-expanded','true');position();
+      sync();opened=api;popup.inert=false;popup.removeAttribute('aria-hidden');popup.hidden=false;if(popup.showPopover)popup.showPopover();button.setAttribute('aria-expanded','true');position();
+      window.RosemaryMotion?.surface(popup);
       active(index??(enabled().some(item=>item.index===select.selectedIndex)?select.selectedIndex:enabled()[0]?.index??-1));
     }
     function commit(index) {
@@ -101,7 +106,7 @@
     on(window,'resize',position);on(document,'scroll',position,{capture:true});on(select,'change',sync);
     labels.forEach(label=>on(label,'click',event=>{if(event.target===label){event.preventDefault();button.focus();}}));
     const observer=new MutationObserver(sync);observer.observe(select,{childList:true,subtree:true,attributes:true,attributeFilter:['disabled','selected','aria-invalid']});
-    const api={button,sync,close,destroy(){if(disposed)return;disposed=true;close();abort.abort();observer.disconnect();popup.remove();wrapper.remove();select.hidden=previousHidden;select.tabIndex=previousTabIndex;delete select.dataset.customSelect;bindings.delete(select);}};
+    const api={button,sync,close,destroy(){if(disposed)return;disposed=true;close(false,true);window.RosemaryMotion?.cancel(popup);abort.abort();observer.disconnect();popup.remove();wrapper.remove();select.hidden=previousHidden;select.tabIndex=previousTabIndex;delete select.dataset.customSelect;bindings.delete(select);}};
     bindings.set(select,api);sync();return api;
   }
   window.RosemarySelect={mountWithin(root){const items=[...root.querySelectorAll('select:not([data-appearance-value])')].map(mount);return()=>items.forEach(item=>item.destroy());},refresh(select){bindings.get(select)?.sync();},control(select){return bindings.get(select)?.button||select;},close(){opened?.close();}};

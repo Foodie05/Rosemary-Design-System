@@ -379,8 +379,20 @@
       case 'menu':
       case 'popover': {
         const trigger = control('disclose'), popup = $('[data-cd-popup]'), disclosure = $('[data-cd-disclosure]');
-        const close = (restore = true) => { popup.hidden = true; trigger.setAttribute('aria-expanded','false'); if (restore) trigger.focus({preventScroll:true}); };
-        act('disclose',() => { const open = popup.hidden; popup.hidden = !open; trigger.setAttribute('aria-expanded',String(open)); if (open) { enter(popup); if (id === 'popover') field('name').focus(); } });
+        let expanded=!popup.hidden;
+        const close = (restore = true) => {
+          if(!expanded)return;
+          expanded=false;trigger.setAttribute('aria-expanded','false');popup.inert=true;popup.setAttribute('aria-hidden','true');
+          if(restore)trigger.focus({preventScroll:true});
+          const finish=()=>{popup.hidden=true;};
+          if(motion?.surface)motion.surface(popup,{open:false,onFinish:finish});else finish();
+        };
+        act('disclose',() => {
+          if(expanded){close();return;}
+          expanded=true;popup.hidden=false;popup.inert=false;popup.removeAttribute('aria-hidden');trigger.setAttribute('aria-expanded','true');
+          if(motion?.surface)motion.surface(popup);else enter(popup);
+          if(id==='popover')field('name').focus({preventScroll:true});
+        });
         on(root,'keydown',event => { if (event.key === 'Escape' && !popup.hidden) { event.preventDefault(); close(); } });
         on(root,'click',event => { if (!disclosure.contains(event.target) && !popup.hidden) close(false); });
         on(disclosure,'focusout',event => { if (event.relatedTarget && !disclosure.contains(event.relatedTarget)) close(false); });
@@ -411,37 +423,22 @@
         const dialog = $('[data-cd-dialog]'), opener = control('open-modal');
         const drawer = id === 'drawer';
         let saved = false;
-        let closePending;
+        let closing=false;
         const closeNow = () => {
-          clear(closePending); closePending = null;
-          delete dialog.dataset.drawerState;
-          if (dialog.open) dialog.close();
+          closing=false;delete dialog.dataset.drawerState;
+          if(dialog.open)dialog.close();
         };
         const closeModal = () => {
-          if (!dialog.open) return;
-          if (!drawer || motion?.reduced?.matches) { closeNow(); return; }
-          clear(closePending);
-          dialog.dataset.drawerState = 'closing';
-          closePending = later(() => {
-            if (dialog.dataset.drawerState === 'closing') closeNow();
-          },190);
+          if(!dialog.open||closing)return;
+          closing=true;dialog.dataset.drawerState='closing';
+          if(motion?.surface)motion.surface(dialog,{open:false,kind:drawer?'drawer':'popover',onFinish:closeNow});else closeNow();
         };
         const openModal = () => {
-          if (dialog.open) {
-            if (drawer && dialog.dataset.drawerState === 'closing') {
-              clear(closePending); closePending = null;
-              dialog.dataset.drawerState = 'open';
-              field('name').focus({preventScroll:true});
-            }
-            return;
-          }
-          saved = false;
-          if (drawer) dialog.dataset.drawerState = 'closed';
-          dialog.showModal();
-          if (drawer) {
-            dialog.getBoundingClientRect();
-            dialog.dataset.drawerState = 'open';
-          } else enter(dialog);
+          if(dialog.open&&!closing)return;
+          if(!dialog.open){saved=false;dialog.showModal();}
+          closing=false;
+          if(drawer)dialog.dataset.drawerState='open';
+          if(motion?.surface)motion.surface(dialog,{kind:drawer?'drawer':'popover'});else enter(dialog);
           field('name').focus({preventScroll:true});
         };
         act('open-modal',openModal);
@@ -459,7 +456,7 @@
           if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
           else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
         });
-        on(dialog,'close',() => { clear(closePending);closePending=null;delete dialog.dataset.drawerState;if (disposed) return; if (!saved) say('已关闭，未提交的草稿仍保留。'); if (opener.isConnected) opener.focus({preventScroll:true}); });
+        on(dialog,'close',() => { closing=false;motion?.cancel(dialog);delete dialog.dataset.drawerState;if (disposed) return; if (!saved) say('已关闭，未提交的草稿仍保留。'); if (opener.isConnected) opener.focus({preventScroll:true}); });
         submit(() => { if (!validName()) return; saved = true; say(`记录「${field('name').value.trim()}」已保存。`); $('.cd-modal-preview > .cd-help').textContent = field('name').value.trim(); closeModal(); });
         break;
       }

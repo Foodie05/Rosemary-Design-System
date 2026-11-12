@@ -54,3 +54,18 @@ SwiftUI 稳定 Xcode 26.3 [CI 38417217654](https://github.com/Foodie05/Rosemary-
 规范版本保持1.2.0。重新生成自包含HTML，静态检查通过：18页面、71图标、33组件规格及独立预览、26组对比度、24语义角色、离线资源和官方Logo哈希。源码入口、本地HTTP自包含HTML与file:离线HTML分别执行10项SDK页面检查，均通过且0运行时异常；检查范围为固定v0.4.1 Release与16个平台资产链接、路由/导航/主题深链接、1440px浅色与375px深色的布局和边界。实际查看桌面安装与窄屏深色主题截图。
 
 本次未重跑历史645项门户矩阵或此前77项针对性操作，不将历史结果计入本次通过数。`sdk-browser-review.json`为本次离线SDK页报告；其他历史报告仍按各自日期解释。Release资产尚未公开抓取，`releaseAssetsFetched:false`；此处是构建与文档浏览器验收，未远端部署。详细证据目录：`/Volumes/MacData/Rosemary/artifacts/portal-0.4.1-consistency-20261015`。
+
+
+## 全站表面层级与滚动边界 · 2026-11-12
+
+新增末位共享 `surfaces.css`，覆盖全部 18 章、33 个组件预览、4 类产品案例、壳层与浮层；独立 404 同步去掉装饰边框和阴影。布局页新增表面关系示例和滚动归属规则。门户表现层别名兼容原有 24 个 SDK 主题角色，不变更 SDK 发布版本或平台 API。
+
+本轮实际执行：
+
+- `python3 -I build.py` 与 `node tests/static-check.mjs`：18 页、74 图标、33 组件规格和独立预览、26 组既有语义色对比、官方 Logo 哈希与离线资源通过。
+- `node tests/motion-lifecycle-check.mjs`：退出中重开、可见帧反转、真实完成、减少动态后的清理和组件卸载通过；已加入门户 CI。
+- CUA Chromium：1440×900、375×812，各 18 页的浅色／深色，共 72 个路由布局检查，标题存在且没有整页横向溢出；另检查 33 个窄屏组件，均只有一个预览且无整页横向溢出。4 类深色案例保留各自语义色板。运行时错误记录为 0。
+- 真实滚动手势：导航顶部／底部、品牌区／页脚区均不移动正文；正文自身仍可滚动。移动导航原生指针打开、滚动到边界、Escape 关闭，正文 scrollY 1624 保持不变，打开时背景 overflow 为 hidden。自动化定位器的点击前自动滚动单列为诊断，不冒充真实用户行为或通过项。
+- 实际操作：抽屉打开后焦点进入名称字段、背景锁定，关闭后解除；下拉 Escape 后收起且焦点保留在 combobox；菜单快速开合后最终展开状态正确。
+
+证据：`portal-surface-review.json`、`screenshots/surface-hierarchy-light.png`、`screenshots/surface-hierarchy-dark.png`。源码 ZIP 包含共享样式、动效回归、说明及本轮报告。此次没有重跑历史全量交互矩阵；Safari、Firefox、真实移动设备、人工读屏未覆盖。减少动态的完成逻辑有状态机测试，强制颜色规则做了静态审查，未切换操作系统偏好进行渲染验收。
