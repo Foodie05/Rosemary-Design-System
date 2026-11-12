@@ -270,3 +270,14 @@ input:disabled,textarea:disabled,.cd-demo :is(input,textarea).cd-input:disabled,
   .switch[aria-checked=true],.cd-demo .cd-switch[aria-checked=true]::before { border-color:Highlight; background:Highlight; }
   .layout-frame,.layout-sidebar,.radius-sample { border-color:CanvasText; }
 }
+
+/* Optical balance: bright fills on a dark canvas paint 1px inside their frame.
+   This changes neither hit bounds nor label position; neutral/text remain un-inset. */
+[data-theme=dark] :is(.button.primary,.button.danger,.cd-demo .cd-primary,.cd-demo .cd-button.cd-danger) {
+  border-color:transparent; background-clip:padding-box;
+}
+@media(forced-colors:active) {
+  :is(.button.primary,.button.danger,.cd-demo .cd-primary,.cd-demo .cd-button.cd-danger) {
+    background-clip:border-box; border-color:ButtonText;
+  }
+}

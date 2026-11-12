@@ -16,6 +16,7 @@ class RosemaryActionSurface extends StatefulWidget {
   final Color? background, foreground, border;
   final bool selected, link, button, enabled, dimWhenDisabled;
   final double? radius;
+  final double backgroundInset;
   final EdgeInsetsGeometry padding;
   final Key? semanticsKey;
   const RosemaryActionSurface({
@@ -33,6 +34,7 @@ class RosemaryActionSurface extends StatefulWidget {
     this.enabled = true,
     this.dimWhenDisabled = true,
     this.radius,
+    this.backgroundInset = 0,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.semanticsKey,
   });
@@ -82,36 +84,57 @@ class _ActionSurfaceState extends State<RosemaryActionSurface> {
           onTapUp: (_) => setState(() => pressed = false),
           onTapCancel: () => setState(() => pressed = false),
           excludeFromSemantics: true,
-          child: AnimatedContainer(
-            duration: rosemaryDuration(context, 'instantFeedback'),
-            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-            padding: widget.padding,
-            decoration: BoxDecoration(
-              color: widget.background ?? Colors.transparent,
-              borderRadius: BorderRadius.circular(
-                widget.radius ?? RosemaryTokens.controlRadius,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Padding(
+                  padding: EdgeInsets.all(widget.backgroundInset),
+                  child: AnimatedContainer(
+                    duration: rosemaryDuration(context, 'instantFeedback'),
+                    decoration: BoxDecoration(
+                      color: widget.background ?? Colors.transparent,
+                      borderRadius: BorderRadius.circular(
+                        (widget.radius ?? RosemaryTokens.controlRadius) -
+                            widget.backgroundInset,
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              border: Border.all(
-                color: focused ? c.focus : widget.border ?? Colors.transparent,
-                width: focused ? 2 : 1,
+              AnimatedContainer(
+                duration: rosemaryDuration(context, 'instantFeedback'),
+                constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                padding: widget.padding,
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(
+                    widget.radius ?? RosemaryTokens.controlRadius,
+                  ),
+                  border: Border.all(
+                    color: focused
+                        ? c.focus
+                        : widget.border ?? Colors.transparent,
+                    width: focused ? 2 : 1,
+                  ),
+                ),
+                child: Opacity(
+                  opacity:
+                      widget.dimWhenDisabled &&
+                          (!widget.enabled ||
+                              (widget.button && widget.onActivate == null))
+                      ? 0.55
+                      : pressed
+                      ? 0.8
+                      : hovered
+                      ? 0.92
+                      : 1,
+                  child: DefaultTextStyle.merge(
+                    style: TextStyle(color: widget.foreground ?? c.ink),
+                    child: widget.child,
+                  ),
+                ),
               ),
-            ),
-            child: Opacity(
-              opacity:
-                  widget.dimWhenDisabled &&
-                      (!widget.enabled ||
-                          (widget.button && widget.onActivate == null))
-                  ? 0.55
-                  : pressed
-                  ? 0.8
-                  : hovered
-                  ? 0.92
-                  : 1,
-              child: DefaultTextStyle.merge(
-                style: TextStyle(color: widget.foreground ?? c.ink),
-                child: widget.child,
-              ),
-            ),
+            ],
           ),
         ),
       ),
@@ -145,6 +168,7 @@ class RosemaryButton extends StatelessWidget {
     final background = switch (variant) {
       RosemaryButtonVariant.primary => c.primary,
       RosemaryButtonVariant.danger => c.danger,
+      RosemaryButtonVariant.secondary => c.surfaceInset,
       _ => Colors.transparent,
     };
     final foreground = switch (variant) {
@@ -161,6 +185,15 @@ class RosemaryButton extends StatelessWidget {
         enabled: enabled && !busy,
         focusNode: focusNode,
         background: background,
+        backgroundInset:
+            c.isDark &&
+                !MediaQuery.highContrastOf(context) &&
+                (variant == RosemaryButtonVariant.primary ||
+                    variant == RosemaryButtonVariant.danger)
+            ? RosemaryTokens
+                  .componentTokens['button']!
+                  .dimensions['darkFillInset']!
+            : 0,
         foreground: foreground,
         border: null,
         child: Row(

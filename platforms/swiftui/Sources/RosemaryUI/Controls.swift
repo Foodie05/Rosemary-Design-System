@@ -16,6 +16,10 @@ public struct RosemaryButtonStyle: ButtonStyle {
     self.variant = variant
     self.showsBusy = showsBusy
   }
+  private var fillInset: CGFloat {
+    p.scheme == .dark && p.stroke == 1 && (variant == .primary || variant == .danger)
+      ? RosemaryNativeMetrics.dimension("button", "darkFillInset") : 0
+  }
   public func makeBody(configuration: Configuration) -> some View {
     configuration.label.rosemaryTypography(.body, weight: .semibold).padding(
       .horizontal, RosemaryNativeMetrics.dimension("button", "paddingInline")
@@ -27,12 +31,12 @@ public struct RosemaryButtonStyle: ButtonStyle {
       variant == .primary
         ? p.colors.onPrimary : variant == .danger ? p.colors.onDanger : p.colors.primary
     )
-    .background(
-      variant == .primary
-        ? p.colors.primary
-        : variant == .danger
-          ? p.colors.danger : variant == .secondary ? p.colors.surfaceInset : .clear
-    )
+    .background {
+      RoundedRectangle(cornerRadius: max(0, RosemaryNativeMetrics.radius("button") - fillInset))
+        .fill(variant == .primary ? p.colors.primary : variant == .danger
+          ? p.colors.danger : variant == .secondary ? p.colors.surfaceInset : .clear)
+        .padding(fillInset)
+    }
     .clipShape(RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("button"))).opacity(
       enabled ? (configuration.isPressed ? 0.75 : 1) : showsBusy ? 1 : 0.45
     )

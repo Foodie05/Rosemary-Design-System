@@ -70,7 +70,8 @@ export const componentTokens={
       "medium": 40,
       "large": 48
     },
-    "paddingInline": 16
+    "paddingInline": 16,
+    "darkFillInset": 1
   },
   "link": {
     "foreground": "ink",

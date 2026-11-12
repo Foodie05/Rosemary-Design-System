@@ -597,3 +597,23 @@ test("semantic floating surfaces retain readable paired content in both appearan
     await expect(section(page,'input').getByRole('textbox')).toHaveCSS('background-color',rgb(colors.fieldFill));
   }
 });
+
+test('button paint correction preserves geometry and follows appearance changes', async ({page})=>{
+  await page.goto('/');
+  const buttons=section(page,'button').locator('.rm-button');
+  const primary=buttons.first();
+  const geometry=()=>buttons.evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return {width:r.width,height:r.height,padding:getComputedStyle(e).padding,lineHeight:getComputedStyle(e).lineHeight}}));
+  const light=await geometry();
+  await expect(primary).toHaveCSS('background-clip','border-box');
+  await page.getByRole('radio',{name:'深色',exact:true}).check();
+  await expect(primary).toHaveCSS('background-clip','padding-box');
+  await expect(buttons.nth(1)).toHaveCSS('background-clip','border-box');
+  expect(await geometry()).toEqual(light);
+  await primary.focus();
+  await expect(primary).toBeFocused();
+  await primary.press('Enter');
+  await expect(page.locator('.gallery-events')).toHaveText('button: true');
+  await page.getByRole('radio',{name:'浅色',exact:true}).check();
+  await expect(primary).toHaveCSS('background-clip','border-box');
+  expect(await geometry()).toEqual(light);
+});

@@ -183,6 +183,7 @@
   --rm-component-button-height-medium: 40px;
   --rm-component-button-height-large: 48px;
   --rm-component-button-padding-inline: 16px;
+  --rm-component-button-dark-fill-inset: 1px;
   --rm-component-link-min-touch-target: 44px;
   --rm-component-icon-button-min-touch-target: 44px;
   --rm-component-input-min-touch-target: 44px;

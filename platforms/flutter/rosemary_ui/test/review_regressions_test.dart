@@ -573,4 +573,80 @@ void main() {
       expect(tester.hasRunningAnimations, isFalse);
     },
   );
+  testWidgets(
+    'optical fills retain equal frames and the full edge hit target',
+    (tester) async {
+      var activations = 0;
+      Future<void> show(RosemaryThemeMode mode, {bool contrast = false}) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: MediaQuery(
+              data: MediaQueryData(highContrast: contrast),
+              child: RosemaryTheme(
+                mode: mode,
+                child: Scaffold(
+                  body: Row(
+                    children: RosemaryButtonVariant.values
+                        .map(
+                          (variant) => RosemaryButton(
+                            key: ValueKey(variant),
+                            label: 'Action',
+                            variant: variant,
+                            onPressed: () => activations++,
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+      }
+
+      await show(RosemaryThemeMode.light);
+      final frames = [
+        for (final v in RosemaryButtonVariant.values)
+          tester.getRect(find.byKey(ValueKey(v))),
+      ];
+      await show(RosemaryThemeMode.dark);
+      for (var i = 0; i < RosemaryButtonVariant.values.length; i++) {
+        final v = RosemaryButtonVariant.values[i];
+        final button = find.byKey(ValueKey(v));
+        final frame = tester.getRect(button);
+        expect(frame, frames[i]);
+        expect(frame.height, greaterThanOrEqualTo(44));
+        final fill = find
+            .descendant(of: button, matching: find.byType(Positioned))
+            .first;
+        final painted = find.descendant(
+          of: fill,
+          matching: find.byType(AnimatedContainer),
+        );
+        final paintRect = tester.getRect(painted);
+        final inset =
+            (v == RosemaryButtonVariant.primary ||
+                v == RosemaryButtonVariant.danger)
+            ? 1.0
+            : 0.0;
+        expect(paintRect, frame.deflate(inset));
+        await tester.tapAt(frame.topLeft + const Offset(.5, .5));
+        await tester.pumpAndSettle();
+      }
+      expect(activations, 4);
+      await show(RosemaryThemeMode.dark, contrast: true);
+      final primary = find.byKey(const ValueKey(RosemaryButtonVariant.primary));
+      final fill = find
+          .descendant(of: primary, matching: find.byType(Positioned))
+          .first;
+      expect(
+        tester.getRect(
+          find.descendant(of: fill, matching: find.byType(AnimatedContainer)),
+        ),
+        tester.getRect(primary),
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

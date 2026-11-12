@@ -169,3 +169,11 @@ Atlassian 的公开正文已直接核对。它将 foundations、components、tok
 2. 以按钮、文本输入、表单、对话框、通知、骨架、Spinner、进度条和导航为第一批完整组件。
 3. 再补响应式导航、平台差异、内容规范和动效 Token。
 4. 最后接入成熟度、测试证据、变更记录和弃用流程，使门户从品牌提案逐步成为可执行的设计系统参考。
+
+## 2026-11-12 补充：按钮尺寸与视觉重量
+
+已读取 Apple Buttons 的官方 Markdown 正文，以及 Fluent 2 Button 使用指导。Apple 建议同组通过样式表达优先级、保持一致尺寸；Fluent 建议一个任务布局有一个主要按钮，次要动作降低视觉重量。这支持统一布局框、文字基线、内边距，移除演示中主按钮专属的最小宽度。
+
+来源：[Apple Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons.md)、[Fluent 2 Button](https://fluent2.microsoft.design/components/web/react/core/button/usage)。
+
+Rosemary 自行采用暗色实心填色内缩 1 个逻辑单位的微调，只改变可见填色，保留点击框、文本与焦点；原生和 Web 统一。该数值不是 Apple、Fluent 或 Material 的规定。高对比模式恢复完整边界。视觉重量分级仍须保留，不能为了“平衡”把次要动作都做成主要动作。

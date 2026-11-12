@@ -49,12 +49,12 @@
 .cd-demo .cd-primary:hover:not(:disabled):not([aria-disabled="true"]) { background: var(--primary); filter: brightness(1.08); }
 .cd-demo .cd-button.cd-danger { background: var(--danger); color: var(--on-danger); border-color: transparent; }
 .cd-demo .cd-button.cd-danger:hover:not(:disabled):not([aria-disabled="true"]) { background: var(--danger); filter: brightness(1.08); }
-.cd-demo .cd-quiet { border-color: transparent; background: transparent; color: var(--primary); padding-inline: 9px; }
+.cd-demo .cd-quiet { border-color: transparent; background: transparent; color: var(--primary); padding-inline: 15px; }
 .cd-demo .cd-button:disabled, .cd-demo .cd-button[aria-disabled="true"]:not([aria-busy="true"]) { opacity: .5; cursor: not-allowed; }
 .cd-demo .cd-button[aria-busy="true"] { cursor: progress; }
 .cd-demo .cd-button[data-cd-size="small"] { min-height: 32px; padding: 6px 12px; font-size: 12px; }
 .cd-demo .cd-button[data-cd-size="large"] { min-height: 48px; padding-inline: 20px; font-size: 15px; }
-.cd-demo .cd-button[data-cd-action="cd-save"] { min-width: 125px; }
+/* Loading preserves its label and intrinsic width; hierarchy never adds width. */
 .cd-demo .cd-icon, .cd-demo .cd-icon-danger { width: 44px; min-width: 44px; min-height: 44px; padding: 10px; flex: 0 0 auto; }
 .cd-demo .cd-icon { color: var(--primary); }
 .cd-demo .cd-icon-danger { color: var(--danger); border-color: var(--border); }

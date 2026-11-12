@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.*
@@ -56,12 +57,22 @@ fun RosemaryButton(
             RosemaryButtonVariant.Danger -> c.onDanger
             else -> c.primary
         }
+    val buttonRadius = rosemaryRadius("button")
+    val fillInset = if (RosemaryTheme.isDark && !RosemaryTheme.highContrast &&
+        (variant == RosemaryButtonVariant.Primary || variant == RosemaryButtonVariant.Danger))
+        rosemaryDimension("button", "darkFillInset") else 0.dp
     Row(
         modifier
             .heightIn(min = rosemaryDimension("input", "minTouchTarget"))
             .rosemaryFocus()
             .clip(RoundedCornerShape(rosemaryRadius("input")))
-            .background(if (enabled) fill else c.border)
+            .drawBehind {
+                val inset = if (enabled) fillInset.toPx() else 0f
+                drawRoundRect(if (enabled) fill else c.border,
+                    topLeft = androidx.compose.ui.geometry.Offset(inset, inset),
+                    size = androidx.compose.ui.geometry.Size((size.width - 2 * inset).coerceAtLeast(0f), (size.height - 2 * inset).coerceAtLeast(0f)),
+                    cornerRadius = androidx.compose.ui.geometry.CornerRadius((buttonRadius.toPx() - inset).coerceAtLeast(0f)))
+            }
             .border(
                 if (variant == RosemaryButtonVariant.Secondary) 1.dp else 0.dp,
                 if (RosemaryTheme.highContrast) c.control else Color.Transparent,

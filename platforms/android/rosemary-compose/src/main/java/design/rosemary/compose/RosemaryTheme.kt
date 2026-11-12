@@ -84,6 +84,9 @@ internal val LocalRosemaryReducedMotion = staticCompositionLocalOf { false }
 private val LocalRosemaryHighContrast = staticCompositionLocalOf { false }
 
 object RosemaryTheme {
+    val isDark: Boolean
+        @Composable get() = LocalRosemaryDark.current
+
     val colors: RosemaryColors
         @Composable get() = LocalRosemaryColors.current
 
