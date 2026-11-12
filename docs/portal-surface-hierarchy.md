@@ -5,10 +5,10 @@ The Forma portal applies one presentation layer to all 18 chapters, component pr
 ## Relationships
 
 - Siblings use alignment and spacing. Ordinary paragraphs and list items do not receive a frame each.
-- Groups use `surface-group` against the page canvas. The navigation uses `surface-navigation` to clarify its separate region.
+- Groups use `surface-group` against the page canvas. The navigation uses `surface-navigation`, always darker than its local canvas in light and dark themes, to clarify its separate region.
 - Nested previews and code use `surface-inset` without another decorative frame or shadow.
 - Detached menus, tooltips, listboxes and notifications use `surface-floating`, a soft edge and `shadow-floating`. Modal surfaces use `shadow-modal` together with focus management and background scroll locking.
-- Required input boundaries, table comparison rules, state colors and focus outlines remain. Forced colors restore system boundaries where tone and shadows cannot communicate a relationship.
+- Text editing uses a soft fill and one neutral accessible baseline. Comboboxes and secondary actions use fill, labels and icons without a complete frame. Table comparison rules, state colors and focus outlines remain. Forced colors restore system boundaries where tone and shadows cannot communicate a relationship.
 
 The aliases are defined in `surfaces.css`, loaded after chapter styles and included in the offline HTML and source ZIP. Product cases recompute aliases from their local semantic palettes; illustrative product-theme swatches retain their explicit colors. Dark elevation uses a lighter surface, quiet edge and dark shadow rather than a pale glow.
 

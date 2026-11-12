@@ -1,7 +1,13 @@
 /* Portal presentation aliases. The shared 24-role SDK theme remains unchanged.
    In-flow groups use tone and space; elevation is reserved for detached surfaces. */
 :root {
-  --surface-navigation: color-mix(in srgb, var(--primary) 3%, var(--surface));
+  --navigation-shade:6%;
+  --navigation-muted:color-mix(in srgb,var(--ink) 12%,var(--muted));
+  --surface-navigation:color-mix(in srgb,#000 var(--navigation-shade),var(--canvas));
+  --field-fill:color-mix(in srgb,var(--ink) 6%,var(--surface));
+  --field-hover:color-mix(in srgb,var(--ink) 9%,var(--surface));
+  --field-line:color-mix(in srgb,var(--ink) 58%,var(--surface));
+  --field-line-hover:color-mix(in srgb,var(--ink) 64%,var(--surface));
   --surface-group: var(--surface);
   --surface-inset: color-mix(in srgb, var(--primary) 3%, var(--canvas));
   --surface-floating: var(--raised);
@@ -10,12 +16,18 @@
   --shadow-modal: 0 8px 24px color-mix(in srgb, var(--ink) 8%, transparent), 0 28px 80px color-mix(in srgb, var(--ink) 14%, transparent);
 }
 .cs-app {
+  --navigation-muted:color-mix(in srgb,var(--ink) 12%,var(--muted));
   --surface-group:var(--surface);
   --surface-inset:color-mix(in srgb,var(--primary) 3%,var(--canvas));
-  --surface-navigation:color-mix(in srgb,var(--primary) 3%,var(--surface));
+  --surface-navigation:color-mix(in srgb,#000 var(--navigation-shade),var(--canvas));
+  --field-fill:color-mix(in srgb,var(--ink) 6%,var(--surface));
+  --field-hover:color-mix(in srgb,var(--ink) 9%,var(--surface));
+  --field-line:color-mix(in srgb,var(--ink) 58%,var(--surface));
+  --field-line-hover:color-mix(in srgb,var(--ink) 64%,var(--surface));
   --surface-floating:var(--surface);
 }
 [data-theme=dark] {
+  --navigation-shade:16%;
   --shadow-floating: 0 3px 8px #0002, 0 16px 40px #0004;
   --shadow-modal: 0 10px 28px #0003, 0 32px 88px #0006;
 }
@@ -27,7 +39,7 @@ html { scrollbar-gutter: stable; }
 .sidebar-foot { border-top-color:transparent; }
 .nav-dialog { background:var(--surface-navigation); overscroll-behavior-y:contain; }
 html:has(dialog:modal) { overflow:hidden; }
-.topbar { border-bottom-color:transparent; box-shadow:0 1px 0 var(--edge-soft); }
+.topbar { background:var(--surface-navigation); border-bottom-color:transparent; box-shadow:none; }
 .page-meta span { border-color:transparent; background:var(--surface-inset); }
 .page-jump { border-color:transparent; background:var(--surface-inset); padding:14px 18px; border-radius:10px; }
 .page-next,.site-footer { border-top-color:var(--edge-soft); }
@@ -132,6 +144,117 @@ pre,.demo-stage,.comparison-preview,.icon-selected-preview,.fold-demo-stage,
   .icon-button,.rm-select-trigger,.rm-select-trigger>.icon,.rm-select-option,
   .page-jump a,.overview-directory-link,.directory-entry,.page[data-page="overview"] .forma-path { transition:none; }
 }
+/* Navigation text receives enough contrast against the deeper shell surface. */
+.sidebar,.topbar,.nav-dialog,
+.page[data-page="cases"] .cs-app-header,.page[data-page="cases"] .cs-music-side,
+.page[data-page="subbrand"] .subbrand-template-nav,
+.page[data-page="subbrand"] .subbrand-template-top,
+.page[data-page="subbrand"] .subbrand-mobile-top,
+.page[data-page="subbrand"] .subbrand-mobile-bottom {
+  --muted:var(--navigation-muted); background:var(--surface-navigation);
+}
+/* Quiet controls: a filled surface is the default, not a four-sided frame.
+   Editable text retains one neutral baseline (SC 1.4.11, minimal text input).
+   Selects/buttons communicate through their labels and familiar icons. */
+input:is(:not([type]),[type=text],[type=email],[type=password],[type=search],[type=url],[type=tel],[type=number]),
+textarea,.field-select,.field-native,.example-field .example-input,
+.friendly-error-draft textarea,.cd-demo .cd-input,
+.page[data-page="cases"] .cs-input-wrap>input {
+  border-width:1px; border-style:solid; border-color:transparent;
+  border-bottom-color:var(--field-line); background:var(--field-fill); box-shadow:none;
+  transition:background-color 120ms var(--ease),border-color 120ms var(--ease);
+}
+input:is(:not([type]),[type=text],[type=email],[type=password],[type=search],[type=url],[type=tel],[type=number]):hover:not(:disabled):not([readonly]),
+textarea:hover:not(:disabled):not([readonly]),.field-native:hover:not(:disabled),
+.cd-demo .cd-input:hover:not(:disabled):not([readonly]),
+.page[data-page="cases"] .cs-input-wrap>input:hover:not(:disabled):not([readonly]) {
+  background:var(--field-hover); border-color:transparent; border-bottom-color:var(--field-line-hover);
+}
+input:is(:not([type]),[type=text],[type=email],[type=password],[type=search],[type=url],[type=tel],[type=number]):focus,
+textarea:focus,.field-native:focus,.cd-demo .cd-input:focus,
+.page[data-page="cases"] .cs-input-wrap>input:focus {
+  border-color:transparent; border-bottom-color:var(--primary); box-shadow:inset 0 -1px var(--primary);
+}
+.rm-select-trigger,.language-control .rm-select-trigger,.theme-control .rm-select-trigger,
+.cd-demo button.cd-input.rm-select-trigger,
+.page[data-page="cases"] .cs-search-field,.page[data-page="cases"] .cs-query-form {
+  border-color:transparent; background:var(--field-fill); box-shadow:none;
+}
+.rm-select-trigger:hover:not(:disabled),.language-control .rm-select-trigger:hover:not(:disabled),
+.rm-select-trigger[aria-expanded=true],.language-control .rm-select-trigger[aria-expanded=true],
+.cd-demo button.cd-input.rm-select-trigger:hover:not(:disabled),.cd-demo button.cd-input.rm-select-trigger[aria-expanded=true] {
+  border-color:transparent; background:var(--field-hover);
+}
+.rm-select-trigger>.icon { color:var(--ink); }
+.page[data-page="cases"] .cs-search-field input,
+.page[data-page="cases"] .cs-query-form input {
+  border:0; background:transparent; box-shadow:none;
+}
+.rm-select-trigger:focus,.cd-demo button.cd-input.rm-select-trigger:focus { border-color:transparent; box-shadow:none; background:var(--field-hover); }
+/* Error information persists in text; a stronger baseline is supplementary. */
+input:is([type=text],[type=email],[type=password],[type=search],[type=url],[type=tel],[type=number])[aria-invalid=true],
+textarea[aria-invalid=true],.cd-demo .cd-input[aria-invalid=true],
+.page[data-page="cases"] .cs-input-wrap>input[aria-invalid=true] {
+  border-width:1px; border-color:transparent; border-bottom-color:var(--danger);
+  background:var(--danger-soft); box-shadow:inset 0 -1px var(--danger);
+}
+.rm-select-trigger[aria-invalid=true],.language-control .rm-select-trigger[aria-invalid=true],
+.cd-demo button.cd-input.rm-select-trigger[aria-invalid=true] {
+  border-color:transparent; background:var(--danger-soft); box-shadow:inset 0 -2px var(--danger);
+}
+input[readonly],textarea[readonly],.cd-demo :is(input,textarea).cd-input[readonly],
+.page[data-page="cases"] .cs-input-wrap>input[readonly] {
+  border-color:transparent; background:var(--surface-inset); box-shadow:none;
+}
+input:disabled,textarea:disabled,.cd-demo :is(input,textarea).cd-input:disabled,
+.page[data-page="cases"] .cs-input-wrap>input:disabled,
+.rm-select-trigger:disabled,.language-control .rm-select-trigger:disabled,
+.cd-demo button.cd-input.rm-select-trigger:disabled {
+  border-color:transparent; background:var(--surface-inset); color:var(--muted); box-shadow:none;
+}
+/* Secondary actions are tonal; primary/destructive actions retain their solid fill. */
+.button.secondary,.example-button,.icon-action-demo,
+.cd-demo .cd-button:not(.cd-primary):not(.cd-danger):not(.cd-quiet):not(.cd-menu),
+.cd-demo .cd-button.cd-icon[aria-pressed=true],
+.page[data-page="cases"] .cs-suggestion-options button {
+  border-color:transparent; background:var(--field-fill);
+}
+.button.secondary:hover:not(:disabled),.example-button:hover,.icon-action-demo:hover,
+.cd-demo .cd-button:not(.cd-primary):not(.cd-danger):not(.cd-quiet):not(.cd-menu):hover:not(:disabled) {
+  border-color:transparent; background:var(--field-hover);
+}
+.cd-demo .cd-button:active:not(:disabled):not([aria-disabled=true]) { border-color:transparent; }
+.cd-demo .cd-button.cd-icon[aria-pressed=true] { background:var(--primary-soft); color:var(--primary); }
+.file-dropzone,.cd-demo .cd-dropzone { border-color:var(--edge-soft); background:var(--field-fill); }
+.file-dropzone input[type=file]::file-selector-button,.cd-demo .cd-file::file-selector-button {
+  border-color:transparent; background:var(--surface-group);
+}
+.rm-tabs,.motion-tabs,.cd-demo .cd-tabs,
+.page[data-page="cases"] .cs-search-categories.rm-tabs { border-color:transparent; }
+.page[data-page="subbrand"] .subbrand-template-toolbar>span,
+.page[data-page="subbrand"] .subbrand-mobile-search,
+.page[data-page="subbrand"] .subbrand-functional-icon { border-color:transparent; background:var(--field-fill); }
+/* Switches use a solid neutral track, with the thumb providing state and depth. */
+.switch,.cd-demo .cd-switch::before { border-color:transparent; background:var(--field-line); }
+.switch[aria-checked=true],.cd-demo .cd-switch[aria-checked=true]::before { border-color:transparent; background:var(--primary); }
+.layout-frame,.layout-sidebar,.radius-sample,.component-picker-bar,
+.component-preview-notes,.cd-demo .cd-status { border-color:transparent; }
+.layout-sidebar { background:var(--surface-navigation); }
+.radius-sample { background:var(--field-fill); }
+/* Check/radio boundaries are small essential state indicators, kept neutral. */
+:where(.cd-check,.check-row,.release-checklist,.rm-check) input:is([type=checkbox],[type=radio]):not(:checked):not(:indeterminate),
+.page[data-page="cases"] .cs-checkbox-visual,.page[data-page="cases"] .cs-radio-visual {
+  border-color:var(--field-line); background:var(--field-fill);
+}
+.page[data-page="cases"] .cs-check input:checked+.cs-checkbox-visual {
+  background:var(--primary); border-color:var(--primary);
+}
+.page[data-page="cases"] .cs-check input:checked+.cs-radio-visual { border-color:var(--primary); }
+.page[data-page="cases"] .cs-check input[aria-invalid=true]+.cs-checkbox-visual { border-color:var(--danger); }
+@media(prefers-reduced-motion:reduce) {
+  input,textarea,.field-native,.cd-demo .cd-input { transition:none; }
+}
+
 /* Tone and shadows are supplementary; system colors preserve real boundaries. */
 @media(forced-colors:active) {
   .sidebar { border-right:1px solid CanvasText; }
@@ -152,4 +275,24 @@ pre,.demo-stage,.comparison-preview,.icon-selected-preview,.fold-demo-stage,
   .demo-drawer,.rm-select-list,.cd-demo .cd-picker-popup,.cd-demo .cd-menu-panel,
   .cd-demo .cd-popover,.cd-demo .cd-tooltip,.cd-demo .cd-dialog,.cd-demo .cd-toast,
   .surface-example-float { border:1px solid CanvasText; box-shadow:none; }
+}
+
+@media(forced-colors:active) {
+  input:is(:not([type]),[type=text],[type=email],[type=password],[type=search],[type=url],[type=tel],[type=number]),
+  textarea,.field-native,.example-field .example-input,.friendly-error-draft textarea,
+  .cd-demo .cd-input,.page[data-page="cases"] .cs-input-wrap>input,
+  .rm-select-trigger,.language-control .rm-select-trigger,.theme-control .rm-select-trigger,
+  .page[data-page="cases"] .cs-search-field,.page[data-page="cases"] .cs-query-form,
+  .button.secondary,.example-button,.icon-action-demo,
+  .cd-demo .cd-button:not(.cd-primary):not(.cd-danger):not(.cd-quiet):not(.cd-menu) {
+    border:1px solid ButtonText!important; background:Canvas; color:ButtonText; box-shadow:none!important;
+  }
+  input:focus-visible,textarea:focus-visible,.rm-select-trigger:focus-visible,
+  .cd-demo .cd-input:focus-visible { outline:3px solid Highlight; outline-offset:3px; }
+}
+
+@media(forced-colors:active) {
+  .switch,.cd-demo .cd-switch::before { border-color:ButtonText; background:Canvas; }
+  .switch[aria-checked=true],.cd-demo .cd-switch[aria-checked=true]::before { border-color:Highlight; background:Highlight; }
+  .layout-frame,.layout-sidebar,.radius-sample { border-color:CanvasText; }
 }
