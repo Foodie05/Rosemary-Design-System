@@ -142,7 +142,7 @@
     sun: {
       label: '日光',
       category: '生活与媒体',
-      paths: '<circle cx="12" cy="12" r="4"/><path d="M12 1v2m0 18v2M1 12h2m18 0h2M4 4l2 2m12 12 2 2M4 20l2-2M18 6l2-2"/>',
+      paths: '<circle cx="12" cy="12" r="3.5"/><path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.6 5.6 7 7m10 10 1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/>',
       usage: '用于切换明亮主题或表示晴天。'
     },
     lock: {
@@ -436,7 +436,7 @@
     'theme-system': {
       label: '跟随系统',
       category: '状态与隐私',
-      paths: '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><circle cx="12" cy="10.5" r="3.5"/><path d="M12 7v7"/>',
+      paths: '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>',
       usage: '用于让明暗主题跟随设备系统设置；不表示手动切换到浅色或深色。'
     },
     globe: {

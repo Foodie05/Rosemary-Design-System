@@ -10,7 +10,7 @@ The Forma portal applies one presentation layer to all 18 chapters, component pr
 - Detached menus, tooltips, listboxes and notifications use `surface-floating`, a soft edge and `shadow-floating`. Modal surfaces use `shadow-modal` together with focus management and background scroll locking.
 - Text editing uses a soft fill and one neutral accessible baseline. Comboboxes and secondary actions use fill, labels and icons without a complete frame. Table comparison rules, state colors and focus outlines remain. Forced colors restore system boundaries where tone and shadows cannot communicate a relationship.
 
-The aliases are defined in `surfaces.css`, loaded after chapter styles and included in the offline HTML and source ZIP. Product cases recompute aliases from their local semantic palettes; illustrative product-theme swatches retain their explicit colors. Dark elevation uses a lighter surface, quiet edge and dark shadow rather than a pale glow.
+Role values are generated in `color-roles.css` and `color-engine.js`; `surfaces.css` supplies structure and `color-system.css` supplies the workbench and shell. All are included in the offline HTML and source ZIP. Product cases recompute aliases from their local semantic palettes; illustrative product-theme swatches retain their explicit colors. Dark elevation uses a lighter surface, quiet edge and dark shadow rather than a pale glow.
 
 ## Scroll ownership
 

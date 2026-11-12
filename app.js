@@ -80,6 +80,7 @@
     themeSelect.value = preference;
     document.documentElement.dataset.theme = theme;
     document.documentElement.dataset.themePreference = preference;
+    window.RosemaryColors.apply(theme);
     for (const [group,binding] of appearanceBindings) if(group.isConnected) binding.select(preference);
     document.querySelectorAll('[data-theme-cycle]').forEach(button=>{
       const next=themeModes[(themeModes.indexOf(preference)+1)%3];
@@ -89,10 +90,19 @@
       button.innerHTML=icon(themeIcons[preference]);
     });
     document.querySelectorAll('[data-token-value]').forEach(el => {
-      el.textContent = tokens.themes[theme][el.dataset.tokenValue];
+      el.textContent = (window.RosemaryColors.current().themes[theme])[el.dataset.tokenValue];
     });
     updateContrast();
   }
+  document.addEventListener('rosemary:colors-change',()=>{
+    const generated=window.RosemaryColors.current();
+    document.querySelectorAll('[data-token-value]').forEach(node=>{node.textContent=generated.themes[activeTheme()][node.dataset.tokenValue];});
+    document.querySelectorAll('[data-color-role]').forEach(node=>{node.textContent=generated.themes[node.dataset.colorMode][node.dataset.colorRole];});
+    updateContrast();
+  });
+  window.addEventListener('storage',event=>{if(event.key==='rosemary-color-preferences-v1'){
+    try{const value=event.newValue?JSON.parse(event.newValue):{version:1,...window.RosemaryColors.DEFAULT};if(value.version===1)window.RosemaryColors.choose(value,{persist:false});}catch{}
+  }});
   function chooseTheme(mode) {
     if(!themeModes.includes(mode))return;
     preference=mode;
@@ -100,6 +110,7 @@
     applyTheme();
   }
   function mountAppearance() {
+    window.RosemaryColors.paintLocal();
     for(const [group,binding] of appearanceBindings) if(!group.isConnected){binding();appearanceBindings.delete(group);}
     document.querySelectorAll('.theme-segments').forEach(group=>{
       if(appearanceBindings.has(group))return;
@@ -143,6 +154,7 @@
   document.querySelectorAll('.search-icon').forEach(el => { el.innerHTML = icon('search'); });
   document.querySelector('.mobile-menu').innerHTML = icon('menu');
   document.querySelector('.dialog-symbol').innerHTML = icon('pencil');
+  document.querySelectorAll('[data-shell-close]').forEach(node=>node.innerHTML=icon('close'));
   document.getElementById('brand-favicon').href = window.ROSEMARY_LOGO_DATA;
   const onMac = /Mac|iPhone|iPad/.test(navigator.platform);
   document.getElementById('search-shortcut').textContent = onMac ? '⌘ K' : 'Ctrl K';
@@ -163,6 +175,7 @@
     const changed = state.page !== route.slug;
     if (changed) {
       selectsCleanup?.();selectsCleanup=null;
+      window.RosemaryColorStudio.destroy();
       window.RosemaryCases?.destroy();
       window.RosemaryMotion.cancelTree(main);
       window.RosemaryComponentView.destroy();
@@ -216,6 +229,8 @@
     window.RosemaryLabs.init(state.page);
     if(state.page==='components')window.RosemaryComponentView.init();
     if(state.page==='cases')window.RosemaryCases?.init();
+    if(state.page==='colors')window.RosemaryColorStudio.init();
+    window.RosemaryColors.paintLocal(main);
     selectsCleanup=window.RosemarySelect.mountWithin(main);
   }
   window.addEventListener('hashchange', () => renderRoute());
@@ -286,7 +301,7 @@
   function updateContrast() {
     const fg=document.getElementById('contrast-fg'), bg=document.getElementById('contrast-bg');
     if (!fg || !bg) return;
-    const palette=tokens.themes[activeTheme()];
+    const palette=window.RosemaryColors.current().themes[activeTheme()];
     const foreground=palette[fg.value], background=palette[bg.value];
     const preview=document.getElementById('contrast-preview');
     preview.style.color=foreground;
@@ -348,7 +363,7 @@
     setTimeout(()=>URL.revokeObjectURL(url),15000);
   }
   async function copyToken(key) {
-    const value=tokens.themes[activeTheme()][key];
+    const value=window.RosemaryColors.current().themes[activeTheme()][key];
     if (!value) return;
     try { if (!navigator.clipboard) throw new Error('Clipboard unavailable');await navigator.clipboard.writeText(value);notify(`已复制 ${key}：${value}`); }
     catch { notify(`无法自动复制。当前 ${key} 色值：${value}，可从色块下方手动复制。`,'info'); }
@@ -390,7 +405,7 @@
     else if (action==='sync-reset') setSync('reset');
     else if (action==='remove-item') {state.removed=true;updateUndo();document.querySelector('[data-action="undo-remove"]').focus();notify('已从演示列表移除。撤销入口会保持可见。');}
     else if (action==='undo-remove') {state.removed=false;updateUndo();const restored=document.getElementById('undo-item');restored.classList.remove('restored');requestAnimationFrame(()=>restored.classList.add('restored'));document.querySelector('[data-action="remove-item"]').focus();notify('已恢复这条示例。');}
-    else if (action==='download-tokens') downloadFile('rosemary-forma-tokens-v1.2.0.json',JSON.stringify(tokens,null,2),'application/json;charset=utf-8');
+    else if (action==='download-tokens') downloadFile('rosemary-forma-tokens-v1.2.0.json',JSON.stringify({...tokens,themes:window.RosemaryColors.current().themes},null,2),'application/json;charset=utf-8');
     else if (action==='download-guide') downloadFile('rosemary-forma-guide-v1.2.0.md',window.ROSEMARY_GUIDE,'text/markdown;charset=utf-8');
     else if (action==='reset-checklist') {state.checks=Array(8).fill(false);writePreference('rosemary-design-checks-v1',JSON.stringify(state.checks));updateChecklist();}
   });

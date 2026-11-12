@@ -29,6 +29,11 @@
       else window.RosemaryMotion.surface(popup,{open:false,onFinish:finish});
       if(restore&&button.isConnected)button.focus({preventScroll:true});
     }
+    function paintTheme() {
+      const style=getComputedStyle(button);
+      const roles=Object.keys(window.RosemaryColors?.current().colors.light||{});
+      for(const role of roles){const value=style.getPropertyValue('--'+role);if(value)popup.style.setProperty('--'+role,value);}
+    }
     function position() {
       if(opened!==api)return;
       if(!button.isConnected||!button.checkVisibility()){close();return;}
@@ -70,7 +75,7 @@
     function open(index) {
       if(button.disabled)return;
       if(opened&&opened!==api)opened.close();
-      sync();opened=api;popup.inert=false;popup.removeAttribute('aria-hidden');popup.hidden=false;if(popup.showPopover)popup.showPopover();button.setAttribute('aria-expanded','true');position();
+      sync();paintTheme();opened=api;popup.inert=false;popup.removeAttribute('aria-hidden');popup.hidden=false;if(popup.showPopover)popup.showPopover();button.setAttribute('aria-expanded','true');position();
       window.RosemaryMotion?.surface(popup);
       active(index??(enabled().some(item=>item.index===select.selectedIndex)?select.selectedIndex:enabled()[0]?.index??-1));
     }
@@ -106,8 +111,8 @@
     on(window,'resize',position);on(document,'scroll',position,{capture:true});on(select,'change',sync);
     labels.forEach(label=>on(label,'click',event=>{if(event.target===label){event.preventDefault();button.focus();}}));
     const observer=new MutationObserver(sync);observer.observe(select,{childList:true,subtree:true,attributes:true,attributeFilter:['disabled','selected','aria-invalid']});
-    const api={button,sync,close,destroy(){if(disposed)return;disposed=true;close(false,true);window.RosemaryMotion?.cancel(popup);abort.abort();observer.disconnect();popup.remove();wrapper.remove();select.hidden=previousHidden;select.tabIndex=previousTabIndex;delete select.dataset.customSelect;bindings.delete(select);}};
+    const api={button,sync,close,paintTheme,destroy(){if(disposed)return;disposed=true;close(false,true);window.RosemaryMotion?.cancel(popup);abort.abort();observer.disconnect();popup.remove();wrapper.remove();select.hidden=previousHidden;select.tabIndex=previousTabIndex;delete select.dataset.customSelect;bindings.delete(select);}};
     bindings.set(select,api);sync();return api;
   }
-  window.RosemarySelect={mountWithin(root){const items=[...root.querySelectorAll('select:not([data-appearance-value])')].map(mount);return()=>items.forEach(item=>item.destroy());},refresh(select){bindings.get(select)?.sync();},control(select){return bindings.get(select)?.button||select;},close(){opened?.close();}};
+  window.RosemarySelect={refreshAppearance(){opened?.paintTheme();},mountWithin(root){const items=[...root.querySelectorAll('select:not([data-appearance-value])')].map(mount);return()=>items.forEach(item=>item.destroy());},refresh(select){bindings.get(select)?.sync();},control(select){return bindings.get(select)?.button||select;},close(){opened?.close();}};
 })();
