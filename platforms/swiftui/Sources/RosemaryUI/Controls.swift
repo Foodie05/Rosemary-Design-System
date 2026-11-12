@@ -31,14 +31,14 @@ public struct RosemaryButtonStyle: ButtonStyle {
       variant == .primary
         ? p.colors.primary
         : variant == .danger
-          ? p.colors.danger : variant == .secondary ? p.colors.primarySoft : .clear
+          ? p.colors.danger : variant == .secondary ? p.colors.surfaceInset : .clear
     )
     .clipShape(RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("button"))).opacity(
       enabled ? (configuration.isPressed ? 0.75 : 1) : showsBusy ? 1 : 0.45
     )
     .overlay(
       RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("button")).stroke(
-        focused ? p.colors.focus : variant == .secondary ? p.colors.border : .clear,
+        focused ? p.colors.focus : p.stroke > 1 ? p.colors.control : .clear,
         lineWidth: focused ? 2 : p.stroke))
   }
 }

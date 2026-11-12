@@ -162,7 +162,7 @@ class RosemaryButton extends StatelessWidget {
         focusNode: focusNode,
         background: background,
         foreground: foreground,
-        border: variant == RosemaryButtonVariant.secondary ? c.control : null,
+        border: null,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -411,17 +411,33 @@ class _InputState extends State<RosemaryInput> {
             constraints: const BoxConstraints(minHeight: 44),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: c.surface,
+              color: widget.error != null ? c.dangerSoft : c.fieldFill,
               borderRadius: BorderRadius.circular(RosemaryTokens.controlRadius),
-              border: Border.all(
-                color: widget.error != null
-                    ? c.danger
-                    : focused
-                    ? c.focus
-                    : c.control,
-                width: focused ? 2 : 1,
-              ),
+              border: MediaQuery.highContrastOf(context)
+                  ? Border.all(
+                      color: widget.error != null
+                          ? c.danger
+                          : focused
+                          ? c.focus
+                          : c.control,
+                      width: 2,
+                    )
+                  : null,
             ),
+            foregroundDecoration: MediaQuery.highContrastOf(context)
+                ? null
+                : BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: widget.error != null
+                            ? c.danger
+                            : focused
+                            ? c.focus
+                            : c.fieldLine,
+                        width: focused || widget.error != null ? 2 : 1,
+                      ),
+                    ),
+                  ),
             child: Stack(
               children: [
                 if (controller.text.isEmpty && !focused)

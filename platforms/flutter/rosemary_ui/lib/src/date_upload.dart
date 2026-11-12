@@ -331,9 +331,18 @@ class _DateState extends State<RosemaryDate> {
                 explicitChildNodes: true,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: RosemaryThemeData.of(context).surface,
+                    color: RosemaryThemeData.of(context).surfaceFloating,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.12),
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                     border: Border.all(
-                      color: RosemaryThemeData.of(context).control,
+                      color: MediaQuery.highContrastOf(context)
+                          ? RosemaryThemeData.of(context).control
+                          : RosemaryThemeData.of(context).edgeSoft,
                     ),
                     borderRadius: BorderRadius.circular(
                       RosemaryTokens.controlRadius,

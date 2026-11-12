@@ -168,11 +168,11 @@ try {
   await click('[data-action="reset-checklist"]');
   for(const action of ['download-tokens','download-guide','download-logo','download-icons','download-sprite','download-references']){await click(`[data-action="${action}"]`);await delay(180);}
   const downloaded=await readdir(downloads);
-  check('All six resource types are generated', ['rosemary-forma-tokens-v1.2.0.json','rosemary-forma-guide-v1.2.0.md','rosemary-logo.png',`rosemary-icons-${Object.keys(JSON.parse(await readFile(path.join(root,'design/icons.json'),'utf8'))).length}.zip`,'rosemary-icons-sprite.svg','rosemary-reference-review.md'].every(n=>downloaded.includes(n)));
+  check('All six resource types are generated', ['rosemary-forma-tokens-v1.3.0.json','rosemary-forma-guide-v1.3.0.md','rosemary-logo.png',`rosemary-icons-${Object.keys(JSON.parse(await readFile(path.join(root,'design/icons.json'),'utf8'))).length}.zip`,'rosemary-icons-sprite.svg','rosemary-reference-review.md'].every(n=>downloaded.includes(n)));
   const sourceLogo=await readFile(path.join(root,'assets/rosemary-logo.png'));
   const downloadedLogo=await readFile(path.join(downloads,'rosemary-logo.png'));
   check('Downloaded official logo is byte-for-byte identical',createHash('sha256').update(sourceLogo).digest('hex')===createHash('sha256').update(downloadedLogo).digest('hex'));
-  const downloadedTokens=JSON.parse(await readFile(path.join(downloads,'rosemary-forma-tokens-v1.2.0.json'),'utf8'));
+  const downloadedTokens=JSON.parse(await readFile(path.join(downloads,'rosemary-forma-tokens-v1.3.0.json'),'utf8'));
   check('Downloaded tokens preserve both themes',downloadedTokens.themes.light.primary==='#614578'&&downloadedTokens.themes.dark.primary==='#CDB5EA');
   await viewport(1440,1000,'dark');await route('overview');await screenshot('home-dark.png');
   await viewport(375,812,'light');await route('overview');await screenshot('home-mobile.png');

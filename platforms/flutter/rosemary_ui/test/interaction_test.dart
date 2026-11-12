@@ -11,6 +11,80 @@ Widget host(Widget child, {bool reduced = true}) => MaterialApp(
   ),
 );
 void main() {
+  testWidgets(
+    'paired scheme inherits explicit parent appearance and switches modes',
+    (tester) async {
+      final scheme = RosemaryColorScheme(
+        light: RosemaryTokens.light.copyWith(
+          fieldFill: const Color(0xFFEEDDCC),
+        ),
+        dark: RosemaryTokens.dark.copyWith(fieldFill: const Color(0xFF223344)),
+      );
+      RosemaryColors? observed;
+      Widget app(RosemaryThemeMode mode) => MaterialApp(
+        home: RosemaryTheme(
+          mode: mode,
+          child: RosemaryTheme(
+            scheme: scheme,
+            child: Builder(
+              builder: (context) {
+                observed = RosemaryThemeData.of(context).colors;
+                return const SizedBox();
+              },
+            ),
+          ),
+        ),
+      );
+      await tester.pumpWidget(app(RosemaryThemeMode.dark));
+      expect(observed!.fieldFill, scheme.dark.fieldFill);
+      await tester.pumpWidget(app(RosemaryThemeMode.light));
+      expect(observed!.fieldFill, scheme.light.fieldFill);
+    },
+  );
+  test(
+    'paired canonical recipe import preserves all surface/content roles',
+    () {
+      const roles = [
+        'surface-navigation',
+        'surface-topbar',
+        'navigation-active',
+        'on-navigation-active',
+        'field-fill',
+        'surface-group',
+        'surface-floating',
+      ];
+      final light = RosemaryTokens.light.toMap().map(
+        (key, value) => MapEntry(
+          key,
+          '#' + value.toARGB32().toRadixString(16).substring(2).toUpperCase(),
+        ),
+      );
+      final dark = RosemaryTokens.dark.toMap().map(
+        (key, value) => MapEntry(
+          key,
+          '#' + value.toARGB32().toRadixString(16).substring(2).toUpperCase(),
+        ),
+      );
+      final scheme = RosemaryColorScheme.fromJson({
+        'colors': {'light': light, 'dark': dark},
+      });
+      for (final role in roles) {
+        expect(scheme.light.toMap()[role], RosemaryTokens.light.toMap()[role]);
+        expect(scheme.dark.toMap()[role], RosemaryTokens.dark.toMap()[role]);
+      }
+      expect(
+        () => RosemaryColorScheme.fromJson({
+          'themes': {'light': light},
+        }),
+        throwsArgumentError,
+      );
+      expect(
+        () => RosemaryColors.fromHex({...light, 'field-fill': 'transparent'}),
+        throwsArgumentError,
+      );
+    },
+  );
+
   WidgetController.hitTestWarningShouldBeFatal = true;
   test('strict local date/time and shared theme diagnostics', () {
     expect(RosemaryLocalDate.parse('0001-01-01'), RosemaryLocalDate(1, 1, 1));
@@ -45,7 +119,7 @@ void main() {
     );
     for (final palette in [RosemaryTokens.light, RosemaryTokens.dark]) {
       final results = rosemaryValidateTheme(palette);
-      expect(results.length, 22);
+      expect(results.length, 56);
       expect(results.every((d) => d.passes), isTrue);
     }
     expect(
@@ -90,7 +164,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(callbacks, 1);
-    expect(results?.length, 22);
+    expect(results?.length, 56);
   });
   testWidgets('controlled native editing emits once and echoes host value', (
     tester,

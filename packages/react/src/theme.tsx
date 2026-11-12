@@ -17,6 +17,7 @@ import type {
   ContrastDiagnostic,
   RosemaryColors,
   ThemeMode,
+  RosemaryColorScheme,
 } from "@rosemary-ui/tokens";
 export interface RosemaryStrings {
   search: string;
@@ -184,6 +185,7 @@ export interface ThemeProviderProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   mode?: ThemeMode;
   colors?: Partial<RosemaryColors>;
+  scheme?: RosemaryColorScheme;
   direction?: "ltr" | "rtl";
   reducedMotion?: boolean;
   language?: string;
@@ -195,6 +197,7 @@ export function ThemeProvider({
   children,
   mode,
   colors,
+  scheme,
   direction,
   reducedMotion,
   language,
@@ -211,9 +214,9 @@ export function ThemeProvider({
   const palette = useMemo(
     () =>
       createTheme(
-        mode === undefined && parent
+        mode === undefined && parent && !scheme
           ? parent.colors
-          : defaultThemes[
+          : (scheme ?? defaultThemes)[
               effectiveMode === "system"
                 ? dark
                   ? "dark"
@@ -222,7 +225,7 @@ export function ThemeProvider({
             ],
         colors,
       ),
-    [mode, parent, effectiveMode, dark, colors],
+    [mode, parent, effectiveMode, dark, colors, scheme],
   );
   const diagnostics = useMemo(() => validateTheme(palette), [palette]);
   const paletteKey = (

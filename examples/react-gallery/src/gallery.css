@@ -2,13 +2,13 @@ body {
   margin: 0;
 }
 .gallery-shell {
-  max-width: 1200px;
+  max-width: var(--rm-content-max,1480px);
   margin: auto;
   padding: 48px 32px;
 }
 .gallery-hero {
   padding: 32px 0 48px;
-  border-bottom: 1px solid var(--rm-border);
+  border-bottom: 1px solid transparent;
 }
 .gallery-hero > div:first-child {
   display: flex;
@@ -58,11 +58,11 @@ body {
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 32px;
+  gap: 24px var(--rm-layout-gap,24px);
 }
 .gallery-example {
   padding: 30px 0 36px;
-  border-bottom: 1px solid var(--rm-border);
+  border-bottom: 1px solid transparent;
   min-width: 0;
 }
 .gallery-example > header {

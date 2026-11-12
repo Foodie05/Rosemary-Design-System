@@ -412,10 +412,10 @@ public struct RosemaryCard<Content: View>: View {
     VStack(alignment: .leading, spacing: 12) { content }.padding(16).frame(
       maxWidth: .infinity, alignment: .leading
     ).background(
-      p.colors.surface, in: RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("card"))
+      p.colors.surfaceGroup, in: RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("card"))
     ).overlay(
       RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("card")).stroke(
-        p.colors.border, lineWidth: p.stroke)
-    ).foregroundStyle(p.colors.ink)
+        p.stroke > 1 ? p.colors.control : .clear, lineWidth: p.stroke)
+    ).shadow(color: .black.opacity(0.05), radius: 8, y: 2).foregroundStyle(p.colors.ink)
   }
 }

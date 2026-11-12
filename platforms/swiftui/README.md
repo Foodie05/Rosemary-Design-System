@@ -1,5 +1,8 @@
 # RosemaryUI 0.4.2 — SwiftUI
 
+> 0.5.0 release candidate implements Forma 1.3.0 with 45 semantic roles and paired scheme imports. See `docs/sdk/0.5.0-migration.md` in the repository. v0.4.2 remains the latest published release; existing historical device evidence below does not establish acceptance for this candidate.
+
+
 RosemaryUI supports iOS 17+ (Swift tools 5.9+, Swift 5 language mode). The root `Package.swift` exposes product/module `RosemaryUI`; the checked-in sample consumes that product through a local package reference to the repository root. macOS 14 is also declared to allow host-side SwiftPM compilation and model tests. iOS simulator build and UI tests are separate checks.
 
 ```swift

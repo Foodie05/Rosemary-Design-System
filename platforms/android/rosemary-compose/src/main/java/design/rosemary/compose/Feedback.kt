@@ -92,7 +92,8 @@ fun RosemaryDialog(
                         .offset(y = 8.dp * (1 - fraction))
                         .graphicsLayer { alpha = fraction }
                         .verticalScroll(rememberScrollState())
-                        .background(c.raised, RoundedCornerShape(rosemaryRadius("dialog")))
+                        .shadow(12.dp, RoundedCornerShape(rosemaryRadius("dialog")))
+                        .background(c.surfaceFloating, RoundedCornerShape(rosemaryRadius("dialog")))
                         .padding(24.dp)
                         .onPreviewKeyEvent {
                             if (it.type == KeyEventType.KeyDown && it.key == Key.Escape) {
@@ -154,7 +155,7 @@ fun RosemaryDrawer(
                         .fillMaxHeight()
                         .width(width)
                         .offset { IntOffset((width.toPx() * (1 - fraction)).toInt(), 0) }
-                        .background(RosemaryTheme.colors.raised)
+                        .background(RosemaryTheme.colors.surfaceFloating)
                         .verticalScroll(rememberScrollState())
                         .padding(24.dp)
                         .onPreviewKeyEvent {
@@ -485,7 +486,7 @@ fun RosemaryToast(
     Row(
         modifier
             .widthIn(max = 480.dp)
-            .background(RosemaryTheme.colors.raised, RoundedCornerShape(rosemaryRadius("toast")))
+            .background(RosemaryTheme.colors.surfaceFloating, RoundedCornerShape(rosemaryRadius("toast")))
             .border(1.dp, RosemaryTheme.colors.border, RoundedCornerShape(rosemaryRadius("toast")))
             .onFocusChanged { focused = it.hasFocus }
             .focusGroup()

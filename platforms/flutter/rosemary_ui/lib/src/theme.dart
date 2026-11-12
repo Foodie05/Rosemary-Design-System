@@ -5,6 +5,29 @@ import 'generated/rosemary_tokens.dart';
 
 enum RosemaryThemeMode { inherit, system, light, dark }
 
+/// Paired palettes imported without a platform-specific approximation.
+class RosemaryColorScheme {
+  final RosemaryColors light, dark;
+  const RosemaryColorScheme({required this.light, required this.dark});
+  static const defaults = RosemaryColorScheme(
+    light: RosemaryTokens.light,
+    dark: RosemaryTokens.dark,
+  );
+  factory RosemaryColorScheme.fromJson(Map<String, dynamic> document) {
+    final modes = document['colors'] ?? document['themes'] ?? document;
+    if (modes is! Map || modes['light'] is! Map || modes['dark'] is! Map)
+      throw ArgumentError('Expected paired light/dark palettes');
+    return RosemaryColorScheme(
+      light: RosemaryColors.fromHex(
+        Map<String, dynamic>.from(modes['light'] as Map),
+      ),
+      dark: RosemaryColors.fromHex(
+        Map<String, dynamic>.from(modes['dark'] as Map),
+      ),
+    );
+  }
+}
+
 enum RosemaryTone { neutral, info, success, warning, danger }
 
 enum RosemaryDismissReason {
@@ -83,10 +106,12 @@ String rosemaryChinese(String key) =>
 class RosemaryThemeData extends ThemeExtension<RosemaryThemeData> {
   final RosemaryColors colors;
   final bool reduceMotion;
+  final bool isDark;
   final RosemaryStrings strings;
   const RosemaryThemeData({
     required this.colors,
     this.reduceMotion = false,
+    this.isDark = false,
     this.strings = _identity,
   });
   static RosemaryThemeData of(BuildContext context) =>
@@ -117,14 +142,37 @@ class RosemaryThemeData extends ThemeExtension<RosemaryThemeData> {
   Color get info => colors.info;
   Color get infoSoft => colors.infoSoft;
   Color get focus => colors.focus;
-  @override
+  Color get surfaceNavigation => colors.surfaceNavigation;
+  Color get onNavigation => colors.onNavigation;
+  Color get navigationMuted => colors.navigationMuted;
+  Color get navigationActive => colors.navigationActive;
+  Color get onNavigationActive => colors.onNavigationActive;
+  Color get surfaceTopbar => colors.surfaceTopbar;
+  Color get onTopbar => colors.onTopbar;
+  Color get onTopbarMuted => colors.onTopbarMuted;
+  Color get topbarControl => colors.topbarControl;
+  Color get surfaceGroup => colors.surfaceGroup;
+  Color get surfaceInset => colors.surfaceInset;
+  Color get surfaceFloating => colors.surfaceFloating;
+  Color get fieldFill => colors.fieldFill;
+  Color get fieldHover => colors.fieldHover;
+  Color get fieldLine => colors.fieldLine;
+  Color get fieldLineHover => colors.fieldLineHover;
+  Color get edgeSoft => colors.edgeSoft;
+  Color get secondaryContainer => colors.secondaryContainer;
+  Color get onSecondaryContainer => colors.onSecondaryContainer;
+  Color get tertiaryContainer => colors.tertiaryContainer;
+  Color get onTertiaryContainer => colors.onTertiaryContainer;
+
   RosemaryThemeData copyWith({
     RosemaryColors? colors,
     bool? reduceMotion,
+    bool? isDark,
     RosemaryStrings? strings,
   }) => RosemaryThemeData(
     colors: colors ?? this.colors,
     reduceMotion: reduceMotion ?? this.reduceMotion,
+    isDark: isDark ?? this.isDark,
     strings: strings ?? this.strings,
   );
   @override
@@ -134,6 +182,7 @@ class RosemaryThemeData extends ThemeExtension<RosemaryThemeData> {
       : RosemaryThemeData(
           colors: colors.lerp(other.colors, t),
           reduceMotion: t < .5 ? reduceMotion : other.reduceMotion,
+          isDark: t < .5 ? isDark : other.isDark,
           strings: t < .5 ? strings : other.strings,
         );
 }
@@ -190,6 +239,7 @@ class RosemaryTheme extends StatefulWidget {
   final Widget child;
   final RosemaryThemeMode mode;
   final RosemaryColors? colors, highContrastColors;
+  final RosemaryColorScheme? scheme;
   final bool reduceMotion;
   final TextDirection? direction;
   final Locale? locale;
@@ -200,6 +250,7 @@ class RosemaryTheme extends StatefulWidget {
     required this.child,
     this.mode = RosemaryThemeMode.inherit,
     this.colors,
+    this.scheme,
     this.highContrastColors,
     this.reduceMotion = false,
     this.direction,
@@ -227,7 +278,11 @@ class _ThemeState extends State<RosemaryTheme> {
     final dark = switch (mode) {
       RosemaryThemeMode.dark => true,
       RosemaryThemeMode.light => false,
-      _ => MediaQuery.platformBrightnessOf(context) == Brightness.dark,
+      RosemaryThemeMode.inherit =>
+        ancestor?.isDark ??
+            (MediaQuery.platformBrightnessOf(context) == Brightness.dark),
+      RosemaryThemeMode.system =>
+        MediaQuery.platformBrightnessOf(context) == Brightness.dark,
     };
     final effectiveLocale = locale ?? Localizations.maybeLocaleOf(context);
     final palette =
@@ -235,11 +290,13 @@ class _ThemeState extends State<RosemaryTheme> {
             ? widget.highContrastColors
             : null) ??
         colors ??
-        (mode == RosemaryThemeMode.inherit && ancestor != null
+        (mode == RosemaryThemeMode.inherit &&
+                ancestor != null &&
+                widget.scheme == null
             ? ancestor.colors
             : dark
-            ? RosemaryTokens.dark
-            : RosemaryTokens.light);
+            ? (widget.scheme ?? RosemaryColorScheme.defaults).dark
+            : (widget.scheme ?? RosemaryColorScheme.defaults).light);
     final diagnostics = rosemaryValidateTheme(palette);
     final roles = palette.toMap();
     if (previousPalette == null ||
@@ -253,6 +310,7 @@ class _ThemeState extends State<RosemaryTheme> {
     }
     final data = RosemaryThemeData(
       colors: palette,
+      isDark: dark,
       reduceMotion:
           reduceMotion ||
           (ancestor?.reduceMotion ?? false) ||

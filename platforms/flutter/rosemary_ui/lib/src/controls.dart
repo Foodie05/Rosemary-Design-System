@@ -444,12 +444,21 @@ class _SelectState extends State<RosemarySelect> {
                         ),
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                          color: RosemaryThemeData.of(context).surface,
+                          color: RosemaryThemeData.of(context).surfaceFloating,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.12),
+                              blurRadius: 16,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                           borderRadius: BorderRadius.circular(
                             RosemaryTokens.controlRadius,
                           ),
                           border: Border.all(
-                            color: RosemaryThemeData.of(context).control,
+                            color: MediaQuery.highContrastOf(context)
+                                ? RosemaryThemeData.of(context).control
+                                : RosemaryThemeData.of(context).edgeSoft,
                           ),
                         ),
                         child: SingleChildScrollView(
@@ -646,13 +655,15 @@ class _SelectState extends State<RosemarySelect> {
                     ? RosemaryThemeData.of(context).canvas
                     : widget.error != null
                     ? RosemaryThemeData.of(context).dangerSoft
-                    : RosemaryThemeData.of(context).surface,
+                    : RosemaryThemeData.of(context).fieldFill,
                 foreground: widget.enabled
                     ? RosemaryThemeData.of(context).ink
                     : RosemaryThemeData.of(context).muted,
                 border: widget.error != null
                     ? RosemaryThemeData.of(context).danger
-                    : RosemaryThemeData.of(context).control,
+                    : (MediaQuery.highContrastOf(context)
+                          ? RosemaryThemeData.of(context).control
+                          : null),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 12,
                   vertical: 8,

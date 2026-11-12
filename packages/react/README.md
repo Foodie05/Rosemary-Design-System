@@ -1,9 +1,12 @@
-# @rosemary-ui/react 0.4.2
+# @rosemary-ui/react 0.5.0
 
-Rosemary Forma 1.2.0 components for React 18.3.1 and 19.2.8. Install the three supplied tarballs together; packages are not published to a public registry.
+> 0.5.0 release candidate implements Forma 1.3.0 with 45 semantic roles and paired scheme imports. See `docs/sdk/0.5.0-migration.md` in the repository. v0.4.2 remains the latest published release; existing historical device evidence below does not establish acceptance for this candidate.
+
+
+Rosemary Forma 1.3.0 components for React 18.3.1 and 19.2.8. Install the three supplied tarballs together; packages are not published to a public registry.
 
 ```sh
-npm install ./rosemary-ui-tokens-0.4.2.tgz ./rosemary-ui-icons-0.4.2.tgz ./rosemary-ui-react-0.4.2.tgz react@19.2.8 react-dom@19.2.8
+npm install ./rosemary-ui-tokens-0.5.0.tgz ./rosemary-ui-icons-0.5.0.tgz ./rosemary-ui-react-0.5.0.tgz react@19.2.8 react-dom@19.2.8
 ```
 
 ```tsx
@@ -28,7 +31,7 @@ The application owns network calls, persistence, business validation and every p
 
 `RosemaryProvider` (`ThemeProvider` alias) accepts `mode: 'light' | 'dark' | 'system'`, partial `colors`, `direction: 'ltr' | 'rtl'`, `language`, partial `strings`, `reducedMotion`, and `onDiagnostics`. Omitted mode and direction inherit the nearest provider. An explicit mode uses its complete built-in palette; color overrides merge into that palette once. Missing/invalid complete palettes and unsupported colors throw. Contrast failures report foreground/background role, measured ratio and target; colors are never silently changed. In production, supply `onDiagnostics` when accepting user palettes. It reports the initial effective palette and subsequent changes to any of its 24 color values, using the latest callback. Equivalent inline color objects and new callback identities do not repeat the report; updating parent state from the callback is supported.
 
-All 24 roles use camelCase in TypeScript (for example `onPrimary`, `primarySoft`, `successSoft`) and raw role names in the source JSON/CSS (`on-primary`, `primary-soft`, `success-soft`). Complete vigilo light/dark examples live in `design/themes/vigilo.json`; their 44 contrast checks run in `design:check`. Local themes remain independent, and menus, popovers and native dialog top layers inherit their enclosing provider's variables. Keep components inside a provider and import the CSS exactly once.
+All 45 roles use camelCase in TypeScript (for example `onPrimary`, `primarySoft`, `successSoft`) and raw role names in the source JSON/CSS (`on-primary`, `primary-soft`, `success-soft`). Complete vigilo light/dark examples live in `design/themes/vigilo.json`; their 112 contrast checks run in `design:check`. Local themes remain independent, and menus, popovers and native dialog top layers inherit their enclosing provider's variables. Keep components inside a provider and import the CSS exactly once.
 
 System or parent reduced motion always wins over an application `false`. Server rendering chooses light for `system`; hydration reads the actual system preference through `useSyncExternalStore`, without browser access on the server. Explicit light/dark renders deterministically. `language="en"` selects English default strings; other language tags use Chinese defaults, so supply the complete translated string overrides for other languages. `useRosemaryTheme()` exposes the resolved colors, mode, direction, motion preference, language and strings.
 
@@ -94,7 +97,7 @@ On a fresh source checkout, run `pnpm build:shared` before `pnpm test:shared`; t
 
 `pnpm build:react`, `pnpm test:react`, `node scripts/pack-sdk-web.mjs`, and `node scripts/check-react-consumers.mjs` compile, test and independently install the artifacts under both supported React majors. The latter executes SSR and semantic/controlled interaction tests against the installed package, not workspace imports. The gallery's Playwright suite exercises Chromium, Firefox and WebKit, including calendar/focus/motion/RTL and a 390 px viewport. WebKit is not a claim of testing actual Safari. VoiceOver/NVDA/TalkBack, real Safari, real-device touch, and visual review across the last two stable browser majors remain separately tracked manual acceptance work.
 
-This 0.4.0 API replaces the historical private Vite demonstration app; no prior publicly installable Web SDK API existed. Applications must adopt controlled props and the 24-role theme contract instead of importing portal globals/CSS classes.
+This 0.4.0 API replaces the historical private Vite demonstration app; no prior publicly installable Web SDK API existed. Applications must adopt controlled props and the 45-role theme contract instead of importing portal globals/CSS classes.
 
 ## Per-file transfer state
 

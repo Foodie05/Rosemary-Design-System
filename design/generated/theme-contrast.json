@@ -4,133 +4,337 @@
       "foreground": "ink",
       "background": "canvas",
       "target": 4.5,
-      "ratio": 12.83163670542059
+      "ratio": 16.22799316
     },
     {
       "foreground": "muted",
       "background": "canvas",
       "target": 4.5,
-      "ratio": 5.145307858621092
+      "ratio": 8.83332011
     },
     {
       "foreground": "ink",
       "background": "surface",
       "target": 4.5,
-      "ratio": 13.68631141376837
+      "ratio": 17.10428061
     },
     {
       "foreground": "muted",
       "background": "surface",
       "target": 4.5,
-      "ratio": 5.488020529995962
+      "ratio": 9.31030623
     },
     {
       "foreground": "ink",
       "background": "raised",
       "target": 4.5,
-      "ratio": 13.68631141376837
+      "ratio": 17.10428061
     },
     {
       "foreground": "muted",
       "background": "raised",
       "target": 4.5,
-      "ratio": 5.488020529995962
-    },
-    {
-      "foreground": "on-primary",
-      "background": "primary",
-      "target": 4.5,
-      "ratio": 7.982546832820872
+      "ratio": 9.31030623
     },
     {
       "foreground": "primary",
       "background": "primary-soft",
       "target": 4.5,
-      "ratio": 6.256606394882186
+      "ratio": 5.97949699
     },
     {
       "foreground": "ink",
       "background": "primary-soft",
       "target": 4.5,
-      "ratio": 10.727135750918277
+      "ratio": 14.70610093
+    },
+    {
+      "foreground": "on-primary",
+      "background": "primary",
+      "target": 4.5,
+      "ratio": 6.95459625
     },
     {
       "foreground": "on-sun",
       "background": "sun",
       "target": 4.5,
-      "ratio": 6.644427229550004
+      "ratio": 11.3350807
     },
     {
       "foreground": "on-sky",
       "background": "sky",
       "target": 4.5,
-      "ratio": 6.807775381656662
+      "ratio": 11.30269723
     },
     {
       "foreground": "success",
       "background": "success-soft",
       "target": 4.5,
-      "ratio": 5.722169805061696
+      "ratio": 7.06342378
     },
     {
       "foreground": "warning",
       "background": "warning-soft",
       "target": 4.5,
-      "ratio": 5.85601538906081
+      "ratio": 7.59237828
     },
     {
       "foreground": "danger",
       "background": "danger-soft",
       "target": 4.5,
-      "ratio": 5.498220224761084
-    },
-    {
-      "foreground": "info",
-      "background": "info-soft",
-      "target": 4.5,
-      "ratio": 5.716051444544233
+      "ratio": 7.01135893
     },
     {
       "foreground": "on-danger",
       "background": "danger",
       "target": 4.5,
-      "ratio": 6.297513772797236
+      "ratio": 7.76957938
+    },
+    {
+      "foreground": "info",
+      "background": "info-soft",
+      "target": 4.5,
+      "ratio": 7.01401956
+    },
+    {
+      "foreground": "on-navigation",
+      "background": "surface-navigation",
+      "target": 4.5,
+      "ratio": 10.76404517
+    },
+    {
+      "foreground": "on-navigation-active",
+      "background": "navigation-active",
+      "target": 4.5,
+      "ratio": 5.59261321
+    },
+    {
+      "foreground": "navigation-muted",
+      "background": "surface-navigation",
+      "target": 4.5,
+      "ratio": 7.59046889
+    },
+    {
+      "foreground": "on-topbar",
+      "background": "surface-topbar",
+      "target": 4.5,
+      "ratio": 11.93956357
+    },
+    {
+      "foreground": "on-topbar-muted",
+      "background": "surface-topbar",
+      "target": 4.5,
+      "ratio": 8.40940146
+    },
+    {
+      "foreground": "navigation-muted",
+      "background": "surface-topbar",
+      "target": 4.5,
+      "ratio": 8.40883104
+    },
+    {
+      "foreground": "ink",
+      "background": "surface-group",
+      "target": 4.5,
+      "ratio": 17.10428061
+    },
+    {
+      "foreground": "muted",
+      "background": "surface-group",
+      "target": 4.5,
+      "ratio": 9.31030623
+    },
+    {
+      "foreground": "ink",
+      "background": "surface-inset",
+      "target": 4.5,
+      "ratio": 15.11642094
+    },
+    {
+      "foreground": "muted",
+      "background": "surface-inset",
+      "target": 4.5,
+      "ratio": 8.22826234
+    },
+    {
+      "foreground": "ink",
+      "background": "surface-floating",
+      "target": 4.5,
+      "ratio": 17.10428061
+    },
+    {
+      "foreground": "muted",
+      "background": "surface-floating",
+      "target": 4.5,
+      "ratio": 9.31030623
+    },
+    {
+      "foreground": "on-topbar",
+      "background": "topbar-control",
+      "target": 4.5,
+      "ratio": 10.49738324
+    },
+    {
+      "foreground": "on-topbar-muted",
+      "background": "topbar-control",
+      "target": 4.5,
+      "ratio": 7.39362954
+    },
+    {
+      "foreground": "primary",
+      "background": "canvas",
+      "target": 4.5,
+      "ratio": 6.59829799
+    },
+    {
+      "foreground": "primary",
+      "background": "surface",
+      "target": 4.5,
+      "ratio": 6.95459625
+    },
+    {
+      "foreground": "primary",
+      "background": "raised",
+      "target": 4.5,
+      "ratio": 6.95459625
+    },
+    {
+      "foreground": "ink",
+      "background": "field-fill",
+      "target": 4.5,
+      "ratio": 14.72539535
+    },
+    {
+      "foreground": "muted",
+      "background": "field-fill",
+      "target": 4.5,
+      "ratio": 8.01541691
+    },
+    {
+      "foreground": "ink",
+      "background": "field-hover",
+      "target": 4.5,
+      "ratio": 13.9434604
+    },
+    {
+      "foreground": "muted",
+      "background": "field-hover",
+      "target": 4.5,
+      "ratio": 7.58978931
+    },
+    {
+      "foreground": "on-secondary-container",
+      "background": "secondary-container",
+      "target": 4.5,
+      "ratio": 11.30269723
+    },
+    {
+      "foreground": "on-tertiary-container",
+      "background": "tertiary-container",
+      "target": 4.5,
+      "ratio": 11.3350807
+    },
+    {
+      "foreground": "navigation-active",
+      "background": "surface-navigation",
+      "target": 3,
+      "ratio": 4.56360518
     },
     {
       "foreground": "control",
       "background": "canvas",
       "target": 3,
-      "ratio": 3.4384290095990044
+      "ratio": 5.11964944
     },
     {
       "foreground": "control",
       "background": "surface",
       "target": 3,
-      "ratio": 3.667451883174605
+      "ratio": 5.39610289
     },
     {
       "foreground": "control",
       "background": "raised",
       "target": 3,
-      "ratio": 3.667451883174605
+      "ratio": 5.39610289
+    },
+    {
+      "foreground": "field-line",
+      "background": "field-fill",
+      "target": 3,
+      "ratio": 4.64560598
+    },
+    {
+      "foreground": "field-line",
+      "background": "canvas",
+      "target": 3,
+      "ratio": 5.11964944
+    },
+    {
+      "foreground": "field-line",
+      "background": "surface-inset",
+      "target": 3,
+      "ratio": 4.76896775
+    },
+    {
+      "foreground": "field-line-hover",
+      "background": "field-hover",
+      "target": 3,
+      "ratio": 5.69599143
     },
     {
       "foreground": "focus",
       "background": "canvas",
       "target": 3,
-      "ratio": 5.862521757088685
-    },
-    {
-      "foreground": "focus",
-      "background": "surface",
-      "target": 3,
-      "ratio": 6.253005776232216
+      "ratio": 8.88637671
     },
     {
       "foreground": "focus",
       "background": "raised",
       "target": 3,
-      "ratio": 6.253005776232216
+      "ratio": 9.36622781
+    },
+    {
+      "foreground": "focus",
+      "background": "surface-group",
+      "target": 3,
+      "ratio": 9.36622781
+    },
+    {
+      "foreground": "focus",
+      "background": "surface-inset",
+      "target": 3,
+      "ratio": 8.27768471
+    },
+    {
+      "foreground": "focus",
+      "background": "surface-floating",
+      "target": 3,
+      "ratio": 9.36622781
+    },
+    {
+      "foreground": "focus",
+      "background": "field-fill",
+      "target": 3,
+      "ratio": 8.06356085
+    },
+    {
+      "foreground": "focus",
+      "background": "surface",
+      "target": 3,
+      "ratio": 9.36622781
+    },
+    {
+      "foreground": "focus",
+      "background": "surface-navigation",
+      "target": 3,
+      "ratio": 7.64289682
+    },
+    {
+      "foreground": "focus",
+      "background": "surface-topbar",
+      "target": 3,
+      "ratio": 8.46691147
     }
   ],
   "dark": [
@@ -138,133 +342,337 @@
       "foreground": "ink",
       "background": "canvas",
       "target": 4.5,
-      "ratio": 14.696293422393556
+      "ratio": 14.4570496
     },
     {
       "foreground": "muted",
       "background": "canvas",
       "target": 4.5,
-      "ratio": 8.19851989674712
+      "ratio": 9.05425459
     },
     {
       "foreground": "ink",
       "background": "surface",
       "target": 4.5,
-      "ratio": 13.346055997872602
+      "ratio": 12.35014284
     },
     {
       "foreground": "muted",
       "background": "surface",
       "target": 4.5,
-      "ratio": 7.445272253133818
+      "ratio": 7.73472738
     },
     {
       "foreground": "ink",
       "background": "raised",
       "target": 4.5,
-      "ratio": 11.745128385701559
+      "ratio": 10.2149752
     },
     {
       "foreground": "muted",
       "background": "raised",
       "target": 4.5,
-      "ratio": 6.552173802769693
-    },
-    {
-      "foreground": "on-primary",
-      "background": "primary",
-      "target": 4.5,
-      "ratio": 8.284436430039822
+      "ratio": 6.39750078
     },
     {
       "foreground": "primary",
       "background": "primary-soft",
       "target": 4.5,
-      "ratio": 6.689853886493018
+      "ratio": 6.51990203
     },
     {
       "foreground": "ink",
       "background": "primary-soft",
       "target": 4.5,
-      "ratio": 10.454442922486342
+      "ratio": 9.8368503
+    },
+    {
+      "foreground": "on-primary",
+      "background": "primary",
+      "target": 4.5,
+      "ratio": 8.18798928
     },
     {
       "foreground": "on-sun",
       "background": "sun",
       "target": 4.5,
-      "ratio": 7.424112191865992
+      "ratio": 8.71227717
     },
     {
       "foreground": "on-sky",
       "background": "sky",
       "target": 4.5,
-      "ratio": 8.543365407503735
+      "ratio": 8.61715777
     },
     {
       "foreground": "success",
       "background": "success-soft",
       "target": 4.5,
-      "ratio": 7.109671788294736
+      "ratio": 7.23784701
     },
     {
       "foreground": "warning",
       "background": "warning-soft",
       "target": 4.5,
-      "ratio": 7.284634925904617
+      "ratio": 7.65923783
     },
     {
       "foreground": "danger",
       "background": "danger-soft",
       "target": 4.5,
-      "ratio": 7.124054186275401
-    },
-    {
-      "foreground": "info",
-      "background": "info-soft",
-      "target": 4.5,
-      "ratio": 6.683559464061996
+      "ratio": 7.27561
     },
     {
       "foreground": "on-danger",
       "background": "danger",
       "target": 4.5,
-      "ratio": 8.99943120875986
+      "ratio": 8.97391837
+    },
+    {
+      "foreground": "info",
+      "background": "info-soft",
+      "target": 4.5,
+      "ratio": 7.26715335
+    },
+    {
+      "foreground": "on-navigation",
+      "background": "surface-navigation",
+      "target": 4.5,
+      "ratio": 14.83998123
+    },
+    {
+      "foreground": "on-navigation-active",
+      "background": "navigation-active",
+      "target": 4.5,
+      "ratio": 5.59261321
+    },
+    {
+      "foreground": "navigation-muted",
+      "background": "surface-navigation",
+      "target": 4.5,
+      "ratio": 10.07789452
+    },
+    {
+      "foreground": "on-topbar",
+      "background": "surface-topbar",
+      "target": 4.5,
+      "ratio": 13.96467488
+    },
+    {
+      "foreground": "on-topbar-muted",
+      "background": "surface-topbar",
+      "target": 4.5,
+      "ratio": 9.48431766
+    },
+    {
+      "foreground": "navigation-muted",
+      "background": "surface-topbar",
+      "target": 4.5,
+      "ratio": 9.47717234
+    },
+    {
+      "foreground": "ink",
+      "background": "surface-group",
+      "target": 4.5,
+      "ratio": 12.35014284
+    },
+    {
+      "foreground": "muted",
+      "background": "surface-group",
+      "target": 4.5,
+      "ratio": 7.73472738
+    },
+    {
+      "foreground": "ink",
+      "background": "surface-inset",
+      "target": 4.5,
+      "ratio": 11.67233624
+    },
+    {
+      "foreground": "muted",
+      "background": "surface-inset",
+      "target": 4.5,
+      "ratio": 7.31022628
+    },
+    {
+      "foreground": "ink",
+      "background": "surface-floating",
+      "target": 4.5,
+      "ratio": 10.2149752
+    },
+    {
+      "foreground": "muted",
+      "background": "surface-floating",
+      "target": 4.5,
+      "ratio": 6.39750078
+    },
+    {
+      "foreground": "on-topbar",
+      "background": "topbar-control",
+      "target": 4.5,
+      "ratio": 10.78474642
+    },
+    {
+      "foreground": "on-topbar-muted",
+      "background": "topbar-control",
+      "target": 4.5,
+      "ratio": 7.32462172
+    },
+    {
+      "foreground": "primary",
+      "background": "canvas",
+      "target": 4.5,
+      "ratio": 9.58218781
+    },
+    {
+      "foreground": "primary",
+      "background": "surface",
+      "target": 4.5,
+      "ratio": 8.18572195
+    },
+    {
+      "foreground": "primary",
+      "background": "raised",
+      "target": 4.5,
+      "ratio": 6.77052466
+    },
+    {
+      "foreground": "ink",
+      "background": "field-fill",
+      "target": 4.5,
+      "ratio": 10.86100499
+    },
+    {
+      "foreground": "muted",
+      "background": "field-fill",
+      "target": 4.5,
+      "ratio": 6.80210049
+    },
+    {
+      "foreground": "ink",
+      "background": "field-hover",
+      "target": 4.5,
+      "ratio": 9.87406344
+    },
+    {
+      "foreground": "muted",
+      "background": "field-hover",
+      "target": 4.5,
+      "ratio": 6.18399235
+    },
+    {
+      "foreground": "on-secondary-container",
+      "background": "secondary-container",
+      "target": 4.5,
+      "ratio": 8.61715777
+    },
+    {
+      "foreground": "on-tertiary-container",
+      "background": "tertiary-container",
+      "target": 4.5,
+      "ratio": 8.71227717
+    },
+    {
+      "foreground": "navigation-active",
+      "background": "surface-navigation",
+      "target": 3,
+      "ratio": 3.25181094
     },
     {
       "foreground": "control",
       "background": "canvas",
       "target": 3,
-      "ratio": 5.0472140663267115
+      "ratio": 7.15389307
     },
     {
       "foreground": "control",
       "background": "surface",
       "target": 3,
-      "ratio": 4.583495962308823
+      "ratio": 6.11131619
     },
     {
       "foreground": "control",
       "background": "raised",
       "target": 3,
-      "ratio": 4.033682201037002
+      "ratio": 5.05475476
+    },
+    {
+      "foreground": "field-line",
+      "background": "field-fill",
+      "target": 3,
+      "ratio": 5.37443465
+    },
+    {
+      "foreground": "field-line",
+      "background": "canvas",
+      "target": 3,
+      "ratio": 7.15389307
+    },
+    {
+      "foreground": "field-line",
+      "background": "surface-inset",
+      "target": 3,
+      "ratio": 5.77591193
+    },
+    {
+      "foreground": "field-line-hover",
+      "background": "field-hover",
+      "target": 3,
+      "ratio": 6.18399235
     },
     {
       "foreground": "focus",
       "background": "canvas",
       "target": 3,
-      "ratio": 9.404236686526302
-    },
-    {
-      "foreground": "focus",
-      "background": "surface",
-      "target": 3,
-      "ratio": 8.540212543959022
+      "ratio": 11.99378127
     },
     {
       "foreground": "focus",
       "background": "raised",
       "target": 3,
-      "ratio": 7.515770410821495
+      "ratio": 8.47449387
+    },
+    {
+      "foreground": "focus",
+      "background": "surface-group",
+      "target": 3,
+      "ratio": 10.24586039
+    },
+    {
+      "foreground": "focus",
+      "background": "surface-inset",
+      "target": 3,
+      "ratio": 9.68354205
+    },
+    {
+      "foreground": "focus",
+      "background": "surface-floating",
+      "target": 3,
+      "ratio": 8.47449387
+    },
+    {
+      "foreground": "focus",
+      "background": "field-fill",
+      "target": 3,
+      "ratio": 9.0104497
+    },
+    {
+      "foreground": "focus",
+      "background": "surface",
+      "target": 3,
+      "ratio": 10.24586039
+    },
+    {
+      "foreground": "focus",
+      "background": "surface-navigation",
+      "target": 3,
+      "ratio": 13.33400732
+    },
+    {
+      "foreground": "focus",
+      "background": "surface-topbar",
+      "target": 3,
+      "ratio": 12.53919507
     }
   ]
 }

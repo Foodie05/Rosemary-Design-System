@@ -776,3 +776,7 @@ Pointer, press and focus states are native transient interaction states. The tab
 | stepper | Typed notStarted/current/completed/error/unavailable, per-step enabled | Host owns progression and can refuse onChanged. |
 
 For example, a host can preserve its search query while switching only the result region between `RosemarySkeleton`, `RosemaryEmpty`, `RosemaryAlert` and `RosemaryList`. That composition exposes the contract states without putting request data or transport into the library.
+
+## 0.5.0 complete paired colors
+
+See `docs/sdk/0.5.0-migration.md`: all 45 semantic fields are required, including surface-navigation, surface-topbar, field-fill and navigation-active/content. Complete paired imports support explicit light/dark/system appearance. Partial local color overrides continue to inherit.

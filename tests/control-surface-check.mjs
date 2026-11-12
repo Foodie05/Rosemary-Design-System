@@ -24,7 +24,7 @@ for(let hue=0;hue<360;hue+=5)for(const tone of [20,50,80])for(const mood of ['ca
 for(const seed of seeds)for(const mood of ['calm','vivid']){
   const generated=E.generate({seed,mood});checkBudgets(generated);
   for(const mode of ['light','dark']){
-    assert.deepEqual(Object.keys(generated.themes[mode]).sort(),required,'The SDK adapter retains all 24 roles');
+    assert.deepEqual(Object.keys(generated.themes[mode]).sort(),required,'The SDK adapter retains all 45 roles');
     const c=generated.colors[mode];
     for(const color of Object.values(c))assert.match(color,/^#[\dA-F]{6}$/);
     assert.ok(E.luminance(c['surface-navigation'])<E.luminance(c['surface-topbar']),seed+' '+mode+' separates navigation and header');
@@ -45,4 +45,4 @@ assert.throws(()=>E.extract([]));
 assert.equal(E.extract([0xffffffff,0xff888888]).fallbackUsed,true,'A neutral image fallback is disclosed');
 const extracted=E.extract([0xffff0000,0xffff0000,0xff00ff00,0xff0000ff]);
 assert.ok(extracted.length>0&&extracted.every(x=>/^#[\dA-F]{6}$/.test(x)),'Image quantization returns usable seed candidates');
-console.log(`Dynamic colors: ${checks} real contrast checks over ${seeds.length} seeds × two moods × two themes; minima ${minText.toFixed(2)}:1 text / ${minState.toFixed(2)}:1 state. Tone, navigation order, extraction and 24-role adapter checks passed.`);
+console.log(`Dynamic colors: ${checks} real contrast checks over ${seeds.length} seeds × two moods × two themes; minima ${minText.toFixed(2)}:1 text / ${minState.toFixed(2)}:1 state. Tone, navigation order, extraction and 45-role adapter checks passed.`);

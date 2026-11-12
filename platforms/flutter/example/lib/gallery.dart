@@ -118,7 +118,7 @@ class _GalleryState extends State<RosemaryGallery> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         const RosemaryText(
-                          'Rosemary · Flutter SDK 0.4.2',
+                          'Rosemary · Flutter SDK 0.5.0',
                           role: 'heading',
                         ),
                         Wrap(

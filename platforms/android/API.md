@@ -501,7 +501,7 @@ Automated Compose semantics and focus tests are not TalkBack certification. API2
 
 ## Vigilo complete palette
 
-The consumer sample bundles `design/themes/vigilo.json` as a build-time asset and loads all 24 roles with `VigiloTheme.colors(context, dark)`. Select Vigilo independently of light/dark. It does not approximate the subbrand by replacing one accent. This JSON is the same source used by the portal and shared contrast validation. Use the same host JSON loader pattern for additional projects, then pass the resulting `RosemaryColors` to `RosemaryTheme(colors = …)`.
+The consumer sample bundles `design/themes/vigilo.json` as a build-time asset and loads all 45 roles with `VigiloTheme.colors(context, dark)`. Select Vigilo independently of light/dark. It does not approximate the subbrand by replacing one accent. This JSON is the same source used by the portal and shared contrast validation. Use the same host JSON loader pattern for additional projects, then pass the resulting `RosemaryColors` to `RosemaryTheme(colors = …)`.
 
 Shared typography is consumed by `rosemaryTextStyle(role, color, size)` and `RosemaryText(role = …)`. Type size, line height and weight come from generated roles. Family identifiers map to Android system sans/serif/monospace; no proprietary font is bundled. Field editing uses the same body style. Control radii/touch targets and drawer/tabs/selection/loading/progress durations read shared component/motion data. `RosemaryProgressState` exposes Running/Idle/Paused/Cancelled/Completed/Error; only Running unfinished work animates, and actual measured value remains intact on cancellation. The sample cancels/retries by changing state.
 
@@ -514,3 +514,7 @@ Verification emits `verification.json` and `SHA256SUMS` with actual tool version
 `RosemaryTheme(highContrast = appHighContrast, highContrastColors = completePalette) { … }` selects the supplied 24-role palette when the application, ancestor or OS requests high contrast. `RosemaryTheme.highContrast` exposes that resolved preference. Custom palettes are never silently recolored; omit `highContrastColors` to retain host colors. The sample uses `palette.copy(border = palette.ink, control = palette.ink, focus = palette.ink)` and preserves every other default/Vigilo role.
 
 API36+ observes [AccessibilityManager.isHighContrastTextEnabled and its change listener](https://developer.android.com/reference/android/view/accessibility/AccessibilityManager) while composed, unregistering on disposal. Those public APIs do not exist on API26–35; expose an application setting through `highContrast` there. This does not claim an OS-mode screenshot or TalkBack audit on all APIs. The representative device test verifies the explicit palette is actually inherited by rendered input/checkbox content, shared contrast pairs pass, and an inline diagnostics callback updating parent state reaches idle after one report. Reports depend on effective palette values, not callback identity.
+
+## 0.5.0 complete paired colors
+
+See `docs/sdk/0.5.0-migration.md`: all 45 semantic fields are required, including surface-navigation, surface-topbar, field-fill and navigation-active/content. Complete paired imports support explicit light/dark/system appearance. Partial local color overrides continue to inherit.

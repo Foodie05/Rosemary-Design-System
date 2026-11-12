@@ -16,25 +16,25 @@ export const releaseWorkflows = [
   {
     workflow: "sdk-web.yml",
     kind: "web",
-    artifacts: ["rosemary-sdk-web-0.4.2"],
+    artifacts: ["rosemary-sdk-web-0.5.0"],
   },
   {
     workflow: "sdk-android.yml",
     kind: "android",
-    artifacts: ["rosemary-compose-0.4.2-api26", "rosemary-compose-0.4.2-api36"],
+    artifacts: ["rosemary-compose-0.5.0-api26", "rosemary-compose-0.5.0-api36"],
   },
   {
     workflow: "sdk-swiftui.yml",
     kind: "swift",
-    artifacts: ["rosemary-swiftui-0.4.2"],
+    artifacts: ["rosemary-swiftui-0.5.0"],
   },
   {
     workflow: "sdk-flutter.yml",
     kind: "flutter",
     artifacts: [
-      "rosemary-flutter-0.4.2-linux-web-android",
-      "rosemary-flutter-0.4.2-macos-ios",
-      "rosemary-flutter-0.4.2-windows",
+      "rosemary-flutter-0.5.0-linux-web-android",
+      "rosemary-flutter-0.5.0-macos-ios",
+      "rosemary-flutter-0.5.0-windows",
     ],
   },
 ];
@@ -229,7 +229,7 @@ async function validateEvidence(files, kind, head, artifactName) {
       }
     } else
       requireThat(
-        (await sha256(findOne(files, "rosemary-ui-0.4.2-source.tar.gz"))) ===
+        (await sha256(findOne(files, "rosemary-ui-0.5.0-source.tar.gz"))) ===
           record.sourceArchiveSha256,
         `${artifactName}: archived consumer source digest mismatch`,
       );
@@ -341,8 +341,8 @@ async function main() {
   await mkdir(assets);
   await mkdir(extracted);
   const manifest = {
-    version: "0.4.2",
-    specification: "1.2.0",
+    version: "0.5.0",
+    specification: "1.3.0",
     repo,
     head,
     assembledUTC: new Date().toISOString(),
@@ -394,36 +394,36 @@ async function main() {
       const names =
         kind === "web"
           ? [
-              "rosemary-ui-tokens-0.4.2.tgz",
-              "rosemary-ui-icons-0.4.2.tgz",
-              "rosemary-ui-react-0.4.2.tgz",
+              "rosemary-ui-tokens-0.5.0.tgz",
+              "rosemary-ui-icons-0.5.0.tgz",
+              "rosemary-ui-react-0.5.0.tgz",
             ]
           : kind === "swift"
             ? [
-                "RosemaryUI-0.4.2-source.tar.gz",
-                "RosemarySample-0.4.2-simulator.zip",
+                "RosemaryUI-0.5.0-source.tar.gz",
+                "RosemarySample-0.5.0-simulator.zip",
               ]
             : kind === "android" && artifact.name.endsWith("api36")
               ? [
-                  "rosemary-compose-0.4.2-maven.zip",
-                  "rosemary-compose-0.4.2.aar",
-                  "rosemary-compose-0.4.2-sources.jar",
-                  "rosemary-compose-sample-0.4.2.apk",
+                  "rosemary-compose-0.5.0-maven.zip",
+                  "rosemary-compose-0.5.0.aar",
+                  "rosemary-compose-0.5.0-sources.jar",
+                  "rosemary-compose-sample-0.5.0.apk",
                 ]
               : kind === "flutter"
                 ? artifact.name.endsWith("linux-web-android")
                   ? [
-                      "rosemary-ui-0.4.2-source.tar.gz",
-                      "rosemary-flutter-0.4.2-linux.tar.gz",
-                      "rosemary-flutter-0.4.2-web.zip",
-                      "rosemary-flutter-0.4.2-android.apk",
+                      "rosemary-ui-0.5.0-source.tar.gz",
+                      "rosemary-flutter-0.5.0-linux.tar.gz",
+                      "rosemary-flutter-0.5.0-web.zip",
+                      "rosemary-flutter-0.5.0-android.apk",
                     ]
                   : artifact.name.endsWith("macos-ios")
                     ? [
-                        "rosemary-flutter-0.4.2-macos.zip",
-                        "rosemary-flutter-0.4.2-ios-simulator.zip",
+                        "rosemary-flutter-0.5.0-macos.zip",
+                        "rosemary-flutter-0.5.0-ios-simulator.zip",
                       ]
-                    : ["rosemary-flutter-0.4.2-windows.zip"]
+                    : ["rosemary-flutter-0.5.0-windows.zip"]
                 : [];
       const packageDigests = [];
       for (const file of files.filter((f) =>

@@ -14,10 +14,10 @@
       "const": 1
     },
     "sdkVersion": {
-      "const": "0.4.2"
+      "const": "0.5.0"
     },
     "specVersion": {
-      "const": "1.2.0"
+      "const": "1.3.0"
     },
     "scope": {
       "const": "33-foundation-components"

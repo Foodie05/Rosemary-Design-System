@@ -1,6 +1,8 @@
 # Rosemary Design System
 
-本仓库同时维护 **Rosemary Forma 1.2.0 设计规范**与 **Rosemary SDK 0.4.2 组件代码**。安装固定到 `v0.4.2`，以 GitHub Release 的实际资产及 SHA256 为准；不发布公共 registry。
+本仓库同时维护 **Rosemary Forma 1.3.0 设计规范**与 **Rosemary SDK 0.5.0 发布候选**。当前最后正式发布版仍为 `v0.4.2`，旧版安装固定到该版本，以 GitHub Release 的实际资产及 SHA256 为准；不发布公共 registry。
+
+新标准：[Forma 1.3.0](docs/standards/forma-1.3.md) · [0.5.0 迁移](docs/sdk/0.5.0-migration.md) · [候选发布说明](docs/sdk/0.5.0-release-notes.md)。下方固定 v0.4.2 的链接保留给已发布版；候选产物须来自本轮实际 CI。
 
 SDK 入口：[接入指南](docs/sdk/getting-started.md)、[迁移](docs/sdk/migration.md)、[验收清单](docs/sdk/release-checklist.md)、[实际 CI](https://github.com/Foodie05/Rosemary-Design-System/actions) 与 [Releases](https://github.com/Foodie05/Rosemary-Design-System/releases/tag/v0.4.2)。
 
@@ -11,9 +13,9 @@ SDK 入口：[接入指南](docs/sdk/getting-started.md)、[迁移](docs/sdk/mig
 | SwiftUI | [platforms/swiftui](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.2/platforms/swiftui) · 根 Package.swift / RosemaryUI |
 | Flutter | [platforms/flutter](https://github.com/Foodie05/Rosemary-Design-System/tree/v0.4.2/platforms/flutter) · rosemary_ui / 六目标 consumer |
 
-SDK 共用当前 33 个组件契约和 24 个语义色角色。各端的最低系统、构建、运行和辅助技术覆盖分别记录；组件存在、编译通过或截图可读不等于全部验收。代码与品牌资产许可证分开。
+SDK 0.5.0 共用当前 33 个组件契约和 45 个语义色角色。各端的最低系统、构建、运行和辅助技术覆盖分别记录；组件存在、编译通过或截图可读不等于全部验收。代码与品牌资产许可证分开。
 
-## Rosemary Forma 1.2.0 门户
+## Rosemary Forma 1.3.0 门户
 
 Rosemary Forma 是 Rosemary 的设计系统门户。它以留白充足的介绍首页连接设计原则、组件、典型案例与实施资源，正文继续使用逐控件独立浏览结构和统一的章节、Tab 动效。
 
@@ -35,7 +37,7 @@ Rosemary Forma 是 Rosemary 的设计系统门户。它以留白充足的介绍�
 - 组件目录、图标筛选与尺寸、颜色对比和组件示例统一使用 Rosemary 定制分组下拉；方向键、首尾、键入定位、确认、取消、外部收起和表单值同步。隐藏的 select 仅持有值，不弹出系统菜单。
 - 日期与时间使用统一的定制月历和小时／分钟双列，支持键盘、直接输入、确认／取消与区间校验；按本地日期、24 小时时间保留原值，不转换时区。窄屏选择面板随字段展开；点击年／月进入专门视图，可直接输入 1–9999 年快速跳转。
 - 全站采用统一表面层级：同级用留白和对齐，内容组用轻微色差，预览／代码用内嵌表面，浮层使用轻边缘和近远双层阴影。输入采用柔和填充与中性底线，选择框和次要按钮默认无完整外框；表格与焦点保留必要线索；深浅主题、产品案例和独立 404 同步应用。
-- 基于 Material HCT 的 Rosemary 动态配色：HEX／预设／本机图片取色，沉静与鲜亮配方、深浅主题成对预览、容器／内容角色、色调阶、对比检查、JSON 导出与整站应用。24-role SDK 适配保持兼容。导航、顶栏与正文使用不同的有色表面；案例保留自己的品牌种子色。
+- 基于 Material HCT 的 Rosemary 动态配色：HEX／预设／本机图片取色，沉静与鲜亮配方、深浅主题成对预览、容器／内容角色、色调阶、对比检查、JSON 导出与整站应用。完整 SDK 主题扩展为 45 色，旧主题需显式迁移。导航、顶栏与正文使用不同的有色表面；案例保留自己的品牌种子色。
 - 桌面侧栏独立滚动并隔离边界手势，品牌区和页脚区也不会带动正文。移动模态导航锁定背景，关闭恢复正文位置。
 - 章节内容采用 220ms 的短距离淡入；文档 Tab、标签页组件和动效演示共用 180ms 定位条与内容淡入。
 - 移动导航滑入／滑出，快速开关可中断，退出完成后收起并恢复焦点。菜单、下拉、对话框与记录抽屉共用进入／退出动效，退出更短；关闭、Escape、保存与点击遮罩按各自语义收起，菜单／抽屉在真实退场完成后隐藏，快速反转从当前可见帧继续，减少动态时即时应用最终状态。

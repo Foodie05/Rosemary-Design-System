@@ -380,9 +380,18 @@ class RosemaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = RosemaryThemeData.of(context);
     final decoration = BoxDecoration(
-      color: selected ? c.primarySoft : c.surface,
+      color: selected ? c.primarySoft : c.surfaceGroup,
       borderRadius: BorderRadius.circular(RosemaryTokens.contentRadius),
-      border: Border.all(color: selected ? c.primary : c.border),
+      border: MediaQuery.highContrastOf(context)
+          ? Border.all(color: c.control, width: 2)
+          : null,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.05),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
+        ),
+      ],
     );
     return onActivate == null
         ? Container(
@@ -394,8 +403,8 @@ class RosemaryCard extends StatelessWidget {
         : RosemaryActionSurface(
             selected: selected,
             onActivate: onActivate,
-            background: selected ? c.primarySoft : c.surface,
-            border: selected ? c.primary : c.border,
+            background: selected ? c.primarySoft : c.surfaceGroup,
+            border: MediaQuery.highContrastOf(context) ? c.control : null,
             radius: RosemaryTokens.contentRadius,
             padding: const EdgeInsets.all(16),
             child: child,
