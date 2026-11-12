@@ -29,7 +29,7 @@ test('theme creation rejects malformed input and diagnoses actual contrast witho
   const dark=resolveTheme({mode:'system',systemDark:true});
   assert.equal(dark.canvas,defaultThemes.dark.canvas);
   const inherited=createTheme(createTheme(dark,{primary:'#CDB5EA'}),{surface:'#25212D'});
-  assert.equal(inherited.primary,'#CDB5EA');assert.equal(Object.keys(themeCssVariables(inherited)).length,24);
+  assert.equal(inherited.primary,'#CDB5EA');assert.equal(Object.keys(themeCssVariables(inherited)).length,45);
 });
 test('every source semantic pair satisfies its applicable target',()=> {
   for(const colors of Object.values(tokens.themes))assert.deepEqual(validateContrast(resolveAliases(colors)),[]);

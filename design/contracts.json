@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "sdkVersion": "0.4.2",
-  "specVersion": "1.2.0",
+  "sdkVersion": "0.5.0",
+  "specVersion": "1.3.0",
   "scope": "33-foundation-components",
   "common": {
     "stateOwnership": "consumer-controlled; transient state reconciles to consumer value",
-    "theme": "inherit parent, merge overrides; reject malformed colors; report contrast diagnostics without recoloring",
+    "theme": "inherit parent, merge overrides; reject malformed colors; report contrast diagnostics without recoloring; 45 roles including surface hierarchy and paired content; low-chroma large areas; light/dark recipe JSON is authoritative across runtimes",
     "direction": "ltr-or-rtl",
     "reducedMotion": "system-or-app-reduce; either request disables motion",
     "dismissReasons": [
@@ -26,7 +26,7 @@
       "timezone": "none-local-date-and-time",
       "cancel": "discard-picker-draft-not-consumer-value"
     },
-    "focus": "visible; logical order; modal containment and return; nonmodal no trap",
+    "focus": "visible; logical order; modal containment and return; nonmodal no trap; editable text uses a bottom focus cue, buttons retain a perimeter focus cue; high-contrast modes may restore complete boundaries",
     "platformMinimum": {
       "web": "React 18 and 19; latest 2 browser major versions",
       "android": "API 26",

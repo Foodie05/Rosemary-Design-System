@@ -1,5 +1,8 @@
 # Rosemary Flutter SDK 0.4.2
 
+> 0.5.0 release candidate implements Forma 1.3.0 with 45 semantic roles and paired scheme imports. See `docs/sdk/0.5.0-migration.md` in the repository. v0.4.2 remains the latest published release; existing historical device evidence below does not establish acceptance for this candidate.
+
+
 `rosemary_ui` implements the 33 foundation components from `design/contracts.json`. The library contains UI, typed theme roles and callbacks; application data, navigation, uploads and persistence stay in the host. Code is MIT; the name and brand identity remain separately governed.
 
 Use Flutter **3.44.8 / Dart 3.12.2**. The example configures Android API **26**, iOS **17**, and macOS **12**. Windows and Linux builds run on Windows 2022 and Ubuntu 24.04 CI; their older OS compatibility has not been established. Browser support is the latest two major versions of Chrome, Edge, Firefox and Safari; building Web alone does not certify that matrix.

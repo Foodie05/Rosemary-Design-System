@@ -1,3 +1,7 @@
+# 0.5.0 candidate status
+
+Forma 1.3.0 revision and 45-role React/Compose/SwiftUI/Flutter adapters are under current validation. Prior 0.4.2 evidence below is historical; current candidate evidence and exact-main release gate are recorded in `0.5.0-release-notes.md` and `release-checklist.md`. Do not infer device acceptance from the role generator or an old run.
+
 # SDK implementation status
 
 Design specification **1.2.0** and SDK release **0.4.2** are separate versions. The target catalog is the same 33 IDs in `design/contracts.json` on React, Android Compose, SwiftUI and Flutter. Code/functional icons use MIT; names, five badges and official raster artwork use the separate root brand policy.

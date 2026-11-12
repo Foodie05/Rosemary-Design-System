@@ -13,6 +13,19 @@ import org.junit.Test
 
 class ContractLogicTest {
     @Test
+    fun canonicalHexImportPreservesExtendedPairs() {
+        val values = RosemaryTokens.light.toMap().mapValues { (_,c) -> "#%02X%02X%02X".format((c.red*255).toInt(),(c.green*255).toInt(),(c.blue*255).toInt()) }
+        val imported = design.rosemary.compose.generated.RosemaryColors.fromHex(values)
+        assertEquals(45, imported.toMap().size)
+        assertEquals(RosemaryTokens.light.surfaceNavigation, imported.surfaceNavigation)
+        assertEquals(RosemaryTokens.light.navigationActive, imported.navigationActive)
+        assertEquals(RosemaryTokens.light.fieldFill, imported.fieldFill)
+        assertEquals(RosemaryTokens.light.onNavigationActive, imported.onNavigationActive)
+        org.junit.Assert.assertThrows(IllegalArgumentException::class.java) { design.rosemary.compose.generated.RosemaryColors.fromHex(values - "field-fill") }
+        org.junit.Assert.assertThrows(IllegalArgumentException::class.java) { design.rosemary.compose.generated.RosemaryColors.fromHex(values + ("field-fill" to "transparent")) }
+    }
+
+    @Test
     fun anchoredPopupsPreferBelowFlipAboveAndRespectRtlWindowEdges() {
         val position = RosemaryAnchoredPopupPosition(4)
         val window = IntSize(400, 800)
@@ -73,7 +86,7 @@ class ContractLogicTest {
     fun defaultThemesPassEverySharedContrastPair() {
         listOf(RosemaryTokens.light, RosemaryTokens.dark).forEach { colors ->
             val results = rosemaryValidateTheme(colors)
-            assertEquals(22, results.size)
+            assertEquals(56, results.size)
             results.forEach {
                 assertTrue("${it.foreground}/${it.background}: ${it.ratio}", it.passes)
             }
@@ -91,7 +104,7 @@ class ContractLogicTest {
     fun unsupportedThemeColorsAreRejectedAndContrastConvertsToSrgb() {
         listOf(Color.Transparent, Color(.3f, .5f, .7f, colorSpace = ColorSpaces.DisplayP3))
             .forEach { color ->
-                assertThrows(IllegalArgumentException::class.java) {
+                org.junit.Assert.assertThrows(IllegalArgumentException::class.java) {
                     rosemaryValidateTheme(RosemaryTokens.light.copy(primary = color))
                 }
             }

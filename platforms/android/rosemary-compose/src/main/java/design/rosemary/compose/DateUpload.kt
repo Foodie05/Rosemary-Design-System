@@ -207,8 +207,8 @@ private fun DatePanel(
             Modifier.widthIn(min = 320.dp, max = 360.dp)
                 .heightIn(max = 640.dp)
                 .verticalScroll(rememberScrollState())
-                .background(c.raised, RoundedCornerShape(12.dp))
-                .border(1.dp, c.border, RoundedCornerShape(12.dp))
+                .background(c.surfaceFloating, RoundedCornerShape(12.dp))
+                .border(1.dp, c.edgeSoft, RoundedCornerShape(12.dp))
                 .padding(6.dp)
                 .semantics { paneTitle = "Date picker" },
             verticalArrangement = Arrangement.spacedBy(8.dp),

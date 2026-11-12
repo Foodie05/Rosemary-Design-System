@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "specVersion": "1.3.0",
+  "sdkVersion": "0.5.0",
+  "recipeSource": "design/color-recipe.js",
+  "default": {
+    "seed": "#614578",
+    "mood": "calm"
+  },
+  "roleCount": 45,
+  "largeAreaChroma": {
+    "surface": 6,
+    "navigation": 10,
+    "topbar": 8,
+    "softContainers": 16,
+    "feedbackContainers": 12
+  },
+  "grid": {
+    "contentMax": 1480,
+    "gutter": "responsive",
+    "gap": 24,
+    "compactGap": 16,
+    "shellHeight": 76,
+    "compactShellHeights": [
+      66,
+      62
+    ]
+  },
+  "focus": {
+    "text": "bottom-integrated-2px",
+    "action": "visible-perimeter",
+    "highContrast": "system-visible-boundary"
+  },
+  "scrolling": {
+    "independent": true,
+    "containChaining": true,
+    "scrollbars": "host-platform-policy"
+  },
+  "nativeDynamicColors": "Import full paired colors from canonical recipe export; no approximation using platform color generators."
+}

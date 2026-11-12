@@ -16,7 +16,7 @@ export function contrastRatio(foreground: string, background: string): number {
 export function validateTheme(colors: RosemaryColors): ContrastDiagnostic[] {
   if (!colors || typeof colors !== 'object' || Array.isArray(colors)) throw new TypeError('Theme must be an object');
   const keys=colorRoles.map(camel);
-  if (Object.keys(colors).length!==keys.length || Object.keys(colors).some(k=>!keys.includes(k as keyof RosemaryColors))) throw new TypeError('Theme must contain exactly all 24 color roles');
+  if (Object.keys(colors).length!==keys.length || Object.keys(colors).some(k=>!keys.includes(k as keyof RosemaryColors))) throw new TypeError('Theme must contain exactly all 45 color roles (including 24 core roles)');
   for (const key of keys) if (typeof colors[key] !== 'string' || !/^#[\da-f]{6}$/i.test(colors[key])) throw new TypeError(`Invalid theme color ${key}`);
   return contrastPairs.flatMap(([foreground,background,target])=> {
     const ratio=contrastRatio(colors[camel(foreground)],colors[camel(background)]);

@@ -8,12 +8,27 @@ import SwiftUI
 
 public enum RosemaryThemeMode: String, CaseIterable { case light, dark, system }
 public enum RosemaryThemeError: Error, Equatable {
+  case invalidDocument
   case missingColor(String)
   case invalidColor(String)
   case unknownColor(String)
   case duplicateColor(String)
   case unresolvableColor(String)
   case translucentColor(String)
+}
+/// Import the full paired canonical recipe; native platforms do not reinterpret the seed.
+public struct RosemaryColorScheme {
+  public let light: RosemaryTheme
+  public let dark: RosemaryTheme
+  public init(light: RosemaryTheme, dark: RosemaryTheme) { self.light=light; self.dark=dark }
+  public static let defaults = RosemaryColorScheme(light: .light, dark: .dark)
+  public init(json: Data) throws {
+    guard let document=try JSONSerialization.jsonObject(with: json) as? [String:Any],
+      let modes=(document["colors"] ?? document["themes"] ?? document) as? [String:Any],
+      let light=modes["light"] as? [String:String], let dark=modes["dark"] as? [String:String]
+    else { throw RosemaryThemeError.invalidDocument }
+    self.light=try RosemaryTheme(hex: light);self.dark=try RosemaryTheme(hex: dark)
+  }
 }
 public struct RosemaryContrastDiagnostic: Equatable {
   public let foreground: String
@@ -27,11 +42,7 @@ public struct RosemaryTheme {
   public init(colors: RosemaryColors) { self.colors = colors }
   public static let light = RosemaryTheme(colors: RosemaryTokens.light)
   public static let dark = RosemaryTheme(colors: RosemaryTokens.dark)
-  public static let semanticNames = [
-    "canvas", "surface", "raised", "ink", "muted", "border", "control", "primary", "onPrimary",
-    "primarySoft", "sun", "onSun", "sky", "onSky", "success", "successSoft", "warning",
-    "warningSoft", "danger", "dangerSoft", "onDanger", "info", "infoSoft", "focus",
-  ]
+  public static let semanticNames = ["canvas", "surface", "raised", "ink", "muted", "border", "control", "primary", "onPrimary", "primarySoft", "sun", "onSun", "sky", "onSky", "focus", "surfaceNavigation", "onNavigation", "navigationMuted", "navigationActive", "onNavigationActive", "surfaceTopbar", "onTopbar", "onTopbarMuted", "topbarControl", "surfaceGroup", "surfaceInset", "surfaceFloating", "fieldFill", "fieldHover", "fieldLine", "fieldLineHover", "edgeSoft", "secondaryContainer", "onSecondaryContainer", "tertiaryContainer", "onTertiaryContainer", "success", "successSoft", "warning", "warningSoft", "danger", "dangerSoft", "info", "infoSoft", "onDanger"]
   public init(hex input: [String: String]) throws {
     var hex: [String: String] = [:]
     for (key, value) in input {
@@ -48,14 +59,7 @@ public struct RosemaryTheme {
       guard let rgb = Self.rgb(value) else { throw RosemaryThemeError.invalidColor(name) }
       c[name] = Color(.sRGB, red: rgb.0, green: rgb.1, blue: rgb.2, opacity: 1)
     }
-    colors = RosemaryColors(
-      canvas: c["canvas"]!, surface: c["surface"]!, raised: c["raised"]!, ink: c["ink"]!,
-      muted: c["muted"]!, border: c["border"]!, control: c["control"]!, primary: c["primary"]!,
-      onPrimary: c["onPrimary"]!, primarySoft: c["primarySoft"]!, sun: c["sun"]!,
-      onSun: c["onSun"]!, sky: c["sky"]!, onSky: c["onSky"]!, success: c["success"]!,
-      successSoft: c["successSoft"]!, warning: c["warning"]!, warningSoft: c["warningSoft"]!,
-      danger: c["danger"]!, dangerSoft: c["dangerSoft"]!, onDanger: c["onDanger"]!,
-      info: c["info"]!, infoSoft: c["infoSoft"]!, focus: c["focus"]!)
+    colors = RosemaryColors(canvas: c["canvas"]!, surface: c["surface"]!, raised: c["raised"]!, ink: c["ink"]!, muted: c["muted"]!, border: c["border"]!, control: c["control"]!, primary: c["primary"]!, onPrimary: c["onPrimary"]!, primarySoft: c["primarySoft"]!, sun: c["sun"]!, onSun: c["onSun"]!, sky: c["sky"]!, onSky: c["onSky"]!, success: c["success"]!, successSoft: c["successSoft"]!, warning: c["warning"]!, warningSoft: c["warningSoft"]!, danger: c["danger"]!, dangerSoft: c["dangerSoft"]!, onDanger: c["onDanger"]!, info: c["info"]!, infoSoft: c["infoSoft"]!, focus: c["focus"]!, surfaceNavigation: c["surfaceNavigation"]!, onNavigation: c["onNavigation"]!, navigationMuted: c["navigationMuted"]!, navigationActive: c["navigationActive"]!, onNavigationActive: c["onNavigationActive"]!, surfaceTopbar: c["surfaceTopbar"]!, onTopbar: c["onTopbar"]!, onTopbarMuted: c["onTopbarMuted"]!, topbarControl: c["topbarControl"]!, surfaceGroup: c["surfaceGroup"]!, surfaceInset: c["surfaceInset"]!, surfaceFloating: c["surfaceFloating"]!, fieldFill: c["fieldFill"]!, fieldHover: c["fieldHover"]!, fieldLine: c["fieldLine"]!, fieldLineHover: c["fieldLineHover"]!, edgeSoft: c["edgeSoft"]!, secondaryContainer: c["secondaryContainer"]!, onSecondaryContainer: c["onSecondaryContainer"]!, tertiaryContainer: c["tertiaryContainer"]!, onTertiaryContainer: c["onTertiaryContainer"]!)
   }
   public static func contrastDiagnostics(hex: [String: String]) throws
     -> [RosemaryContrastDiagnostic]
@@ -135,14 +139,7 @@ public struct RosemaryTheme {
       c[role] = value
     }
     return RosemaryTheme(
-      colors: RosemaryColors(
-        canvas: c["canvas"]!, surface: c["surface"]!, raised: c["raised"]!, ink: c["ink"]!,
-        muted: c["muted"]!, border: c["border"]!, control: c["control"]!, primary: c["primary"]!,
-        onPrimary: c["onPrimary"]!, primarySoft: c["primarySoft"]!, sun: c["sun"]!,
-        onSun: c["onSun"]!, sky: c["sky"]!, onSky: c["onSky"]!, success: c["success"]!,
-        successSoft: c["successSoft"]!, warning: c["warning"]!, warningSoft: c["warningSoft"]!,
-        danger: c["danger"]!, dangerSoft: c["dangerSoft"]!, onDanger: c["onDanger"]!,
-        info: c["info"]!, infoSoft: c["infoSoft"]!, focus: c["focus"]!))
+      colors: RosemaryColors(canvas: c["canvas"]!, surface: c["surface"]!, raised: c["raised"]!, ink: c["ink"]!, muted: c["muted"]!, border: c["border"]!, control: c["control"]!, primary: c["primary"]!, onPrimary: c["onPrimary"]!, primarySoft: c["primarySoft"]!, sun: c["sun"]!, onSun: c["onSun"]!, sky: c["sky"]!, onSky: c["onSky"]!, success: c["success"]!, successSoft: c["successSoft"]!, warning: c["warning"]!, warningSoft: c["warningSoft"]!, danger: c["danger"]!, dangerSoft: c["dangerSoft"]!, onDanger: c["onDanger"]!, info: c["info"]!, infoSoft: c["infoSoft"]!, focus: c["focus"]!, surfaceNavigation: c["surfaceNavigation"]!, onNavigation: c["onNavigation"]!, navigationMuted: c["navigationMuted"]!, navigationActive: c["navigationActive"]!, onNavigationActive: c["onNavigationActive"]!, surfaceTopbar: c["surfaceTopbar"]!, onTopbar: c["onTopbar"]!, onTopbarMuted: c["onTopbarMuted"]!, topbarControl: c["topbarControl"]!, surfaceGroup: c["surfaceGroup"]!, surfaceInset: c["surfaceInset"]!, surfaceFloating: c["surfaceFloating"]!, fieldFill: c["fieldFill"]!, fieldHover: c["fieldHover"]!, fieldLine: c["fieldLine"]!, fieldLineHover: c["fieldLineHover"]!, edgeSoft: c["edgeSoft"]!, secondaryContainer: c["secondaryContainer"]!, onSecondaryContainer: c["onSecondaryContainer"]!, tertiaryContainer: c["tertiaryContainer"]!, onTertiaryContainer: c["onTertiaryContainer"]!))
   }
 
   private static func rgb(_ hex: String) -> (Double, Double, Double)? {
@@ -191,6 +188,9 @@ extension View {
   public func rosemaryTheme(_ theme: RosemaryTheme) -> some View {
     environment(\.rosemaryTheme, theme)
   }
+  public func rosemaryTheme(_ scheme: RosemaryColorScheme, mode: RosemaryThemeMode = .system) -> some View {
+    modifier(ThemeModeModifier(mode: mode, scheme: scheme))
+  }
   public func rosemaryTheme(_ mode: RosemaryThemeMode) -> some View {
     modifier(ThemeModeModifier(mode: mode))
   }
@@ -211,16 +211,17 @@ extension View {
 }
 private struct ThemeModeModifier: ViewModifier {
   let mode: RosemaryThemeMode
+  let scheme: RosemaryColorScheme
   @Environment(\.colorScheme) private var hostAppearance
   @Environment(\.rosemarySystemAppearance) private var inheritedSystemAppearance
-  init(mode: RosemaryThemeMode) { self.mode = mode }
+  init(mode: RosemaryThemeMode, scheme: RosemaryColorScheme = .defaults) { self.mode = mode;self.scheme=scheme }
   private var systemAppearance: ColorScheme { inheritedSystemAppearance ?? hostAppearance }
   @ViewBuilder private func themed(_ content: Content) -> some View {
     switch mode {
-    case .light: content.environment(\.rosemaryTheme, .light).environment(\.colorScheme, .light)
-    case .dark: content.environment(\.rosemaryTheme, .dark).environment(\.colorScheme, .dark)
+    case .light: content.environment(\.rosemaryTheme, scheme.light).environment(\.colorScheme, .light)
+    case .dark: content.environment(\.rosemaryTheme, scheme.dark).environment(\.colorScheme, .dark)
     case .system:
-      content.environment(\.rosemaryTheme, nil).environment(\.colorScheme, systemAppearance)
+      content.environment(\.rosemaryTheme, systemAppearance == .dark ? scheme.dark : scheme.light).environment(\.colorScheme, systemAppearance)
     }
   }
   func body(content: Content) -> some View {
@@ -235,19 +236,23 @@ struct RosemaryFieldFrame: ViewModifier {
   private var p = RosemaryPalette()
   var invalid = false
   var focused = false
-  init(invalid: Bool = false, focused: Bool = false) {
+  var editable = true
+  init(invalid: Bool = false, focused: Bool = false, editable: Bool = true) {
     self.invalid = invalid
     self.focused = focused
+    self.editable = editable
   }
   func body(content: Content) -> some View {
     content.padding(12).frame(minHeight: RosemaryNativeMetrics.dimension("input", "minHeight"))
-      .background(!enabled ? p.colors.canvas : invalid ? p.colors.dangerSoft : p.colors.surface)
+      .background(!enabled ? p.colors.canvas : invalid ? p.colors.dangerSoft : p.colors.fieldFill)
       .clipShape(RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("input")))
-      .overlay(
-        RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("input")).stroke(
-          invalid ? p.colors.danger : focused ? p.colors.focus : p.colors.control,
-          lineWidth: focused ? 2 : p.stroke)
-      )
+      .overlay(alignment: .bottom) {
+        if p.stroke > 1 {
+          RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("input")).stroke(invalid ? p.colors.danger : focused ? p.colors.focus : p.colors.control, lineWidth: 2)
+        } else if editable {
+          Rectangle().fill(invalid ? p.colors.danger : focused ? p.colors.focus : p.colors.fieldLine).frame(height: focused || invalid ? 2 : 1)
+        }
+      }
       .foregroundStyle(enabled ? p.colors.ink : p.colors.muted)
       .opacity(enabled ? 1 : 0.65)
   }

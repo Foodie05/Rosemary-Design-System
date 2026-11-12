@@ -99,8 +99,8 @@ public struct RosemaryTooltip<Content: View>: View {
           ScrollView {
             Text(text).rosemaryTypography(.caption).foregroundStyle(p.colors.ink)
               .frame(maxWidth: .infinity, alignment: .leading).padding(10)
-          }.background(p.colors.raised, in: RoundedRectangle(cornerRadius: 8))
-            .overlay(RoundedRectangle(cornerRadius: 8).stroke(p.colors.border, lineWidth: p.stroke))
+          }.background(p.colors.surfaceFloating, in: RoundedRectangle(cornerRadius: 8))
+            .overlay(RoundedRectangle(cornerRadius: 8).stroke(p.stroke > 1 ? p.colors.control : p.colors.edgeSoft, lineWidth: p.stroke))
             .onHover { if $0 { presented = true } }.accessibilityHidden(true)
         }
       }
@@ -247,7 +247,7 @@ private struct RosemaryModalModifier<Panel: View>: ViewModifier {
                 : drawer == .bottom ? g.size.height * 0.75 : g.size.height
             )
             .background(
-              p.colors.raised,
+              p.colors.surfaceFloating,
               in: RoundedRectangle(
                 cornerRadius: RosemaryNativeMetrics.radius(drawer == nil ? "dialog" : "drawer"))
             ).overlay(

@@ -77,9 +77,9 @@ public struct RosemarySelect<Value: Hashable>: View {
         }
       }.onAppear { proxy.scrollTo(cursor, anchor: .center) }
         .onChange(of: cursor) { _, value in proxy.scrollTo(value, anchor: .center) }
-    }.background(p.colors.surface, in: RoundedRectangle(cornerRadius: 8))
+    }.background(p.colors.surfaceFloating, in: RoundedRectangle(cornerRadius: 8))
       .overlay(
-        RoundedRectangle(cornerRadius: 8).stroke(p.colors.control, lineWidth: p.stroke)
+        RoundedRectangle(cornerRadius: 8).stroke(p.stroke > 1 ? p.colors.control : p.colors.edgeSoft, lineWidth: p.stroke)
       )
       .onKeyPress(.escape) {
         open = false
@@ -501,7 +501,7 @@ public struct RosemaryTable<Row: Identifiable>: View {
         }
       }.padding(16).foregroundStyle(p.colors.ink).background(
         p.colors.surface, in: RoundedRectangle(cornerRadius: 12)
-      ).overlay(RoundedRectangle(cornerRadius: 12).stroke(p.colors.border, lineWidth: p.stroke))
+      ).overlay(RoundedRectangle(cornerRadius: 12).stroke(p.stroke > 1 ? p.colors.control : p.colors.edgeSoft, lineWidth: p.stroke))
     }
   }
 }

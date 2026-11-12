@@ -1,6 +1,7 @@
 package design.rosemary.compose
 
 import android.database.ContentObserver
+import org.json.JSONObject
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.*
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -31,6 +34,22 @@ enum class RosemaryThemeMode {
     Light,
     Dark,
     Inherit,
+}
+
+/** Both appearance palettes from a canonical studio/SDK JSON recipe. */
+data class RosemaryColorScheme(val light: RosemaryColors, val dark: RosemaryColors) {
+    companion object {
+        val Default = RosemaryColorScheme(RosemaryTokens.light, RosemaryTokens.dark)
+        fun fromJson(json: String): RosemaryColorScheme {
+            val source = JSONObject(json)
+            val modes = source.optJSONObject("colors") ?: source.optJSONObject("themes") ?: source
+            fun palette(mode: String): RosemaryColors {
+                val values = modes.getJSONObject(mode)
+                return RosemaryColors.fromHex(values.keys().asSequence().associateWith { values.getString(it) })
+            }
+            return RosemaryColorScheme(palette("light"), palette("dark"))
+        }
+    }
 }
 
 enum class RosemaryTone {
@@ -58,6 +77,7 @@ enum class RosemaryDismissReason {
     Unmount,
 }
 
+private val LocalRosemaryDark = staticCompositionLocalOf { false }
 private val LocalRosemaryThemePresent = staticCompositionLocalOf { false }
 internal val LocalRosemaryColors = staticCompositionLocalOf { RosemaryTokens.light }
 internal val LocalRosemaryReducedMotion = staticCompositionLocalOf { false }
@@ -93,6 +113,7 @@ private fun systemHighContrastText(): Boolean {
 fun RosemaryTheme(
     mode: RosemaryThemeMode = RosemaryThemeMode.Inherit,
     colors: RosemaryColors? = null,
+    scheme: RosemaryColorScheme? = null,
     direction: LayoutDirection? = null,
     reduceMotion: Boolean = false,
     language: RosemaryLanguage? = null,
@@ -108,18 +129,16 @@ fun RosemaryTheme(
         highContrast ||
             LocalRosemaryHighContrast.current ||
             (if (Build.VERSION.SDK_INT >= 36) systemHighContrastText() else false)
-    val resolved =
-        (if (contrastRequested) highContrastColors else null)
-            ?: colors
-            ?: when (mode) {
-                RosemaryThemeMode.System ->
-                    if (isSystemInDarkTheme()) RosemaryTokens.dark else RosemaryTokens.light
-                RosemaryThemeMode.Light -> RosemaryTokens.light
-                RosemaryThemeMode.Dark -> RosemaryTokens.dark
-                RosemaryThemeMode.Inherit ->
-                    if (parentPresent) parent
-                    else if (isSystemInDarkTheme()) RosemaryTokens.dark else RosemaryTokens.light
-            }
+    val pair = scheme ?: RosemaryColorScheme.Default
+    val dark = when (mode) {
+        RosemaryThemeMode.Dark -> true
+        RosemaryThemeMode.Light -> false
+        RosemaryThemeMode.System -> isSystemInDarkTheme()
+        RosemaryThemeMode.Inherit -> if (parentPresent) LocalRosemaryDark.current else isSystemInDarkTheme()
+    }
+    val resolved = (if (contrastRequested) highContrastColors else null) ?: colors
+        ?: if (mode == RosemaryThemeMode.Inherit && parentPresent && scheme == null) parent
+        else if (dark) pair.dark else pair.light
     val diagnostics = remember(resolved) { rosemaryValidateTheme(resolved) }
     val reportDiagnostics by rememberUpdatedState(onContrastDiagnostics)
     LaunchedEffect(diagnostics) {
@@ -164,6 +183,7 @@ fun RosemaryTheme(
         LocalRosemaryThemePresent provides true,
         LocalRosemaryStrings provides resolvedStrings,
         LocalRosemaryColors provides resolved,
+        LocalRosemaryDark provides dark,
         LocalRosemaryHighContrast provides contrastRequested,
         LocalRosemaryReducedMotion provides
             (reduceMotion || systemReduced || LocalRosemaryReducedMotion.current),
@@ -226,6 +246,20 @@ internal fun Modifier.rosemaryFocus(radius: Dp = RosemaryTokens.controlRadius.dp
             if (focused) colors.focus else Color.Transparent,
             RoundedCornerShape(radius),
         )
+}
+
+@Composable
+internal fun Modifier.rosemaryFieldFocus(invalid: Boolean = false): Modifier {
+    var focused by remember { mutableStateOf(false) }
+    val c = RosemaryTheme.colors
+    val highContrast = RosemaryTheme.highContrast
+    return onFocusChanged { focused = it.isFocused }.drawWithContent {
+        drawContent()
+        val line = if (focused || invalid) 2.dp.toPx() else 1.dp.toPx()
+        val color = if (invalid) c.danger else if (focused) c.focus else c.fieldLine
+        if (highContrast) drawRect(color, style = androidx.compose.ui.graphics.drawscope.Stroke(line))
+        else drawLine(color, Offset(0f,size.height-line/2), Offset(size.width,size.height-line/2),line)
+    }
 }
 
 internal fun toneColors(colors: RosemaryColors, tone: RosemaryTone): Pair<Color, Color> =

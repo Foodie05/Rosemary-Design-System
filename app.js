@@ -405,8 +405,8 @@
     else if (action==='sync-reset') setSync('reset');
     else if (action==='remove-item') {state.removed=true;updateUndo();document.querySelector('[data-action="undo-remove"]').focus();notify('已从演示列表移除。撤销入口会保持可见。');}
     else if (action==='undo-remove') {state.removed=false;updateUndo();const restored=document.getElementById('undo-item');restored.classList.remove('restored');requestAnimationFrame(()=>restored.classList.add('restored'));document.querySelector('[data-action="remove-item"]').focus();notify('已恢复这条示例。');}
-    else if (action==='download-tokens') downloadFile('rosemary-forma-tokens-v1.2.0.json',JSON.stringify({...tokens,themes:window.RosemaryColors.current().themes},null,2),'application/json;charset=utf-8');
-    else if (action==='download-guide') downloadFile('rosemary-forma-guide-v1.2.0.md',window.ROSEMARY_GUIDE,'text/markdown;charset=utf-8');
+    else if (action==='download-tokens') downloadFile('rosemary-forma-tokens-v1.3.0.json',JSON.stringify({...tokens,themes:window.RosemaryColors.current().themes},null,2),'application/json;charset=utf-8');
+    else if (action==='download-guide') downloadFile('rosemary-forma-guide-v1.3.0.md',window.ROSEMARY_GUIDE,'text/markdown;charset=utf-8');
     else if (action==='reset-checklist') {state.checks=Array(8).fill(false);writePreference('rosemary-design-checks-v1',JSON.stringify(state.checks));updateChecklist();}
   });
   document.addEventListener('change',event=> {

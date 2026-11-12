@@ -205,7 +205,7 @@ fun RosemaryMenu(
                         .heightIn(max = 420.dp)
                         .verticalScroll(rememberScrollState())
                         .background(
-                            RosemaryTheme.colors.raised,
+                            RosemaryTheme.colors.surfaceFloating,
                             RoundedCornerShape(rosemaryRadius("menu")),
                         )
                         .padding(8.dp)
@@ -280,12 +280,12 @@ fun RosemaryPopover(
                         .heightIn(max = 500.dp)
                         .verticalScroll(rememberScrollState())
                         .background(
-                            RosemaryTheme.colors.raised,
+                            RosemaryTheme.colors.surfaceFloating,
                             RoundedCornerShape(rosemaryRadius("card")),
                         )
                         .border(
                             1.dp,
-                            RosemaryTheme.colors.border,
+                            RosemaryTheme.colors.edgeSoft,
                             RoundedCornerShape(rosemaryRadius("card")),
                         )
                         .padding(16.dp),
@@ -333,10 +333,10 @@ fun RosemaryCard(
     Column(
         modifier
             .fillMaxWidth()
-            .background(c.surface, RoundedCornerShape(rosemaryRadius("card")))
+            .background(if (selected) c.primarySoft else c.surfaceGroup, RoundedCornerShape(rosemaryRadius("card")))
             .border(
                 if (selected) 2.dp else 1.dp,
-                if (selected) c.primary else c.border,
+                if (RosemaryTheme.highContrast) c.control else Color.Transparent,
                 RoundedCornerShape(rosemaryRadius("card")),
             )
             .then(

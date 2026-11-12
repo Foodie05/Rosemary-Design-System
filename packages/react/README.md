@@ -1,5 +1,8 @@
 # @rosemary-ui/react 0.4.2
 
+> 0.5.0 release candidate implements Forma 1.3.0 with 45 semantic roles and paired scheme imports. See `docs/sdk/0.5.0-migration.md` in the repository. v0.4.2 remains the latest published release; existing historical device evidence below does not establish acceptance for this candidate.
+
+
 Rosemary Forma 1.2.0 components for React 18.3.1 and 19.2.8. Install the three supplied tarballs together; packages are not published to a public registry.
 
 ```sh

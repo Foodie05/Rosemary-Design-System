@@ -62,11 +62,25 @@ final class RosemaryTests: XCTestCase {
     draft.cancel()
     XCTAssertEqual(draft.value, b)
   }
+  func testPairedCanonicalRecipeImport() throws {
+    var light=Dictionary(uniqueKeysWithValues: RosemaryTheme.semanticNames.map { ($0,"#FFFFFF") })
+    var dark=light
+    light["surfaceNavigation"]="#112233";dark["surfaceNavigation"]="#334455"
+    light["fieldFill"]="#EEFFDD";dark["fieldFill"]="#223322"
+    let json=try JSONSerialization.data(withJSONObject:["colors":["light":light,"dark":dark]])
+    let scheme=try RosemaryColorScheme(json:json)
+    XCTAssertEqual(scheme.light.colors.toMap().count,45)
+    XCTAssertNotEqual(scheme.light.colors.surfaceNavigation,scheme.dark.colors.surfaceNavigation)
+    XCTAssertNotEqual(scheme.light.colors.fieldFill,scheme.dark.colors.fieldFill)
+    XCTAssertThrowsError(try RosemaryColorScheme(json:Data("{}".utf8)))
+    light.removeValue(forKey:"fieldFill")
+    XCTAssertThrowsError(try RosemaryTheme(hex:light))
+  }
   func testCompleteThemeValidationContrastAndInheritance() throws {
     var hex = Dictionary(uniqueKeysWithValues: RosemaryTheme.semanticNames.map { ($0, "#FFFFFF") })
     XCTAssertEqual(
       try RosemaryTheme.contrastDiagnostics(hex: hex).count, RosemaryTokens.contrastPairs.count)
-    XCTAssertEqual(RosemaryTokens.contrastPairs.count, 22)
+    XCTAssertEqual(RosemaryTokens.contrastPairs.count, 56)
     hex["ink"] = "#000000"
     let theme = try RosemaryTheme(hex: hex)
     XCTAssertNotNil(theme.colors.toMap()["ink"])
@@ -97,7 +111,7 @@ final class RosemaryTests: XCTestCase {
     bad["unexpected"] = "#000000"
     XCTAssertThrowsError(try RosemaryTheme(hex: bad))
     let inherited = try theme.overriding(["primary": .purple])
-    XCTAssertEqual(inherited.colors.toMap().count, 24)
+    XCTAssertEqual(inherited.colors.toMap().count, 45)
     XCTAssertThrowsError(try theme.overriding(["not-a-role": .red]))
   }
   func testAnchoredPlacementFlipsClampsAndPreservesRTLLeadingEdge() {

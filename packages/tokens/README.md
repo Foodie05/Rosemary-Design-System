@@ -1,5 +1,8 @@
 # @rosemary-ui/tokens 0.4.2
 
+> 0.5.0 release candidate implements Forma 1.3.0 with 45 semantic roles and paired scheme imports. See `docs/sdk/0.5.0-migration.md` in the repository. v0.4.2 remains the latest published release; existing historical device evidence below does not establish acceptance for this candidate.
+
+
 Shared Forma 1.2.0 theme roles, component tokens, motion and local date helpers.
 Import `defaultThemes`, `createTheme`, `resolveTheme`, `validateTheme`,
 `themeCssVariables`, `componentTokens`, `motion` and `metrics` from the package.

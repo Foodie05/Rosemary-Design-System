@@ -83,14 +83,14 @@ function Gallery() {
         <header className="gallery-hero">
           <div>
             <R.BrandBadge product="forma" size={64} label="Forma" />
-            <span>ROSEMARY FORMA · SDK 0.4.2</span>
+            <span>ROSEMARY FORMA · SDK 0.5.0</span>
           </div>
           <h1>
             Components that belong
             <br />
             to your product.
           </h1>
-          <p>设计规范 1.2.0。主题、可访问语义与受控行为，共享同一套约定。</p>
+          <p>设计规范 1.3.0。主题、可访问语义与受控行为，共享同一套约定。</p>
           <div className="gallery-controls">
             <R.Radio
               label="主题"

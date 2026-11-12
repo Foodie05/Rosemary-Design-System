@@ -229,7 +229,7 @@ class _PanelState extends State<RosemaryDialog>
             constraints: BoxConstraints(maxHeight: size.height),
             padding: widget.padding,
             decoration: BoxDecoration(
-              color: c.raised,
+              color: c.surfaceFloating,
               borderRadius: drawer
                   ? null
                   : BorderRadius.circular(RosemaryTokens.dialogRadius),
@@ -405,12 +405,14 @@ class _PopoverState extends State<RosemaryPopover> {
                             ),
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: RosemaryThemeData.of(context).surface,
+                              color: RosemaryThemeData.of(
+                                context,
+                              ).surfaceFloating,
                               borderRadius: BorderRadius.circular(
                                 RosemaryTokens.contentRadius,
                               ),
                               border: Border.all(
-                                color: RosemaryThemeData.of(context).control,
+                                color: RosemaryThemeData.of(context).edgeSoft,
                               ),
                             ),
                             child: SingleChildScrollView(child: widget.child),
@@ -512,9 +514,9 @@ class _TooltipState extends State<RosemaryTooltip> {
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: RosemaryThemeData.of(context).raised,
+                  color: RosemaryThemeData.of(context).surfaceFloating,
                   border: Border.all(
-                    color: RosemaryThemeData.of(context).control,
+                    color: RosemaryThemeData.of(context).edgeSoft,
                   ),
                   borderRadius: BorderRadius.circular(
                     RosemaryTokens.controlRadius,

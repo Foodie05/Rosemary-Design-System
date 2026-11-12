@@ -1,0 +1,88 @@
+{
+  "date": "2026-11-12",
+  "status": "local-candidate",
+  "views": [
+    {
+      "columns": "676px 676px",
+      "examples": 33,
+      "gap": "24px",
+      "mode": "light",
+      "overflow": 0,
+      "roles": 45,
+      "width": 1440
+    },
+    {
+      "columns": "676px 676px",
+      "examples": 33,
+      "gap": "24px",
+      "mode": "dark",
+      "overflow": 0,
+      "roles": 45,
+      "width": 1440
+    },
+    {
+      "columns": "468px 468px",
+      "examples": 33,
+      "gap": "24px",
+      "mode": "light",
+      "overflow": 0,
+      "roles": 45,
+      "width": 1024
+    },
+    {
+      "columns": "468px 468px",
+      "examples": 33,
+      "gap": "24px",
+      "mode": "dark",
+      "overflow": 0,
+      "roles": 45,
+      "width": 1024
+    },
+    {
+      "columns": "340px 340px",
+      "examples": 33,
+      "gap": "24px",
+      "mode": "light",
+      "overflow": 0,
+      "roles": 45,
+      "width": 768
+    },
+    {
+      "columns": "340px 340px",
+      "examples": 33,
+      "gap": "24px",
+      "mode": "dark",
+      "overflow": 0,
+      "roles": 45,
+      "width": 768
+    },
+    {
+      "columns": "350px",
+      "examples": 33,
+      "gap": "16px",
+      "mode": "light",
+      "overflow": 0,
+      "roles": 45,
+      "width": 390
+    },
+    {
+      "columns": "350px",
+      "examples": 33,
+      "gap": "16px",
+      "mode": "dark",
+      "overflow": 0,
+      "roles": 45,
+      "width": 390
+    }
+  ],
+  "input": {
+    "integratedBottomFocus": true,
+    "perimeterOutline": false
+  },
+  "popup": {
+    "pairedFloatingSurface": true,
+    "quietEdge": true,
+    "dualShadow": true
+  },
+  "modeSwitch": true
+}

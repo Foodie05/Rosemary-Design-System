@@ -9,7 +9,7 @@ const buildRoot = process.env.ROSEMARY_BUILD_ROOT || os.tmpdir();
 mkdirSync(buildRoot, { recursive: true });
 const fixture = mkdtempSync(path.join(buildRoot, "shared-consumer-"));
 const files = ["tokens", "icons"].map((name) =>
-  path.join(artifactRoot, "shared", `rosemary-ui-${name}-0.4.2.tgz`),
+  path.join(artifactRoot, "shared", `rosemary-ui-${name}-0.5.0.tgz`),
 );
 for (const file of files) readFileSync(file);
 writeFileSync(
@@ -30,10 +30,16 @@ const source = `
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createRequire} from 'node:module';
-import {defaultThemes,createTheme,validateTheme,parseLocalDate,formatLocalDate} from '@rosemary-ui/tokens';
+import {defaultThemes,createTheme,validateTheme,parseLocalDate,formatLocalDate,createColorScheme,importColorScheme,generateColorRecipe} from '@rosemary-ui/tokens';
 import {getIconSvg,iconNames} from '@rosemary-ui/icons';
 const require=createRequire(import.meta.url);
 assert.equal(validateTheme(defaultThemes.dark).length,0);
+const recipe=generateColorRecipe({seed:'#00FF00',mood:'vivid'});
+const scheme=importColorScheme(JSON.parse(JSON.stringify(recipe)));
+assert.deepEqual(scheme,createColorScheme(recipe.config));
+assert.equal(Object.keys(scheme.light).length,45);
+assert.deepEqual(validateTheme(scheme.dark),[]);
+assert.equal(scheme.light.surfaceNavigation,recipe.colors.light['surface-navigation']);
 assert.equal(createTheme(defaultThemes.dark,{surface:'#25212D'}).primary,defaultThemes.dark.primary);
 assert.equal(formatLocalDate(parseLocalDate('0001-01-01')),'0001-01-01');
 assert.deepEqual(iconNames,${JSON.stringify(Object.keys(JSON.parse(readFileSync(new URL('../design/icons.json', import.meta.url), 'utf8'))))});

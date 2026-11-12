@@ -1227,3 +1227,31 @@ body:has(.rm-dialog:modal) {
     background: HighlightText;
   }
 }
+
+/* Forma 1.3 semantic hierarchy. Controls are filled; editable fields have one baseline. */
+.rm-theme { --rm-layout-gap:24px;--rm-content-max:1480px; }
+.rm-button[data-variant="secondary"] { background:var(--rm-surface-inset);border-color:transparent; }
+.rm-input { background:var(--rm-field-fill);border-color:transparent;border-bottom-color:var(--rm-field-line); }
+.rm-input:hover:not(:disabled):not(:read-only) { background:var(--rm-field-hover);border-bottom-color:var(--rm-field-line-hover); }
+.rm-theme input.rm-input:focus-visible,.rm-theme textarea.rm-input:focus-visible { outline:none;border-color:transparent;border-bottom-color:var(--rm-focus);box-shadow:inset 0 -1px var(--rm-focus); }
+.rm-input[aria-invalid="true"],.rm-theme .rm-input[aria-invalid="true"]:focus-visible { border-color:transparent;border-bottom-color:var(--rm-danger);background:var(--rm-danger-soft); }
+button.rm-input,.rm-select-trigger { border-color:transparent;background:var(--rm-field-fill); }
+.rm-card { border-color:transparent;background:var(--rm-surface-group);box-shadow:0 2px 8px color-mix(in srgb,var(--rm-ink) 5%,transparent); }
+.rm-list>li { border-color:transparent; }
+.rm-table-wrap { border-color:transparent;background:var(--rm-surface-group); }
+.rm-table { background:var(--rm-surface-group); }
+.rm-table th { background:var(--rm-surface-inset); }
+.rm-table th,.rm-table td { border-color:var(--rm-edge-soft); }
+.rm-dialog,.rm-options,.rm-popover-panel,.rm-tooltip,.rm-toast { background:var(--rm-surface-floating);border-color:var(--rm-edge-soft);box-shadow:0 4px 12px color-mix(in srgb,var(--rm-ink) 8%,transparent),0 16px 48px color-mix(in srgb,var(--rm-ink) 8%,transparent); }
+.rm-theme nav a[aria-current="page"] { background:var(--rm-navigation-active);color:var(--rm-on-navigation-active);border-radius:var(--rm-radius-control); }
+.rm-surface { color:var(--rm-ink);background:var(--rm-surface-group);border-radius:var(--rm-radius-content); }
+.rm-surface[data-level="inset"] { background:var(--rm-surface-inset); }
+.rm-surface[data-level="floating"] { background:var(--rm-surface-floating); }
+.rm-surface[data-level="navigation"] { background:var(--rm-surface-navigation);color:var(--rm-on-navigation); }
+.rm-surface[data-level="topbar"] { background:var(--rm-surface-topbar);color:var(--rm-on-topbar); }
+@media(max-width:580px) { .rm-theme { --rm-layout-gap:16px; } }
+@media(forced-colors:active) {
+ .rm-theme input.rm-input:focus-visible,.rm-theme textarea.rm-input:focus-visible { outline:2px solid Highlight;outline-offset:2px; }
+ .rm-input,.rm-card,.rm-table-wrap { border:1px solid CanvasText;box-shadow:none; }
+ .rm-theme nav a[aria-current="page"] { background:Highlight;color:HighlightText; }
+}

@@ -47,7 +47,7 @@ fun RosemaryButton(
         when (variant) {
             RosemaryButtonVariant.Primary -> c.primary
             RosemaryButtonVariant.Danger -> c.danger
-            RosemaryButtonVariant.Secondary -> c.surface
+            RosemaryButtonVariant.Secondary -> c.surfaceInset
             RosemaryButtonVariant.Text -> Color.Transparent
         }
     val ink =
@@ -64,7 +64,7 @@ fun RosemaryButton(
             .background(if (enabled) fill else c.border)
             .border(
                 if (variant == RosemaryButtonVariant.Secondary) 1.dp else 0.dp,
-                if (variant == RosemaryButtonVariant.Secondary) c.control else Color.Transparent,
+                if (RosemaryTheme.highContrast) c.control else Color.Transparent,
                 RoundedCornerShape(rosemaryRadius("input")),
             )
             .clickable(enabled = enabled && !busy, role = Role.Button, onClick = onClick)
@@ -223,14 +223,9 @@ private fun Field(
             onValueChange,
             Modifier.fillMaxWidth()
                 .heightIn(min = rosemaryDimension("input", "minTouchTarget"))
-                .rosemaryFocus()
-                .border(
-                    1.dp,
-                    if (error != null) c.danger else c.control,
-                    RoundedCornerShape(rosemaryRadius("input")),
-                )
+                .rosemaryFieldFocus(error != null)
                 .background(
-                    if (!enabled) c.canvas else if (error != null) c.dangerSoft else c.surface,
+                    if (!enabled) c.canvas else if (error != null) c.dangerSoft else c.fieldFill,
                     RoundedCornerShape(rosemaryRadius("input")),
                 )
                 .alpha(if (enabled) 1f else .65f)
@@ -330,12 +325,12 @@ fun RosemarySelect(
                     .rosemaryFocus()
                     .clip(RoundedCornerShape(rosemaryRadius("input")))
                     .background(
-                        if (!enabled) c.canvas else if (error != null) c.dangerSoft else c.surface
+                        if (!enabled) c.canvas else if (error != null) c.dangerSoft else c.fieldFill
                     )
                     .alpha(if (enabled) 1f else .65f)
                     .border(
                         1.dp,
-                        if (error != null) c.danger else c.control,
+                        if (RosemaryTheme.highContrast) c.control else Color.Transparent,
                         RoundedCornerShape(rosemaryRadius("input")),
                     )
                     .clickable(enabled = enabled, role = Role.Button) {
@@ -373,7 +368,7 @@ fun RosemarySelect(
                             .heightIn(max = 360.dp)
                             .verticalScroll(rememberScrollState())
                             .background(c.raised, RoundedCornerShape(rosemaryRadius("input")))
-                            .border(1.dp, c.border, RoundedCornerShape(rosemaryRadius("input")))
+                            .background(c.surfaceInset, RoundedCornerShape(rosemaryRadius("input")))
                             .padding(4.dp)
                             .selectableGroup()
                             .onPreviewKeyEvent { event ->
