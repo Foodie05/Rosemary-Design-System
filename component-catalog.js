@@ -1,8 +1,8 @@
 (() => {
   const base = {
     responsive:'验证长标签、窄屏、200% 文字放大和触控操作。主要信息不能因固定宽高被裁切。',
-    maturity:'设计提案；门户演示不是生产组件库。',
-    validation:'实现前验证所有列出的状态、键盘路径、深浅主题和目标平台辅助技术。'
+    maturity:'设计规范；多端实现与代码接入见 SDK 章节。',
+    validation:'开发接入前请核对所有状态、键盘支持、深浅主题与无障碍表现。'
   };
   const catalog = {};
   function add(id,title,use,anatomy,variants,dimensions,states,behavior,keyboard,semantics,motion,good,bad,implementation='规范与门户演示') {

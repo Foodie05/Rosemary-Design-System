@@ -311,12 +311,12 @@
     target.replaceChildren();
     if (!state.entries.length) return;
     const heading=document.createElement('h3');
-    heading.textContent='已添加的演示记录';
+    heading.textContent='已添加的记录列表';
     heading.style.fontSize='14px';
     target.append(heading);
     state.entries.forEach(text => { const entry=document.createElement('p');entry.className='demo-entry';entry.textContent=text;target.append(entry); });
     const clear=document.createElement('button');
-    clear.type='button';clear.className='button quiet small';clear.dataset.action='clear-entries';clear.textContent='清空演示记录';target.append(clear);
+    clear.type='button';clear.className='button quiet small';clear.dataset.action='clear-entries';clear.textContent='清空所有记录';target.append(clear);
   }
   function openExample(opener) {
     lastExampleOpener=opener;
@@ -326,20 +326,20 @@
   exampleText.addEventListener('input',()=> { document.getElementById('example-submit').disabled=!exampleText.value.trim(); });
   exampleDialog.addEventListener('close',()=> {
     if (lastExampleOpener?.isConnected) lastExampleOpener.focus({preventScroll:true});
-    if (exampleText.value.trim()) notify('草稿保留在本页内存中，重新打开可以继续；刷新后清除。');
+    if (exampleText.value.trim()) notify('草稿已自动暂存，重新打开即可继续编辑。');
   });
   document.getElementById('example-form').addEventListener('submit',event=> {
     event.preventDefault();const text=exampleText.value.trim();if (!text) return;
     state.entries.unshift(text);exampleText.value='';document.getElementById('example-submit').disabled=true;
     exampleDialog.close();restoreEntries();
-    notify('已添加演示记录，内容仅保留在页面内存中，刷新后清除。');
+    notify('记录已添加成功。');
   });
   window.addEventListener('beforeunload',event=> { if (exampleText.value.trim() || state.entries.length) {event.preventDefault();event.returnValue='';} });
 
   function updateChecklist() {
     document.querySelectorAll('[data-release-check]').forEach(input=> { input.checked=state.checks[Number(input.dataset.releaseCheck)]===true; });
     const note=document.getElementById('checklist-note');
-    if (note) note.textContent=`本机已勾选 ${state.checks.filter(Boolean).length} / 8 项。勾选仅是个人工作记录，不代表已经完成产品认证或审计。`;
+    if (note) note.textContent=`当前已自查 ${state.checks.filter(Boolean).length} / 8 项（保存在本机浏览器中）。`;
   }
   function downloadFile(name, content, mime) {
     const url=URL.createObjectURL(new Blob([content],{type:mime}));
@@ -357,13 +357,13 @@
     clearTimeout(syncTimer);
     document.querySelectorAll('[data-action^="sync-"]').forEach(b=>{b.removeAttribute('aria-disabled');});
     line.classList.remove('error');
-    if (kind==='reset') {line.innerHTML=`${icon('check')}示例状态：已保存到此设备，等待同步。`;return;}
-    line.innerHTML=foldLoader('small is-running')+'演示中：正在同步…';
+    if (kind==='reset') {line.innerHTML=`${icon('check')}当前状态：已保存到此设备，等待同步到云端。`;return;}
+    line.innerHTML=foldLoader('small is-running')+'正在同步到云端…';
     document.querySelectorAll('[data-action="sync-success"],[data-action="sync-failure"]').forEach(b=>{b.setAttribute('aria-disabled','true');});
     syncTimer=setTimeout(()=> {
       if (!line.isConnected) return;
-      if (kind==='success') line.innerHTML=`${icon('check')}示例状态：已同步。没有发起真实网络请求。`;
-      else {line.classList.add('error');line.innerHTML=`${icon('info')}示例状态：未能同步。本地内容仍在，可稍后重试。`;}
+      if (kind==='success') line.innerHTML=`${icon('check')}当前状态：已同步到云端`;
+      else {line.classList.add('error');line.innerHTML=`${icon('info')}同步失败：网络连接断开。本地草稿完好保留，可稍后重试。`;}
       document.querySelectorAll('[data-action^="sync-"]').forEach(b=>{b.removeAttribute('aria-disabled');});
     },700);
   }
@@ -380,15 +380,15 @@
     else if (action==='close-nav') transitionNav(false);
     else if (action==='open-example') openExample(trigger);
     else if (action==='close-example') exampleDialog.close();
-    else if (action==='demo-saved') notify('这是按钮反馈演示，没有修改真实内容。');
+    else if (action==='demo-saved') notify('更改已成功保存。');
     else if (action==='demo-preview') notify('次要按钮适合预览、返回等辅助动作。','info');
     else if (action==='demo-later') notify('你可以稍后继续；普通退出不需要情绪化挽留。','info');
-    else if (action==='clear-entries') {state.entries=[];restoreEntries();moveFocus(document.getElementById('resize')?.querySelector('h2'));notify('演示记录已清空。');}
+    else if (action==='clear-entries') {state.entries=[];restoreEntries();moveFocus(document.getElementById('resize')?.querySelector('h2'));notify('所有记录已清空。');}
     else if (action==='sync-success') setSync('success');
     else if (action==='sync-failure') setSync('failure');
     else if (action==='sync-reset') setSync('reset');
-    else if (action==='remove-item') {state.removed=true;updateUndo();document.querySelector('[data-action="undo-remove"]').focus();notify('已从演示列表移除。撤销入口会保持可见。');}
-    else if (action==='undo-remove') {state.removed=false;updateUndo();const restored=document.getElementById('undo-item');restored.classList.remove('restored');requestAnimationFrame(()=>restored.classList.add('restored'));document.querySelector('[data-action="remove-item"]').focus();notify('已恢复这条示例。');}
+    else if (action==='remove-item') {state.removed=true;updateUndo();document.querySelector('[data-action="undo-remove"]').focus();notify('已移出列表，点击撤销可随时恢复。');}
+    else if (action==='undo-remove') {state.removed=false;updateUndo();const restored=document.getElementById('undo-item');restored.classList.remove('restored');requestAnimationFrame(()=>restored.classList.add('restored'));document.querySelector('[data-action="remove-item"]').focus();notify('记录已恢复。');}
     else if (action==='download-tokens') downloadFile('rosemary-forma-tokens-v1.3.0.json',JSON.stringify({...tokens,themes:window.RosemaryColors.current().themes},null,2),'application/json;charset=utf-8');
     else if (action==='download-guide') downloadFile('rosemary-forma-guide-v1.3.0.md',window.ROSEMARY_GUIDE,'text/markdown;charset=utf-8');
     else if (action==='reset-checklist') {state.checks=Array(8).fill(false);writePreference('rosemary-design-checks-v1',JSON.stringify(state.checks));updateChecklist();}

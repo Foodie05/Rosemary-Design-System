@@ -171,6 +171,10 @@
 .page[data-page="overview"] .forma-principle-list span {display:block;color:var(--muted);font:11px/1.5 var(--code);margin-bottom:45px}
 .page[data-page="overview"] .forma-principle-list h3 {font-size:17px;font-weight:560;margin-bottom:12px}
 .page[data-page="overview"] .forma-principle-list p {max-width:300px;color:var(--muted);font-size:13px;line-height:1.9}
+.page[data-page="overview"] .forma-role-links {display:flex;flex-direction:column;gap:8px;margin-top:20px}
+.page[data-page="overview"] .forma-role-link {display:inline-flex;align-items:center;gap:6px;color:var(--primary);font-size:13px;font-weight:500;width:fit-content}
+.page[data-page="overview"] .forma-role-link .icon {width:14px;height:14px;transition:transform 160ms var(--ease)}
+.page[data-page="overview"] .forma-role-link:hover .icon {transform:translateX(2px)}
 
 .page[data-page="overview"] .forma-paths {
   display:grid;
@@ -367,6 +371,7 @@
   .page[data-page="overview"] .forma-principle-list li { grid-template-columns:40px minmax(0,1fr);gap:8px 16px; }
   .page[data-page="overview"] .forma-principle-list span { margin:3px 0 0; }
   .page[data-page="overview"] .forma-principle-list p { grid-column:2;max-width:none; }
+  .page[data-page="overview"] .forma-role-links { grid-column:2;margin-top:8px; }
 }
 @media(max-width:580px) {
   .page[data-page="overview"] .forma-hero { gap:24px; }

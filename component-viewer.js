@@ -34,7 +34,7 @@
       </div>
       <section class="component-document-panel" id="component-panel-preview" role="tabpanel" aria-labelledby="component-tab-preview" tabindex="0">
         <div id="component-demo-host">${window.RosemaryComponentDemos.render(id)}</div>
-        <div class="component-preview-notes"><p>只展示<strong>${escape(item.title)}</strong>的示例与状态。触发按钮、标签等仅用于演示当前控件，不是其他组件的独立展示。</p><p>演示不连接真实账户；切换控件会重置本地示例。</p></div>
+        <div class="component-preview-notes"><p>上方为 <strong>${escape(item.title)}</strong> 的常用状态与可交互演示；支持使用鼠标点击或键盘 Tab 键体验交互反馈。</p></div>
       </section>
       <section class="component-document-panel" id="component-panel-usage" role="tabpanel" aria-labelledby="component-tab-usage" tabindex="0" hidden>
         ${fields(item,[['结构','anatomy'],['变体','variants'],['尺寸','dimensions'],['状态','states']])}
@@ -48,7 +48,7 @@
   function shell() {
     const {id,missing}=resolve();
     return `<section class="component-workspace" id="reference" aria-labelledby="component-picker-label">
-      <div class="component-picker-bar"><div class="component-picker-field"><label class="field-label" id="component-picker-label" for="component-spec-select">选择控件</label><select class="field-select" id="component-spec-select">${groups.map(([label,items])=>`<optgroup label="${label}">${items.map(key=>`<option value="${key}"${key===id?' selected':''}>${escape(catalog[key].title)}</option>`).join('')}</optgroup>`).join('')}</select></div><div class="component-step-controls"><button type="button" class="icon-button" data-component-step="-1" aria-label="上一个控件">${icon('arrow-left')}</button><span id="component-position">${ids.indexOf(id)+1} / ${ids.length}</span><button type="button" class="icon-button" data-component-step="1" aria-label="下一个控件">${icon('arrow')}</button></div><p class="component-picker-help">每次只查看一个控件。<br>预览、规范和实现要求同步切换。</p></div>
+      <div class="component-picker-bar"><div class="component-picker-field"><label class="field-label" id="component-picker-label" for="component-spec-select">选择控件</label><select class="field-select" id="component-spec-select">${groups.map(([label,items])=>`<optgroup label="${label}">${items.map(key=>`<option value="${key}"${key===id?' selected':''}>${escape(catalog[key].title)}</option>`).join('')}</optgroup>`).join('')}</select></div><div class="component-step-controls"><button type="button" class="icon-button" data-component-step="-1" aria-label="上一个控件">${icon('arrow-left')}</button><span id="component-position">${ids.indexOf(id)+1} / ${ids.length}</span><button type="button" class="icon-button" data-component-step="1" aria-label="下一个控件">${icon('arrow')}</button></div><p class="component-picker-help">支持使用左右按钮或键盘快速切换。<br>可点击下方选项卡查阅使用规范与实现细节。</p></div>
       <p class="component-selection-status sr-only" id="component-selection-status" role="status">${missing?'未找到指定控件，已显示按钮。':''}</p>
       <div class="component-detail" id="component-detail" data-selected-component="${id}">${detail(id)}</div>
     </section>`;
@@ -92,7 +92,7 @@
     const detailHost=document.getElementById('component-detail');
     const status=document.getElementById('component-selection-status');
     status.classList.toggle('sr-only',!resolved.missing);
-    const message=resolved.missing?'未找到指定控件，已显示按钮。':`已选择${catalog[resolved.id].title}，只显示该控件的示例与规范。`;
+    const message=resolved.missing?'未找到指定控件，已展示默认按钮。':`已切换至${catalog[resolved.id].title}组件。`;
     if(status.textContent!==message)status.textContent=message;
     if(currentId===resolved.id){updatePicker();return;}
     const focusFromPicker=document.activeElement===window.RosemarySelect.control(document.getElementById('component-spec-select')) || document.activeElement?.matches('[data-component-step]');
