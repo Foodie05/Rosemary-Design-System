@@ -141,3 +141,10 @@ RosemaryProgress("Imported", value: completed, total: total, isRunning: importin
 Anchored select/menu/popover/tooltip calculate placement in the hosting window, flip upward when needed, and clamp horizontal position; docked software keyboard frames reduce the available viewport. They remain nonmodal. Mount a surface outside an explicitly clipped custom ancestor: a host `.clipped()` can still clip descendant overlays. The sample's root ScrollView edge placement is exercised by a dedicated UI regression; its direct-launch screenshot is additional visual evidence, not a keyboard/interaction pass.
 
 The contract's app-state keys are reachable through composition: switch busy/error uses disabled binding plus Loading/Alert; tabs/pagination loading/error places feedback in consumer content; popover/dialog/drawer submitting/invalid disables submit and renders field/Alert errors in its content. Card selected uses consumer selection styling and a named button; Table empty/loading/error chooses Empty/Loading/Alert before supplying ready rows. Skeleton finished/error replaces the placeholder; Loading finished/error/cancelled/timeout sets `isRunning:false` and renders the host's actual result/error message. Unknown/partial/cancelled/error progress never fabricates completed work: host supplies real completed values or the unknown initializer, stops `isRunning` for terminal states, and composes the named result. Empty first-use/filtered/offline/denied is consumer title/message/action. Upload partial is a file collection with mixed per-file states. Link current/visited flags are host navigation/history data; IconButton has an explicit busy flag; Input/Textarea readonly values are selectable static text.
+
+
+## 统一密码创建策略
+
+`RosemaryPasswordPolicy.check(value)` 返回 `length`、`characters`、`categories` 与 `valid`。规则从 `design/input-validation.json` 生成：8–32 个字符，仅可打印 ASCII（不含空格），英文字母、数字、英文标点至少两类；不做 trim、改写或截断。
+
+纯检查器不自动控制 UI 时机。要求预先放在字段下方，首次非空脱焦才显示逐条对勾／红叉，此后动态更新；清空恢复中性。验证码、CAPTCHA 及其恢复操作也必须紧邻对应字段下方。

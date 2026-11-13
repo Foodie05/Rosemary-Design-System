@@ -238,7 +238,10 @@ class _PanelState extends State<RosemaryDialog>
                 ),
               ],
               borderRadius: drawer
-                  ? null
+                  ? const BorderRadiusDirectional.only(
+                      topStart: Radius.circular(RosemaryTokens.dialogRadius),
+                      bottomStart: Radius.circular(RosemaryTokens.dialogRadius),
+                    )
                   : BorderRadius.circular(RosemaryTokens.dialogRadius),
             ),
             child: SafeArea(

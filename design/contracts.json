@@ -186,11 +186,11 @@
       "variants": "普通、密码、邮箱、数字语义等；使用合适的原生类型与输入法提示。",
       "dimensions": "常规高度 40–44px，正文 16px 起；宽度按预期内容确定。",
       "states": "空、聚焦、已填、只读、禁用、错误、校验中。",
-      "behavior": "提交或合适时机校验；保留输入；不要在尚未输入时连续报错。",
+      "behavior": "要求提前显示在字段下方；首次非空脱焦后检查，此后动态更新；清空移除对错与错误描边。",
       "keyboard": "原生文本编辑；Enter 是否提交由表单语义决定。",
       "semantics": "label 与 input 关联；帮助与错误通过 aria-describedby；错误用 aria-invalid。",
       "motion": "边界和焦点短反馈；不摇晃整个字段表示错误。",
-      "good": "解释字段要求，并在字段附近给出修复方法。",
+      "good": "逐条满足显示对勾，未满足显示红叉和红色描边；验证代码、CAPTCHA 与恢复操作直接放在相关字段下方。",
       "bad": "只用 placeholder 作标签，或失败后清空内容。",
       "implementation": "Rosemary rendering; no demo business data",
       "stateKeys": [

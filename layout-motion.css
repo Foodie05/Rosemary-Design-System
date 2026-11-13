@@ -1,0 +1,15 @@
+.rm-range-shell { position:relative;display:inline-grid;grid-template-areas:'range';align-items:center;width:100%;min-width:0;min-height:44px;vertical-align:middle; }
+.rm-range-shell>input[type=range] { grid-area:range;position:relative;z-index:1;display:block;width:100%;min-width:0;height:44px;min-height:44px;margin:0;padding:0;opacity:0;cursor:pointer; }
+.rm-range-track { position:absolute;inset-inline:8px;top:50%;height:4px;transform:translateY(-50%);border-radius:999px;background:var(--control);pointer-events:none;overflow:hidden; }
+.rm-range-fill { display:block;height:100%;background:var(--primary);transition:width 180ms cubic-bezier(.2,.8,.2,1); }
+.rm-range-knob { position:absolute;top:50%;width:16px;height:16px;transform:translate(-50%,-50%);border-radius:50%;background:var(--primary);pointer-events:none;transition:left 180ms cubic-bezier(.2,.8,.2,1); }
+.rm-range-shell:has(input:focus-visible) .rm-range-knob { box-shadow:0 0 0 2px var(--canvas),0 0 0 4px var(--focus); }
+.rm-range-shell[data-direct=true] :is(.rm-range-fill,.rm-range-knob) { transition:none; }
+.rm-range-shell[data-disabled=true] { opacity:.5; }
+.rm-range-shell[data-disabled=true]>input { cursor:not-allowed; }
+.access-label>.rm-range-shell { width:150px; }
+@media(max-width:580px) { .access-label>.rm-range-shell { width:130px; } }
+@media(prefers-reduced-motion:reduce) { .rm-range-fill,.rm-range-knob { transition:none!important; } }
+@media(forced-colors:active) { .rm-range-track,.rm-range-knob { display:none; }.rm-range-shell>input[type=range] { opacity:1; } }
+/* Label changes must not create a transient second line while the box grows. */
+[data-motion-width=running] { white-space:nowrap;overflow:hidden;will-change:width; }

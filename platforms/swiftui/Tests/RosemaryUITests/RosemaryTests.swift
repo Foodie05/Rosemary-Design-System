@@ -4,6 +4,18 @@ import XCTest
 @testable import RosemaryUI
 
 final class RosemaryTests: XCTestCase {
+  func testUnifiedPasswordPolicy() {
+    for value in ["abc12345", "abcdefg!", "1234567!", String(repeating: "A", count: 31) + "1"] {
+      XCTAssertTrue(RosemaryPasswordPolicy.check(value).valid)
+    }
+    for value in ["", "AbCdEfGh", "12345678", "!!!!!!!!", "Abc12345中", "Abc12345😀", "Abc12345 ", String(repeating: "A", count: 32) + "1"] {
+      XCTAssertFalse(RosemaryPasswordPolicy.check(value).valid)
+    }
+    for n in 0...127 {
+      XCTAssertEqual(RosemaryPasswordPolicy.check("Ab12345" + String(UnicodeScalar(n)!)).valid, n >= 33 && n <= 126)
+    }
+  }
+
   func testGregorianBoundariesLeapYearsAndTimezoneFreeRoundTrip() throws {
     XCTAssertNil(RosemaryLocalDate("0000-01-01"))
     XCTAssertNil(RosemaryLocalDate("10000-01-01"))

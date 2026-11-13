@@ -6,10 +6,10 @@
   "packageManager": "pnpm@11.25.0",
   "license": "MIT",
   "scripts": {
-    "design:generate": "node scripts/generate-color-runtime.mjs && node scripts/generate-design.mjs",
-    "design:check": "node scripts/generate-color-runtime.mjs --check && node scripts/generate-design.mjs --check && node scripts/check-design.mjs",
+    "design:generate": "node scripts/generate-color-runtime.mjs && node scripts/generate-design.mjs && node scripts/generate-password-policy.mjs",
+    "design:check": "node scripts/generate-color-runtime.mjs --check && node scripts/generate-design.mjs --check && node scripts/check-design.mjs && node scripts/generate-password-policy.mjs --check",
     "build:shared": "pnpm --filter @rosemary-ui/tokens build && pnpm --filter @rosemary-ui/icons build",
-    "test:shared": "node --test tests/design-foundation.test.mjs tests/color-recipe.test.mjs",
+    "test:shared": "node --test tests/design-foundation.test.mjs tests/color-recipe.test.mjs tests/password-policy.test.mjs tests/input-validation.test.mjs",
     "build": "pnpm -r --if-present build",
     "test": "pnpm test:shared && pnpm -r --if-present test",
     "build:react": "pnpm build:shared && pnpm --filter @rosemary-ui/react build",

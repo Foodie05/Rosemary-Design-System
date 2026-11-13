@@ -9,3 +9,4 @@ export 'src/navigation.dart';
 export 'src/overlays.dart';
 export 'src/feedback.dart';
 export 'package:file_selector/file_selector.dart' show XFile, XTypeGroup;
+export 'src/password_policy.dart';

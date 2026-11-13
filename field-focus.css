@@ -1,0 +1,20 @@
+/* Filled fields have no baseline. The integrated 1.5px perimeter is drawn by
+   field-focus.js only while focused; native fallback remains without script. */
+:is(textarea,input:not([type]),input:is([type=text],[type=email],[type=password],[type=search],[type=url],[type=tel],[type=number])) {
+  border-color:transparent!important;box-shadow:none!important;
+}
+:is(.cs-search-field,.cs-query-form,.search-dialog-top):focus-within { box-shadow:none!important; }
+.page[data-page=cases] .cs-search-field { border-color:transparent;border-radius:var(--radius-control); }
+:is(textarea,input:not([type]),input:is([type=text],[type=email],[type=password],[type=search],[type=url],[type=tel],[type=number])):focus {
+  outline:1.5px solid var(--focus);outline-offset:-1.5px;
+}
+html[data-field-focus=ready] :is(textarea,input:not([type]),input:is([type=text],[type=email],[type=password],[type=search],[type=url],[type=tel],[type=number])):focus {
+  outline:none!important;
+}
+.rm-field-focus { position:fixed;display:block;max-width:none;overflow:visible;margin:0;padding:0;border:0;pointer-events:none;z-index:15; }
+.rm-field-focus path { fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:round;vector-effect:non-scaling-stroke; }
+@media(forced-colors:active) {
+  .rm-field-focus { display:none; }
+  :is(textarea,input:not([type]),input:is([type=text],[type=email],[type=password],[type=search],[type=url],[type=tel],[type=number])) { border:1px solid ButtonText!important; }
+  html[data-field-focus=ready] :is(textarea,input:not([type]),input:is([type=text],[type=email],[type=password],[type=search],[type=url],[type=tel],[type=number])):focus { outline:2px solid Highlight!important;outline-offset:-2px; }
+}

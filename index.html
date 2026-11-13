@@ -17,18 +17,27 @@
 <link rel="stylesheet" href="./forma-home.css">
 <link rel="stylesheet" href="./selection-controls.css">
 <link rel="stylesheet" href="./subbrand-page.css">
-<link rel="stylesheet" href="./case-studies-page.css">
 <link rel="stylesheet" href="./sdk-page.css">
   <link rel="stylesheet" href="./surfaces.css">
 <link rel="stylesheet" href="./color-roles.css">
 <link rel="stylesheet" href="./color-system.css">
+<link rel="stylesheet" href="./case-studies-page.css">
+<link rel="stylesheet" href="./physical-motion.css">
+<link rel="stylesheet" href="./field-focus.css">
+<link rel="stylesheet" href="./shell-interactions.css">
+<link rel="stylesheet" href="./layout-motion.css">
+<link rel="stylesheet" href="./input-validation.css">
 <script src="./assets-data.js" defer></script>
 <script src="./vendor/material-color-utilities.js" defer></script>
 <script src="./color-engine.js" defer></script>
 <script src="./icon-library.js" defer></script>
 <script src="./component-catalog.js" defer></script>
 <script src="./ui.js" defer></script>
+<script src="./input-validation.js" defer></script>
+<script src="./motion-physics.js" defer></script>
 <script src="./motion.js" defer></script>
+<script src="./layout-motion.js" defer></script>
+<script src="./field-focus.js" defer></script>
 <script src="./custom-select.js" defer></script>
 <script src="./component-demos.js" defer></script>
 <script src="./component-viewer.js" defer></script>
@@ -59,7 +68,7 @@
 </div>
 <dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title"><div class="search-dialog-top"><h2 id="search-title" class="sr-only">搜索 Rosemary Forma</h2><label for="site-search" class="sr-only">关键词</label><span class="search-icon" aria-hidden="true"></span><input id="site-search" type="search" placeholder="例如：按钮、加载、撤销" autocomplete="off"><button class="icon-button" type="button" data-action="close-search" aria-label="关闭搜索"><span data-shell-close></span></button></div><div id="search-results" class="search-results" aria-live="polite"></div><div class="search-help"><span>搜索在本机完成，不上传关键词</span><span>Esc 关闭</span></div></dialog>
 <dialog id="nav-dialog" class="nav-dialog" aria-labelledby="nav-title"><div class="nav-dialog-head"><h2 id="nav-title">Rosemary Forma</h2><button class="icon-button" type="button" data-action="close-nav" aria-label="关闭导航"><span data-shell-close></span></button></div><nav id="mobile-nav" aria-label="移动端章节"></nav></dialog>
-<dialog id="example-dialog" class="example-dialog" aria-labelledby="example-dialog-title"><form id="example-form"><div class="dialog-symbol" aria-hidden="true"></div><h2 id="example-dialog-title">添加演示记录</h2><p class="dialog-description">输入内容并添加到本页。关闭对话框会保留未提交的草稿。</p><label class="field-label" for="example-text">记录内容</label><textarea id="example-text" maxlength="280" placeholder="输入一段用于测试的记录内容。"></textarea><p class="field-help">内容只保留在当前页面内存中，刷新后清除。</p><div class="dialog-actions"><button type="button" class="button secondary" data-action="close-example">关闭并保留草稿</button><button type="submit" class="button primary" id="example-submit" disabled>添加到演示</button></div></form></dialog>
+<dialog id="example-dialog" class="example-dialog" aria-labelledby="example-dialog-title"><form id="example-form"><div class="dialog-symbol" aria-hidden="true"></div><h2 id="example-dialog-title">添加演示记录</h2><p class="dialog-description">输入内容并添加到本页。关闭对话框会保留未提交的草稿。</p><label class="field-label" for="example-text">记录内容</label><textarea id="example-text" maxlength="280" required placeholder="输入一段用于测试的记录内容。"></textarea><p class="field-help">内容只保留在当前页面内存中，刷新后清除。</p><div class="dialog-actions"><button type="button" class="button secondary" data-action="close-example">关闭并保留草稿</button><button type="submit" class="button primary" id="example-submit" disabled>添加到演示</button></div></form></dialog>
 <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
 <noscript><div class="noscript">Rosemary Forma 需要 JavaScript 展示章节与交互。也可阅读目录中的 brand-guide.md 文字规范。</div></noscript>
 </body>

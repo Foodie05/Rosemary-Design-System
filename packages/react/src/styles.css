@@ -178,7 +178,7 @@ textarea.rm-input {
   width: 20px;
   height: 20px;
   border: 1px solid var(--rm-control);
-  border-radius: 5px;
+  border-radius: calc(var(--rm-radius-control) * .5);
   background: var(--rm-surface);
   flex-shrink: 0;
 }
@@ -431,6 +431,8 @@ textarea.rm-input {
   margin-top: 12px;
 }
 .rm-drawer {
+  border:0;
+  outline:none;
   margin: 0 0 0 auto;
   width: min(420px, 92vw);
   height: 100dvh;

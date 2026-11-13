@@ -118,3 +118,10 @@ const states = new Map<File, UploadFileState>([
 ```
 
 Import `UploadFileState` from the package. `onRetry` and `onCancel` do not optimistically alter the visible state or remove files. The host updates `fileStates` only after accepting the action. No files are transmitted by this component.
+
+
+### Password creation policy
+
+`checkRosemaryPassword(value)` and `rosemaryPasswordPolicy` are exported by this package and `@rosemary-ui/tokens`. Results expose `length`, `characters`, `categories`, and `valid`: 8–32 printable ASCII characters (excluding spaces), with at least two of letters, digits, and punctuation. Do not trim or truncate passwords.
+
+Show requirements directly below their field before editing. Reveal checks after the first nonempty blur, then update while editing. Clearing resets all results. Related verification codes, CAPTCHA, errors, and recovery belong below that same field. These pure checks do not replace identity-service validation.

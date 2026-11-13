@@ -243,9 +243,9 @@ public struct RosemaryCheckbox: View {
     } label: {
       HStack(spacing: 10) {
         ZStack {
-          RoundedRectangle(cornerRadius: 4).fill(
+          RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("checkbox") / 2).fill(
             checked || mixed ? p.colors.primary : p.colors.surface)
-          RoundedRectangle(cornerRadius: 4).stroke(p.colors.control, lineWidth: p.stroke)
+          RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("checkbox") / 2).stroke(p.colors.control, lineWidth: p.stroke)
           if mixed {
             Rectangle().fill(p.colors.onPrimary).frame(width: 10, height: 2)
           } else if checked {

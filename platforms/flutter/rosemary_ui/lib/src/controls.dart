@@ -47,7 +47,9 @@ class RosemaryCheckbox extends StatelessWidget {
               decoration: BoxDecoration(
                 color: value == false ? c.surface : c.primary,
                 border: Border.all(color: c.control),
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(
+                  RosemaryTokens.controlRadius / 2,
+                ),
               ),
               child: ExcludeSemantics(
                 child: value == false

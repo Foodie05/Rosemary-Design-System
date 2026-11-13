@@ -3,14 +3,19 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const active = new Map();
   const bindings = new Set();
+  const poses = new Map();
+  const physics = () => window.RosemaryPhysics;
+  const physicalRecipe = () => window.ROSEMARY_MOTION_PHYSICS;
   const token = (key, fallback) => window.ROSEMARY_TOKENS?.motionMs?.[key] ?? fallback;
   const easing = () => window.ROSEMARY_TOKENS?.motionEasing || 'cubic-bezier(.2,.7,.2,1)';
 
   function cancel(element) {
+    cancelPose(element);
     const animation = active.get(element);
     if (animation) { active.delete(element); animation.cancel(); }
   }
   function cancelTree(root) {
+    for (const element of poses.keys()) if(element===root||root.contains(element))cancelPose(element);
     for (const element of active.keys()) {
       if (element === root || root.contains(element)) cancel(element);
     }
@@ -22,7 +27,7 @@
     cancel(element);
     element.dataset.motionKind = kind;
     if (reduced.matches || !element.animate) return null;
-    if (element.matches('.cd-menu-panel,.cd-popover,.cd-tooltip,.cd-dialog,.cd-toast')) return surface(element);
+    if (element.matches('.cd-menu-panel,.cd-popover,.cd-picker-popup,.cd-tooltip,.cd-dialog,.cd-toast')) return surface(element,{kind:element.matches('.cd-drawer')?'drawer':'popover'});
     const duration = kind === 'page' ? token('page',220) : token('state',180);
     const frames = kind === 'page'
       ? [{opacity:currentOpacity ?? .35,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}]
@@ -38,17 +43,25 @@
   // Snapshot before cancellation so a rapid reversal starts at the visible frame.
   function surface(element, {open=true, kind='popover', onFinish} = {}) {
     if (!element?.isConnected) return null;
+    if(kind==='popover'&&element.matches?.('.rm-select-list,.menu-popover,.cd-menu-panel,.cd-popover,.cd-picker-popup'))kind='disclosure';
+    element.dataset.motionKind=kind;
     const previous = active.get(element);
     const current = previous ? getComputedStyle(element) : null;
-    const from = current ? {opacity:current.opacity,transform:current.transform} : null;
+    const from = current ? {opacity:current.opacity,transform:current.transform,...(kind==='disclosure'?{clipPath:current.clipPath}: {})} : null;
     cancel(element);
     if (reduced.matches || !element.animate) { onFinish?.(); return null; }
+    const disclosure=kind==='disclosure';
     const offset = kind === 'drawer' ? 'translateX(100%)' : `translateY(${element.dataset.placement === 'above' ? '-4px' : '4px'})`;
-    const rest = {opacity:1,transform:'translate(0)'};
-    const edge = {opacity:0,transform:offset};
-    const animation = element.animate([from || (open ? edge : rest),open ? rest : edge],{
-      duration:open ? token('enter',220) : token('exit',140),easing:easing(),fill:'both'
-    });
+    const rest = disclosure ? {opacity:1,transform:'none',clipPath:element.dataset.placement==='above'?'inset(-40px -40px 0px -40px)':'inset(0px -40px -40px -40px)'} : {opacity:1,transform:'translate(0)'};
+    const edge = disclosure ? {opacity:1,transform:'none',clipPath:element.dataset.placement==='above'?'inset(100% -40px 0px -40px)':'inset(0px -40px 100% -40px)'} : {opacity:0,transform:offset};
+    const recipe=physicalRecipe()?.disclosure;
+    const duration=disclosure?(open?recipe?.durationMs||240:recipe?.exitMs||180):(open?token('enter',220):token('exit',140));
+    let curve=easing();
+    if(disclosure&&recipe&&physics()){
+      const springCurve=physics().cssEasing({...recipe,durationMs:duration});
+      if(typeof CSS!=='undefined'&&CSS.supports('animation-timing-function',springCurve))curve=springCurve;
+    }
+    const animation = element.animate([from || (open ? edge : rest),open ? rest : edge],{duration,easing:curve,fill:'both'});
     active.set(element,animation);
     animation.addEventListener('finish',()=>{
       if (active.get(element)!==animation) return;
@@ -83,12 +96,13 @@
       if (disposed || !current || !tablist.clientWidth) return;
       const box = tablist.getBoundingClientRect();
       const item = current.getBoundingClientRect();
-      const x = item.left - box.left - tablist.clientLeft + tablist.scrollLeft;
+      const layout=current.offsetParent===tablist;
+      const x = layout?current.offsetLeft:item.left - box.left - tablist.clientLeft + tablist.scrollLeft;
       if (!animate) marker.dataset.instant = 'true';
       marker.style.setProperty('--tab-x',`${x}px`);
-      marker.style.setProperty('--tab-y',`${item.top-box.top-tablist.clientTop+tablist.scrollTop}px`);
-      marker.style.setProperty('--tab-width',`${item.width}px`);
-      marker.style.setProperty('--tab-height',`${item.height}px`);
+      marker.style.setProperty('--tab-y',`${layout?current.offsetTop:item.top-box.top-tablist.clientTop+tablist.scrollTop}px`);
+      marker.style.setProperty('--tab-width',`${layout?current.offsetWidth:item.width}px`);
+      marker.style.setProperty('--tab-height',`${layout?current.offsetHeight:item.height}px`);
       if (!animate) {
         marker.getBoundingClientRect();
         cancelAnimationFrame(resetFrame);
@@ -189,8 +203,92 @@
       requestAnimationFrame(()=>{if(visualFill.isConnected)visualFill.dataset.instant='false';});
     }
   }
+  function cancelPose(element) {
+    const pose=poses.get(element);
+    if(!pose)return;
+    poses.delete(element);pose.animation.cancel();element.removeAttribute('data-motion-press');
+  }
+  function poseSample(element) {
+    const pose=poses.get(element);
+    if(!pose)return {position:Number.parseFloat(getComputedStyle(element).scale)||1,velocity:0};
+    const elapsed=(performance.now()-pose.started)/1000;
+    return elapsed>=pose.duration/1000?{position:pose.state.target,velocity:0}:physics().sample(pose.state,elapsed);
+  }
+  function animatePose(element,{down=false,selection=false,cancelled=false}={}) {
+    const recipe=physicalRecipe(),P=physics();
+    if(!element?.isConnected||!recipe||!P||reduced.matches||!element.animate){if(element)cancelPose(element);return;}
+    const previous=poses.get(element),sample=poseSample(element),base=previous?.base??sample.position;
+    const parameters=down?recipe.press:cancelled?{...recipe.press,durationMs:180}:recipe.release;
+    const target=down?base*(selection?recipe.selection.scale:recipe.press.scale):base;
+    const state=P.state(parameters,sample.position,sample.velocity,target);
+    cancelPose(element);
+    element.dataset.motionPress=down?'held':'release';
+    const animation=element.animate(P.frames(state,parameters.durationMs),{duration:parameters.durationMs,easing:'linear',fill:'both'});
+    const pose={animation,state,base,duration:parameters.durationMs,started:performance.now()};
+    poses.set(element,pose);
+    animation.addEventListener('finish',()=>{if(!down&&poses.get(element)===pose)cancelPose(element);},{once:true});
+    animation.addEventListener('cancel',()=>{if(poses.get(element)===pose){poses.delete(element);element.removeAttribute('data-motion-press');}},{once:true});
+  }
+  // Popup anchoring uses the rest frame, not the transient pressed visual scale.
+  function anchorRect(element) {
+    const r=element.getBoundingClientRect(),pose=poses.get(element);
+    if(!pose)return r;
+    const scale=(Number.parseFloat(getComputedStyle(element).scale)||1)/pose.base;
+    const width=r.width/scale,height=r.height/scale,left=r.left+(r.width-width)/2,top=r.top+(r.height-height)/2;
+    return {x:left,y:top,left,top,right:left+width,bottom:top+height,width,height};
+  }
+  function bindPressFeedback(root) {
+    const abort=new AbortController(),pointers=new Map(),keys=new Map(),released=new WeakMap();
+    const on=(node,type,fn,options={})=>node.addEventListener(type,fn,{...options,signal:abort.signal});
+    const candidate=target=>{
+      if(!target?.closest)return null;
+      let control=target.closest('button,input[type=button],input[type=submit],input[type=reset],input[type=checkbox],input[type=radio],a.button,.page-next>a,.nav-link,[role=button],[role=switch]');
+      if(!control){const label=target.closest('label');if(label?.control?.matches('input[type=checkbox],input[type=radio]'))control=label.control;}
+      if(control?.matches('.rm-select-trigger'))return null; // one connected disclosure, not an independently bouncing button
+      if(!control||control.disabled||control.getAttribute('aria-disabled')==='true'||control.closest('[inert]'))return null;
+      const selection=control.matches('input[type=checkbox],input[type=radio]');
+      const sibling=selection?control.nextElementSibling:null;
+      const node=sibling?.matches('.cs-checkbox-visual,.cs-radio-visual,.rm-check-visual,.rm-radio-visual')?sibling:control;
+      return {control,node,selection};
+    };
+    const release=(item,cancelled=false)=>{if(!item)return;animatePose(item.node,{selection:item.selection,cancelled});released.set(item.control,performance.now());};
+    on(root,'pointerdown',event=>{
+      if(event.button!==0||event.isPrimary===false)return;
+      const item=candidate(event.target);if(!item)return;
+      const label=item.selection?item.control.closest('label'):null;item.box=anchorRect(label||item.control);item.inside=true;pointers.set(event.pointerId,item);animatePose(item.node,{down:true,selection:item.selection});
+    },{capture:true,passive:true});
+    on(root,'pointermove',event=>{
+      const item=pointers.get(event.pointerId);if(!item)return;
+      const b=item.box,inside=event.clientX>=b.left&&event.clientX<=b.right&&event.clientY>=b.top&&event.clientY<=b.bottom;
+      if(inside!==item.inside){item.inside=inside;inside?animatePose(item.node,{down:true,selection:item.selection}):release(item,true);}
+    },{capture:true,passive:true});
+    on(root,'pointerup',event=>{const item=pointers.get(event.pointerId);pointers.delete(event.pointerId);release(item,!item?.inside);},{capture:true,passive:true});
+    on(root,'pointercancel',event=>{const item=pointers.get(event.pointerId);pointers.delete(event.pointerId);release(item,true);},{capture:true,passive:true});
+    on(root,'keydown',event=>{
+      if(event.repeat||![' ','Enter'].includes(event.key))return;
+      const item=candidate(event.target);if(!item)return;keys.set(event.key,item);animatePose(item.node,{down:true,selection:item.selection});
+    },{capture:true});
+    on(root,'keyup',event=>{const item=keys.get(event.key);if(item){keys.delete(event.key);release(item);}},{capture:true});
+    // Assistive or programmatic activation has no pointer sequence; keep it brief.
+    on(root,'click',event=>{
+      const item=candidate(event.target);if(!item||[...keys.values()].some(key=>key.control===item.control)||performance.now()-(released.get(item.control)??-Infinity)<120)return;
+      if(event.detail>0&&item.selection)return; // a label click can forward one native click to its control
+      const recipe=physicalRecipe(),P=physics();if(!recipe||!P||reduced.matches)return;
+      const position=item.selection?recipe.selection.scale:recipe.press.scale;
+      cancelPose(item.node);
+      const state=P.state(recipe.release,position,0,1),animation=item.node.animate(P.frames(state,recipe.release.durationMs),{duration:recipe.release.durationMs,easing:'linear',fill:'both'});
+      const pose={state,animation,base:1,duration:recipe.release.durationMs,started:performance.now()};poses.set(item.node,pose);item.node.dataset.motionPress='release';
+      animation.addEventListener('finish',()=>{if(poses.get(item.node)===pose)cancelPose(item.node);},{once:true});
+    },{capture:true});
+    const reset=()=>{pointers.clear();keys.clear();for(const node of [...poses.keys()])cancelPose(node);};
+    on(window,'blur',reset);on(window,'pagehide',reset);on(root,'visibilitychange',()=>{if(document.hidden)reset();});
+    const observer=new MutationObserver(()=>{for(const node of poses.keys())if(!node.isConnected)cancelPose(node);for(const [id,item]of pointers)if(!item.control.isConnected)pointers.delete(id);for(const [key,item]of keys)if(!item.control.isConnected)keys.delete(key);});
+    observer.observe(document.documentElement,{childList:true,subtree:true});
+    return ()=>{reset();abort.abort();observer.disconnect();};
+  }
+  if(typeof document!=='undefined')bindPressFeedback(document);
   reduced.addEventListener('change',()=>{
-    if (reduced.matches) for (const animation of [...active.values()]) animation.finish();
+    if (reduced.matches) {for(const node of [...poses.keys()])cancelPose(node);for (const animation of [...active.values()]) animation.finish();}
   });
-  window.RosemaryMotion = {reduced,enter,surface,bindTabs,bindRadioGroup:(group,options={})=>bindTabs(group,{...options,selectionRole:'radio'}),progress,cancel,cancelTree};
+  window.RosemaryMotion = {reduced,enter,surface,bindTabs,bindRadioGroup:(group,options={})=>bindTabs(group,{...options,selectionRole:'radio'}),progress,cancel,cancelTree,anchorRect};
 })();

@@ -9,7 +9,7 @@
   let cleanup;
   function render(){
     return section('studio','Rosemary 色彩工作台',`<div class="color-studio" data-color-studio><div class="studio-intro"><div><p class="studio-eyebrow">一枚种子色，两种表达</p><h3>让每一层都有合适的颜色。</h3><p>从颜色或图片出发，同时生成深浅主题、容器与内容色，以及可检查的对比度。</p></div><a class="text-link" href="#/colors?section=recipe">了解配色机制${icon('arrow')}</a></div>
-      <div class="studio-controls"><div class="studio-source"><label for="studio-hex">种子色</label><div class="studio-source-row"><input type="color" id="studio-picker" aria-label="选择种子色" value="#614578"><input type="text" id="studio-hex" value="#614578" spellcheck="false" maxlength="7" aria-describedby="studio-hex-help"></div><span id="studio-hex-help" class="field-help">完整 HEX，例如 #614578</span></div>
+      <div class="studio-controls"><div class="studio-source"><label for="studio-hex">种子色</label><div class="studio-source-row"><input type="color" id="studio-picker" aria-label="选择种子色" value="#614578"><input type="text" id="studio-hex" data-validation="hex" value="#614578" spellcheck="false" maxlength="7" aria-describedby="studio-hex-help"></div><span id="studio-hex-help" class="field-help">用于当前主题的配色预览。</span></div>
       <div class="studio-mood"><span id="studio-mood-label">色彩表达</span><div class="studio-moods" role="radiogroup" aria-labelledby="studio-mood-label"><button type="button" role="radio" aria-checked="true" data-tab-key="calm">沉静</button><button type="button" role="radio" aria-checked="false" data-tab-key="vivid" tabindex="-1">鲜亮</button></div><p class="field-help" data-studio-mood-copy>柔和色调，适合阅读与长时间专注。</p></div>
       <div class="studio-image"><span>从图片取色</span><label class="button secondary studio-upload" for="studio-image">${icon('upload')}选择图片<input id="studio-image" type="file" accept="image/png,image/jpeg,image/webp"></label><p class="field-help">PNG、JPEG、WebP，最大 8 MB；仅在本机处理。</p></div></div>
       <div class="studio-presets" aria-label="种子色预设">${presets.map(([name,hex])=>`<button type="button" data-studio-seed="${hex}" aria-label="使用${name}种子色" style="--seed:${hex}"><i aria-hidden="true"></i>${name}</button>`).join('')}</div><div class="studio-image-results" data-studio-image-results></div>
@@ -44,13 +44,13 @@
     const setSeed=seed=>{imageVersion++;draft={...draft,seed:seed.toUpperCase()};update();status('预览已更新；应用到本站后，会同步更新其他页面。');};
     on($('#studio-picker'),'input',event=>setSeed(event.target.value));
     on($('#studio-hex'),'input',event=>{imageVersion++;if(/^#[\da-f]{6}$/i.test(event.target.value))setSeed(event.target.value);});
-    on($('#studio-hex'),'blur',event=>{if(!/^#[\da-f]{6}$/i.test(event.target.value)){event.target.setAttribute('aria-invalid','true');status('请输入完整的六位 HEX 色值，例如 #614578。');}});
+
     on(root,'click',async event=>{
       const preset=event.target.closest('[data-studio-seed]');if(preset){setSeed(preset.dataset.studioSeed);return;}
       const copy=event.target.closest('[data-studio-copy]');if(copy){try{await navigator.clipboard.writeText(copy.dataset.studioCopy);if(!disposed){$('[data-studio-copy-value]').hidden=true;status('已复制 '+copy.dataset.studioCopy+'。');}}catch{if(!disposed){const fallback=$('[data-studio-copy-value]');fallback.hidden=false;fallback.value=copy.dataset.studioCopy;fallback.focus({preventScroll:true});fallback.select();status('请复制已选中的色值；当前种子色和预览保持不变。');}}return;}
       const add=event.target.closest('[data-studio-add]');if(add){const panel=add.closest('[data-studio-preview]');const count=Number(panel.dataset.count||0)+1;panel.dataset.count=String(count);panel.querySelector('[data-studio-preview-count]').textContent=`已添加 ${count} 条示例记录。`;panel.querySelector('[data-studio-preview-result]').textContent='仅用于预览颜色，未连接真实账户。';return;}
       const action=event.target.closest('[data-studio-action]')?.dataset.studioAction;
-      if(['apply','export'].includes(action)&&!/^#[\da-f]{6}$/i.test($('#studio-hex').value)){status('请先修正种子色。');$('#studio-hex').focus();return;}
+      if(['apply','export'].includes(action)&&!/^#[\da-f]{6}$/i.test($('#studio-hex').value)){$('#studio-hex').focus({preventScroll:true});return;}
       if(action==='apply'){const saved=E.choose(draft);status(saved?'已应用到本站；深浅主题、组件和导航会使用这套配色。':'本页已应用；浏览器未能保存偏好。');}
       if(action==='reset'){imageVersion++;$('[data-studio-copy-value]').hidden=true;$('#studio-image').value='';$('[data-studio-image-results]').replaceChildren();E.reset();draft=E.preference();moodBinding.select(draft.mood,{animate:false});update();status('已恢复 Rosemary 默认种子色与沉静配方。');}
       if(action==='export'){const blob=new Blob([JSON.stringify(scheme,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`rosemary-${draft.mood}-${draft.seed.slice(1)}.json`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000);status('已导出深浅角色、表现层角色、色调阶与对比检查结果。');}

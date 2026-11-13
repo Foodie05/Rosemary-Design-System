@@ -1,0 +1,34 @@
+/* Geometry stays in layout; independent scale composes with existing translations. */
+[data-motion-press] { transform-origin:center;will-change:scale; }
+.rm-tab-indicator { transition-timing-function:var(--motion-spring-travel,var(--motion-ease));transition-duration:var(--motion-spring-travel-duration,340ms); }
+.rm-tab-indicator[data-instant=true] { transition:none; }
+.switch::after,.cd-demo .cd-switch>span { transition:transform var(--motion-spring-travel-duration,340ms) var(--motion-spring-travel,var(--motion-ease)),background-color 120ms var(--motion-ease); }
+.rm-select-trigger>.icon { transition:transform var(--motion-spring-travel-duration,340ms) var(--motion-spring-travel,var(--motion-ease)); }
+.rm-select-trigger[aria-expanded=true]>.icon { transform:rotate(180deg); }
+.rm-select-list { border:0;border-radius:var(--select-radius,var(--radius-control)); }
+.rm-select-list[data-placement=below] { border-top-left-radius:0;border-top-right-radius:0; }
+.rm-select-list[data-placement=above] { border-bottom-left-radius:0;border-bottom-right-radius:0; }
+.rm-select-trigger[data-popup-placement=below][data-popup-open=true] { border-bottom-left-radius:0;border-bottom-right-radius:0; }
+.rm-select-trigger[data-popup-placement=above][data-popup-open=true] { border-top-left-radius:0;border-top-right-radius:0; }
+.physics-example { display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.8fr);gap:32px;padding:28px;border-radius:var(--radius-content);background:var(--surface-group); }
+.physics-example h3 { font-size:16px;margin-bottom:12px; }
+.physics-example p { margin-top:12px;color:var(--muted);font-size:13px;line-height:1.8; }
+.physics-example .button-row { margin-top:18px; }
+.physics-example .check-row { margin-top:20px; }
+@media(max-width:650px) { .physics-example { grid-template-columns:1fr;padding:20px;gap:24px; } }
+@media(prefers-reduced-motion:reduce) {
+  .rm-tab-indicator,.switch::after,.cd-demo .cd-switch>span,.rm-select-trigger>.icon { transition:none!important; }
+}
+@media(forced-colors:active) { .rm-select-list { border:1px solid ButtonText; } }
+
+/* The trigger is the fixed head of one unfolding surface, not a second spring. */
+.rm-select-trigger { box-shadow:none!important;border-color:transparent!important;transition:background-color 120ms var(--motion-ease),border-radius 240ms var(--motion-disclosure-ease,var(--motion-ease)); }
+.rm-select-trigger:active:not(:disabled),.rm-select-trigger[data-popup-open=true] { background:var(--field-hover)!important; }
+.rm-select-trigger>.icon { transition:transform 240ms var(--motion-disclosure-ease,var(--motion-ease)); }
+.rm-select-trigger[aria-expanded=false]>.icon { transition-duration:180ms; }
+.rm-select-trigger[data-popup-open=true][aria-expanded=false] { border-radius:var(--select-connected-radius,var(--radius-control));transition-duration:180ms; }
+.rm-select-trigger:focus-visible { outline:1.5px solid var(--focus);outline-offset:-1.5px; }
+.rm-select-trigger[aria-expanded=true]:focus-visible { outline:none; }
+.rm-select-list { background:var(--select-surface,var(--field-hover)); }
+@media(prefers-reduced-motion:reduce) { .rm-select-trigger,.rm-select-trigger>.icon { transition:none!important; } }
+@media(forced-colors:active) { .rm-select-trigger { border:1px solid ButtonText!important; }.rm-select-trigger[aria-expanded=true]:focus-visible { outline:2px solid Highlight;outline-offset:-2px; } }

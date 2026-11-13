@@ -539,6 +539,7 @@ fun RosemaryCheckbox(
 ) {
     val strings = LocalRosemaryStrings.current
 
+    val checkboxRadius = rosemaryRadius("checkbox") / 2
     val c = RosemaryTheme.colors
     val fill by
         animateColorAsState(
@@ -568,11 +569,11 @@ fun RosemaryCheckbox(
         Canvas(Modifier.size(20.dp)) {
             drawRoundRect(
                 fill,
-                cornerRadius = androidx.compose.ui.geometry.CornerRadius(4.dp.toPx()),
+                cornerRadius = androidx.compose.ui.geometry.CornerRadius(checkboxRadius.toPx()),
             )
             drawRoundRect(
                 c.control,
-                cornerRadius = androidx.compose.ui.geometry.CornerRadius(4.dp.toPx()),
+                cornerRadius = androidx.compose.ui.geometry.CornerRadius(checkboxRadius.toPx()),
                 style = Stroke(1.dp.toPx()),
             )
             if (checked == true) {

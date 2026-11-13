@@ -780,3 +780,10 @@ For example, a host can preserve its search query while switching only the resul
 ## 0.5.0 complete paired colors
 
 See `docs/sdk/0.5.0-migration.md`: all 45 semantic fields are required, including surface-navigation, surface-topbar, field-fill and navigation-active/content. Complete paired imports support explicit light/dark/system appearance. Partial local color overrides continue to inherit.
+
+
+## 统一密码创建策略
+
+`RosemaryPasswordPolicy.check(value)` 返回 `length`、`characters`、`categories` 与 `valid`。规则从 `design/input-validation.json` 生成：8–32 个字符，仅可打印 ASCII（不含空格），英文字母、数字、英文标点至少两类；不做 trim、改写或截断。
+
+纯检查器不自动控制 UI 时机。要求预先放在字段下方，首次非空脱焦才显示逐条对勾／红叉，此后动态更新；清空恢复中性。验证码、CAPTCHA 及其恢复操作也必须紧邻对应字段下方。

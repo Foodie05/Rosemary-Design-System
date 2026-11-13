@@ -184,6 +184,7 @@
     else if(action==='fail-progress')stopProgress('failed');
     else if(action==='cancel-progress')stopProgress('cancelled');
     else if(action==='start-skeleton')startSkeleton();
+    else if(action==='toggle-button-label'){const expanded=actionButton.getAttribute('aria-pressed')!=='true';actionButton.setAttribute('aria-pressed',String(expanded));actionButton.textContent=expanded?'稍长一些的操作名称':'短标签';}
     else if(action==='confirm-action')confirmAction();
     else if(action==='insert-motion-row')insertMotionRow();
     else if(action==='reset-motion-rows')resetMotionRows();

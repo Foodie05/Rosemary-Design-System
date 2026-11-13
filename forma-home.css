@@ -57,12 +57,12 @@
 }
 .page[data-page="overview"] .forma-sheet-back {
   inset:4% 15% 21% 2%;
-  border-radius:50% 50% 12px 12px;
+  border-radius:50% 50% var(--radius-content) var(--radius-content);
   background:var(--primary-soft);
 }
 .page[data-page="overview"] .forma-sheet-front {
   inset:18% 2% 3% 19%;
-  border-radius:12px;
+  border-radius:var(--radius-content);
   overflow:hidden;
   box-shadow:0 24px 70px color-mix(in srgb,var(--ink) 7%,transparent);
 }
@@ -95,7 +95,7 @@
   position:absolute;
   left:40%;
   height:7px;
-  border-radius:999px;
+  border-radius:var(--radius-pill);
   background:var(--forma-rule);
 }
 .page[data-page="overview"] .forma-rule-wide {top:44%;width:45%}
@@ -107,7 +107,7 @@
   bottom:15%;
   width:28%;
   height:9%;
-  border-radius:8px;
+  border-radius:var(--radius-control);
   background:var(--primary);
 }
 .page[data-page="overview"] .forma-axis {position:absolute;background:var(--primary);opacity:.62}
@@ -187,7 +187,7 @@
   align-items:start;
   padding:27px 28px;
   border:1px solid var(--border);
-  border-radius:12px;
+  border-radius:var(--radius-content);
   background:var(--surface);
   transition:border-color 160ms var(--ease),background 160ms var(--ease),transform 160ms var(--ease);
 }
@@ -306,7 +306,7 @@
   .page[data-page="overview"] .forma-actions {margin-top:28px;gap:10px}
   .page[data-page="overview"] .forma-actions .button {min-height:44px;padding-inline:15px;font-size:12px}
   .page[data-page="overview"] .forma-composition {width:min(88%,360px);align-self:center;aspect-ratio:5/4}
-  .page[data-page="overview"] .forma-sheet-back {inset:2% 21% 14% 2%;border-radius:48% 48% 10px 10px}
+  .page[data-page="overview"] .forma-sheet-back {inset:2% 21% 14% 2%;border-radius:48% 48% var(--radius-control) var(--radius-control)}
   .page[data-page="overview"] .forma-sheet-front {inset:14% 2% 2% 22%}
   .page[data-page="overview"] .forma-contents {overflow-x:auto;gap:22px;white-space:nowrap;scrollbar-width:none}
   .page[data-page="overview"] .forma-contents::-webkit-scrollbar {display:none}

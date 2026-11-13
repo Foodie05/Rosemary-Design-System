@@ -73,22 +73,22 @@
   const themeModes = ['system','light','dark'];
   const themeNames = {system:'跟随系统',light:'浅色',dark:'深色'};
   const themeIcons = {system:'theme-system',light:'sun',dark:'moon'};
-  const appearanceBindings = new Map(), languageBindings = new Map();
+  const languageBindings = new Map();
   const appearanceMarkup = (options={}) => window.RosemaryUI.appearanceControls({...options,preference});
+  function paintThemeButton(button) {
+    const dark=activeTheme()==='dark',next=dark?'light':'dark';
+    button.dataset.currentMode=preference;
+    button.setAttribute('aria-label',`当前${dark?'深色':'浅色'}；切换为${themeNames[next]}`);
+    button.title=`切换为${themeNames[next]}`;
+    button.innerHTML=icon(dark?'sun':'moon');
+  }
   function applyTheme() {
     const theme = preference === 'system' ? (systemTheme.matches ? 'dark' : 'light') : preference;
     themeSelect.value = preference;
     document.documentElement.dataset.theme = theme;
     document.documentElement.dataset.themePreference = preference;
     window.RosemaryColors.apply(theme);
-    for (const [group,binding] of appearanceBindings) if(group.isConnected) binding.select(preference);
-    document.querySelectorAll('[data-theme-cycle]').forEach(button=>{
-      const next=themeModes[(themeModes.indexOf(preference)+1)%3];
-      button.dataset.currentMode=preference;
-      button.setAttribute('aria-label',`外观主题：${themeNames[preference]}；点击切换为${themeNames[next]}`);
-      button.title=`${themeNames[preference]}；下一项：${themeNames[next]}`;
-      button.innerHTML=icon(themeIcons[preference]);
-    });
+    document.querySelectorAll('[data-theme-cycle]').forEach(paintThemeButton);
     document.querySelectorAll('[data-token-value]').forEach(el => {
       el.textContent = (window.RosemaryColors.current().themes[theme])[el.dataset.tokenValue];
     });
@@ -111,31 +111,15 @@
   }
   function mountAppearance() {
     window.RosemaryColors.paintLocal();
-    for(const [group,binding] of appearanceBindings) if(!group.isConnected){binding();appearanceBindings.delete(group);}
-    document.querySelectorAll('.theme-segments').forEach(group=>{
-      if(appearanceBindings.has(group))return;
-      const binding=window.RosemaryMotion.bindRadioGroup(group,{initialKey:preference,onChange(mode,button,{initial}){if(!initial&&mode!==preference)chooseTheme(mode);}});
-      appearanceBindings.set(group,binding);
-    });
     for(const [select,cleanup] of languageBindings) if(!select.isConnected){cleanup();languageBindings.delete(select);}
     document.querySelectorAll('.language-control select').forEach(select=>{if(!languageBindings.has(select))languageBindings.set(select,window.RosemarySelect.mountWithin(select.parentElement));});
-    document.querySelectorAll('[data-theme-cycle]').forEach(button=>{
-      if(button.dataset.currentMode)return;
-      const next=themeModes[(themeModes.indexOf(preference)+1)%3];
-      button.dataset.currentMode=preference;button.setAttribute('aria-label',`外观主题：${themeNames[preference]}；点击切换为${themeNames[next]}`);button.innerHTML=icon(themeIcons[preference]);
-    });
+    document.querySelectorAll('[data-theme-cycle]').forEach(button=>{if(!button.dataset.currentMode)paintThemeButton(button);});
   }
   window.RosemaryAppearance={markup:appearanceMarkup,preference:()=>preference};
   document.getElementById('appearance-controls').outerHTML=appearanceMarkup();
   themeSelect.addEventListener('change',()=>chooseTheme(themeSelect.value));
-  document.addEventListener('click',event=>{if(event.target.closest('[data-theme-cycle]'))chooseTheme(themeModes[(themeModes.indexOf(preference)+1)%3]);});
+  document.addEventListener('click',event=>{if(event.target.closest('[data-theme-cycle]'))chooseTheme(activeTheme()==='dark'?'light':'dark');});
   systemTheme.addEventListener('change',applyTheme);
-  matchMedia('(max-width:580px)').addEventListener('change',event=>{
-    const active=document.activeElement,container=active?.closest('.appearance-theme');
-    if(!container)return;
-    if(event.matches&&active.matches('[role=radio]'))container.querySelector('[data-theme-cycle]').focus();
-    else if(!event.matches&&active.matches('[data-theme-cycle]'))container.querySelector('[aria-checked=true]').focus();
-  });
   window.addEventListener('storage',event=>{if(event.key==='rosemary-design-theme-v1'){preference=themeModes.includes(event.newValue)?event.newValue:'system';applyTheme();}});
   const appearanceObserver=new MutationObserver(mountAppearance);
   appearanceObserver.observe(document.body,{childList:true,subtree:true});
@@ -258,7 +242,7 @@
     searchOpener = opener;
     updateSearch();
     if (!searchDialog.open) { searchDialog.showModal(); window.RosemaryMotion.surface(searchDialog); }
-    searchInput.focus();
+    searchInput.focus({preventScroll:true});
   }
   searchInput.addEventListener('input', updateSearch);
   searchInput.addEventListener('keydown', event => {
@@ -337,7 +321,7 @@
   function openExample(opener) {
     lastExampleOpener=opener;
     document.getElementById('example-submit').disabled=!exampleText.value.trim();
-    exampleDialog.showModal();window.RosemaryMotion.surface(exampleDialog);exampleText.focus();
+    exampleDialog.showModal();window.RosemaryMotion.surface(exampleDialog);exampleText.focus({preventScroll:true});
   }
   exampleText.addEventListener('input',()=> { document.getElementById('example-submit').disabled=!exampleText.value.trim(); });
   exampleDialog.addEventListener('close',()=> {

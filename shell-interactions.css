@@ -1,0 +1,38 @@
+/* One stable shell; only document content participates in page transitions. */
+.workspace { padding-top:var(--shell-height,76px); }
+.topbar { position:fixed;inset:0 0 auto var(--sidebar-width);height:var(--shell-height,76px);z-index:30;transform:none;opacity:1;visibility:visible; }
+/* Lock the root only. Changing body into an overflow container breaks sticky
+   positioning mid-scroll and made the header disappear under modal surfaces. */
+body:has(dialog[open]) { overflow:visible; }
+html:has(dialog:modal) { overflow:hidden; }
+.appearance-controls .theme-cycle { display:inline-flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;padding:10px;border:0;border-radius:var(--radius-control);background:transparent;color:var(--muted); }
+.topbar .appearance-controls .theme-cycle { width:44px;height:44px;min-height:44px;background:transparent;color:var(--on-topbar-muted);border-radius:var(--radius-control); }
+.appearance-controls .theme-cycle:hover { background:var(--surface-inset);color:var(--primary); }
+.appearance-controls .theme-cycle>.icon { width:20px;height:20px; }
+.nav-dialog { margin-top:var(--shell-height);height:calc(100dvh - var(--shell-height));max-height:calc(100dvh - var(--shell-height));border-radius:0 var(--radius-dialog) 0 0; }
+.nav-dialog::backdrop,.search-dialog::backdrop { background:linear-gradient(to bottom,transparent 0 var(--shell-height),#1b142853 var(--shell-height) 100%); }
+.search-dialog { margin-block-start:max(calc(var(--shell-height) + 16px),10vh);max-height:calc(100dvh - var(--shell-height) - 32px); }
+.page-next { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;border-top:0;padding-top:0; }
+.page-next>a { display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-width:0;min-height:88px;padding:18px 20px;border:0;border-radius:var(--radius-content);background:var(--surface-group);color:var(--ink);font-size:16px;transition:background-color 120ms var(--motion-ease),color 120ms var(--motion-ease); }
+.page-next>a[data-chapter=next] { align-items:flex-end;text-align:right;grid-column:2; }
+.page-next>a:hover { background:var(--primary-soft);color:var(--primary); }
+.page-next>a>strong { font-size:16px;font-weight:500; }
+.page-next .chapter-direction { display:flex;align-items:center;gap:8px;margin:0;color:var(--muted);font-size:12px; }
+.chapter-direction>.icon { width:16px;height:16px; }
+.chapter-back-arrow { transform:rotate(180deg); }
+@media(max-width:800px) { .topbar { inset-inline-start:0; } }
+@media(max-width:580px) { .page-next { gap:12px; }.page-next>a { padding:16px;min-height:88px; }.page-next>a>strong { font-size:14px; } }
+@media(forced-colors:active) { .appearance-controls .theme-cycle,.page-next>a { border:1px solid ButtonText;background:Canvas;color:ButtonText; } }
+@media print { .workspace { padding-top:0; } }
+.cd-demo .cd-search-modes { display:grid;gap:24px; }
+.cd-demo .cd-search-mode { display:grid;gap:16px;min-width:0;padding:24px;border-radius:var(--radius-content);background:var(--surface-inset); }
+.cd-demo .cd-search-mode>h3 { font-size:17px; }
+.cd-demo .cd-inline-search { width:100%;max-width:640px;min-width:0; }
+.cd-demo .cd-inline-search-body { display:flex;align-items:center;gap:8px;width:100%;min-width:0;padding:4px 6px 4px 14px;border-radius:var(--radius-control);background:var(--field-fill); }
+.cd-demo .cd-inline-search-body>.cd-input { flex:1;width:0;min-width:0;border:0;background:transparent;padding-inline:0; }
+.cd-demo .cd-inline-search-body>.cd-button { flex-shrink:0; }
+.cd-demo .cd-inline-search-body>.icon { color:var(--muted); }
+.cd-demo .cd-search-mode>.cd-status { padding:0;margin:0;border:0; }
+.cd-demo .cd-search-mode>.cd-button { justify-self:start; }
+@media(max-width:580px) { .cd-demo .cd-search-mode { padding:20px; }.cd-demo .cd-inline-search-body { gap:4px;padding-left:10px; }.cd-demo .cd-inline-search-body>.cd-primary { padding-inline:10px; } }
+.page-next>a[data-chapter] { width:100%;max-width:none;margin:0;justify-self:stretch; }

@@ -41,5 +41,27 @@
     "viewBox": 24,
     "strokeWidth": 1.6,
     "headerSize": 20
+  },
+  "shape": {
+    "source": "design/tokens.json#/radius",
+    "control": 8,
+    "content": 12,
+    "dialog": 20,
+    "pill": 999,
+    "nested": "Subtract the actual inset when inner and outer shapes are visually concentric.",
+    "drawerEdge": "no perimeter stroke; use surface and shadow",
+    "exceptions": [
+      "brand artwork",
+      "functional circles",
+      "capsule tracks",
+      "miniature diagrams"
+    ],
+    "compactDerivative": "20px square checkbox: control × 0.5 = 4px; preserve visual distinction from a radio circle.",
+    "toolbarPreferences": {
+      "outer": "content",
+      "inset": 2,
+      "inner": "outer minus inset",
+      "rule": "Equal-height language and appearance controls share one outer silhouette in every navigation context."
+    }
   }
 }

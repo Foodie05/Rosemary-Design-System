@@ -13,6 +13,13 @@ import org.junit.Test
 
 class ContractLogicTest {
     @Test
+    fun unifiedPasswordPolicy() {
+        listOf("abc12345", "abcdefg!", "1234567!", "A".repeat(31) + "1").forEach { assertTrue(RosemaryPasswordPolicy.check(it).valid) }
+        listOf("", "AbCdEfGh", "12345678", "!!!!!!!!", "Abc12345中", "Abc12345😀", "Abc12345 ", "A".repeat(32) + "1").forEach { assertFalse(RosemaryPasswordPolicy.check(it).valid) }
+        for (n in 0..127) assertEquals(n in 33..126, RosemaryPasswordPolicy.check("Ab12345" + n.toChar()).valid)
+    }
+
+    @Test
     fun canonicalHexImportPreservesExtendedPairs() {
         val values = RosemaryTokens.light.toMap().mapValues { (_,c) -> "#%02X%02X%02X".format((c.red*255).toInt(),(c.green*255).toInt(),(c.blue*255).toInt()) }
         val imported = design.rosemary.compose.generated.RosemaryColors.fromHex(values)

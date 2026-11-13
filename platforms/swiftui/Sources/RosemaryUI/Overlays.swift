@@ -194,6 +194,15 @@ private struct RosemaryModalModifier<Panel: View>: ViewModifier {
       }
     }
   }
+  private var panelShape: UnevenRoundedRectangle {
+    let radius = RosemaryNativeMetrics.radius(drawer == nil ? "dialog" : "drawer")
+    return UnevenRoundedRectangle(
+      topLeadingRadius: drawer == .leading ? 0 : radius,
+      bottomLeadingRadius: drawer == .leading || drawer == .bottom ? 0 : radius,
+      bottomTrailingRadius: drawer == .trailing || drawer == .bottom ? 0 : radius,
+      topTrailingRadius: drawer == .trailing ? 0 : radius
+    )
+  }
   private var alignment: Alignment {
     guard let drawer else { return .center }
     switch drawer {
@@ -248,13 +257,11 @@ private struct RosemaryModalModifier<Panel: View>: ViewModifier {
             )
             .background(
               p.colors.surfaceFloating,
-              in: RoundedRectangle(
-                cornerRadius: RosemaryNativeMetrics.radius(drawer == nil ? "dialog" : "drawer"))
+              in: panelShape
             ).overlay(
-              RoundedRectangle(
-                cornerRadius: RosemaryNativeMetrics.radius(drawer == nil ? "dialog" : "drawer")
-              ).stroke(
-                p.stroke > 1 ? p.colors.control : p.colors.edgeSoft, lineWidth: p.stroke)
+              panelShape.stroke(
+                drawer == nil ? (p.stroke > 1 ? p.colors.control : p.colors.edgeSoft) : .clear,
+                lineWidth: drawer == nil ? p.stroke : 0)
             ).shadow(color: .black.opacity(0.12), radius: 18, y: 6).foregroundStyle(p.colors.ink).opacity(visible ? 1 : 0).offset(offset(g)).padding(
               drawer == nil ? 12 : 0
             ).accessibilityElement(children: .contain).accessibilityAddTraits(modal ? .isModal : [])

@@ -124,6 +124,7 @@ fun RosemaryDrawer(
 ) {
     val strings = LocalRosemaryStrings.current
 
+    val drawerRadius = rosemaryRadius("drawer")
     val reduced = RosemaryTheme.reducedMotion
     val latestFinished by rememberUpdatedState(onAnimationFinished)
     val fraction by
@@ -155,6 +156,7 @@ fun RosemaryDrawer(
                         .fillMaxHeight()
                         .width(width)
                         .offset { IntOffset((width.toPx() * (1 - fraction)).toInt(), 0) }
+                        .clip(RoundedCornerShape(topStart = drawerRadius, bottomStart = drawerRadius))
                         .background(RosemaryTheme.colors.surfaceFloating)
                         .verticalScroll(rememberScrollState())
                         .padding(24.dp)

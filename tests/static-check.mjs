@@ -1,4 +1,5 @@
 import './motion-lifecycle-check.mjs';
+import './layout-motion-check.mjs';
 import './control-surface-check.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
