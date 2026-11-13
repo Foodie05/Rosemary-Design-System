@@ -134,6 +134,7 @@ export function usePhysicalActions(root: React.RefObject<HTMLElement | null>) {
     const release = () => {
       for (const c of controllers.values()) c.drive(false);
     };
+    const focusOut = (event: Event) => target(event)?.drive(false);
     const key = (event: Event) => {
       const e = event as KeyboardEvent;
       if ((e.key === " " || e.key === "Enter") && !e.defaultPrevented)
@@ -145,7 +146,7 @@ export function usePhysicalActions(root: React.RefObject<HTMLElement | null>) {
     const media = window.matchMedia?.("(prefers-reduced-motion: reduce)");
     host.addEventListener("pointerdown", down);
     host.addEventListener("keydown", key);
-    host.addEventListener("focusout", release);
+    host.addEventListener("focusout", focusOut);
     window.addEventListener("pointerup", release);
     window.addEventListener("pointercancel", release);
     window.addEventListener("keyup", release);
@@ -183,7 +184,7 @@ export function usePhysicalActions(root: React.RefObject<HTMLElement | null>) {
       observer?.disconnect();
       host.removeEventListener("pointerdown", down);
       host.removeEventListener("keydown", key);
-      host.removeEventListener("focusout", release);
+      host.removeEventListener("focusout", focusOut);
       window.removeEventListener("pointerup", release);
       window.removeEventListener("pointercancel", release);
       window.removeEventListener("keyup", release);
