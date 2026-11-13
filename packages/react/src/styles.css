@@ -395,6 +395,9 @@ textarea.rm-input {
   min-width: var(--rm-metric-touch-target);
 }
 .rm-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
   background: var(--rm-surface);
   color: var(--rm-ink);
   border: 1px solid var(--rm-border);

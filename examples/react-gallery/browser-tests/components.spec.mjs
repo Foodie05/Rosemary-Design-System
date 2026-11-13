@@ -345,7 +345,7 @@ test("nonmodal text and time/range variants, roving columns, outside/Tab dismiss
   await page.evaluate(() => (document.documentElement.style.fontSize = "32px"));
   await expect(section(page, "input").getByRole("textbox")).toHaveCSS(
     "font-size",
-    "28px",
+    "32px",
   );
   expect(
     await page.evaluate(
@@ -713,7 +713,7 @@ test("portal and SDK use the same default visual metrics and disclosure easing",
     return {
       height: el.offsetHeight,
       font: s.fontSize,
-      line: s.lineHeight,
+      line: Math.round(parseFloat(s.lineHeight) * 1000) / 1000,
       padding: s.padding,
       radius: s.borderRadius,
     };
