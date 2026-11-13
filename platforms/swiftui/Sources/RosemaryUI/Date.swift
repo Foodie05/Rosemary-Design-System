@@ -178,9 +178,9 @@ public struct RosemaryDate: View {
           ).accessibilityHidden(true)
         }.accessibilityElement(children: .contain)
           .accessibilityLabel("\(p.text("Choose")) \(label)").onKeyPress(.escape) {
-          cancel()
-          return .handled
-        }
+            cancel()
+            return .handled
+          }
       }
     }.zIndex(open ? 50 : 0).onAppear {
       guard !initialized else { return }
@@ -215,9 +215,11 @@ public struct RosemaryDate: View {
       RosemaryButton(String(cursor.year), variant: .quiet) {
         mode = .years
         yearText = String(cursor.year)
-      }.fixedSize(horizontal: true, vertical: false).accessibilityLabel(p.format("Year %@", String(cursor.year)))
+      }.fixedSize(horizontal: true, vertical: false).accessibilityLabel(
+        p.format("Year %@", String(cursor.year)))
       RosemaryButton(String(cursor.month), variant: .quiet) { mode = .months }.fixedSize(
-        horizontal: true, vertical: false).accessibilityLabel(p.format("Month %d", cursor.month))
+        horizontal: true, vertical: false
+      ).accessibilityLabel(p.format("Month %d", cursor.month))
     }
   }
   private var monthArrows: some View {
@@ -284,37 +286,39 @@ public struct RosemaryDate: View {
               ).overlay(
                 RoundedRectangle(cornerRadius: 8).stroke(
                   dayFocus == day ? p.colors.focus : .clear, lineWidth: 2))
-            }.buttonStyle(.plain).disabled(!bounds.contains(date)).focusable(cursor.day == day)
-              .focused($dayFocus, equals: day).accessibilityLabel(date.description)
-              .accessibilityAddTraits(draft.value == date ? .isSelected : [])
-              .onKeyPress(.leftArrow) {
-                move(direction == .rightToLeft ? 1 : -1)
-                return .handled
-              }.onKeyPress(.rightArrow) {
-                move(direction == .rightToLeft ? -1 : 1)
-                return .handled
-              }.onKeyPress(.upArrow) {
-                move(-7)
-                return .handled
-              }.onKeyPress(.downArrow) {
-                move(7)
-                return .handled
-              }.onKeyPress(.home) {
-                move(-((cursor.weekday - weekStart + 7) % 7))
-                return .handled
-              }.onKeyPress(.end) {
-                move(6 - ((cursor.weekday - weekStart + 7) % 7))
-                return .handled
-              }.onKeyPress(.pageUp) {
-                month(-1)
-                return .handled
-              }.onKeyPress(.pageDown) {
-                month(1)
-                return .handled
-              }.onKeyPress(.tab) {
-                cancel()
-                return .ignored
-              }
+            }.buttonStyle(RosemaryPressStyle()).disabled(!bounds.contains(date)).focusable(
+              cursor.day == day
+            )
+            .focused($dayFocus, equals: day).accessibilityLabel(date.description)
+            .accessibilityAddTraits(draft.value == date ? .isSelected : [])
+            .onKeyPress(.leftArrow) {
+              move(direction == .rightToLeft ? 1 : -1)
+              return .handled
+            }.onKeyPress(.rightArrow) {
+              move(direction == .rightToLeft ? -1 : 1)
+              return .handled
+            }.onKeyPress(.upArrow) {
+              move(-7)
+              return .handled
+            }.onKeyPress(.downArrow) {
+              move(7)
+              return .handled
+            }.onKeyPress(.home) {
+              move(-((cursor.weekday - weekStart + 7) % 7))
+              return .handled
+            }.onKeyPress(.end) {
+              move(6 - ((cursor.weekday - weekStart + 7) % 7))
+              return .handled
+            }.onKeyPress(.pageUp) {
+              month(-1)
+              return .handled
+            }.onKeyPress(.pageDown) {
+              month(1)
+              return .handled
+            }.onKeyPress(.tab) {
+              cancel()
+              return .ignored
+            }
           }
         }
       }.id("\(cursor.year)-\(cursor.month)-\(weekStart)")

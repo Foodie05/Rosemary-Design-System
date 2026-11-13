@@ -1,3 +1,8 @@
+import 'package:flutter/physics.dart';
+import 'validation.dart';
+import 'interaction_tokens.dart';
+import 'field_outline.dart';
+import 'overlays.dart';
 import 'dart:ui' show SemanticsValidationResult;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,8 +19,11 @@ class RosemaryActionSurface extends StatefulWidget {
   final FocusNode? focusNode;
   final String? label;
   final Color? background, foreground, border;
-  final bool selected, link, button, enabled, dimWhenDisabled;
+  final bool selected, link, button, enabled, dimWhenDisabled, physicalPress;
   final double? radius;
+  final BorderRadius? corners;
+  final Duration? transitionDuration;
+  final Curve transitionCurve;
   final double backgroundInset;
   final EdgeInsetsGeometry padding;
   final Key? semanticsKey;
@@ -33,7 +41,11 @@ class RosemaryActionSurface extends StatefulWidget {
     this.button = true,
     this.enabled = true,
     this.dimWhenDisabled = true,
+    this.physicalPress = true,
     this.radius,
+    this.corners,
+    this.transitionDuration,
+    this.transitionCurve = const Cubic(.2, .8, .2, 1),
     this.backgroundInset = 0,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.semanticsKey,
@@ -42,7 +54,51 @@ class RosemaryActionSurface extends StatefulWidget {
   State<RosemaryActionSurface> createState() => _ActionSurfaceState();
 }
 
-class _ActionSurfaceState extends State<RosemaryActionSurface> {
+class _ActionSurfaceState extends State<RosemaryActionSurface>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController physical = AnimationController.unbounded(
+    vsync: this,
+    value: 1,
+  );
+  void press(bool held) {
+    if (!widget.physicalPress || RosemaryThemeData.of(context).reduceMotion) {
+      physical.stop();
+      physical.value = 1;
+      return;
+    }
+    physical.animateWith(
+      SpringSimulation(
+        SpringDescription.withDampingRatio(
+          mass: 1,
+          stiffness: held
+              ? RosemaryInteraction.pressStiffness
+              : RosemaryInteraction.releaseStiffness,
+          ratio: held
+              ? RosemaryInteraction.pressDamping
+              : RosemaryInteraction.releaseDamping,
+        ),
+        physical.value,
+        held ? RosemaryInteraction.pressScale : 1,
+        physical.velocity,
+      ),
+    );
+  }
+
+  @override
+  void didUpdateWidget(RosemaryActionSurface old) {
+    super.didUpdateWidget(old);
+    if (!widget.enabled || widget.onActivate == null) {
+      physical.stop();
+      physical.value = 1;
+    }
+  }
+
+  @override
+  void dispose() {
+    physical.dispose();
+    super.dispose();
+  }
+
   bool focused = false, hovered = false, pressed = false;
   @override
   Widget build(BuildContext context) {
@@ -60,7 +116,10 @@ class _ActionSurfaceState extends State<RosemaryActionSurface> {
       child: FocusableActionDetector(
         focusNode: widget.focusNode,
         enabled: enabled,
-        onFocusChange: (v) => setState(() => focused = v),
+        onFocusChange: (v) {
+          if (!v) press(false);
+          setState(() => focused = v);
+        },
         onShowHoverHighlight: (v) => setState(() => hovered = v),
         shortcuts: {
           const SingleActivator(LogicalKeyboardKey.enter):
@@ -72,7 +131,13 @@ class _ActionSurfaceState extends State<RosemaryActionSurface> {
         actions: {
           ActivateIntent: CallbackAction<ActivateIntent>(
             onInvoke: (_) {
-              if (enabled) widget.onActivate!();
+              if (enabled) {
+                press(true);
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) press(false);
+                });
+                widget.onActivate!();
+              }
               return null;
             },
           ),
@@ -80,61 +145,101 @@ class _ActionSurfaceState extends State<RosemaryActionSurface> {
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: enabled ? widget.onActivate : null,
-          onTapDown: enabled ? (_) => setState(() => pressed = true) : null,
-          onTapUp: (_) => setState(() => pressed = false),
-          onTapCancel: () => setState(() => pressed = false),
+          onTapDown: enabled
+              ? (_) {
+                  press(true);
+                  setState(() => pressed = true);
+                }
+              : null,
+          onTapUp: (_) {
+            press(false);
+            setState(() => pressed = false);
+          },
+          onTapCancel: () {
+            press(false);
+            setState(() => pressed = false);
+          },
           excludeFromSemantics: true,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: Padding(
-                  padding: EdgeInsets.all(widget.backgroundInset),
-                  child: AnimatedContainer(
-                    duration: rosemaryDuration(context, 'instantFeedback'),
-                    decoration: BoxDecoration(
-                      color: widget.background ?? Colors.transparent,
-                      borderRadius: BorderRadius.circular(
-                        (widget.radius ?? RosemaryTokens.controlRadius) -
+          child: AnimatedBuilder(
+            animation: physical,
+            builder: (context, child) => Transform.scale(
+              scale: RosemaryThemeData.of(context).reduceMotion
+                  ? 1
+                  : pressed || physical.isAnimating
+                  ? physical.value
+                  : 1,
+              child: child,
+            ),
+            child: _RosemaryAnimatedSize(
+              duration: rosemaryDuration(context, "state"),
+              curve: const Cubic(.2, .8, .2, 1),
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Padding(
+                      padding: EdgeInsets.all(widget.backgroundInset),
+                      child: AnimatedContainer(
+                        duration:
+                            widget.transitionDuration ??
+                            rosemaryDuration(context, 'instantFeedback'),
+                        curve: widget.transitionCurve,
+                        decoration: BoxDecoration(
+                          color: widget.background ?? Colors.transparent,
+                          borderRadius: _insetCorners(
+                            widget.corners ??
+                                BorderRadius.circular(
+                                  widget.radius ?? RosemaryTokens.controlRadius,
+                                ),
                             widget.backgroundInset,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  AnimatedContainer(
+                    duration:
+                        widget.transitionDuration ??
+                        rosemaryDuration(context, 'instantFeedback'),
+                    curve: widget.transitionCurve,
+                    constraints: const BoxConstraints(
+                      minWidth: 44,
+                      minHeight: 44,
+                    ),
+                    padding: widget.padding,
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius:
+                          widget.corners ??
+                          BorderRadius.circular(
+                            widget.radius ?? RosemaryTokens.controlRadius,
+                          ),
+                      border: Border.all(
+                        color: focused
+                            ? c.focus
+                            : widget.border ?? Colors.transparent,
+                        width: focused ? 2 : 1,
+                      ),
+                    ),
+                    child: Opacity(
+                      opacity:
+                          widget.dimWhenDisabled &&
+                              (!widget.enabled ||
+                                  (widget.button && widget.onActivate == null))
+                          ? 0.55
+                          : pressed
+                          ? 0.8
+                          : hovered
+                          ? 0.92
+                          : 1,
+                      child: DefaultTextStyle.merge(
+                        style: TextStyle(color: widget.foreground ?? c.ink),
+                        child: widget.child,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              AnimatedContainer(
-                duration: rosemaryDuration(context, 'instantFeedback'),
-                constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-                padding: widget.padding,
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(
-                    widget.radius ?? RosemaryTokens.controlRadius,
-                  ),
-                  border: Border.all(
-                    color: focused
-                        ? c.focus
-                        : widget.border ?? Colors.transparent,
-                    width: focused ? 2 : 1,
-                  ),
-                ),
-                child: Opacity(
-                  opacity:
-                      widget.dimWhenDisabled &&
-                          (!widget.enabled ||
-                              (widget.button && widget.onActivate == null))
-                      ? 0.55
-                      : pressed
-                      ? 0.8
-                      : hovered
-                      ? 0.92
-                      : 1,
-                  child: DefaultTextStyle.merge(
-                    style: TextStyle(color: widget.foreground ?? c.ink),
-                    child: widget.child,
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -362,6 +467,8 @@ class RosemaryInput extends StatefulWidget {
   final VoidCallback? onCommit;
   final FocusNode? focusNode;
   final int minLines, maxLines;
+  final List<RosemaryFieldRequirement> requirements;
+  final Widget? verification;
   const RosemaryInput({
     super.key,
     required this.value,
@@ -377,6 +484,8 @@ class RosemaryInput extends StatefulWidget {
     this.focusNode,
     this.minLines = 1,
     this.maxLines = 1,
+    this.requirements = const [],
+    this.verification,
   });
   @override
   State<RosemaryInput> createState() => _InputState();
@@ -386,21 +495,46 @@ class _InputState extends State<RosemaryInput> {
   late final TextEditingController controller;
   late FocusNode node;
   bool focused = false;
+  final validation = RosemaryFieldValidationState();
+  bool get active =>
+      validation.armed &&
+      widget.value.isNotEmpty &&
+      controller.value.composing.isCollapsed;
+  bool get invalid =>
+      widget.error != null ||
+      active && widget.requirements.any((r) => !r.check(widget.value));
   @override
   void initState() {
     super.initState();
     controller = TextEditingController(text: widget.value);
     node = widget.focusNode ?? FocusNode();
     node.addListener(_focus);
+    controller.addListener(_edit);
+  }
+
+  void _edit() {
+    if (!mounted) return;
+    validation.edit(controller.text);
+    setState(() {});
   }
 
   void _focus() {
-    if (mounted) setState(() => focused = node.hasFocus);
+    if (!mounted) return;
+    if (node.hasFocus) {
+      validation.focus();
+    } else {
+      validation.blur(
+        controller.text,
+        composing: !controller.value.composing.isCollapsed,
+      );
+    }
+    setState(() => focused = node.hasFocus);
   }
 
   @override
   void didUpdateWidget(RosemaryInput old) {
     super.didUpdateWidget(old);
+    validation.edit(widget.value);
     if (old.focusNode != widget.focusNode) {
       node.removeListener(_focus);
       if (old.focusNode == null) node.dispose();
@@ -422,6 +556,7 @@ class _InputState extends State<RosemaryInput> {
   void dispose() {
     node.removeListener(_focus);
     if (widget.focusNode == null) node.dispose();
+    controller.removeListener(_edit);
     controller.dispose();
     super.dispose();
   }
@@ -437,80 +572,90 @@ class _InputState extends State<RosemaryInput> {
         Semantics(
           textField: true,
           label: widget.label,
-          validationResult: widget.error == null
+          validationResult: !invalid
               ? SemanticsValidationResult.none
               : SemanticsValidationResult.invalid,
-          child: Container(
-            constraints: const BoxConstraints(minHeight: 44),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: widget.error != null ? c.dangerSoft : c.fieldFill,
-              borderRadius: BorderRadius.circular(RosemaryTokens.controlRadius),
-              border: MediaQuery.highContrastOf(context)
-                  ? Border.all(
-                      color: widget.error != null
-                          ? c.danger
-                          : focused
-                          ? c.focus
-                          : c.control,
-                      width: 2,
-                    )
-                  : null,
-            ),
-            foregroundDecoration: MediaQuery.highContrastOf(context)
-                ? null
-                : BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
+          child: RosemaryFieldOutline(
+            focused: focused,
+            invalid: invalid,
+            child: Container(
+              constraints: const BoxConstraints(minHeight: 44),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: invalid ? c.dangerSoft : c.fieldFill,
+                borderRadius: BorderRadius.circular(
+                  RosemaryTokens.controlRadius,
+                ),
+                border: MediaQuery.highContrastOf(context)
+                    ? Border.all(
                         color: widget.error != null
                             ? c.danger
                             : focused
                             ? c.focus
-                            : c.fieldLine,
-                        width: focused || widget.error != null ? 2 : 1,
+                            : c.control,
+                        width: 2,
+                      )
+                    : null,
+              ),
+              child: Stack(
+                children: [
+                  if (controller.text.isEmpty && !focused)
+                    IgnorePointer(
+                      child: Text(
+                        widget.placeholder,
+                        style: rosemaryTextStyle(
+                          context,
+                          'body',
+                          color: c.muted,
+                        ),
                       ),
                     ),
+                  EditableText(
+                    controller: controller,
+                    focusNode: node,
+                    style: rosemaryTextStyle(context, 'body'),
+                    cursorColor: c.primary,
+                    backgroundCursorColor: c.surface,
+                    readOnly: widget.readOnly || !widget.enabled,
+                    showCursor: widget.enabled,
+                    obscureText: widget.password,
+                    keyboardType:
+                        widget.keyboardType ??
+                        (widget.password
+                            ? TextInputType.visiblePassword
+                            : TextInputType.text),
+                    minLines: widget.minLines,
+                    maxLines: widget.maxLines,
+                    selectionControls: materialTextSelectionControls,
+                    onChanged: (value) {
+                      widget.onChanged(value);
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (mounted && controller.text != widget.value)
+                          controller.value = TextEditingValue(
+                            text: widget.value,
+                            selection: TextSelection.collapsed(
+                              offset: widget.value.length,
+                            ),
+                          );
+                      });
+                    },
+                    onSubmitted: (_) => widget.onCommit?.call(),
                   ),
-            child: Stack(
-              children: [
-                if (controller.text.isEmpty && !focused)
-                  IgnorePointer(
-                    child: Text(
-                      widget.placeholder,
-                      style: rosemaryTextStyle(context, 'body', color: c.muted),
-                    ),
-                  ),
-                EditableText(
-                  controller: controller,
-                  focusNode: node,
-                  style: rosemaryTextStyle(context, 'body'),
-                  cursorColor: c.primary,
-                  backgroundCursorColor: c.surface,
-                  readOnly: widget.readOnly || !widget.enabled,
-                  showCursor: widget.enabled,
-                  obscureText: widget.password,
-                  keyboardType: widget.keyboardType,
-                  minLines: widget.minLines,
-                  maxLines: widget.maxLines,
-                  selectionControls: materialTextSelectionControls,
-                  onChanged: (value) {
-                    widget.onChanged(value);
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (mounted && controller.text != widget.value)
-                        controller.value = TextEditingValue(
-                          text: widget.value,
-                          selection: TextSelection.collapsed(
-                            offset: widget.value.length,
-                          ),
-                        );
-                    });
-                  },
-                  onSubmitted: (_) => widget.onCommit?.call(),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
+        RosemaryFieldRequirements(
+          value: widget.value,
+          requirements: widget.requirements,
+          active: active,
+        ),
+        if (widget.verification != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: widget.verification!,
+          ),
         if (widget.error != null)
           Semantics(
             liveRegion: true,
@@ -527,6 +672,8 @@ class RosemaryTextarea extends StatelessWidget {
   final bool enabled, readOnly;
   final String? error;
   final int minLines;
+  final List<RosemaryFieldRequirement> requirements;
+  final Widget? verification;
   const RosemaryTextarea({
     super.key,
     required this.value,
@@ -537,6 +684,8 @@ class RosemaryTextarea extends StatelessWidget {
     this.readOnly = false,
     this.error,
     this.minLines = 4,
+    this.requirements = const [],
+    this.verification,
   });
   @override
   Widget build(BuildContext context) => RosemaryInput(
@@ -549,15 +698,21 @@ class RosemaryTextarea extends StatelessWidget {
     error: error,
     minLines: minLines,
     maxLines: 1000,
+    requirements: requirements,
+    verification: verification,
   );
 }
 
-class RosemarySearch extends StatelessWidget {
+enum RosemarySearchPresentation { inline, dialog }
+
+class RosemarySearch extends StatefulWidget {
   final String query, label;
   final ValueChanged<String> onQueryChanged;
   final VoidCallback onSubmit;
   final VoidCallback? onClear;
   final bool busy;
+  final RosemarySearchPresentation presentation;
+  final bool initiallyExpanded;
   const RosemarySearch({
     super.key,
     required this.query,
@@ -566,13 +721,92 @@ class RosemarySearch extends StatelessWidget {
     this.label = 'Search',
     this.onClear,
     this.busy = false,
+    this.presentation = RosemarySearchPresentation.inline,
+    this.initiallyExpanded = true,
   });
   @override
-  Widget build(BuildContext context) => Column(
+  State<RosemarySearch> createState() => _SearchState();
+}
+
+class _SearchState extends State<RosemarySearch> {
+  late bool expanded =
+      widget.presentation == RosemarySearchPresentation.inline &&
+      widget.initiallyExpanded;
+  final entryFocus = FocusNode(), fieldFocus = FocusNode();
+  String get query => widget.query;
+  String get label => widget.label;
+  bool get busy => widget.busy;
+  ValueChanged<String> get onQueryChanged => widget.onQueryChanged;
+  VoidCallback get onSubmit => widget.onSubmit;
+  VoidCallback? get onClear => widget.onClear;
+  @override
+  void dispose() {
+    entryFocus.dispose();
+    fieldFocus.dispose();
+    super.dispose();
+  }
+
+  void close() {
+    setState(() => expanded = false);
+    entryFocus.requestFocus();
+  }
+
+  void open() {
+    setState(() => expanded = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) fieldFocus.requestFocus();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final contents = Focus(
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent &&
+            event.logicalKey == LogicalKeyboardKey.escape) {
+          if (widget.presentation == RosemarySearchPresentation.dialog ||
+              query.isEmpty) {
+            close();
+          } else {
+            onQueryChanged('');
+          }
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
+      },
+      child: searchContents(context),
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.presentation == RosemarySearchPresentation.dialog ||
+            !expanded)
+          RosemaryIconButton(
+            label: label,
+            icon: const RosemaryIcon('search'),
+            focusNode: entryFocus,
+            onPressed: open,
+          ),
+        if (widget.presentation == RosemarySearchPresentation.inline &&
+            expanded)
+          contents,
+        if (widget.presentation == RosemarySearchPresentation.dialog)
+          RosemaryDialog(
+            open: expanded,
+            title: label,
+            onDismiss: (_) => close(),
+            child: contents,
+          ),
+      ],
+    );
+  }
+
+  Widget searchContents(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       RosemaryInput(
         value: query,
+        focusNode: fieldFocus,
         onChanged: onQueryChanged,
         label: label,
         onCommit: busy ? null : onSubmit,
@@ -596,5 +830,33 @@ class RosemarySearch extends StatelessWidget {
         ],
       ),
     ],
+  );
+}
+
+class _RosemaryAnimatedSize extends StatelessWidget {
+  final Duration duration;
+  final Curve curve;
+  final Widget child;
+  const _RosemaryAnimatedSize({
+    required this.duration,
+    required this.curve,
+    required this.child,
+  });
+  @override
+  Widget build(BuildContext context) => duration == Duration.zero
+      ? child
+      : AnimatedSize(duration: duration, curve: curve, child: child);
+}
+
+BorderRadius _insetCorners(BorderRadius corners, double inset) {
+  Radius inner(Radius r) => Radius.elliptical(
+    (r.x - inset).clamp(0, double.infinity),
+    (r.y - inset).clamp(0, double.infinity),
+  );
+  return BorderRadius.only(
+    topLeft: inner(corners.topLeft),
+    topRight: inner(corners.topRight),
+    bottomLeft: inner(corners.bottomLeft),
+    bottomRight: inner(corners.bottomRight),
   );
 }

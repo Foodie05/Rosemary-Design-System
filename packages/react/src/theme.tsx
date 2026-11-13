@@ -1,3 +1,4 @@
+import { usePhysicalActions } from "./physical-motion.js";
 import {
   createContext,
   useContext,
@@ -273,10 +274,13 @@ export function ThemeProvider({
       strings,
     ],
   );
+  const motionRoot = useRef<HTMLDivElement>(null);
+  usePhysicalActions(motionRoot);
   return (
     <ThemeContext.Provider value={value}>
       <div
         {...props}
+        ref={motionRoot}
         className={["rm-theme", className].filter(Boolean).join(" ")}
         dir={value.direction}
         lang={value.language}

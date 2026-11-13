@@ -105,15 +105,20 @@ struct Gallery: View {
             })
           Text("Following content stays in place").accessibilityIdentifier("select-following")
         } else if kind == "disclosures" {
-          RosemarySelect("Status", selection: $select, isExpanded: $selectOpen,
-            options: [RosemaryOption("draft", label: "Draft"), RosemaryOption("ready", label: "Ready")])
-          RosemaryMenu("More actions", isExpanded: $menu,
+          RosemarySelect(
+            "Status", selection: $select, isExpanded: $selectOpen,
+            options: [
+              RosemaryOption("draft", label: "Draft"), RosemaryOption("ready", label: "Ready"),
+            ])
+          RosemaryMenu(
+            "More actions", isExpanded: $menu,
             actions: [RosemaryMenuAction("save", title: "Save record") { result = "Saved record" }])
           Text(result).accessibilityIdentifier("disclosure-result")
           RosemaryInput("Unavailable field", text: .constant("Offline")).disabled(true)
           RosemaryInput("Invalid field", text: .constant("Invalid"), error: "Check this value")
           RosemaryCheckbox("Unavailable checkbox", isChecked: .constant(true)).disabled(true)
-          RosemaryRadio("Unavailable radio", value: "draft", selection: .constant("draft")).disabled(true)
+          RosemaryRadio("Unavailable radio", value: "draft", selection: .constant("draft"))
+            .disabled(true)
           RosemarySwitch("Unavailable switch", isOn: .constant(true)).disabled(true)
         } else if kind == "edge-popover" {
           Spacer().frame(height: 490)
@@ -133,8 +138,10 @@ struct Gallery: View {
             AppearanceProbe(identifier: "system-subtree-appearance").rosemaryTheme(.system)
           }.rosemaryTheme(RosemaryThemeMode.dark)
         } else if kind == "toast" {
-          RosemaryToast("Timed notification", isPresented: $toast, duration: toastDuration,
-            isPaused: toastPaused) { toastDismissals += 1 }
+          RosemaryToast(
+            "Timed notification", isPresented: $toast, duration: toastDuration,
+            isPaused: toastPaused
+          ) { toastDismissals += 1 }
           RosemaryButton("Resume notification") { toastPaused = false }
           RosemaryButton("Show persistent notification") {
             toastDuration = nil
@@ -177,7 +184,9 @@ struct Gallery: View {
       RosemaryList(records) { row in Text(row.name) }
       RosemaryButton("Done") { drawer = false }
     }
-    .rosemaryTheme(theme).rosemaryReduceMotion(reduced).environment(\.layoutDirection, rtl ? .rightToLeft : .leftToRight)
+    .rosemaryTheme(theme).rosemaryReduceMotion(reduced).environment(
+      \.layoutDirection, rtl ? .rightToLeft : .leftToRight
+    )
     .dynamicTypeSize(
       ProcessInfo.processInfo.arguments.contains("--large") ? .accessibility3 : .large
     )
@@ -243,7 +252,14 @@ struct Gallery: View {
   }
   private var forms: some View {
     Group {
-      RosemaryInput("Name", text: $text, placeholder: "Your name").accessibilityIdentifier("input")
+      RosemaryInput(
+        "Name", text: $text, placeholder: "Your name",
+        requirements: [
+          RosemaryFieldRequirement(
+            "name-length", label: "1–32 characters; cannot be all whitespace"
+          ) { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && $0.count <= 32 }
+        ]
+      ).accessibilityIdentifier("input")
       Text("Name value: \(text)").accessibilityIdentifier("name-value")
       RosemaryTextarea("Notes", text: $notes)
       RosemarySearch("Search records", text: $text) { result = "Search: \($0)" }

@@ -24,7 +24,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node ../../scripts/copy-package-assets.mjs react",
-    "test": "node --test tests/*.test.mjs"
+    "test": "python3 ../../tests/react-test-guard.test.py && python3 ../../scripts/run-react-tests.py"
   },
   "peerDependencies": {
     "react": "^18.3.1 || ^19.2.8",

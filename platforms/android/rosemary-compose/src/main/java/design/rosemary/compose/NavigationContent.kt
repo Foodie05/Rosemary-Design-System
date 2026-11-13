@@ -105,6 +105,7 @@ fun RosemaryTabs(
                         }
                         .heightIn(min = 44.dp)
                         .rosemaryFocus()
+                        .rosemaryPhysicalTap(option.enabled)
                         .selectable(option.id == value, option.enabled, Role.Tab) {
                             onValueChange(option.id)
                         }
@@ -333,7 +334,10 @@ fun RosemaryCard(
     Column(
         modifier
             .fillMaxWidth()
-            .background(if (selected) c.primarySoft else c.surfaceGroup, RoundedCornerShape(rosemaryRadius("card")))
+            .background(
+                if (selected) c.primarySoft else c.surfaceGroup,
+                RoundedCornerShape(rosemaryRadius("card")),
+            )
             .border(
                 if (selected) 2.dp else 1.dp,
                 if (RosemaryTheme.highContrast) c.control else Color.Transparent,
@@ -341,7 +345,9 @@ fun RosemaryCard(
             )
             .then(
                 if (onClick != null)
-                    Modifier.rosemaryFocus(12.dp).clickable(role = Role.Button, onClick = onClick)
+                    Modifier.rosemaryFocus(12.dp)
+                        .rosemaryPhysicalTap()
+                        .clickable(role = Role.Button, onClick = onClick)
                 else Modifier
             )
             .padding(16.dp)
@@ -383,7 +389,10 @@ fun RosemaryList(
                                 onSelectionChange(next)
                             }
                         else if (onActivate != null)
-                            Modifier.rosemaryFocus().clickable(item.enabled, role = Role.Button) {
+                            Modifier.rosemaryFocus().rosemaryPhysicalTap().clickable(
+                                item.enabled,
+                                role = Role.Button,
+                            ) {
                                 onActivate(item.id)
                             }
                         else Modifier
@@ -456,7 +465,9 @@ fun RosemaryTable(
             Row(
                 Modifier.then(
                     if (onActivate != null)
-                        Modifier.rosemaryFocus().clickable(role = Role.Button) {
+                        Modifier.rosemaryFocus().rosemaryPhysicalTap().clickable(
+                            role = Role.Button
+                        ) {
                             onActivate(row.id)
                         }
                     else Modifier
@@ -583,7 +594,7 @@ fun RosemaryStepper(
                     .heightIn(min = 44.dp)
                     .then(
                         if (onStepChange != null)
-                            Modifier.rosemaryFocus().selectable(
+                            Modifier.rosemaryFocus().rosemaryPhysicalTap(step.available).selectable(
                                 step.id == current,
                                 step.available,
                                 Role.Tab,

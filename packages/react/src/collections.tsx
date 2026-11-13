@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import type { CSSProperties, KeyboardEvent, ReactNode, RefObject } from "react";
+import { rosemaryInteraction as interaction } from "@rosemary-ui/tokens";
 import { Button, Icon, IconButton } from "./primitives.js";
 import type { Choice } from "./primitives.js";
 import { useRosemaryTheme, useRosemaryStrings } from "./theme.js";
@@ -8,6 +9,7 @@ function useOptionsPosition(
   open: boolean,
   trigger: RefObject<HTMLElement | null>,
   panel: RefObject<HTMLDivElement | null>,
+  joined = false,
 ) {
   const [style, setStyle] = useState<CSSProperties>({ visibility: "hidden" });
   useEffect(() => {
@@ -25,7 +27,7 @@ function useOptionsPosition(
         width = viewport?.width ?? window.innerWidth,
         height = viewport?.height ?? window.innerHeight;
       const rect = anchor.getBoundingClientRect(),
-        gap = 6,
+        gap = joined ? 0 : 6,
         margin = 8;
       const below = top + height - margin - rect.bottom - gap,
         above = rect.top - top - margin - gap;
@@ -38,6 +40,12 @@ function useOptionsPosition(
       const popupHeight = Math.min(element.scrollHeight, maxHeight);
       setStyle({
         visibility: "visible",
+        transformOrigin: flip ? "bottom" : "top",
+        borderRadius: joined
+          ? flip
+            ? "var(--rm-radius-control) var(--rm-radius-control) 0 0"
+            : "0 0 var(--rm-radius-control) var(--rm-radius-control)"
+          : undefined,
         position: "fixed",
         insetInline: "auto",
         left: Math.max(
@@ -69,7 +77,7 @@ function useOptionsPosition(
       window.visualViewport?.removeEventListener("resize", measure);
       window.visualViewport?.removeEventListener("scroll", measure);
     };
-  }, [open, trigger, panel]);
+  }, [open, trigger, panel, joined]);
   return style;
 }
 function moveIndex(current: number, count: number, key: string, rtl = false) {
@@ -106,7 +114,57 @@ export function Select({
   const list = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
-  const popupStyle = useOptionsPosition(open, trigger, list);
+  const [mounted, setMounted] = useState(false);
+  const animation = useRef<Animation>();
+  const theme = useRosemaryTheme();
+  const popupStyle = useOptionsPosition(mounted, trigger, list, true);
+  useEffect(() => {
+    if (open) setMounted(true);
+  }, [open]);
+  useEffect(() => {
+    const panel = list.current;
+    if (!mounted || !panel || popupStyle.visibility !== "visible") return;
+    panel.inert = !open;
+    const up = popupStyle.transformOrigin === "bottom",
+      closed = up ? "inset(100% 0 0 0)" : "inset(0 0 100% 0)";
+    const from = animation.current
+      ? getComputedStyle(panel).clipPath
+      : open
+        ? closed
+        : "inset(0 0 0 0)";
+    animation.current?.cancel();
+    if (theme.reducedMotion || !panel.animate) {
+      if (!open) setMounted(false);
+      return;
+    }
+    const current = panel.animate(
+      [{ clipPath: from }, { clipPath: open ? "inset(0 0 0 0)" : closed }],
+      {
+        duration: open
+          ? interaction.disclosureMs
+          : interaction.disclosureExitMs,
+        easing: "cubic-bezier(.2,.7,.2,1)",
+        fill: "forwards",
+      },
+    );
+    animation.current = current;
+    current.finished
+      .then(() => {
+        if (animation.current === current) {
+          if (!open) setMounted(false);
+          animation.current = undefined;
+          current.cancel();
+        }
+      })
+      .catch(() => {});
+  }, [
+    open,
+    mounted,
+    popupStyle.visibility,
+    popupStyle.transformOrigin,
+    theme.reducedMotion,
+  ]);
+  useEffect(() => () => animation.current?.cancel(), []);
   const enabled = options.filter((o) => !o.disabled);
   const selected = options.find((o) => o.value === value);
   useEffect(() => {
@@ -128,10 +186,13 @@ export function Select({
     return () => document.removeEventListener("pointerdown", outside);
   }, [open]);
   useEffect(() => {
-    if (open && enabled[active])
-      document
-        .getElementById(`${id}-${enabled[active].value}`)
-        ?.scrollIntoView?.({ block: "nearest", inline: "nearest" });
+    const panel = list.current,
+      option = document.getElementById(`${id}-${enabled[active]?.value}`);
+    if (!open || !panel || !option) return;
+    const top = option.offsetTop - panel.offsetTop;
+    if (top < panel.scrollTop) panel.scrollTop = top;
+    else if (top + option.offsetHeight > panel.scrollTop + panel.clientHeight)
+      panel.scrollTop = top + option.offsetHeight - panel.clientHeight;
   }, [open, active, id, enabled]);
   function close() {
     setOpen(false);
@@ -167,7 +228,12 @@ export function Select({
     }
   }
   return (
-    <div ref={root} className="rm-field rm-select">
+    <div
+      ref={root}
+      className="rm-field rm-select"
+      data-open={open || undefined}
+      data-up={popupStyle.transformOrigin === "bottom" || undefined}
+    >
       <span id={`${id}-label`}>{label}</span>
       <button
         ref={trigger}
@@ -194,11 +260,13 @@ export function Select({
         </span>
         <Icon name="down" size={18} />
       </button>
-      {open && (
+      {mounted && (
         <div
           id={`${id}-list`}
           ref={list}
           role="listbox"
+          aria-hidden={!open || undefined}
+          data-closing={!open || undefined}
           tabIndex={-1}
           className="rm-options"
           style={popupStyle}

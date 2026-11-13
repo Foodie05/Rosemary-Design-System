@@ -29,11 +29,15 @@ internal fun RosemaryNativeDialog(
 internal fun RosemaryPopup(
     onDismissRequest: () -> Unit,
     properties: PopupProperties,
+    joined: Boolean = false,
+    onDirection: (Boolean) -> Unit = {},
     content: @Composable () -> Unit,
 ) {
     val direction = LocalLayoutDirection.current
-    val gap = with(LocalDensity.current) { 4.dp.roundToPx() }
-    val position = remember(gap) { RosemaryAnchoredPopupPosition(gap) }
+    val gap = with(LocalDensity.current) { if (joined) 0 else 4.dp.roundToPx() }
+    val latestDirection = androidx.compose.runtime.rememberUpdatedState(onDirection)
+    val position =
+        remember(gap) { RosemaryAnchoredPopupPosition(gap) { latestDirection.value(it) } }
     Popup(
         popupPositionProvider = position,
         onDismissRequest = onDismissRequest,
@@ -44,7 +48,10 @@ internal fun RosemaryPopup(
 }
 
 /** Prefer below the trigger; flip above when needed and keep the popup inside the window. */
-internal class RosemaryAnchoredPopupPosition(private val gap: Int) : PopupPositionProvider {
+internal class RosemaryAnchoredPopupPosition(
+    private val gap: Int,
+    private val onDirection: (Boolean) -> Unit = {},
+) : PopupPositionProvider {
     override fun calculatePosition(
         anchorBounds: IntRect,
         windowSize: IntSize,
@@ -66,6 +73,7 @@ internal class RosemaryAnchoredPopupPosition(private val gap: Int) : PopupPositi
                 above >= minY -> above
                 else -> below.coerceIn(minY, maxY)
             }
+        onDirection(y < anchorBounds.top)
         return IntOffset(start.coerceIn(minX, maxX), y.coerceIn(minY, maxY))
     }
 }

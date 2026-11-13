@@ -1,7 +1,6 @@
 package design.rosemary.compose
 
 import android.database.ContentObserver
-import org.json.JSONObject
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -14,12 +13,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.*
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.colorspace.ColorSpaces
+import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.TextStyle
@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import design.rosemary.compose.generated.*
 import kotlin.math.pow
+import org.json.JSONObject
 
 enum class RosemaryThemeMode {
     System,
@@ -40,12 +41,15 @@ enum class RosemaryThemeMode {
 data class RosemaryColorScheme(val light: RosemaryColors, val dark: RosemaryColors) {
     companion object {
         val Default = RosemaryColorScheme(RosemaryTokens.light, RosemaryTokens.dark)
+
         fun fromJson(json: String): RosemaryColorScheme {
             val source = JSONObject(json)
             val modes = source.optJSONObject("colors") ?: source.optJSONObject("themes") ?: source
             fun palette(mode: String): RosemaryColors {
                 val values = modes.getJSONObject(mode)
-                return RosemaryColors.fromHex(values.keys().asSequence().associateWith { values.getString(it) })
+                return RosemaryColors.fromHex(
+                    values.keys().asSequence().associateWith { values.getString(it) }
+                )
             }
             return RosemaryColorScheme(palette("light"), palette("dark"))
         }
@@ -133,15 +137,19 @@ fun RosemaryTheme(
             LocalRosemaryHighContrast.current ||
             (if (Build.VERSION.SDK_INT >= 36) systemHighContrastText() else false)
     val pair = scheme ?: RosemaryColorScheme.Default
-    val dark = when (mode) {
-        RosemaryThemeMode.Dark -> true
-        RosemaryThemeMode.Light -> false
-        RosemaryThemeMode.System -> isSystemInDarkTheme()
-        RosemaryThemeMode.Inherit -> if (parentPresent) LocalRosemaryDark.current else isSystemInDarkTheme()
-    }
-    val resolved = (if (contrastRequested) highContrastColors else null) ?: colors
-        ?: if (mode == RosemaryThemeMode.Inherit && parentPresent && scheme == null) parent
-        else if (dark) pair.dark else pair.light
+    val dark =
+        when (mode) {
+            RosemaryThemeMode.Dark -> true
+            RosemaryThemeMode.Light -> false
+            RosemaryThemeMode.System -> isSystemInDarkTheme()
+            RosemaryThemeMode.Inherit ->
+                if (parentPresent) LocalRosemaryDark.current else isSystemInDarkTheme()
+        }
+    val resolved =
+        (if (contrastRequested) highContrastColors else null)
+            ?: colors
+            ?: if (mode == RosemaryThemeMode.Inherit && parentPresent && scheme == null) parent
+            else if (dark) pair.dark else pair.light
     val diagnostics = remember(resolved) { rosemaryValidateTheme(resolved) }
     val reportDiagnostics by rememberUpdatedState(onContrastDiagnostics)
     LaunchedEffect(diagnostics) {
@@ -254,15 +262,125 @@ internal fun Modifier.rosemaryFocus(radius: Dp = RosemaryTokens.controlRadius.dp
 @Composable
 internal fun Modifier.rosemaryFieldFocus(invalid: Boolean = false): Modifier {
     var focused by remember { mutableStateOf(false) }
+    var origin by remember { mutableFloatStateOf(.5f) }
+    var pointerPending by remember { mutableStateOf(false) }
+    val progress = remember { androidx.compose.animation.core.Animatable(1f) }
     val c = RosemaryTheme.colors
     val highContrast = RosemaryTheme.highContrast
-    return onFocusChanged { focused = it.isFocused }.drawWithContent {
-        drawContent()
-        val line = if (focused || invalid) 2.dp.toPx() else 1.dp.toPx()
-        val color = if (invalid) c.danger else if (focused) c.focus else c.fieldLine
-        if (highContrast) drawRect(color, style = androidx.compose.ui.graphics.drawscope.Stroke(line))
-        else drawLine(color, Offset(0f,size.height-line/2), Offset(size.width,size.height-line/2),line)
+    val reduce = RosemaryTheme.reducedMotion
+    val opacity by
+        androidx.compose.animation.core.animateFloatAsState(
+            if (focused || invalid || highContrast) 1f else 0f,
+            if (reduce) androidx.compose.animation.core.snap()
+            else
+                androidx.compose.animation.core.tween(
+                    if (focused) 0 else RosemaryInteraction.fieldExitMs.toInt()
+                ),
+            label = "Field focus opacity",
+        )
+    LaunchedEffect(focused, reduce) {
+        if (focused && !reduce) {
+            progress.snapTo(0f)
+            progress.animateTo(
+                1f,
+                androidx.compose.animation.core.tween(
+                    RosemaryInteraction.fieldEnterMs.toInt(),
+                    easing = androidx.compose.animation.core.CubicBezierEasing(.2f, .7f, .2f, 1f),
+                ),
+            )
+        } else progress.snapTo(1f)
     }
+    val radius = rosemaryRadius("input")
+    return pointerInput(Unit) {
+            awaitPointerEventScope {
+                while (true) {
+                    val event =
+                        awaitPointerEvent(
+                            androidx.compose.ui.input.pointer.PointerEventPass.Initial
+                        )
+                    if (event.changes.any { it.pressed && !it.previousPressed }) {
+                        origin = (event.changes.first().position.x / size.width).coerceIn(0f, 1f)
+                        pointerPending = true
+                    }
+                }
+            }
+        }
+        .onFocusChanged {
+            if (it.isFocused && !pointerPending) origin = .5f
+            pointerPending = false
+            focused = it.isFocused
+        }
+        .drawWithContent {
+            drawContent()
+            if (opacity <= 0f) return@drawWithContent
+            val line = if (highContrast) 2.dp.toPx() else RosemaryInteraction.fieldWidth.dp.toPx()
+            val inset = line / 2
+            val w = (size.width - line).coerceAtLeast(0f)
+            val h = (size.height - line).coerceAtLeast(0f)
+            val rad = (radius.toPx() - inset).coerceIn(0f, minOf(w, h) / 2)
+            val x = (origin * size.width - inset).coerceIn(rad, (w - rad).coerceAtLeast(rad))
+            val color =
+                (if (invalid) c.danger else if (focused) c.focus else c.control).copy(
+                    alpha = opacity
+                )
+            val paths =
+                (0..3).map { index ->
+                    androidx.compose.ui.graphics.Path().apply {
+                        if (index < 2) {
+                            if (index == 0) {
+                                moveTo(x, 0f)
+                                lineTo(w - rad, 0f)
+                                quadraticBezierTo(w, 0f, w, rad)
+                                lineTo(w, h - rad)
+                                quadraticBezierTo(w, h, w - rad, h)
+                                lineTo(x, h)
+                            } else {
+                                moveTo(x, h)
+                                lineTo(w - rad, h)
+                                quadraticBezierTo(w, h, w, h - rad)
+                                lineTo(w, rad)
+                                quadraticBezierTo(w, 0f, w - rad, 0f)
+                                lineTo(x, 0f)
+                            }
+                        } else {
+                            if (index == 2) {
+                                moveTo(x, 0f)
+                                lineTo(rad, 0f)
+                                quadraticBezierTo(0f, 0f, 0f, rad)
+                                lineTo(0f, h - rad)
+                                quadraticBezierTo(0f, h, rad, h)
+                                lineTo(x, h)
+                            } else {
+                                moveTo(x, h)
+                                lineTo(rad, h)
+                                quadraticBezierTo(0f, h, 0f, h - rad)
+                                lineTo(0f, rad)
+                                quadraticBezierTo(0f, 0f, rad, 0f)
+                                lineTo(x, 0f)
+                            }
+                        }
+                    }
+                }
+            withTransform({ translate(inset, inset) }) {
+                paths.forEach { path ->
+                    val measure = androidx.compose.ui.graphics.PathMeasure()
+                    measure.setPath(path, false)
+                    val visible = androidx.compose.ui.graphics.Path()
+                    measure.getSegment(
+                        0f,
+                        measure.length *
+                            .501f *
+                            (if (invalid || highContrast) 1f else progress.value),
+                        visible,
+                    )
+                    drawPath(
+                        visible,
+                        color,
+                        style = androidx.compose.ui.graphics.drawscope.Stroke(line),
+                    )
+                }
+            }
+        }
 }
 
 internal fun toneColors(colors: RosemaryColors, tone: RosemaryTone): Pair<Color, Color> =

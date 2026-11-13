@@ -1,9 +1,47 @@
 {
   "version": 1,
-  "status": "local interaction prototype",
-  "press": { "scale": 0.974, "mass": 1, "stiffness": 1800, "dampingRatio": 1, "durationMs": 160 },
-  "release": { "mass": 1, "stiffness": 800, "dampingRatio": 0.39, "durationMs": 420 },
-  "selection": { "scale": 0.9 },
-  "travel": { "mass": 1, "stiffness": 750, "dampingRatio": 0.82, "durationMs": 340 },
-  "disclosure": { "mass": 1, "stiffness": 1800, "dampingRatio": 1, "durationMs": 240, "exitMs": 180 }
+  "status": "SDK 0.5.0 release candidate",
+  "press": {
+    "scale": 0.974,
+    "mass": 1,
+    "stiffness": 1800,
+    "dampingRatio": 1,
+    "durationMs": 160
+  },
+  "release": {
+    "mass": 1,
+    "stiffness": 800,
+    "dampingRatio": 0.39,
+    "durationMs": 420
+  },
+  "selection": {
+    "scale": 0.9
+  },
+  "travel": {
+    "mass": 1,
+    "stiffness": 750,
+    "dampingRatio": 0.82,
+    "durationMs": 340
+  },
+  "disclosure": {
+    "mass": 1,
+    "stiffness": 1800,
+    "dampingRatio": 1,
+    "durationMs": 240,
+    "exitMs": 180
+  },
+  "field": {
+    "width": 1.5,
+    "enterMs": 220,
+    "exitMs": 90
+  },
+  "layout": {
+    "durationMs": 180,
+    "bezier": [
+      0.2,
+      0.8,
+      0.2,
+      1
+    ]
+  }
 }

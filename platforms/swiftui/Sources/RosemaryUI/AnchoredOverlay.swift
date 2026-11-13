@@ -12,17 +12,17 @@ struct RosemaryOverlayPlacement: Equatable {
   let size: CGSize
   static func resolve(
     anchor: CGRect, viewport: CGRect, preferredWidth: CGFloat, preferredHeight: CGFloat,
-    rightToLeft: Bool
+    rightToLeft: Bool, gap: CGFloat = 8
   ) -> Self {
     let width = min(max(0, viewport.width), max(anchor.width, preferredWidth))
-    let below = max(0, viewport.maxY - anchor.maxY - 8)
-    let above = max(0, anchor.minY - viewport.minY - 8)
+    let below = max(0, viewport.maxY - anchor.maxY - gap)
+    let above = max(0, anchor.minY - viewport.minY - gap)
     let down = below >= preferredHeight || below >= above
     let height = min(preferredHeight, down ? below : above)
     let x = min(
       max(rightToLeft ? anchor.maxX - width : anchor.minX, viewport.minX),
       max(viewport.minX, viewport.maxX - width))
-    let y = down ? anchor.maxY + 8 : anchor.minY - height - 8
+    let y = down ? anchor.maxY + gap : anchor.minY - height - gap
     return Self(
       origin: CGPoint(x: x - anchor.minX, y: max(viewport.minY, y) - anchor.minY),
       size: CGSize(width: width, height: height))
@@ -32,16 +32,23 @@ struct RosemaryAnchoredLayer<Panel: View>: View {
   let preferredWidth: CGFloat
   let preferredHeight: CGFloat
   let dismissOutside: (() -> Void)?
+  let joined: Bool
+  let reveal: CGFloat
+  let onDirection: ((Bool) -> Void)?
   let panel: Panel
   @State private var viewport = CGRect.zero
   @Environment(\.layoutDirection) private var direction
   init(
     width: CGFloat = 320, height: CGFloat = 300, dismissOutside: (() -> Void)? = nil,
+    joined: Bool = false, reveal: CGFloat = 1, onDirection: ((Bool) -> Void)? = nil,
     @ViewBuilder panel: () -> Panel
   ) {
     preferredWidth = width
     preferredHeight = height
     self.dismissOutside = dismissOutside
+    self.joined = joined
+    self.reveal = reveal
+    self.onDirection = onDirection
     self.panel = panel()
   }
   var body: some View {
@@ -55,7 +62,7 @@ struct RosemaryAnchoredLayer<Panel: View>: View {
       let placement = RosemaryOverlayPlacement.resolve(
         anchor: anchor, viewport: usable,
         preferredWidth: preferredWidth, preferredHeight: preferredHeight,
-        rightToLeft: direction == .rightToLeft)
+        rightToLeft: direction == .rightToLeft, gap: joined ? 0 : 8)
       ZStack(alignment: .topLeading) {
         if let dismissOutside {
           Color.clear.contentShape(Rectangle()).frame(width: usable.width, height: usable.height)
@@ -65,6 +72,11 @@ struct RosemaryAnchoredLayer<Panel: View>: View {
         panel.environment(\.layoutDirection, direction).frame(
           width: placement.size.width, height: placement.size.height, alignment: .topLeading
         )
+        .mask(alignment: placement.origin.y < 0 ? .bottom : .top) {
+          Rectangle().scaleEffect(x: 1, y: reveal, anchor: placement.origin.y < 0 ? .bottom : .top)
+        }
+        .onAppear { onDirection?(placement.origin.y < 0) }
+        .onChange(of: placement.origin.y < 0) { _, up in onDirection?(up) }
         .shadow(color: .black.opacity(0.12), radius: 12, y: 4)
         .offset(x: placement.origin.x, y: placement.origin.y)
       }

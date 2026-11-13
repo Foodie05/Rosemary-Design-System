@@ -94,12 +94,22 @@ void main() {
         findsOneWidget,
       );
       expect(arrow, findsOneWidget);
-      expect(find.byType(AnimatedRotation), findsNothing);
+      expect(
+        tester.widget<AnimatedRotation>(find.byType(AnimatedRotation)).turns,
+        .5,
+      );
+      expect(
+        tester.widget<AnimatedRotation>(find.byType(AnimatedRotation)).duration,
+        Duration.zero,
+      );
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pumpAndSettle();
       expect(check, findsNothing);
       expect(arrow, findsOneWidget);
-      expect(find.byType(AnimatedRotation), findsNothing);
+      expect(
+        tester.widget<AnimatedRotation>(find.byType(AnimatedRotation)).turns,
+        0,
+      );
     },
   );
   testWidgets(

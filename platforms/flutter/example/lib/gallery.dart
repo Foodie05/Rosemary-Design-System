@@ -253,7 +253,7 @@ class _DemoState extends State<Demo> {
         value: text,
         onChanged: (v) => update(() => text = v),
         label: 'Project name',
-        error: text.isEmpty ? 'Enter a name' : null,
+        requirements: [RosemaryFieldRequirement('name-length','1–32 characters; cannot be all whitespace',(v)=>v.trim().isNotEmpty && v.runes.length<=32)],
       ),
       'textarea' => RosemaryTextarea(
         value: text,

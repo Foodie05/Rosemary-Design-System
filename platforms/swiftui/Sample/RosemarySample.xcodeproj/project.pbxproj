@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		19E4AD4203EB0A9D2084485D /* RosemaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FFFA808C964478FF109E5 /* RosemaryTests.swift */; };
+		49D23C5127D149CCF94AA77B /* FieldValidationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1649406A9946EC462A0FF75 /* FieldValidationTests.swift */; };
 		82A37ABD8112F39BCF1F9702 /* vigilo.json in Resources */ = {isa = PBXBuildFile; fileRef = CD6367342BCAB8B6E0F039A7 /* vigilo.json */; };
 		CE7CCBEA5B5F7A0684DBE413 /* RosemaryUI in Frameworks */ = {isa = PBXBuildFile; productRef = 463BB09C62D52DE123BB5DB1 /* RosemaryUI */; };
 		D06B1A4B7142515F67DCED9A /* GalleryUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393304F74D138F8D32D705AA /* GalleryUITests.swift */; };
@@ -40,6 +41,7 @@
 		393304F74D138F8D32D705AA /* GalleryUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryUITests.swift; sourceTree = "<group>"; };
 		92AB3EC705A21C4AF08DD2BD /* RosemarySampleUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = RosemarySampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A34FFFA808C964478FF109E5 /* RosemaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosemaryTests.swift; sourceTree = "<group>"; };
+		B1649406A9946EC462A0FF75 /* FieldValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldValidationTests.swift; sourceTree = "<group>"; };
 		CD6367342BCAB8B6E0F039A7 /* vigilo.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = vigilo.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -85,6 +87,7 @@
 		DF64751CF93AFB106BF64260 /* RosemaryUITests */ = {
 			isa = PBXGroup;
 			children = (
+				B1649406A9946EC462A0FF75 /* FieldValidationTests.swift */,
 				A34FFFA808C964478FF109E5 /* RosemaryTests.swift */,
 			);
 			name = RosemaryUITests;
@@ -256,6 +259,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49D23C5127D149CCF94AA77B /* FieldValidationTests.swift in Sources */,
 				19E4AD4203EB0A9D2084485D /* RosemaryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -4,6 +4,7 @@ import 'theme.dart';
 import 'primitives.dart';
 import 'overlays.dart';
 import 'generated/rosemary_tokens.dart';
+import 'interaction_tokens.dart';
 
 class RosemaryOption {
   final String id, label;
@@ -42,6 +43,7 @@ class RosemaryCheckbox extends StatelessWidget {
           children: [
             AnimatedContainer(
               duration: rosemaryDuration(context, 'instantFeedback'),
+              curve: const Cubic(.2, .8, .2, 1),
               width: 22,
               height: 22,
               decoration: BoxDecoration(
@@ -124,6 +126,7 @@ class RosemaryRadio extends StatelessWidget {
                       ),
                       child: AnimatedContainer(
                         duration: rosemaryDuration(context, 'instantFeedback'),
+                        curve: const Cubic(.2, .8, .2, 1),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: value == option.id
@@ -177,6 +180,7 @@ class RosemarySwitch extends StatelessWidget {
           children: [
             AnimatedContainer(
               duration: rosemaryDuration(context, 'state'),
+              curve: const Cubic(.2, .8, .2, 1),
               width: 44,
               height: 28,
               padding: const EdgeInsets.all(3),
@@ -186,6 +190,7 @@ class RosemarySwitch extends StatelessWidget {
               ),
               child: AnimatedAlign(
                 duration: rosemaryDuration(context, 'state'),
+                curve: const Cubic(.2, .8, .2, 1),
                 alignment: value
                     ? AlignmentDirectional.centerEnd
                     : AlignmentDirectional.centerStart,
@@ -209,7 +214,7 @@ class RosemarySwitch extends StatelessWidget {
   }
 }
 
-class RosemarySlider extends StatelessWidget {
+class RosemarySlider extends StatefulWidget {
   final double value, min, max, step;
   final String label;
   final ValueChanged<double> onChanged;
@@ -226,6 +231,20 @@ class RosemarySlider extends StatelessWidget {
     this.onCommit,
     this.enabled = true,
   });
+  @override
+  State<RosemarySlider> createState() => _SliderState();
+}
+
+class _SliderState extends State<RosemarySlider> {
+  bool dragging = false;
+  double get value => widget.value;
+  double get min => widget.min;
+  double get max => widget.max;
+  double get step => widget.step;
+  String get label => widget.label;
+  bool get enabled => widget.enabled;
+  ValueChanged<double> get onChanged => widget.onChanged;
+  ValueChanged<double>? get onCommit => widget.onCommit;
   @override
   Widget build(BuildContext context) {
     if (![value, min, max, step].every((v) => v.isFinite) ||
@@ -303,11 +322,19 @@ class RosemarySlider extends StatelessWidget {
                         onTapDown: enabled
                             ? (d) => fromX(d.localPosition.dx, commit: true)
                             : null,
+                        onHorizontalDragStart: enabled
+                            ? (_) => setState(() => dragging = true)
+                            : null,
+                        onHorizontalDragCancel: () =>
+                            setState(() => dragging = false),
                         onHorizontalDragUpdate: enabled
                             ? (d) => fromX(d.localPosition.dx)
                             : null,
                         onHorizontalDragEnd: enabled
-                            ? (_) => onCommit?.call(normalized(value))
+                            ? (_) {
+                                setState(() => dragging = false);
+                                onCommit?.call(normalized(value));
+                              }
                             : null,
                         child: Container(
                           height: 44,
@@ -322,7 +349,17 @@ class RosemarySlider extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(99),
                                 ),
                               ),
-                              Align(
+                              AnimatedAlign(
+                                duration: Duration(
+                                  milliseconds:
+                                      dragging ||
+                                          RosemaryThemeData.of(
+                                            context,
+                                          ).reduceMotion
+                                      ? 0
+                                      : RosemaryInteraction.layoutMs.toInt(),
+                                ),
+                                curve: const Cubic(.2, .8, .2, 1),
                                 alignment: Alignment(
                                   (rtl ? 1 : -1) +
                                       (rtl ? -2 : 2) *
@@ -386,7 +423,26 @@ class RosemarySelect extends StatefulWidget {
   State<RosemarySelect> createState() => _SelectState();
 }
 
-class _SelectState extends State<RosemarySelect> {
+class _SelectState extends State<RosemarySelect>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController disclosure;
+  @override
+  void initState() {
+    super.initState();
+    disclosure = AnimationController(
+      vsync: this,
+      duration: Duration(
+        milliseconds: RosemaryInteraction.disclosureMs.toInt(),
+      ),
+      reverseDuration: Duration(
+        milliseconds: RosemaryInteraction.disclosureExitMs.toInt(),
+      ),
+    );
+  }
+
+  bool closing = false;
+  bool openingUp = false;
+  bool get expanded => entry != null && !closing;
   final trigger = FocusNode(), menu = FocusNode();
   final anchor = GlobalKey();
   final optionKeys = <String, GlobalKey>{};
@@ -399,19 +455,45 @@ class _SelectState extends State<RosemarySelect> {
       if (widget.options[i].enabled) i,
   ];
   void _close() {
-    if (entry == null) return;
-    entry!.remove();
-    entry!.dispose();
-    entry = null;
-    if (mounted) {
-      setState(() {});
-      trigger.requestFocus();
-      widget.onOpenChanged?.call(false);
+    if (entry == null || closing) return;
+    setState(() => closing = true);
+    entry?.markNeedsBuild();
+    trigger.requestFocus();
+    widget.onOpenChanged?.call(false);
+    void remove() {
+      if (!mounted || !closing) return;
+      entry?.remove();
+      entry?.dispose();
+      entry = null;
+      setState(() => closing = false);
+    }
+
+    if (RosemaryThemeData.of(context).reduceMotion) {
+      disclosure.value = 0;
+      remove();
+    } else {
+      disclosure.reverse().then((_) => remove());
     }
   }
 
   void _open() {
-    if (entry != null || !widget.enabled || enabledIndices.isEmpty) return;
+    if (!widget.enabled || enabledIndices.isEmpty) return;
+    if (entry != null) {
+      if (closing) {
+        setState(() => closing = false);
+        disclosure.forward();
+        menu.requestFocus();
+        entry?.markNeedsBuild();
+        widget.onOpenChanged?.call(true);
+      }
+      return;
+    }
+    closing = false;
+    if (RosemaryThemeData.of(context).reduceMotion) {
+      disclosure.value = 1;
+    } else {
+      disclosure.forward(from: 0);
+    }
     active = widget.options.indexWhere(
       (o) => o.id == widget.value && o.enabled,
     );
@@ -424,90 +506,122 @@ class _SelectState extends State<RosemarySelect> {
           ).wrap(
             Stack(
               children: [
-                Positioned.fill(
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: _close,
-                    child: const SizedBox.expand(),
+                if (!closing)
+                  Positioned.fill(
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: _close,
+                      child: const SizedBox.expand(),
+                    ),
                   ),
-                ),
                 RosemaryAnchoredOverlay(
                   anchor: anchor,
-                  child: Focus(
-                    focusNode: menu,
-                    autofocus: true,
-                    onKeyEvent: _key,
-                    child: Material(
-                      type: MaterialType.transparency,
-                      child: Container(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.sizeOf(context).width - 24,
-                          maxHeight: MediaQuery.sizeOf(context).height * .55,
-                        ),
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: RosemaryThemeData.of(context).surfaceFloating,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.12),
-                              blurRadius: 16,
-                              offset: const Offset(0, 4),
+                  joined: true,
+                  reveal: disclosure,
+                  onDirectionChanged: (up) {
+                    if (mounted) {
+                      setState(() => openingUp = up);
+                      entry?.markNeedsBuild();
+                    }
+                  },
+                  child: ExcludeSemantics(
+                    excluding: closing,
+                    child: IgnorePointer(
+                      ignoring: closing,
+                      child: Focus(
+                        focusNode: menu,
+                        autofocus: true,
+                        onKeyEvent: _key,
+                        child: Material(
+                          type: MaterialType.transparency,
+                          child: Container(
+                            constraints: BoxConstraints(
+                              maxWidth: MediaQuery.sizeOf(context).width - 24,
+                              maxHeight:
+                                  MediaQuery.sizeOf(context).height * .55,
                             ),
-                          ],
-                          borderRadius: BorderRadius.circular(
-                            RosemaryTokens.controlRadius,
-                          ),
-                          border: Border.all(
-                            color: MediaQuery.highContrastOf(context)
-                                ? RosemaryThemeData.of(context).control
-                                : RosemaryThemeData.of(context).edgeSoft,
-                          ),
-                        ),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              for (var i = 0; i < widget.options.length; i++)
-                                RosemaryActionSurface(
-                                  key: optionKeys.putIfAbsent(
-                                    widget.options[i].id,
-                                    () => GlobalKey(),
-                                  ),
-                                  selected:
-                                      widget.options[i].id == widget.value,
-                                  enabled: widget.options[i].enabled,
-                                  background: i == active
-                                      ? RosemaryThemeData.of(
-                                          context,
-                                        ).primarySoft
-                                      : null,
-                                  onActivate: () {
-                                    widget.onChanged(widget.options[i].id);
-                                    _close();
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: RosemaryText(
-                                          widget.options[i].label,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      SizedBox.square(
-                                        dimension: 18,
-                                        child:
-                                            widget.options[i].id == widget.value
-                                            ? const RosemaryIcon(
-                                                'check',
-                                                size: 18,
-                                              )
-                                            : null,
-                                      ),
-                                    ],
-                                  ),
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: RosemaryThemeData.of(context).fieldFill,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.12),
+                                  blurRadius: 16,
+                                  offset: const Offset(0, 4),
                                 ),
-                            ],
+                              ],
+                              borderRadius: openingUp
+                                  ? const BorderRadius.vertical(
+                                      top: Radius.circular(
+                                        RosemaryTokens.controlRadius,
+                                      ),
+                                    )
+                                  : const BorderRadius.vertical(
+                                      bottom: Radius.circular(
+                                        RosemaryTokens.controlRadius,
+                                      ),
+                                    ),
+                              border: MediaQuery.highContrastOf(context)
+                                  ? Border.all(
+                                      color: RosemaryThemeData.of(
+                                        context,
+                                      ).control,
+                                      width: 2,
+                                    )
+                                  : null,
+                            ),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  for (
+                                    var i = 0;
+                                    i < widget.options.length;
+                                    i++
+                                  )
+                                    RosemaryActionSurface(
+                                      key: optionKeys.putIfAbsent(
+                                        widget.options[i].id,
+                                        () => GlobalKey(),
+                                      ),
+                                      selected:
+                                          widget.options[i].id == widget.value,
+                                      enabled: widget.options[i].enabled,
+                                      background: i == active
+                                          ? RosemaryThemeData.of(
+                                              context,
+                                            ).primarySoft
+                                          : null,
+                                      onActivate: () {
+                                        widget.onChanged(widget.options[i].id);
+                                        _close();
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: RosemaryText(
+                                              widget.options[i].label,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          SizedBox.square(
+                                            dimension: 18,
+                                            child:
+                                                widget.options[i].id ==
+                                                    widget.value
+                                                ? const RosemaryIcon(
+                                                    'check',
+                                                    size: 18,
+                                                  )
+                                                : null,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -622,6 +736,7 @@ class _SelectState extends State<RosemarySelect> {
 
   @override
   void dispose() {
+    disclosure.dispose();
     entry?.remove();
     entry?.dispose();
     trigger.dispose();
@@ -635,21 +750,44 @@ class _SelectState extends State<RosemarySelect> {
         .where((o) => o.id == widget.value)
         .firstOrNull;
     return KeyedSubtree(
-      key: anchor,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           RosemaryText(widget.label, role: 'small'),
           Semantics(
-            expanded: entry != null,
+            expanded: expanded,
             value: selected?.label ?? rString(context, 'Choose'),
             child: Opacity(
               opacity: widget.enabled ? 1 : .65,
               child: RosemaryActionSurface(
+                key: anchor,
+                physicalPress: false,
+                corners: expanded
+                    ? (openingUp
+                          ? const BorderRadius.vertical(
+                              bottom: Radius.circular(
+                                RosemaryTokens.controlRadius,
+                              ),
+                            )
+                          : const BorderRadius.vertical(
+                              top: Radius.circular(
+                                RosemaryTokens.controlRadius,
+                              ),
+                            ))
+                    : BorderRadius.circular(RosemaryTokens.controlRadius),
+                transitionDuration: Duration(
+                  milliseconds: RosemaryThemeData.of(context).reduceMotion
+                      ? 0
+                      : (expanded
+                                ? RosemaryInteraction.disclosureMs
+                                : RosemaryInteraction.disclosureExitMs)
+                            .toInt(),
+                ),
+                transitionCurve: const Cubic(.2, .7, .2, 1),
                 label:
                     '${widget.label}: ${selected?.label ?? rString(context, 'Choose')}',
-                onActivate: entry == null ? _open : _close,
+                onActivate: expanded ? _close : _open,
                 enabled: widget.enabled,
                 dimWhenDisabled: false,
                 focusNode: trigger,
@@ -682,7 +820,19 @@ class _SelectState extends State<RosemarySelect> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    const RosemaryIcon('down', size: 18),
+                    AnimatedRotation(
+                      turns: expanded ? 0.5 : 0,
+                      duration: Duration(
+                        milliseconds: RosemaryThemeData.of(context).reduceMotion
+                            ? 0
+                            : (expanded
+                                      ? RosemaryInteraction.disclosureMs
+                                      : RosemaryInteraction.disclosureExitMs)
+                                  .toInt(),
+                      ),
+                      curve: const Cubic(.2, .7, .2, 1),
+                      child: const RosemaryIcon('down', size: 18),
+                    ),
                   ],
                 ),
               ),

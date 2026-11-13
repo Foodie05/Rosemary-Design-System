@@ -380,10 +380,7 @@ test("select keyboard/typeahead, tabs RTL, breadcrumb, pagination, menu and step
   fireEvent.keyDown(screen.getByRole("tab", { name: "Tab A" }), {
     key: "ArrowLeft",
   });
-  assert.equal(
-    document.activeElement,
-    screen.getByRole("tab", { name: "Tab B" }),
-  );
+  assert.equal((document.activeElement) === (screen.getByRole("tab", { name: "Tab B" })), true, "Expected DOM identity or absence");
   assert.equal(
     screen.getByRole("tab", { name: "Tab A" }).getAttribute("aria-selected"),
     "true",
@@ -459,10 +456,7 @@ test("date drafts cancel cleanly, support year 0001 and 9999, reject invalid yea
   fireEvent.keyDown(screen.getByRole("gridcell", { name: "0001-01-01" }), {
     key: "ArrowRight",
   });
-  assert.equal(
-    document.activeElement,
-    screen.getByRole("gridcell", { name: "0001-01-02" }),
-  );
+  assert.equal((document.activeElement) === (screen.getByRole("gridcell", { name: "0001-01-02" })), true, "Expected DOM identity or absence");
   fireEvent.click(screen.getByRole("button", { name: "取消" }));
   assert.equal(values.length, 0);
   fireEvent.click(trigger);
@@ -524,7 +518,7 @@ test("date drafts cancel cleanly, support year 0001 and 9999, reject invalid yea
     1,
   );
   fireEvent.pointerDown(document.body);
-  assert.equal(screen.queryByRole("dialog"), null);
+  assert.equal((screen.queryByRole("dialog")) === (null), true, "Expected DOM identity or absence");
   fireEvent.change(screen.getByLabelText("Bounded", { selector: "input" }), {
     target: { value: "2000-03-01" },
   });
@@ -549,7 +543,7 @@ test("date drafts cancel cleanly, support year 0001 and 9999, reject invalid yea
   assert.equal(hours.querySelectorAll('[tabindex=\"0\"]').length, 1);
   fireEvent.keyDown(hours.querySelector('[tabindex=\"0\"]'), { key: "End" });
   fireEvent.keyDown(document.activeElement, { key: "ArrowRight" });
-  assert.equal(document.activeElement.closest("[role=listbox]"), minutes);
+  assert.equal((document.activeElement.closest("[role=listbox]")) === (minutes), true, "Expected DOM identity or absence");
   fireEvent.keyDown(document.activeElement, { key: "End" });
   fireEvent.click(screen.getByRole("button", { name: "确认" }));
   assert.deepEqual(timeValues, ["23:59"]);
@@ -641,7 +635,7 @@ test("upload rejects type/size/count, removes by proposal only, and dialog/popov
   fireEvent.keyDown(screen.getByRole("button", { name: "Help" }), {
     key: "Escape",
   });
-  assert.equal(screen.queryByRole("tooltip"), null);
+  assert.equal((screen.queryByRole("tooltip")) === (null), true, "Expected DOM identity or absence");
   assert.ok(screen.getByRole("dialog", { name: "Dialog" }).open);
   fireEvent.click(screen.getByRole("button", { name: "关闭" }));
   assert.ok(screen.getByRole("dialog", { name: "Dialog" }).open);
@@ -706,7 +700,7 @@ test("upload rejects type/size/count, removes by proposal only, and dialog/popov
       }),
     ),
   );
-  assert.equal(screen.queryByRole("progressbar"), null);
+  assert.equal((screen.queryByRole("progressbar")) === (null), true, "Expected DOM identity or absence");
   assert.ok(screen.getByText("已取消"));
 });
 test("drawer completes only resolved animation promises, supports nonmodal, never closes refused dismissals", async () => {
@@ -862,14 +856,14 @@ test("feedback, card/list/table data, badges/avatar/empty/skeleton/loading/progr
   const loader = render(
     wrap(h(UI.Loading, { label: "Delayed loading", delay: 30 })),
   );
-  assert.equal(screen.queryByRole("status"), null);
+  assert.equal((screen.queryByRole("status")) === (null), true, "Expected DOM identity or absence");
   loader.rerender(
     wrap(h(UI.Loading, { label: "Delayed loading", delay: 30, active: false })),
   );
   await act(async () => {
     await new Promise((resolve) => setTimeout(resolve, 40));
   });
-  assert.equal(screen.queryByRole("status"), null);
+  assert.equal((screen.queryByRole("status")) === (null), true, "Expected DOM identity or absence");
   assert.equal(
     loader.container.querySelector(".rm-loading").dataset.visible,
     "true",
@@ -915,4 +909,104 @@ test("feedback, card/list/table data, badges/avatar/empty/skeleton/loading/progr
   });
   fireEvent(document, new Event("visibilitychange"));
   assert.equal(screen.getByRole("status").dataset.active, "true");
+});
+test("field requirements wait for nonempty blur, clear all feedback and defer IME; verification stays beside its field", async () => {
+  function Form() {
+    const [value, set] = useState("");
+    return wrap(
+      h(UI.Input, {
+        label: "Create password",
+        value,
+        onValueChange: set,
+        type: "password",
+        requirements: UI.passwordRequirements(),
+        verification: h("button", { type: "button" }, "Verify this field"),
+      }),
+    );
+  }
+  render(h(Form));
+  const input = screen.getByLabelText("Create password");
+  const rules = () =>
+    document.querySelectorAll('.rm-requirements [data-result="invalid"]');
+  assert.equal(rules().length, 0);
+  assert.ok(
+    input.closest(".rm-field").contains(screen.getByText("Verify this field")),
+  );
+  fireEvent.focus(input);
+  fireEvent.change(input, { target: { value: "abc" } });
+  assert.equal(rules().length, 0);
+  fireEvent.blur(input);
+  assert.equal(input.getAttribute("aria-invalid"), "true");
+  assert.equal(rules().length, 2);
+  fireEvent.focus(input);
+  fireEvent.change(input, { target: { value: "abc12345" } });
+  assert.equal(input.hasAttribute("aria-invalid"), false);
+  assert.equal(
+    document.querySelectorAll('.rm-requirements [data-result="valid"]').length,
+    3,
+  );
+  fireEvent.change(input, { target: { value: "" } });
+  assert.equal(
+    document.querySelectorAll('.rm-requirements [data-result="valid"]').length,
+    0,
+  );
+  fireEvent.change(input, { target: { value: "abc" } });
+  assert.equal(rules().length, 0);
+  fireEvent.compositionStart(input);
+  fireEvent.blur(input);
+  assert.equal(rules().length, 0);
+  fireEvent.compositionEnd(input);
+  assert.equal(rules().length, 0);
+  fireEvent.focus(input);
+  fireEvent.blur(input);
+  assert.equal(rules().length, 2);
+});
+test("inline search clears then collapses; dialog search preserves scope, query and entry focus", () => {
+  function Inline() {
+    const [value, set] = useState("");
+    return wrap(
+      h(UI.Search, {
+        label: "Local records",
+        value,
+        onValueChange: set,
+        defaultExpanded: false,
+      }),
+    );
+  }
+  render(h(Inline));
+  fireEvent.click(screen.getByRole("button", { name: "Local records" }));
+  let input = screen.getByRole("searchbox", { name: "Local records" });
+  fireEvent.change(input, { target: { value: "draft" } });
+  fireEvent.keyDown(input, { key: "Escape" });
+  assert.equal(input.value, "");
+  fireEvent.keyDown(input, { key: "Escape" });
+  assert.equal((screen.queryByRole("searchbox")) === (null), true, "Expected DOM identity or absence");
+  assert.equal(
+    document.activeElement?.getAttribute("aria-label"),
+    "Local records",
+  );
+  cleanup();
+  function Global() {
+    const [value, set] = useState("");
+    return wrap(
+      h(UI.Search, {
+        label: "Global search",
+        value,
+        onValueChange: set,
+        presentation: "dialog",
+      }),
+    );
+  }
+  render(h(Global));
+  const entry = screen.getByRole("button", { name: "Global search" });
+  fireEvent.click(entry);
+  input = screen.getByRole("searchbox", { name: "Global search" });
+  fireEvent.change(input, { target: { value: "keep query" } });
+  fireEvent(screen.getByRole("dialog", {name:"Global search"}), new Event("cancel", {cancelable:true}));
+  assert.equal(document.activeElement?.getAttribute("aria-label"), "Global search");
+  fireEvent.click(entry);
+  assert.equal(
+    screen.getByRole("searchbox", { name: "Global search" }).value,
+    "keep query",
+  );
 });

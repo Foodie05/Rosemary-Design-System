@@ -125,3 +125,13 @@ Import `UploadFileState` from the package. `onRetry` and `onCancel` do not optim
 `checkRosemaryPassword(value)` and `rosemaryPasswordPolicy` are exported by this package and `@rosemary-ui/tokens`. Results expose `length`, `characters`, `categories`, and `valid`: 8–32 printable ASCII characters (excluding spaces), with at least two of letters, digits, and punctuation. Do not trim or truncate passwords.
 
 Show requirements directly below their field before editing. Reveal checks after the first nonempty blur, then update while editing. Clearing resets all results. Related verification codes, CAPTCHA, errors, and recovery belong below that same field. These pure checks do not replace identity-service validation.
+
+
+## SDK 0.5.0 field and interaction candidate
+
+Input and textarea accept optional `requirements` and an adjacent `verification` slot. Requirements are visible before editing; local results start after the first nonempty blur, update after that, and reset on clearing. Existing `error` remains host controlled. Password requirements provide English/Chinese labels; login does not inherit creation complexity. See the repository's `docs/sdk/input-validation.md` and `docs/sdk/interaction.md` for the four platform APIs, composition behavior, focus geometry, physical motion, reduced motion and migration.
+
+
+### Bounded local tests
+
+`pnpm test:react` uses `scripts/run-react-tests.py`: one test tree at a time, a 512 MiB V8 heap cap inherited by children, a 768 MiB sampled aggregate RSS cap, a 90 second external deadline, and 20 seconds per test. The watchdog cleans up observed descendants on failure, interruption and normal exit; core dumps are disabled. POSIX `ps` and Python 3 are required. DOM identity assertions compare booleans so failure reports cannot expand React Fiber/DOM object graphs. Use `--node` to select the CI-matching Node binary and `--name-pattern` for a targeted diagnostic run.

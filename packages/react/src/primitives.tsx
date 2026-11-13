@@ -10,6 +10,11 @@ import type {
   TextareaHTMLAttributes,
 } from "react";
 import { componentTokens } from "@rosemary-ui/tokens";
+import { Dialog } from "./overlays.js";
+import { FieldFrame } from "./field-frame.js";
+import { FieldRequirements, useFieldValidation } from "./validation.js";
+import type { FieldRequirement } from "./validation.js";
+import { usePhysicalButton } from "./physical-motion.js";
 import { iconMarkup } from "@rosemary-ui/icons";
 import type { IconName } from "@rosemary-ui/icons";
 import { useDocumentVisible, useRosemaryStrings } from "./theme.js";
@@ -64,10 +69,39 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) {
+    const physical = usePhysicalButton(disabled || loading);
     return (
       <button
         {...props}
-        ref={ref}
+        ref={(node) => {
+          physical.ref.current = node;
+          if (typeof ref === "function") ref(node);
+          else if (ref) ref.current = node;
+        }}
+        onPointerUp={(e) => {
+          physical.release();
+          props.onPointerUp?.(e);
+        }}
+        onPointerCancel={(e) => {
+          physical.release();
+          props.onPointerCancel?.(e);
+        }}
+        onPointerLeave={(e) => {
+          physical.release();
+          props.onPointerLeave?.(e);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === " " || e.key === "Enter") physical.press();
+          props.onKeyDown?.(e);
+        }}
+        onKeyUp={(e) => {
+          physical.release();
+          props.onKeyUp?.(e);
+        }}
+        onBlur={(e) => {
+          physical.release();
+          props.onBlur?.(e);
+        }}
         type={type}
         className={cx("button", className)}
         data-variant={variant}
@@ -77,6 +111,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         aria-disabled={disabled || loading || undefined}
         onPointerDown={(e) => {
           props.onPointerDown?.(e);
+          if (!e.defaultPrevented && e.button === 0) physical.press();
           if (!e.defaultPrevented && e.button === 0 && !disabled)
             e.currentTarget.focus({ preventScroll: true });
         }}
@@ -89,8 +124,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           onClick?.(e);
         }}
       >
-        {loading && <Loading label="" size="small" />}
-        {children}
+        <span ref={physical.content} className="rm-button-content">
+          {loading && <Loading label="" size="small" />}
+          {children}
+        </span>
       </button>
     );
   },
@@ -123,6 +160,8 @@ export interface FieldProps {
   label: string;
   description?: ReactNode;
   error?: ReactNode;
+  requirements?: readonly FieldRequirement[];
+  verification?: ReactNode;
 }
 function Field({
   id,
@@ -130,11 +169,15 @@ function Field({
   description,
   error,
   children,
+  verification,
 }: FieldProps & { id: string; children: ReactNode }) {
   return (
     <div className="rm-field">
       <label htmlFor={id}>{label}</label>
       {children}
+      {verification && (
+        <div className="rm-field-verification">{verification}</div>
+      )}
       {description && (
         <div className="rm-help" id={`${id}-help`}>
           {description}
@@ -156,31 +199,75 @@ export interface InputProps
   onValueChange: (value: string) => void;
 }
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { id, label, description, error, value, onValueChange, className, ...props },
+  {
+    id,
+    label,
+    description,
+    error,
+    requirements,
+    verification,
+    value,
+    onValueChange,
+    className,
+    ...props
+  },
   ref,
 ) {
   const auto = useId();
   const fieldId = id ?? auto;
+  const validation = useFieldValidation(value, requirements);
+  const invalid = !!error || validation.invalid;
   return (
-    <Field id={fieldId} label={label} description={description} error={error}>
-      <input
-        {...props}
-        ref={ref}
-        id={fieldId}
-        value={value}
-        onChange={(e) => onValueChange(e.target.value)}
-        className={cx("input", className)}
-        aria-invalid={!!error || undefined}
-        aria-describedby={
-          [
-            description ? `${fieldId}-help` : "",
-            error ? `${fieldId}-error` : "",
-            props["aria-describedby"],
-          ]
-            .filter(Boolean)
-            .join(" ") || undefined
-        }
-      />
+    <Field
+      id={fieldId}
+      label={label}
+      description={description}
+      error={error}
+      verification={verification}
+    >
+      <FieldFrame invalid={invalid}>
+        <input
+          {...props}
+          ref={ref}
+          id={fieldId}
+          value={value}
+          onChange={(e) => onValueChange(e.target.value)}
+          onFocus={(e) => {
+            validation.focus();
+            props.onFocus?.(e);
+          }}
+          onBlur={(e) => {
+            validation.blur();
+            props.onBlur?.(e);
+          }}
+          onCompositionStart={(e) => {
+            validation.compositionStart();
+            props.onCompositionStart?.(e);
+          }}
+          onCompositionEnd={(e) => {
+            validation.compositionEnd();
+            props.onCompositionEnd?.(e);
+          }}
+          className={cx("input", className)}
+          aria-invalid={invalid || undefined}
+          aria-describedby={
+            [
+              requirements?.length ? `${fieldId}-requirements` : "",
+              description ? `${fieldId}-help` : "",
+              error ? `${fieldId}-error` : "",
+              props["aria-describedby"],
+            ]
+              .filter(Boolean)
+              .join(" ") || undefined
+          }
+        />
+      </FieldFrame>
+      {requirements?.length ? (
+        <FieldRequirements
+          id={`${fieldId}-requirements`}
+          results={validation.results}
+        />
+      ) : null}
     </Field>
   );
 });
@@ -201,42 +288,98 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       value,
       onValueChange,
       className,
+      requirements,
+      verification,
       ...props
     },
     ref,
   ) {
     const auto = useId();
     const fieldId = id ?? auto;
+    const validation = useFieldValidation(value, requirements);
+    const invalid = !!error || validation.invalid;
     return (
-      <Field id={fieldId} label={label} description={description} error={error}>
-        <textarea
-          {...props}
-          ref={ref}
-          id={fieldId}
-          value={value}
-          onChange={(e) => onValueChange(e.target.value)}
-          className={cx("input", className)}
-          aria-invalid={!!error || undefined}
-          aria-describedby={
-            [
-              description ? `${fieldId}-help` : "",
-              error ? `${fieldId}-error` : "",
-              props["aria-describedby"],
-            ]
-              .filter(Boolean)
-              .join(" ") || undefined
-          }
-        />
+      <Field
+        id={fieldId}
+        label={label}
+        description={description}
+        error={error}
+        verification={verification}
+      >
+        <FieldFrame invalid={invalid}>
+          <textarea
+            {...props}
+            ref={ref}
+            id={fieldId}
+            value={value}
+            onChange={(e) => onValueChange(e.target.value)}
+            onFocus={(e) => {
+              validation.focus();
+              props.onFocus?.(e);
+            }}
+            onBlur={(e) => {
+              validation.blur();
+              props.onBlur?.(e);
+            }}
+            onCompositionStart={(e) => {
+              validation.compositionStart();
+              props.onCompositionStart?.(e);
+            }}
+            onCompositionEnd={(e) => {
+              validation.compositionEnd();
+              props.onCompositionEnd?.(e);
+            }}
+            className={cx("input", className)}
+            aria-invalid={invalid || undefined}
+            aria-describedby={
+              [
+                requirements?.length ? `${fieldId}-requirements` : "",
+                description ? `${fieldId}-help` : "",
+                error ? `${fieldId}-error` : "",
+                props["aria-describedby"],
+              ]
+                .filter(Boolean)
+                .join(" ") || undefined
+            }
+          />
+        </FieldFrame>
+        {requirements?.length ? (
+          <FieldRequirements
+            id={`${fieldId}-requirements`}
+            results={validation.results}
+          />
+        ) : null}
       </Field>
     );
   },
 );
 export interface SearchProps extends Omit<InputProps, "type"> {
   onSearch?: (value: string) => void;
+  presentation?: "inline" | "dialog";
+  defaultExpanded?: boolean;
 }
-export function Search({ onSearch, ...props }: SearchProps) {
-  const strings = useRosemaryStrings();
-  return (
+export function Search({
+  onSearch,
+  presentation = "inline",
+  defaultExpanded = true,
+  ...props
+}: SearchProps) {
+  const strings = useRosemaryStrings(),
+    [expanded, setExpanded] = useState(
+      presentation === "inline" && defaultExpanded,
+    );
+  const trigger = useRef<HTMLButtonElement>(null),
+    input = useRef<HTMLInputElement>(null);
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    if (expanded) input.current?.focus();
+    else trigger.current?.focus();
+  }, [expanded]);
+  const form = (
     <form
       className="rm-search"
       role="search"
@@ -244,13 +387,54 @@ export function Search({ onSearch, ...props }: SearchProps) {
         e.preventDefault();
         if (!props.disabled) onSearch?.(props.value);
       }}
+      onKeyDown={(e) => {
+        if (
+          e.key !== "Escape" ||
+          e.defaultPrevented ||
+          presentation === "dialog"
+        )
+          return;
+        e.preventDefault();
+        if (props.value) props.onValueChange("");
+        else {
+          setExpanded(false);
+          trigger.current?.focus();
+        }
+      }}
     >
-      <Input {...props} type="search" />
+      <Input {...props} ref={input} type="search" />
       <Button type="submit" variant="secondary" disabled={props.disabled}>
         <Icon name="search" />
         {strings.search}
       </Button>
     </form>
+  );
+  return (
+    <div className="rm-search-pattern" data-presentation={presentation}>
+      {(presentation === "dialog" || !expanded) && (
+        <IconButton
+          ref={trigger}
+          icon="search"
+          label={props.label}
+          variant="secondary"
+          disabled={props.disabled}
+          aria-expanded={expanded}
+          onClick={() => setExpanded(true)}
+        />
+      )}
+      {presentation === "dialog" ? (
+        <Dialog
+          open={expanded}
+          onOpenChange={setExpanded}
+          title={props.label}
+          returnFocusRef={trigger}
+        >
+          {form}
+        </Dialog>
+      ) : expanded ? (
+        form
+      ) : null}
+    </div>
   );
 }
 export interface CheckProps extends Omit<
@@ -384,19 +568,47 @@ export function Slider({
   ...props
 }: SliderProps) {
   const auto = useId();
+  const [dragging, setDragging] = useState(false);
+  const min = Number(props.min ?? 0),
+    max = Number(props.max ?? 100);
+  const ratio = Math.min(1, Math.max(0, (value - min) / (max - min)));
   return (
     <label className="rm-slider" htmlFor={id ?? auto}>
       <span>
         {label} <output>{valueText ?? value}</output>
       </span>
-      <input
-        {...props}
-        id={id ?? auto}
-        type="range"
-        value={value}
-        onChange={(e) => onValueChange(Number(e.target.value))}
-        aria-valuetext={valueText}
-      />
+      <span
+        className="rm-range-track"
+        data-dragging={dragging || undefined}
+        style={{ "--rm-range-ratio": ratio } as CSSProperties}
+      >
+        <span className="rm-range-fill" aria-hidden="true" />
+        <span className="rm-range-thumb" aria-hidden="true" />
+        <input
+          {...props}
+          id={id ?? auto}
+          type="range"
+          onPointerDown={(e) => {
+            setDragging(true);
+            props.onPointerDown?.(e);
+          }}
+          onPointerUp={(e) => {
+            setDragging(false);
+            props.onPointerUp?.(e);
+          }}
+          onPointerCancel={(e) => {
+            setDragging(false);
+            props.onPointerCancel?.(e);
+          }}
+          onBlur={(e) => {
+            setDragging(false);
+            props.onBlur?.(e);
+          }}
+          value={value}
+          onChange={(e) => onValueChange(Number(e.target.value))}
+          aria-valuetext={valueText}
+        />
+      </span>
     </label>
   );
 }

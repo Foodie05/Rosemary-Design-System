@@ -5,27 +5,61 @@ import 'theme.dart';
 import 'generated/rosemary_tokens.dart';
 
 /// Keeps a non-modal popup inside its owning window, flipping above if needed.
-class RosemaryAnchoredOverlay extends StatelessWidget {
+class RosemaryAnchoredOverlay extends StatefulWidget {
   final GlobalKey anchor;
   final Widget child;
+  final bool joined;
+  final Animation<double>? reveal;
+  final ValueChanged<bool>? onDirectionChanged;
   const RosemaryAnchoredOverlay({
     super.key,
     required this.anchor,
     required this.child,
+    this.joined = false,
+    this.reveal,
+    this.onDirectionChanged,
   });
+  @override
+  State<RosemaryAnchoredOverlay> createState() => _AnchoredOverlayState();
+}
+
+class _AnchoredOverlayState extends State<RosemaryAnchoredOverlay> {
+  bool up = false;
   @override
   Widget build(BuildContext context) {
     final overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox?;
-    final box = anchor.currentContext?.findRenderObject() as RenderBox?;
+    final box = widget.anchor.currentContext?.findRenderObject() as RenderBox?;
     final origin = box != null && box.hasSize
         ? box.localToGlobal(Offset.zero, ancestor: overlay)
         : Offset.zero;
     final rect = origin & (box?.size ?? Size.zero);
     return Positioned.fill(
       child: CustomSingleChildLayout(
-        delegate: _RosemaryPopupLayout(rect, Directionality.of(context)),
-        child: child,
+        delegate: _RosemaryPopupLayout(
+          rect,
+          Directionality.of(context),
+          joined: widget.joined,
+          onDirection: (value) {
+            if (value != up)
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted && up != value) {
+                  setState(() => up = value);
+                  widget.onDirectionChanged?.call(value);
+                }
+              });
+          },
+        ),
+        child: widget.reveal == null
+            ? widget.child
+            : AnimatedBuilder(
+                animation: widget.reveal!,
+                builder: (context, child) => ClipRect(
+                  clipper: _RosemaryRevealClipper(widget.reveal!.value, up),
+                  child: child,
+                ),
+                child: widget.child,
+              ),
       ),
     );
   }
@@ -34,7 +68,14 @@ class RosemaryAnchoredOverlay extends StatelessWidget {
 class _RosemaryPopupLayout extends SingleChildLayoutDelegate {
   final Rect anchor;
   final TextDirection direction;
-  const _RosemaryPopupLayout(this.anchor, this.direction);
+  final bool joined;
+  final ValueChanged<bool> onDirection;
+  const _RosemaryPopupLayout(
+    this.anchor,
+    this.direction, {
+    this.joined = false,
+    required this.onDirection,
+  });
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
     final below = (constraints.maxHeight - anchor.bottom - 12).clamp(
@@ -43,7 +84,10 @@ class _RosemaryPopupLayout extends SingleChildLayoutDelegate {
     );
     final above = (anchor.top - 12).clamp(0.0, constraints.maxHeight);
     return BoxConstraints(
-      maxWidth: (constraints.maxWidth - 16).clamp(0.0, constraints.maxWidth),
+      minWidth: joined ? anchor.width.clamp(0.0, constraints.maxWidth - 16) : 0,
+      maxWidth: joined
+          ? anchor.width.clamp(0.0, constraints.maxWidth - 16)
+          : (constraints.maxWidth - 16).clamp(0.0, constraints.maxWidth),
       maxHeight: below > above ? below : above,
     );
   }
@@ -52,9 +96,11 @@ class _RosemaryPopupLayout extends SingleChildLayoutDelegate {
   Offset getPositionForChild(Size size, Size childSize) {
     final below = size.height - anchor.bottom - 12;
     final above = anchor.top - 12;
-    final y = childSize.height <= below || below >= above
-        ? anchor.bottom + 4
-        : anchor.top - childSize.height - 4;
+    final flipped = !(childSize.height <= below || below >= above);
+    onDirection(flipped);
+    final y = !flipped
+        ? anchor.bottom + (joined ? 0 : 4)
+        : anchor.top - childSize.height - (joined ? 0 : 4);
     final x = direction == TextDirection.rtl
         ? anchor.right - childSize.width
         : anchor.left;
@@ -69,7 +115,9 @@ class _RosemaryPopupLayout extends SingleChildLayoutDelegate {
 
   @override
   bool shouldRelayout(_RosemaryPopupLayout old) =>
-      anchor != old.anchor || direction != old.direction;
+      anchor != old.anchor ||
+      direction != old.direction ||
+      joined != old.joined;
 }
 
 class RosemaryDialog extends StatefulWidget {
@@ -553,4 +601,20 @@ class _TooltipState extends State<RosemaryTooltip> {
       ),
     ),
   );
+}
+
+class _RosemaryRevealClipper extends CustomClipper<Rect> {
+  final double progress;
+  final bool up;
+  _RosemaryRevealClipper(this.progress, this.up);
+  @override
+  Rect getClip(Size size) => Rect.fromLTWH(
+    0,
+    up ? size.height * (1 - progress) : 0,
+    size.width,
+    size.height * progress,
+  );
+  @override
+  bool shouldReclip(_RosemaryRevealClipper old) =>
+      old.progress != progress || old.up != up;
 }

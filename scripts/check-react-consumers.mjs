@@ -76,9 +76,9 @@ for (const row of matrix) {
   writeFileSync(
     path.join(fixture, "consumer.tsx"),
     `import {createRef} from 'react';
-import {RosemaryProvider,Button,Checkbox,Input,DatePicker,Drawer,Table,Icon,ThemeProvider,Upload,Stepper} from '@rosemary-ui/react';
+import {RosemaryProvider,Button,Checkbox,Input,DatePicker,Drawer,Table,Icon,ThemeProvider,Upload,Stepper,Search,passwordRequirements,rosemaryInteraction} from '@rosemary-ui/react';
 const ref=createRef<HTMLButtonElement>();const rows=[{id:'1',value:'record'}];const file=new File([],'file.txt');
-export const app=<RosemaryProvider mode="system" language="en" colors={{primary:'#614578'}} onDiagnostics={diagnostics=>diagnostics.map(d=>d.ratio/d.target)}><ThemeProvider><Button ref={ref}>Save</Button><Checkbox label="All" checked="mixed" onCheckedChange={checked=>void checked}/><Input label="Name" value="" onValueChange={value=>void value}/><DatePicker label="Date" value="0001-01-01" onValueChange={value=>void value}/><Drawer title="Settings" open={false} modal={false} onOpenChange={(open,reason)=>void [open,reason]}/><Table caption="Rows" rows={rows} rowKey={r=>r.id} columns={[{id:'value',header:'Value',render:r=>r.value}]}/><Icon name="leaf"/><Upload label="Files" files={[file]} fileStates={new Map([[file,{status:"uploading",progress:45}]])} onFilesChange={()=>{}} onRetry={file=>void file.name} onCancel={file=>void file.name}/><Stepper current="failed" items={[{id:"failed",title:"Failed",state:"error"},{id:"locked",title:"Locked",state:"unavailable"}]}/></ThemeProvider></RosemaryProvider>;`,
+export const app=<RosemaryProvider mode="system" language="en" colors={{primary:'#614578'}} onDiagnostics={diagnostics=>diagnostics.map(d=>d.ratio/d.target)}><ThemeProvider><Button ref={ref}>Save</Button><Checkbox label="All" checked="mixed" onCheckedChange={checked=>void checked}/><Input label="Name" value="" onValueChange={value=>void value} requirements={passwordRequirements("en")} verification={<span>Verify this field</span>}/><Search label="Global" value="" onValueChange={()=>{}} presentation="dialog" defaultExpanded={false}/><span>{rosemaryInteraction.fieldWidth}</span><DatePicker label="Date" value="0001-01-01" onValueChange={value=>void value}/><Drawer title="Settings" open={false} modal={false} onOpenChange={(open,reason)=>void [open,reason]}/><Table caption="Rows" rows={rows} rowKey={r=>r.id} columns={[{id:'value',header:'Value',render:r=>r.value}]}/><Icon name="leaf"/><Upload label="Files" files={[file]} fileStates={new Map([[file,{status:"uploading",progress:45}]])} onFilesChange={()=>{}} onRetry={file=>void file.name} onCancel={file=>void file.name}/><Stepper current="failed" items={[{id:"failed",title:"Failed",state:"error"},{id:"locked",title:"Locked",state:"unavailable"}]}/></ThemeProvider></RosemaryProvider>;`,
   );
   writeFileSync(
     path.join(fixture, "tsconfig.json"),
@@ -101,9 +101,10 @@ export const app=<RosemaryProvider mode="system" language="en" colors={{primary:
     { cwd: fixture, encoding: "utf8" },
   );
   const result = execFileSync(
-    process.execPath,
-    ["--test", "consumer.test.mjs"],
-    { cwd: fixture, encoding: "utf8" },
+    process.env.ROSEMARY_PYTHON || "python3",
+    [path.resolve("scripts/run-react-tests.py"), "--node", process.execPath,
+      "--test-file", path.join(fixture, "consumer.test.mjs")],
+    { cwd: fixture, encoding: "utf8", timeout: 100_000 },
   );
   console.log(result);
   writeFileSync(
@@ -116,7 +117,7 @@ export const app=<RosemaryProvider mode="system" language="en" colors={{primary:
     fixture,
     typecheck: "passed",
     ssrAndControlledInteractions: "passed",
-    tests: 8,
+    tests: 10,
     cssAndBrandAssets: "passed",
     packages: files.map((file) => ({
       file,

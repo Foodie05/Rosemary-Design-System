@@ -30,3 +30,7 @@ test-results/
 
 # Build directories can be external symlinks on development hosts
 **/build
+
+# Python tooling caches
+**/__pycache__/
+*.pyc

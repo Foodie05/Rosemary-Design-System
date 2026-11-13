@@ -35,6 +35,7 @@ function Gallery() {
     [refuse, setRefuse] = useState(false),
     [events, setEvents] = useState<string[]>([]);
   const [name, setName] = useState("Rosemary"),
+    [password, setPassword] = useState(""),
     [notes, setNotes] = useState(""),
     [query, setQuery] = useState(""),
     [choice, setChoice] = useState("forma"),
@@ -150,8 +151,31 @@ function Gallery() {
               value={name}
               onValueChange={(v) => change("input", setName, v)}
               description="公开显示的名称"
+              requirements={[
+                {
+                  id: "name-length",
+                  label: "1–32 个字符，不能全为空白",
+                  check: (v) => !!v.trim() && Array.from(v).length <= 32,
+                },
+              ]}
             />
           </Example>
+          <section className="gallery-example" aria-label="字段验证标准">
+            <h2>创建密码 · 字段要求与反馈</h2>
+            <R.Input
+              label="创建密码"
+              type="password"
+              value={password}
+              onValueChange={setPassword}
+              autoComplete="new-password"
+              requirements={R.passwordRequirements("zh")}
+              verification={
+                <p className="rm-help">
+                  若身份服务要求验证码或 CAPTCHA，请放在这个字段的下方。
+                </p>
+              }
+            />
+          </section>
           <Example id="textarea" title="长文本">
             <R.Textarea
               label="备注"

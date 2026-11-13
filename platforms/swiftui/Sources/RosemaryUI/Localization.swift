@@ -5,6 +5,7 @@ public struct RosemaryStrings {
   public let overrides: [String: String]
   public init(_ overrides: [String: String] = [:]) { self.overrides = overrides }
   public static let chinese: [String: String] = [
+    "Requirement met": "已满足要求", "Requirement not met": "未满足要求", "Not checked": "尚未检查",
     "Read only": "只读", "Visited": "已访问", "Indeterminate": "进度未知", "Remove": "移除", "Retry": "重试",
     "Uploading": "上传中", "selected": "已选择",
     "uploading": "上传中",

@@ -33,12 +33,35 @@ public struct RosemaryButtonStyle: ButtonStyle {
     )
     .background {
       RoundedRectangle(cornerRadius: max(0, RosemaryNativeMetrics.radius("button") - fillInset))
-        .fill(variant == .primary ? p.colors.primary : variant == .danger
-          ? p.colors.danger : variant == .secondary ? p.colors.surfaceInset : .clear)
+        .fill(
+          variant == .primary
+            ? p.colors.primary
+            : variant == .danger
+              ? p.colors.danger : variant == .secondary ? p.colors.surfaceInset : .clear
+        )
         .padding(fillInset)
     }
     .clipShape(RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("button"))).opacity(
       enabled ? (configuration.isPressed ? 0.75 : 1) : showsBusy ? 1 : 0.45
+    )
+    .modifier(RosemaryAnimatedWidth())
+    .scaleEffect(
+      p.reduce || !enabled ? 1 : configuration.isPressed ? RosemaryInteraction.pressScale : 1
+    )
+    .animation(
+      p.reduce
+        ? nil
+        : .interpolatingSpring(
+          mass: 1,
+          stiffness: configuration.isPressed
+            ? RosemaryInteraction.pressStiffness : RosemaryInteraction.releaseStiffness,
+          damping: 2
+            * (configuration.isPressed
+              ? RosemaryInteraction.pressDamping : RosemaryInteraction.releaseDamping)
+            * sqrt(
+              configuration.isPressed
+                ? RosemaryInteraction.pressStiffness : RosemaryInteraction.releaseStiffness)),
+      value: configuration.isPressed
     )
     .overlay(
       RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("button")).stroke(
@@ -95,7 +118,7 @@ public struct RosemaryLink: View {
       .foregroundStyle(visited ? p.colors.muted : p.colors.primary)
       .underline().frame(
         minHeight: 44
-      ).buttonStyle(.plain).accessibilityValue(
+      ).buttonStyle(RosemaryPressStyle()).accessibilityValue(
         current ? p.text("Current page") : visited ? p.text("Visited") : "")
   }
 }
@@ -134,12 +157,19 @@ public struct RosemaryInput: View {
   let error: String?
   let secure: Bool
   let readOnly: Bool
+  let requirements: [RosemaryFieldRequirement]
+  let verification: AnyView?
+  let isComposing: Bool
+  @State private var validation = RosemaryFieldValidationState()
+  @State private var nativeComposing = false
   let onSubmit: () -> Void
   @Binding var text: String
   @FocusState private var focused: Bool
   public init(
     _ label: String, text: Binding<String>, placeholder: String = "", error: String? = nil,
-    secure: Bool = false, isReadOnly: Bool = false, onSubmit: @escaping () -> Void = {}
+    secure: Bool = false, isReadOnly: Bool = false,
+    requirements: [RosemaryFieldRequirement] = [], verification: AnyView? = nil,
+    isComposing: Bool = false, onSubmit: @escaping () -> Void = {}
   ) {
     self.label = label
     _text = text
@@ -147,8 +177,13 @@ public struct RosemaryInput: View {
     self.error = error
     self.secure = secure
     readOnly = isReadOnly
+    self.requirements = requirements
+    self.verification = verification
+    self.isComposing = isComposing
     self.onSubmit = onSubmit
   }
+  private var active: Bool { validation.armed && !text.isEmpty && !isComposing && !nativeComposing }
+  private var invalid: Bool { error != nil || active && requirements.contains { !$0.check(text) } }
   public var body: some View {
     VStack(alignment: .leading, spacing: 6) {
       Text(label).rosemaryTypography(.small, weight: .medium).foregroundStyle(p.colors.ink)
@@ -162,10 +197,21 @@ public struct RosemaryInput: View {
           TextField("", text: $text, prompt: Text(placeholder).foregroundStyle(p.colors.muted))
         }
       }.textFieldStyle(.plain).focused($focused).onSubmit(onSubmit).modifier(
-        RosemaryFieldFrame(invalid: error != nil, focused: focused)
-      ).accessibilityLabel(label).accessibilityHint((readOnly ? p.text("Read only") + " " : "") + (error ?? ""))
-      if let error { Text(error).rosemaryTypography(.caption).foregroundStyle(p.colors.danger) }
+        RosemaryFieldFrame(invalid: invalid, focused: focused)
+      ).background(RosemaryCompositionProbe { nativeComposing = $0 }).accessibilityLabel(label)
+        .accessibilityHint((readOnly ? p.text("Read only") + " " : "") + (error ?? ""))
+      RosemaryFieldRequirements(value: text, rules: requirements, active: active)
+      verification
+      if let error { Text(error).font(.system(size: 14)).foregroundStyle(p.colors.danger) }
     }
+    .onChange(of: focused) { _, value in
+      if value {
+        validation.focus()
+      } else {
+        validation.blur(text, isComposing: isComposing || nativeComposing)
+      }
+    }
+    .onChange(of: text) { _, value in validation.edit(value) }
   }
 }
 public struct RosemaryTextarea: View {
@@ -173,16 +219,28 @@ public struct RosemaryTextarea: View {
   let label: String
   let error: String?
   let readOnly: Bool
+  let requirements: [RosemaryFieldRequirement]
+  let verification: AnyView?
+  let isComposing: Bool
+  @State private var validation = RosemaryFieldValidationState()
+  @State private var nativeComposing = false
   @Binding var text: String
   @FocusState var focused: Bool
   public init(
-    _ label: String, text: Binding<String>, error: String? = nil, isReadOnly: Bool = false
+    _ label: String, text: Binding<String>, error: String? = nil, isReadOnly: Bool = false,
+    requirements: [RosemaryFieldRequirement] = [], verification: AnyView? = nil,
+    isComposing: Bool = false
   ) {
     self.label = label
     _text = text
     self.error = error
     readOnly = isReadOnly
+    self.requirements = requirements
+    self.verification = verification
+    self.isComposing = isComposing
   }
+  private var active: Bool { validation.armed && !text.isEmpty && !isComposing && !nativeComposing }
+  private var invalid: Bool { error != nil || active && requirements.contains { !$0.check(text) } }
   public var body: some View {
     VStack(alignment: .leading, spacing: 6) {
       Text(label).rosemaryTypography(.small, weight: .medium).foregroundStyle(p.colors.ink)
@@ -196,35 +254,90 @@ public struct RosemaryTextarea: View {
         }
       }.focused(
         $focused
-      ).modifier(RosemaryFieldFrame(invalid: error != nil, focused: focused)).accessibilityLabel(
+      ).modifier(RosemaryFieldFrame(invalid: invalid, focused: focused)).accessibilityLabel(
         label
-      ).accessibilityHint((readOnly ? p.text("Read only") + " " : "") + (error ?? ""))
-      if let error { Text(error).rosemaryTypography(.caption).foregroundStyle(p.colors.danger) }
+      ).background(RosemaryCompositionProbe { nativeComposing = $0 }).accessibilityHint(
+        (readOnly ? p.text("Read only") + " " : "") + (error ?? ""))
+      RosemaryFieldRequirements(value: text, rules: requirements, active: active)
+      verification
+      if let error { Text(error).font(.system(size: 14)).foregroundStyle(p.colors.danger) }
     }
+    .onChange(of: focused) { _, value in
+      if value {
+        validation.focus()
+      } else {
+        validation.blur(text, isComposing: isComposing || nativeComposing)
+      }
+    }
+    .onChange(of: text) { _, value in validation.edit(value) }
   }
 }
+public enum RosemarySearchPresentation { case inline, dialog }
 public struct RosemarySearch: View {
   private var p = RosemaryPalette()
   let label: String
   let submit: (String) -> Void
+  let presentation: RosemarySearchPresentation
   @Binding var text: String
-  public init(_ label: String, text: Binding<String>, onSearch: @escaping (String) -> Void) {
+  @State private var expanded: Bool
+  @FocusState private var focused: Bool
+  @FocusState private var entryFocused: Bool
+  public init(
+    _ label: String, text: Binding<String>, presentation: RosemarySearchPresentation = .inline,
+    initiallyExpanded: Bool = true, onSearch: @escaping (String) -> Void
+  ) {
     self.label = label
     _text = text
     submit = onSearch
+    self.presentation = presentation
+    _expanded = State(initialValue: presentation == .inline && initiallyExpanded)
   }
-  public var body: some View {
+  private var searchField: some View {
     HStack {
       RosemaryIcon("search").foregroundStyle(p.colors.muted)
       TextField("", text: $text, prompt: Text(label).foregroundStyle(p.colors.muted))
-        .textFieldStyle(.plain).onSubmit { submit(text) }.accessibilityLabel(label)
+        .textFieldStyle(.plain).focused($focused).onSubmit { submit(text) }.accessibilityLabel(
+          label)
       if !text.isEmpty {
         RosemaryIconButton("close", label: "\(p.text("Clear")) \(label)") {
           text = ""
           submit("")
         }
       }
-    }.modifier(RosemaryFieldFrame())
+    }.modifier(RosemaryFieldFrame(focused: focused))
+      .onKeyPress(.escape) {
+        if presentation == .dialog {
+          expanded = false
+          entryFocused = true
+        } else if !text.isEmpty {
+          text = ""
+        } else {
+          expanded = false
+          entryFocused = true
+        }
+        return .handled
+      }
+  }
+  public var body: some View {
+    Group {
+      if presentation == .inline && expanded {
+        searchField
+      } else {
+        RosemaryIconButton("search", label: label) {
+          expanded = true
+          focused = true
+        }.focused($entryFocused)
+      }
+    }.animation(
+      p.reduce
+        ? nil : .timingCurve(0.2, 0.8, 0.2, 1, duration: RosemaryInteraction.layoutMs / 1000),
+      value: expanded
+    )
+    .rosemaryDialog(
+      label,
+      isPresented: Binding(get: { presentation == .dialog && expanded }, set: { expanded = $0 }),
+      restoreFocus: { entryFocused = true }
+    ) { searchField.onAppear { focused = true } }
   }
 }
 public struct RosemaryCheckbox: View {
@@ -245,7 +358,8 @@ public struct RosemaryCheckbox: View {
         ZStack {
           RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("checkbox") / 2).fill(
             checked || mixed ? p.colors.primary : p.colors.surface)
-          RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("checkbox") / 2).stroke(p.colors.control, lineWidth: p.stroke)
+          RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("checkbox") / 2).stroke(
+            p.colors.control, lineWidth: p.stroke)
           if mixed {
             Rectangle().fill(p.colors.onPrimary).frame(width: 10, height: 2)
           } else if checked {
@@ -255,7 +369,7 @@ public struct RosemaryCheckbox: View {
         Text(label).foregroundStyle(p.colors.ink)
         Spacer(minLength: 0)
       }.padding(.vertical, 10).frame(minHeight: 44).contentShape(Rectangle())
-    }.buttonStyle(.plain).animation(
+    }.buttonStyle(RosemaryPressStyle()).animation(
       p.reduce ? nil : .easeInOut(duration: RosemaryNativeMetrics.duration("state")), value: checked
     )
     .accessibilityRepresentation {
@@ -288,7 +402,7 @@ public struct RosemaryRadio<Value: Hashable>: View {
         Text(label).foregroundStyle(p.colors.ink)
         Spacer(minLength: 0)
       }.frame(minHeight: 44)
-    }.buttonStyle(.plain).animation(
+    }.buttonStyle(RosemaryPressStyle()).animation(
       p.reduce ? nil : .easeInOut(duration: RosemaryNativeMetrics.duration("state")),
       value: selection
     )
@@ -319,7 +433,7 @@ public struct RosemarySwitch: View {
             Circle().fill(p.colors.surface).frame(width: 18, height: 18).padding(3)
           }
       }.frame(minHeight: 44)
-    }.buttonStyle(.plain).accessibilityRepresentation { Toggle(label, isOn: $on) }
+    }.buttonStyle(RosemaryPressStyle()).accessibilityRepresentation { Toggle(label, isOn: $on) }
       .accessibilityLabel(label).accessibilityValue(on ? p.text("On") : p.text("Off"))
       .accessibilityAddTraits(on ? [.isSelected] : [])
   }
@@ -327,6 +441,7 @@ public struct RosemarySwitch: View {
 public struct RosemarySlider: View {
   @Environment(\.isEnabled) private var enabled
   private var p = RosemaryPalette()
+  @GestureState private var dragging = false
   @Environment(\.layoutDirection) var direction
   let label: String
   let range: ClosedRange<Double>
@@ -361,13 +476,18 @@ public struct RosemarySlider: View {
           Circle().fill(p.colors.surface).overlay(Circle().stroke(p.colors.primary, lineWidth: 2))
             .frame(width: 22, height: 22).offset(
               x: (g.size.width - 22) * ratio * (direction == .rightToLeft ? -1 : 1))
-        }.frame(height: 44).contentShape(Rectangle()).gesture(
-          DragGesture(minimumDistance: 0).onChanged { v in
-            let r = max(0, min(1, v.location.x / g.size.width))
-            set(
-              range.lowerBound + (direction == .rightToLeft ? 1 - r : r)
-                * (range.upperBound - range.lowerBound))
-          })
+        }.animation(
+          p.reduce || dragging
+            ? nil : .timingCurve(0.2, 0.8, 0.2, 1, duration: RosemaryInteraction.layoutMs / 1000),
+          value: value
+        ).frame(height: 44).contentShape(Rectangle()).gesture(
+          DragGesture(minimumDistance: 0).updating($dragging) { _, state, _ in state = true }
+            .onChanged { v in
+              let r = max(0, min(1, v.location.x / g.size.width))
+              set(
+                range.lowerBound + (direction == .rightToLeft ? 1 - r : r)
+                  * (range.upperBound - range.lowerBound))
+            })
       }.frame(height: 44).accessibilityElement().accessibilityLabel(label).accessibilityValue(
         value.formatted()
       ).accessibilityAdjustableAction { d in set(value + (d == .increment ? step : -step)) }

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "scope": "Rosemary platform password creation and local field validation prototype",
+  "scope": "Rosemary platform password creation and SDK 0.5.0 field validation",
   "timing": {
     "initial": "neutral",
     "firstCheck": "first focusout with a nonempty value",
@@ -14,11 +14,28 @@
     "allowedCodePointMin": 33,
     "allowedCodePointMax": 126,
     "minimumCategories": 2,
-    "categories": ["ASCII letters", "ASCII digits", "ASCII punctuation"],
-    "requirements": ["8–32 个字符", "仅使用英文字母、数字和英文符号，不含空格", "字母、数字、英文符号中至少包含两类"],
+    "categories": [
+      "ASCII letters",
+      "ASCII digits",
+      "ASCII punctuation"
+    ],
+    "requirements": [
+      "8–32 个字符",
+      "仅使用英文字母、数字和英文符号，不含空格",
+      "字母、数字、英文符号中至少包含两类"
+    ],
     "normalization": "none; never trim, rewrite or truncate passwords",
-    "appliesTo": ["registration", "set password", "reset password"],
+    "appliesTo": [
+      "registration",
+      "set password",
+      "reset password"
+    ],
     "login": "Check presence only; do not reject existing credentials using password creation complexity rules."
   },
-  "exampleNickname": { "minLength": 1, "maxLength": 32, "requireNonWhitespace": true, "scope": "Illustrative nickname/name limits, not a new platform-wide character policy." }
+  "exampleNickname": {
+    "minLength": 1,
+    "maxLength": 32,
+    "requireNonWhitespace": true,
+    "scope": "Illustrative nickname/name limits, not a new platform-wide character policy."
+  }
 }

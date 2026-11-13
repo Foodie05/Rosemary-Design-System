@@ -1,6 +1,8 @@
-# 0.5.0 candidate status
+# SDK 0.5.0 candidate status
 
-Forma 1.3.0 revision and 45-role React/Compose/SwiftUI/Flutter adapters are under current validation. Prior 0.4.2 evidence below is historical; current candidate evidence and exact-main release gate are recorded in `0.5.0-release-notes.md` and `release-checklist.md`. Do not infer device acceptance from the role generator or an old run.
+The 1.3.0 standard now covers shared 45-role themes, coordinated shapes, optical button fills, adjacent field requirements/verification, unified password creation, two-origin focus outlines, connected select disclosure, physical press/release, nonlinear width/slider motion, and inline/dialog search variants on React, Compose, SwiftUI and Flutter. The 33 component IDs and 74 icons remain stable; new field/search APIs are additive.
+
+Current source and release gates are in [release notes](0.5.0-release-notes.md), [field validation](input-validation.md), [interaction](interaction.md) and [release checklist](release-checklist.md). Local checks are preliminary. Final artifacts must be assembled from the same reviewed main SHA and its complete CI matrix. Historical evidence below does not certify this candidate.
 
 # SDK implementation status
 

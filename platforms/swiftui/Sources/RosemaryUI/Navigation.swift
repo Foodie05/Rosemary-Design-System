@@ -18,6 +18,10 @@ public struct RosemarySelect<Value: Hashable>: View {
   let error: String?
   @Binding var selection: Value?
   @Binding var open: Bool
+  @State private var presented = false
+  @State private var reveal: CGFloat = 0
+  @State private var openingUp = false
+  @State private var generation = 0
   @State private var cursor: Int = 0
   @State private var prefix = ""
   @State private var prefixTime = Date.distantPast
@@ -31,6 +35,29 @@ public struct RosemarySelect<Value: Hashable>: View {
     _open = isExpanded
     self.options = options
     self.error = error
+  }
+  private func animateDisclosure() {
+    generation += 1
+    let token = generation
+    if open { presented = true }
+    if p.reduce {
+      reveal = open ? 1 : 0
+      presented = open
+      return
+    }
+    DispatchQueue.main.async {
+      guard token == generation else { return }
+      withAnimation(
+        .timingCurve(
+          0.2, 0.7, 0.2, 1,
+          duration: (open ? RosemaryInteraction.disclosureMs : RosemaryInteraction.disclosureExitMs)
+            / 1000), completionCriteria: .logicallyComplete
+      ) {
+        reveal = open ? 1 : 0
+      } completion: {
+        if token == generation && !open { presented = false }
+      }
+    }
   }
   private func move(_ delta: Int) {
     guard !options.isEmpty else { return }
@@ -63,8 +90,8 @@ public struct RosemarySelect<Value: Hashable>: View {
         if o.value == selection { RosemaryIcon("check") }
       }.padding(12).frame(minHeight: 44).foregroundStyle(
         o.disabled ? p.colors.muted : p.colors.ink
-      ).background(cursor == i ? p.colors.primarySoft : p.colors.surface)
-    }.buttonStyle(.plain).disabled(o.disabled).id(i).accessibilityAddTraits(
+      ).background(cursor == i ? p.colors.primarySoft : p.colors.fieldFill)
+    }.buttonStyle(RosemaryPressStyle()).disabled(o.disabled).id(i).accessibilityAddTraits(
       o.value == selection ? .isSelected : [])
   }
   private var optionsPanel: some View {
@@ -77,88 +104,108 @@ public struct RosemarySelect<Value: Hashable>: View {
         }
       }.onAppear { proxy.scrollTo(cursor, anchor: .center) }
         .onChange(of: cursor) { _, value in proxy.scrollTo(value, anchor: .center) }
-    }.background(p.colors.surfaceFloating, in: RoundedRectangle(cornerRadius: 8))
-      .overlay(
-        RoundedRectangle(cornerRadius: 8).stroke(p.stroke > 1 ? p.colors.control : p.colors.edgeSoft, lineWidth: p.stroke)
-      )
-      .onKeyPress(.escape) {
-        open = false
-        focus = true
-        return .handled
-      }
-      .onKeyPress(.tab) {
-        open = false
-        return .ignored
-      }
+    }.background(
+      p.colors.fieldFill,
+      in: UnevenRoundedRectangle(
+        topLeadingRadius: openingUp ? 8 : 0, bottomLeadingRadius: openingUp ? 0 : 8,
+        bottomTrailingRadius: openingUp ? 0 : 8, topTrailingRadius: openingUp ? 8 : 0)
+    )
+    .overlay(
+      RoundedRectangle(cornerRadius: 8).stroke(
+        p.stroke > 1 ? p.colors.control : .clear, lineWidth: p.stroke)
+    )
+    .onKeyPress(.escape) {
+      open = false
+      focus = true
+      return .handled
+    }
+    .onKeyPress(.tab) {
+      open = false
+      return .ignored
+    }
   }
   private var trigger: some View {
     Button(action: expand) {
       HStack {
         Text(selectedLabel).frame(
           maxWidth: .infinity, alignment: .leading)
-        RosemaryIcon("down")
+        RosemaryIcon("down").rotationEffect(.degrees(open ? 180 : 0)).animation(
+          p.reduce
+            ? nil
+            : .timingCurve(0.2, 0.7, 0.2, 1, duration: RosemaryInteraction.disclosureMs / 1000),
+          value: open)
       }
-    }.buttonStyle(.plain).modifier(RosemaryFieldFrame(invalid: error != nil, focused: focus))
-      .focused($focus).accessibilityLabel(label).accessibilityValue(
-        "\(options.first { $0.value == selection }?.label ?? ""), \(open ? p.text("Expanded"):p.text("Collapsed"))"
-      )
-      .onKeyPress(.downArrow) {
-        if !open { expand() } else { move(1) }
-        return .handled
-      }
-      .onKeyPress(.upArrow) {
-        if !open { expand() } else { move(-1) }
-        return .handled
-      }
-      .onKeyPress(.home) {
-        cursor = options.firstIndex { !$0.disabled } ?? 0
-        return .handled
-      }
-      .onKeyPress(.end) {
-        cursor = options.lastIndex { !$0.disabled } ?? 0
-        return .handled
-      }
-      .onKeyPress(.return) {
-        if open { choose(cursor) } else { expand() }
-        return .handled
-      }
-      .onKeyPress(.escape) {
-        open = false
-        return .handled
-      }
-      .onKeyPress(.tab) {
-        open = false
+    }.buttonStyle(.plain).modifier(
+      RosemaryFieldFrame(
+        invalid: error != nil, focused: focus, editable: false, joiningProgress: reveal,
+        openingUp: openingUp)
+    )
+    .focused($focus).accessibilityLabel(label).accessibilityValue(
+      "\(options.first { $0.value == selection }?.label ?? ""), \(open ? p.text("Expanded"):p.text("Collapsed"))"
+    )
+    .onKeyPress(.downArrow) {
+      if !open { expand() } else { move(1) }
+      return .handled
+    }
+    .onKeyPress(.upArrow) {
+      if !open { expand() } else { move(-1) }
+      return .handled
+    }
+    .onKeyPress(.home) {
+      cursor = options.firstIndex { !$0.disabled } ?? 0
+      return .handled
+    }
+    .onKeyPress(.end) {
+      cursor = options.lastIndex { !$0.disabled } ?? 0
+      return .handled
+    }
+    .onKeyPress(.return) {
+      if open { choose(cursor) } else { expand() }
+      return .handled
+    }
+    .onKeyPress(.escape) {
+      open = false
+      return .handled
+    }
+    .onKeyPress(.tab) {
+      open = false
+      return .ignored
+    }
+    .onKeyPress(phases: .down) { key in
+      guard open, !key.characters.isEmpty, key.characters.first?.isLetter == true else {
         return .ignored
       }
-      .onKeyPress(phases: .down) { key in
-        guard open, !key.characters.isEmpty, key.characters.first?.isLetter == true else {
-          return .ignored
-        }
-        if Date().timeIntervalSince(prefixTime) > 0.7 { prefix = "" }
-        prefix += key.characters.lowercased()
-        prefixTime = Date()
-        if let i = options.firstIndex(where: {
-          !$0.disabled && $0.label.lowercased().hasPrefix(prefix)
-        }) {
-          cursor = i
-        }
-        return .handled
+      if Date().timeIntervalSince(prefixTime) > 0.7 { prefix = "" }
+      prefix += key.characters.lowercased()
+      prefixTime = Date()
+      if let i = options.firstIndex(where: {
+        !$0.disabled && $0.label.lowercased().hasPrefix(prefix)
+      }) {
+        cursor = i
       }
+      return .handled
+    }
 
   }
   public var body: some View {
     VStack(alignment: .leading, spacing: 6) {
       Text(label).rosemaryTypography(.small, weight: .medium).foregroundStyle(p.colors.ink)
       trigger.overlay(alignment: .topLeading) {
-        if open {
+        if presented {
           RosemaryAnchoredLayer(
-            width: 280, height: min(240, CGFloat(options.count) * 44),
-            dismissOutside: { open = false }
-          ) { optionsPanel }
+            width: 0, height: min(240, CGFloat(options.count) * 44),
+            dismissOutside: open ? { open = false } : nil, joined: true, reveal: reveal,
+            onDirection: { openingUp = $0 }
+          ) { optionsPanel.allowsHitTesting(open).accessibilityHidden(!open) }
         }
       }
       if let error { Text(error).rosemaryTypography(.caption).foregroundStyle(p.colors.danger) }
-    }.zIndex(open ? 50 : 0).onDisappear {
+    }.zIndex(presented ? 50 : 0).onAppear { animateDisclosure() }.onChange(of: open) { _, _ in
+      animateDisclosure()
+    }.onChange(of: p.reduce) { _, _ in animateDisclosure() }.onDisappear {
+      generation += 1
+      presented = false
+      reveal = 0
       open = false
       prefix = ""
     }
@@ -220,22 +267,24 @@ public struct RosemaryTabs<Value: Hashable, Content: View>: View {
                   }
                 }
               }.fixedSize(horizontal: true, vertical: false).frame(minHeight: 44)
-            }.buttonStyle(.plain).disabled(o.disabled).focused($focusedTab, equals: o.value)
-              .accessibilityAddTraits(
-                selection == o.value ? .isSelected : []
-              ).onKeyPress(.rightArrow) {
-                move(direction == .rightToLeft ? -1 : 1)
-                return .handled
-              }.onKeyPress(.leftArrow) {
-                move(direction == .rightToLeft ? 1 : -1)
-                return .handled
-              }.onKeyPress(.home) {
-                if let first = options.first(where: { !$0.disabled }) { activate(first.value) }
-                return .handled
-              }.onKeyPress(.end) {
-                if let last = options.last(where: { !$0.disabled }) { activate(last.value) }
-                return .handled
-              }
+            }.buttonStyle(RosemaryPressStyle()).disabled(o.disabled).focused(
+              $focusedTab, equals: o.value
+            )
+            .accessibilityAddTraits(
+              selection == o.value ? .isSelected : []
+            ).onKeyPress(.rightArrow) {
+              move(direction == .rightToLeft ? -1 : 1)
+              return .handled
+            }.onKeyPress(.leftArrow) {
+              move(direction == .rightToLeft ? 1 : -1)
+              return .handled
+            }.onKeyPress(.home) {
+              if let first = options.first(where: { !$0.disabled }) { activate(first.value) }
+              return .handled
+            }.onKeyPress(.end) {
+              if let last = options.last(where: { !$0.disabled }) { activate(last.value) }
+              return .handled
+            }
           }
         }
       }.scrollIndicators(.hidden)
@@ -347,7 +396,9 @@ public struct RosemaryMenu: View {
     self.actions = actions
   }
   public var body: some View {
-    Button { open.toggle() } label: {
+    Button {
+      open.toggle()
+    } label: {
       HStack {
         Text(label)
         RosemaryIcon("down")
@@ -375,7 +426,7 @@ public struct RosemaryMenu: View {
                         Text(a.title).frame(maxWidth: .infinity, alignment: .leading)
                       }.padding(12).frame(minHeight: 44).foregroundStyle(
                         a.destructive ? p.colors.danger : p.colors.ink)
-                    }.buttonStyle(.plain).disabled(a.disabled)
+                    }.buttonStyle(RosemaryPressStyle()).disabled(a.disabled)
                   }
                 }
               }
@@ -420,7 +471,7 @@ where Data.Element: Identifiable {
             } label: {
               row(item).frame(maxWidth: .infinity, alignment: .leading).padding(12).frame(
                 minHeight: 44)
-            }.buttonStyle(.plain)
+            }.buttonStyle(RosemaryPressStyle())
           } else {
             row(item).frame(maxWidth: .infinity, alignment: .leading).padding(12)
           }
@@ -484,7 +535,7 @@ public struct RosemaryTable<Row: Identifiable>: View {
                     rotation: .degrees(sortedColumn == c.id && !ascending ? 0 : 180))
                 }
               }.frame(minHeight: 44)
-            }.buttonStyle(.plain).disabled(c.sort == nil).accessibilityValue(
+            }.buttonStyle(RosemaryPressStyle()).disabled(c.sort == nil).accessibilityValue(
               sortedColumn == c.id
                 ? ascending ? p.text("Ascending") : p.text("Descending") : p.text("Unsorted"))
           }
@@ -501,7 +552,9 @@ public struct RosemaryTable<Row: Identifiable>: View {
         }
       }.padding(16).foregroundStyle(p.colors.ink).background(
         p.colors.surface, in: RoundedRectangle(cornerRadius: 12)
-      ).overlay(RoundedRectangle(cornerRadius: 12).stroke(p.stroke > 1 ? p.colors.control : p.colors.edgeSoft, lineWidth: p.stroke))
+      ).overlay(
+        RoundedRectangle(cornerRadius: 12).stroke(
+          p.stroke > 1 ? p.colors.control : p.colors.edgeSoft, lineWidth: p.stroke))
     }
   }
 }
@@ -552,7 +605,7 @@ public struct RosemaryStepper: View {
             onSelect(s.id)
           } label: {
             label(i, s)
-          }.buttonStyle(.plain)
+          }.buttonStyle(RosemaryPressStyle())
         } else {
           label(i, s)
         }

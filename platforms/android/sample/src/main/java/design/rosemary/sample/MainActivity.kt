@@ -191,7 +191,15 @@ private fun Demo(id: String) {
                 { text = it },
                 "Project name",
                 placeholder = "Rosemary",
-                error = if (text.length > 20) "Use 20 characters or fewer" else null,
+                requirements =
+                    listOf(
+                        RosemaryFieldRequirement(
+                            "name-length",
+                            "1–20 characters; cannot be all whitespace",
+                        ) {
+                            it.isNotBlank() && it.codePointCount(0, it.length) <= 20
+                        }
+                    ),
             )
         "textarea" ->
             RosemaryTextarea(

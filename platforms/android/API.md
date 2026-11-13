@@ -525,3 +525,8 @@ See `docs/sdk/0.5.0-migration.md`: all 45 semantic fields are required, includin
 `RosemaryPasswordPolicy.check(value)` 返回 `length`、`characters`、`categories` 与 `valid`。规则从 `design/input-validation.json` 生成：8–32 个字符，仅可打印 ASCII（不含空格），英文字母、数字、英文标点至少两类；不做 trim、改写或截断。
 
 纯检查器不自动控制 UI 时机。要求预先放在字段下方，首次非空脱焦才显示逐条对勾／红叉，此后动态更新；清空恢复中性。验证码、CAPTCHA 及其恢复操作也必须紧邻对应字段下方。
+
+
+## SDK 0.5.0 field and interaction candidate
+
+Input and textarea accept optional `requirements` and an adjacent `verification` slot. Requirements are visible before editing; local results start after the first nonempty blur, update after that, and reset on clearing. Existing `error` remains host controlled. Password requirements provide English/Chinese labels; login does not inherit creation complexity. See the repository's `docs/sdk/input-validation.md` and `docs/sdk/interaction.md` for the four platform APIs, composition behavior, focus geometry, physical motion, reduced motion and migration.
