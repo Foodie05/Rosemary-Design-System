@@ -1615,4 +1615,23 @@ button.rm-input,
 }
 
 /* Blur fades the complete perimeter without playing a reverse trace. */
-.rm-field-frame:not([data-focused]):not([data-invalid]) .rm-field-outline path {stroke-dasharray:.501 1;transition:none}
+.rm-field-frame:not([data-focused]):not([data-invalid]) .rm-field-outline path {
+  stroke-dasharray: 0.501 1;
+  transition: none;
+}
+
+/* Constrained disclosure labels wrap within their own control, retaining icon size. */
+.rm-menu {
+  min-width: 0;
+  max-width: 100%;
+}
+.rm-menu > .rm-button {
+  max-width: 100%;
+}
+.rm-menu > .rm-button > .rm-button-content {
+  white-space: normal;
+}
+.rm-menu .rm-disclosure-label {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}

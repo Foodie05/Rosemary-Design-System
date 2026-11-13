@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
-import {defaultThemes} from "@rosemary-ui/tokens";
-const rgb = hex => `rgb(${[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)).join(", ")})`;
+import { defaultThemes } from "@rosemary-ui/tokens";
+const rgb = (hex) =>
+  `rgb(${[1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(", ")})`;
 const section = (page, id) => page.locator(`[data-component="${id}"]`);
 test("real browser consumes all 33 examples with theme, controlled data and keyboard state changes", async ({
   page,
@@ -576,44 +577,112 @@ test("field states and long disclosure labels preserve semantic colors and full 
   }
 });
 
-
-test("semantic floating surfaces retain readable paired content in both appearances", async ({page})=>{
-  await page.goto('/');
-  for(const [label,mode] of [['浅色','light'],['深色','dark']]){
-    await page.getByRole('radio',{name:label,exact:true}).check();
-    const colors=defaultThemes[mode];
-    await section(page,'tooltip').getByRole('button').focus();
-    const tip=section(page,'tooltip').getByRole('tooltip');
+test("semantic floating surfaces retain readable paired content in both appearances", async ({
+  page,
+}) => {
+  await page.goto("/");
+  for (const [label, mode] of [
+    ["浅色", "light"],
+    ["深色", "dark"],
+  ]) {
+    await page.getByRole("radio", { name: label, exact: true }).check();
+    const colors = defaultThemes[mode];
+    await section(page, "tooltip").getByRole("button").focus();
+    const tip = section(page, "tooltip").getByRole("tooltip");
     await expect(tip).toBeVisible();
-    await expect(tip).toHaveCSS('background-color',rgb(colors.surfaceFloating));
-    await expect(tip).toHaveCSS('color',rgb(colors.ink));
-    await section(page,'tooltip').getByRole('button').press('Escape');
-    await section(page,'select').getByRole('combobox').click();
-    await expect(section(page,'select').getByRole('listbox')).toHaveCSS('background-color',rgb(colors.surfaceFloating));
-    await section(page,'select').getByRole('listbox').press('Escape');
-    await expect(section(page,'card').getByRole('article')).toHaveCSS('background-color',rgb(colors.surfaceGroup));
-    await section(page,'input').getByRole('textbox').focus();
-    await expect(section(page,'input').getByRole('textbox')).toHaveCSS('outline-style','none');
-    await expect(section(page,'input').getByRole('textbox')).toHaveCSS('background-color',rgb(colors.fieldFill));
+    await expect(tip).toHaveCSS(
+      "background-color",
+      rgb(colors.surfaceFloating),
+    );
+    await expect(tip).toHaveCSS("color", rgb(colors.ink));
+    await section(page, "tooltip").getByRole("button").press("Escape");
+    await section(page, "select").getByRole("combobox").click();
+    await expect(section(page, "select").getByRole("listbox")).toHaveCSS(
+      "background-color",
+      rgb(colors.fieldFill),
+    );
+    await expect(section(page, "select").getByRole("combobox")).toHaveCSS(
+      "background-color",
+      rgb(colors.fieldFill),
+    );
+    await section(page, "select").getByRole("listbox").press("Escape");
+    await expect(section(page, "card").getByRole("article")).toHaveCSS(
+      "background-color",
+      rgb(colors.surfaceGroup),
+    );
+    await section(page, "input").getByRole("textbox").focus();
+    await expect(section(page, "input").getByRole("textbox")).toHaveCSS(
+      "outline-style",
+      "none",
+    );
+    await expect(section(page, "input").getByRole("textbox")).toHaveCSS(
+      "background-color",
+      rgb(colors.fieldFill),
+    );
   }
 });
 
-test('button paint correction preserves geometry and follows appearance changes', async ({page})=>{
-  await page.goto('/');
-  const buttons=section(page,'button').locator('.rm-button');
-  const primary=buttons.first();
-  const geometry=()=>buttons.evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return {width:r.width,height:r.height,padding:getComputedStyle(e).padding,lineHeight:getComputedStyle(e).lineHeight}}));
-  const light=await geometry();
-  await expect(primary).toHaveCSS('background-clip','border-box');
-  await page.getByRole('radio',{name:'深色',exact:true}).check();
-  await expect(primary).toHaveCSS('background-clip','padding-box');
-  await expect(buttons.nth(1)).toHaveCSS('background-clip','border-box');
+test("button paint correction preserves geometry and follows appearance changes", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const buttons = section(page, "button").locator(".rm-button");
+  const primary = buttons.first();
+  const geometry = () =>
+    buttons.evaluateAll((es) =>
+      es.map((e) => {
+        const r = e.getBoundingClientRect();
+        return {
+          width: e.offsetWidth,
+          height: e.offsetHeight,
+          padding: getComputedStyle(e).padding,
+          lineHeight: getComputedStyle(e).lineHeight,
+        };
+      }),
+    );
+  const light = await geometry();
+  await expect(primary).toHaveCSS("background-clip", "border-box");
+  await page.getByRole("radio", { name: "深色", exact: true }).check();
+  await expect(primary).toHaveCSS("background-clip", "padding-box");
+  await expect(buttons.nth(1)).toHaveCSS("background-clip", "border-box");
   expect(await geometry()).toEqual(light);
   await primary.focus();
   await expect(primary).toBeFocused();
-  await primary.press('Enter');
-  await expect(page.locator('.gallery-events')).toHaveText('button: true');
-  await page.getByRole('radio',{name:'浅色',exact:true}).check();
-  await expect(primary).toHaveCSS('background-clip','border-box');
+  await primary.press("Enter");
+  await expect(page.locator(".gallery-events")).toHaveText("button: true");
+  await page.getByRole("radio", { name: "浅色", exact: true }).check();
+  await expect(primary).toHaveCSS("background-clip", "border-box");
   expect(await geometry()).toEqual(light);
+});
+
+test("field requirements stay adjacent, arm on blur and reset without truncating passwords", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const input = page.getByLabel("创建密码", { exact: true });
+  const field = page.locator(".rm-field").filter({ has: input });
+  const rules = field.locator(".rm-requirements");
+  await expect(rules.locator("li")).toHaveCount(3);
+  await expect(rules.locator('[data-result="invalid"]')).toHaveCount(0);
+  await input.fill("abc");
+  await expect(rules.locator('[data-result="invalid"]')).toHaveCount(0);
+  await input.press("Tab");
+  await expect(input).toHaveAttribute("aria-invalid", "true");
+  await expect(rules.locator('[data-result="invalid"]')).toHaveCount(2);
+  await expect(field.locator(".rm-field-outline path").first()).toHaveCSS(
+    "stroke-width",
+    "1.5px",
+  );
+  await input.fill("abcdefg!");
+  await expect(rules.locator('[data-result="valid"]')).toHaveCount(3);
+  await expect(input).not.toHaveAttribute("aria-invalid", "true");
+  const raw = "A".repeat(32) + "1";
+  await input.fill(raw);
+  await expect(input).toHaveValue(raw);
+  await expect(rules.locator('[data-result="invalid"]')).toHaveCount(1);
+  await input.fill("");
+  await expect(
+    rules.locator('[data-result="invalid"],[data-result="valid"]'),
+  ).toHaveCount(0);
+  await expect(input).not.toHaveAttribute("aria-invalid", "true");
 });

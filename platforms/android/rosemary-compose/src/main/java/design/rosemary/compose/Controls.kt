@@ -217,6 +217,7 @@ fun RosemaryIconButton(
     }
 }
 
+/** Preserve 0.4.x positional arguments and trailing onCommit lambdas. */
 @Composable
 fun RosemaryInput(
     value: String,
@@ -230,8 +231,38 @@ fun RosemaryInput(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     password: Boolean = false,
     onCommit: () -> Unit = {},
+) =
+    RosemaryInput(
+        value,
+        onValueChange,
+        label,
+        modifier,
+        placeholder,
+        enabled,
+        readOnly,
+        error,
+        keyboardOptions,
+        password,
+        requirements = emptyList(),
+        verification = null,
+        onCommit = onCommit,
+    )
+
+@Composable
+fun RosemaryInput(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    modifier: Modifier = Modifier,
+    placeholder: String = "",
+    enabled: Boolean = true,
+    readOnly: Boolean = false,
+    error: String? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    password: Boolean = false,
     requirements: List<RosemaryFieldRequirement> = emptyList(),
     verification: (@Composable () -> Unit)? = null,
+    onCommit: () -> Unit = {},
 ) {
     val strings = LocalRosemaryStrings.current
 
@@ -654,6 +685,7 @@ enum class RosemarySearchPresentation {
     Dialog,
 }
 
+/** Keep the legacy trailing onClear callback bound to clearing, never to content. */
 @Composable
 fun RosemarySearch(
     query: String,
@@ -663,8 +695,30 @@ fun RosemarySearch(
     modifier: Modifier = Modifier,
     busy: Boolean = false,
     onClear: () -> Unit = { onQueryChange("") },
+) =
+    RosemarySearch(
+        query,
+        onQueryChange,
+        onSubmit,
+        label,
+        modifier,
+        busy,
+        presentation = RosemarySearchPresentation.Inline,
+        initiallyExpanded = true,
+        onClear = onClear,
+    )
+
+@Composable
+fun RosemarySearch(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onSubmit: () -> Unit,
+    label: String = "Search",
+    modifier: Modifier = Modifier,
+    busy: Boolean = false,
     presentation: RosemarySearchPresentation = RosemarySearchPresentation.Inline,
     initiallyExpanded: Boolean = true,
+    onClear: () -> Unit = { onQueryChange("") },
 ) {
     val strings = LocalRosemaryStrings.current
 

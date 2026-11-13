@@ -184,35 +184,46 @@ public struct RosemaryInput: View {
   }
   private var active: Bool { validation.armed && !text.isEmpty && !isComposing && !nativeComposing }
   private var invalid: Bool { error != nil || active && requirements.contains { !$0.check(text) } }
+  @ViewBuilder private var editor: some View {
+    if readOnly {
+      Text(secure ? String(repeating: "•", count: text.count) : text)
+        .textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading)
+    } else if secure {
+      SecureField("", text: $text, prompt: Text(placeholder).foregroundStyle(p.colors.muted))
+    } else {
+      TextField("", text: $text, prompt: Text(placeholder).foregroundStyle(p.colors.muted))
+    }
+  }
+  private var framedEditor: some View {
+    editor.textFieldStyle(.plain).focused($focused).onSubmit(onSubmit)
+      .modifier(RosemaryFieldFrame(invalid: invalid, focused: focused))
+  }
+  private var fieldHint: String { (readOnly ? p.text("Read only") + " " : "") + (error ?? "") }
+  private var accessibleEditor: some View {
+    framedEditor.background(RosemaryCompositionProbe { nativeComposing = $0 })
+      .accessibilityLabel(label).accessibilityHint(fieldHint)
+  }
+  @ViewBuilder private var feedback: some View {
+    RosemaryFieldRequirements(value: text, rules: requirements, active: active)
+    if let verification { verification }
+    if let error { Text(error).font(.system(size: 14)).foregroundStyle(p.colors.danger) }
+  }
   public var body: some View {
     VStack(alignment: .leading, spacing: 6) {
       Text(label).rosemaryTypography(.small, weight: .medium).foregroundStyle(p.colors.ink)
-      Group {
-        if readOnly {
-          Text(secure ? String(repeating: "•", count: text.count) : text).textSelection(.enabled)
-            .frame(maxWidth: .infinity, alignment: .leading).accessibilityHint(p.text("Read only"))
-        } else if secure {
-          SecureField("", text: $text, prompt: Text(placeholder).foregroundStyle(p.colors.muted))
-        } else {
-          TextField("", text: $text, prompt: Text(placeholder).foregroundStyle(p.colors.muted))
-        }
-      }.textFieldStyle(.plain).focused($focused).onSubmit(onSubmit).modifier(
-        RosemaryFieldFrame(invalid: invalid, focused: focused)
-      ).background(RosemaryCompositionProbe { nativeComposing = $0 }).accessibilityLabel(label)
-        .accessibilityHint((readOnly ? p.text("Read only") + " " : "") + (error ?? ""))
-      RosemaryFieldRequirements(value: text, rules: requirements, active: active)
-      verification
-      if let error { Text(error).font(.system(size: 14)).foregroundStyle(p.colors.danger) }
+      accessibleEditor
+      feedback
     }
-    .onChange(of: focused) { _, value in
+    .onChange(of: focused) { (_: Bool, value: Bool) in
       if value {
         validation.focus()
       } else {
         validation.blur(text, isComposing: isComposing || nativeComposing)
       }
     }
-    .onChange(of: text) { _, value in validation.edit(value) }
+    .onChange(of: text) { (_: String, value: String) in validation.edit(value) }
   }
+
 }
 public struct RosemaryTextarea: View {
   private var p = RosemaryPalette()
@@ -241,36 +252,43 @@ public struct RosemaryTextarea: View {
   }
   private var active: Bool { validation.armed && !text.isEmpty && !isComposing && !nativeComposing }
   private var invalid: Bool { error != nil || active && requirements.contains { !$0.check(text) } }
+  @ViewBuilder private var editor: some View {
+    if readOnly {
+      Text(text).textSelection(.enabled)
+        .frame(maxWidth: .infinity, minHeight: 100, alignment: .topLeading)
+    } else {
+      TextEditor(text: $text).scrollContentBackground(.hidden).frame(minHeight: 100)
+    }
+  }
+  private var framedEditor: some View {
+    editor.focused($focused).modifier(RosemaryFieldFrame(invalid: invalid, focused: focused))
+  }
+  private var fieldHint: String { (readOnly ? p.text("Read only") + " " : "") + (error ?? "") }
+  private var accessibleEditor: some View {
+    framedEditor.background(RosemaryCompositionProbe { nativeComposing = $0 })
+      .accessibilityLabel(label).accessibilityHint(fieldHint)
+  }
+  @ViewBuilder private var feedback: some View {
+    RosemaryFieldRequirements(value: text, rules: requirements, active: active)
+    if let verification { verification }
+    if let error { Text(error).font(.system(size: 14)).foregroundStyle(p.colors.danger) }
+  }
   public var body: some View {
     VStack(alignment: .leading, spacing: 6) {
       Text(label).rosemaryTypography(.small, weight: .medium).foregroundStyle(p.colors.ink)
-      Group {
-        if readOnly {
-          Text(text).textSelection(.enabled).frame(
-            maxWidth: .infinity, minHeight: 100, alignment: .topLeading
-          ).accessibilityHint(p.text("Read only"))
-        } else {
-          TextEditor(text: $text).scrollContentBackground(.hidden).frame(minHeight: 100)
-        }
-      }.focused(
-        $focused
-      ).modifier(RosemaryFieldFrame(invalid: invalid, focused: focused)).accessibilityLabel(
-        label
-      ).background(RosemaryCompositionProbe { nativeComposing = $0 }).accessibilityHint(
-        (readOnly ? p.text("Read only") + " " : "") + (error ?? ""))
-      RosemaryFieldRequirements(value: text, rules: requirements, active: active)
-      verification
-      if let error { Text(error).font(.system(size: 14)).foregroundStyle(p.colors.danger) }
+      accessibleEditor
+      feedback
     }
-    .onChange(of: focused) { _, value in
+    .onChange(of: focused) { (_: Bool, value: Bool) in
       if value {
         validation.focus()
       } else {
         validation.blur(text, isComposing: isComposing || nativeComposing)
       }
     }
-    .onChange(of: text) { _, value in validation.edit(value) }
+    .onChange(of: text) { (_: String, value: String) in validation.edit(value) }
   }
+
 }
 public enum RosemarySearchPresentation { case inline, dialog }
 public struct RosemarySearch: View {

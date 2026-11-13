@@ -1,6 +1,7 @@
 package design.rosemary.compose
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -14,6 +15,7 @@ import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.LayoutDirection
 import java.time.LocalDate
 import java.time.LocalTime
@@ -24,6 +26,33 @@ import org.junit.Test
 @OptIn(ExperimentalTestApi::class)
 class InteractionTest {
     @get:Rule val compose = createAndroidComposeRule<androidx.activity.ComponentActivity>()
+
+    @Test
+    fun legacyTrailingCallbacksStillCommitAndClear() {
+        var commits = 0
+        var clears = 0
+        compose.setContent {
+            RosemaryTheme(reduceMotion = true, language = RosemaryLanguage.English) {
+                Column {
+                    RosemaryInput(
+                        "value",
+                        {},
+                        "Legacy input",
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    ) {
+                        commits++
+                    }
+                    RosemarySearch("query", {}, {}, label = "Legacy search") { clears++ }
+                }
+            }
+        }
+        compose.onNodeWithContentDescription("Legacy input").performImeAction()
+        compose.onNodeWithText("Clear").performClick()
+        compose.runOnIdle {
+            assertEquals(1, commits)
+            assertEquals(1, clears)
+        }
+    }
 
     @Test
     fun inputReflectsHostValueAndMixedCheckboxEmitsOneChange() {

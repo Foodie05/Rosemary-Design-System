@@ -26,7 +26,21 @@ function useOptionsPosition(
         top = viewport?.offsetTop ?? 0,
         width = viewport?.width ?? window.innerWidth,
         height = viewport?.height ?? window.innerHeight;
-      const rect = anchor.getBoundingClientRect(),
+      const painted = anchor.getBoundingClientRect();
+      // Physical press scales paint, not the popup's layout anchor.
+      const scale = parseFloat(getComputedStyle(anchor).scale) || 1;
+      const anchorWidth = painted.width / scale,
+        anchorHeight = painted.height / scale;
+      const anchorLeft = painted.left - (anchorWidth - painted.width) / 2;
+      const anchorTop = painted.top - (anchorHeight - painted.height) / 2;
+      const rect = {
+          left: anchorLeft,
+          top: anchorTop,
+          width: anchorWidth,
+          height: anchorHeight,
+          right: anchorLeft + anchorWidth,
+          bottom: anchorTop + anchorHeight,
+        },
         gap = joined ? 0 : 6,
         margin = 8;
       const below = top + height - margin - rect.bottom - gap,
@@ -189,7 +203,10 @@ export function Select({
     const panel = list.current,
       option = document.getElementById(`${id}-${enabled[active]?.value}`);
     if (!open || !panel || !option) return;
-    const top = option.offsetTop - panel.offsetTop;
+    const top =
+      option.getBoundingClientRect().top -
+      panel.getBoundingClientRect().top +
+      panel.scrollTop;
     if (top < panel.scrollTop) panel.scrollTop = top;
     else if (top + option.offsetHeight > panel.scrollTop + panel.clientHeight)
       panel.scrollTop = top + option.offsetHeight - panel.clientHeight;

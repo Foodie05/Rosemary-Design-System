@@ -135,7 +135,10 @@ export function FieldFrame({
         setFocused(true);
       }}
       onBlurCapture={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget)) {pointer.current=null;setFocused(false);}
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          pointer.current = null;
+          setFocused(false);
+        }
       }}
     >
       {children}
