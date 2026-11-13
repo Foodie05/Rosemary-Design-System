@@ -508,4 +508,35 @@ class InteractionTest {
         compose.waitUntil(2000) { dismissed == 1 }
         compose.runOnIdle { assertEquals(1, dismissed) }
     }
+
+    @Test
+    fun sliderRetainsSemanticAndKeyboardControlWithoutExtraButtons() {
+        var proposed = 50f
+        var commits = 0
+        compose.setContent {
+            var value by remember { mutableFloatStateOf(50f) }
+            RosemaryTheme(reduceMotion = true) {
+                RosemarySlider(
+                    value,
+                    {
+                        value = it
+                        proposed = it
+                    },
+                    "Level",
+                    onCommit = { commits++ },
+                )
+            }
+        }
+        compose.onAllNodesWithText("+").assertCountEquals(0)
+        compose.onAllNodesWithText("−").assertCountEquals(0)
+        val slider = compose.onNodeWithContentDescription("Level")
+        slider.performSemanticsAction(SemanticsActions.SetProgress) { it(60f) }
+        compose.runOnIdle {
+            assertEquals(60f, proposed, 0f)
+            assertEquals(1, commits)
+        }
+        slider.performSemanticsAction(SemanticsActions.RequestFocus) { it() }
+        slider.performKeyInput { pressKey(Key.DirectionRight) }
+        compose.runOnIdle { assertEquals(61f, proposed, 0f) }
+    }
 }

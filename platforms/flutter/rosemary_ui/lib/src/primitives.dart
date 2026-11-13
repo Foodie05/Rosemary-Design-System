@@ -13,13 +13,44 @@ import 'generated/rosemary_icons.dart';
 
 enum RosemaryButtonVariant { primary, secondary, text, danger }
 
+class _ActionKeyIntent extends Intent {
+  final LogicalKeyboardKey key;
+  final bool down;
+  const _ActionKeyIntent(this.key, this.down);
+}
+
+class _ActionKeyActivator extends ShortcutActivator {
+  final LogicalKeyboardKey key;
+  final bool down;
+  const _ActionKeyActivator(this.key, this.down);
+  @override
+  Iterable<LogicalKeyboardKey> get triggers => [key];
+  @override
+  String debugDescribeKeys() => '${key.keyLabel} ${down ? "down" : "up"}';
+  @override
+  bool accepts(KeyEvent event, HardwareKeyboard state) =>
+      event.logicalKey == key &&
+      !state.isControlPressed &&
+      !state.isAltPressed &&
+      !state.isMetaPressed &&
+      (down
+          ? event is KeyDownEvent || event is KeyRepeatEvent
+          : event is KeyUpEvent);
+}
+
 class RosemaryActionSurface extends StatefulWidget {
   final Widget child;
   final VoidCallback? onActivate;
   final FocusNode? focusNode;
   final String? label;
   final Color? background, foreground, border;
-  final bool selected, link, button, enabled, dimWhenDisabled, physicalPress;
+  final bool selected,
+      link,
+      button,
+      enabled,
+      dimWhenDisabled,
+      physicalPress,
+      selectionPress;
   final double? radius;
   final BorderRadius? corners;
   final Duration? transitionDuration;
@@ -42,6 +73,7 @@ class RosemaryActionSurface extends StatefulWidget {
     this.enabled = true,
     this.dimWhenDisabled = true,
     this.physicalPress = true,
+    this.selectionPress = false,
     this.radius,
     this.corners,
     this.transitionDuration,
@@ -78,7 +110,11 @@ class _ActionSurfaceState extends State<RosemaryActionSurface>
               : RosemaryInteraction.releaseDamping,
         ),
         physical.value,
-        held ? RosemaryInteraction.pressScale : 1,
+        held
+            ? (widget.selectionPress
+                  ? RosemaryInteraction.selectionScale
+                  : RosemaryInteraction.pressScale)
+            : 1,
         physical.velocity,
       ),
     );
@@ -88,6 +124,8 @@ class _ActionSurfaceState extends State<RosemaryActionSurface>
   void didUpdateWidget(RosemaryActionSurface old) {
     super.didUpdateWidget(old);
     if (!widget.enabled || widget.onActivate == null) {
+      heldKey = null;
+      pressed = false;
       physical.stop();
       physical.value = 1;
     }
@@ -99,6 +137,7 @@ class _ActionSurfaceState extends State<RosemaryActionSurface>
     super.dispose();
   }
 
+  LogicalKeyboardKey? heldKey;
   bool focused = false, hovered = false, pressed = false;
   @override
   Widget build(BuildContext context) {
@@ -117,18 +156,42 @@ class _ActionSurfaceState extends State<RosemaryActionSurface>
         focusNode: widget.focusNode,
         enabled: enabled,
         onFocusChange: (v) {
-          if (!v) press(false);
+          if (!v) {
+            heldKey = null;
+            pressed = false;
+            press(false);
+          }
           setState(() => focused = v);
         },
         onShowHoverHighlight: (v) => setState(() => hovered = v),
         shortcuts: {
-          const SingleActivator(LogicalKeyboardKey.enter):
-              const ActivateIntent(),
-          if (!widget.link)
-            const SingleActivator(LogicalKeyboardKey.space):
-                const ActivateIntent(),
+          for (final key in [
+            LogicalKeyboardKey.enter,
+            if (!widget.link) LogicalKeyboardKey.space,
+          ])
+            for (final down in [true, false])
+              _ActionKeyActivator(key, down): _ActionKeyIntent(key, down),
         },
         actions: {
+          _ActionKeyIntent: CallbackAction<_ActionKeyIntent>(
+            onInvoke: (intent) {
+              if (!enabled) return null;
+              if (intent.down && heldKey == null) {
+                heldKey = intent.key;
+                setState(() => pressed = true);
+                press(true);
+                if (intent.key == LogicalKeyboardKey.enter)
+                  widget.onActivate!();
+              } else if (!intent.down && heldKey == intent.key) {
+                heldKey = null;
+                setState(() => pressed = false);
+                press(false);
+                if (intent.key == LogicalKeyboardKey.space)
+                  widget.onActivate!();
+              }
+              return null;
+            },
+          ),
           ActivateIntent: CallbackAction<ActivateIntent>(
             onInvoke: (_) {
               if (enabled) {
@@ -163,7 +226,9 @@ class _ActionSurfaceState extends State<RosemaryActionSurface>
           child: AnimatedBuilder(
             animation: physical,
             builder: (context, child) => Transform.scale(
-              scale: RosemaryThemeData.of(context).reduceMotion
+              scale:
+                  widget.selectionPress ||
+                      RosemaryThemeData.of(context).reduceMotion
                   ? 1
                   : pressed || physical.isAnimating
                   ? physical.value
@@ -226,14 +291,15 @@ class _ActionSurfaceState extends State<RosemaryActionSurface>
                               (!widget.enabled ||
                                   (widget.button && widget.onActivate == null))
                           ? 0.55
-                          : pressed
-                          ? 0.8
                           : hovered
                           ? 0.92
                           : 1,
                       child: DefaultTextStyle.merge(
                         style: TextStyle(color: widget.foreground ?? c.ink),
-                        child: widget.child,
+                        child: _RosemarySelectionScope(
+                          notifier: physical,
+                          child: widget.child,
+                        ),
                       ),
                     ),
                   ),
@@ -273,12 +339,13 @@ class RosemaryButton extends StatelessWidget {
     final background = switch (variant) {
       RosemaryButtonVariant.primary => c.primary,
       RosemaryButtonVariant.danger => c.danger,
-      RosemaryButtonVariant.secondary => c.surfaceInset,
+      RosemaryButtonVariant.secondary => c.fieldFill,
       _ => Colors.transparent,
     };
     final foreground = switch (variant) {
       RosemaryButtonVariant.primary => c.onPrimary,
       RosemaryButtonVariant.danger => c.onDanger,
+      RosemaryButtonVariant.secondary => c.ink,
       _ => c.primary,
     };
     return Semantics(
@@ -300,6 +367,10 @@ class RosemaryButton extends StatelessWidget {
                   .dimensions['darkFillInset']!
             : 0,
         foreground: foreground,
+        padding: EdgeInsets.symmetric(
+          horizontal: rosemaryDimension('button', 'paddingInline'),
+          vertical: rosemaryDimension('button', 'paddingBlock'),
+        ),
         border: null,
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -315,7 +386,14 @@ class RosemaryButton extends StatelessWidget {
             Flexible(
               child: Text(
                 label,
-                style: rosemaryTextStyle(context, 'body', color: foreground),
+                style: rosemaryTextStyle(context, 'body', color: foreground)
+                    .copyWith(
+                      fontSize: rosemaryDimension('button', 'fontSize'),
+                      height:
+                          rosemaryDimension('button', 'lineHeight') /
+                          rosemaryDimension('button', 'fontSize'),
+                      fontWeight: FontWeight.w500,
+                    ),
               ),
             ),
             if (trailing != null) ...[const SizedBox(width: 8), trailing!],
@@ -567,8 +645,15 @@ class _InputState extends State<RosemaryInput> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        RosemaryText(widget.label, role: 'small'),
-        const SizedBox(height: 4),
+        Text(
+          widget.label,
+          style: rosemaryTextStyle(context, 'small').copyWith(
+            fontSize: rosemaryDimension('input', 'labelFontSize'),
+            height: 1.4,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 8),
         Semantics(
           textField: true,
           label: widget.label,
@@ -580,9 +665,16 @@ class _InputState extends State<RosemaryInput> {
             invalid: invalid,
             child: Container(
               constraints: const BoxConstraints(minHeight: 44),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: rosemaryDimension('input', 'paddingBlock'),
+              ),
               decoration: BoxDecoration(
-                color: invalid ? c.dangerSoft : c.fieldFill,
+                color: invalid
+                    ? c.dangerSoft
+                    : !widget.enabled || widget.readOnly
+                    ? c.surfaceInset
+                    : c.fieldFill,
                 borderRadius: BorderRadius.circular(
                   RosemaryTokens.controlRadius,
                 ),
@@ -603,17 +695,26 @@ class _InputState extends State<RosemaryInput> {
                     IgnorePointer(
                       child: Text(
                         widget.placeholder,
-                        style: rosemaryTextStyle(
-                          context,
-                          'body',
-                          color: c.muted,
-                        ),
+                        style:
+                            rosemaryTextStyle(
+                              context,
+                              'body',
+                              color: c.muted,
+                            ).copyWith(
+                              fontSize: rosemaryDimension('input', 'fontSize'),
+                              height: 1.5,
+                            ),
                       ),
                     ),
                   EditableText(
                     controller: controller,
                     focusNode: node,
-                    style: rosemaryTextStyle(context, 'body'),
+                    style: rosemaryTextStyle(context, 'body').copyWith(
+                      fontSize: rosemaryDimension('input', 'fontSize'),
+                      height:
+                          rosemaryDimension('input', 'lineHeight') /
+                          rosemaryDimension('input', 'fontSize'),
+                    ),
                     cursorColor: c.primary,
                     backgroundCursorColor: c.surface,
                     readOnly: widget.readOnly || !widget.enabled,
@@ -859,4 +960,28 @@ BorderRadius _insetCorners(BorderRadius corners, double inset) {
     bottomLeft: inner(corners.bottomLeft),
     bottomRight: inner(corners.bottomRight),
   );
+}
+
+class _RosemarySelectionScope extends InheritedNotifier<Animation<double>> {
+  const _RosemarySelectionScope({
+    required super.notifier,
+    required super.child,
+  });
+}
+
+/// Paint-only physical feedback; leaves the label and 44px target stationary.
+class RosemarySelectionMark extends StatelessWidget {
+  final Widget child;
+  const RosemarySelectionMark({super.key, required this.child});
+  @override
+  Widget build(BuildContext context) {
+    final scope = context
+        .dependOnInheritedWidgetOfExactType<_RosemarySelectionScope>();
+    return Transform.scale(
+      scale: RosemaryThemeData.of(context).reduceMotion
+          ? 1
+          : scope?.notifier?.value ?? 1,
+      child: child,
+    );
+  }
 }

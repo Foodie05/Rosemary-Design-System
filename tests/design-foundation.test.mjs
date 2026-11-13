@@ -4,9 +4,21 @@ import fs from 'node:fs';
 import {execFileSync} from 'node:child_process';
 import {colorRoles,resolveAliases,contrast,validateContrast} from '../scripts/design-engine.mjs';
 import {normalizePath,normalizeSvgElements} from '../scripts/icon-geometry.mjs';
-import {defaultThemes,createTheme,resolveTheme,validateTheme,themeCssVariables,parseLocalDate,formatLocalDate,parseLocalTime,formatLocalTime,addLocalDays,addLocalMonths,localWeekday} from '../packages/tokens/dist/index.js';
+import {defaultThemes,createTheme,resolveTheme,validateTheme,themeCssVariables,parseLocalDate,formatLocalDate,parseLocalTime,formatLocalTime,addLocalDays,addLocalMonths,localWeekday,rosemaryDisclosure} from '../packages/tokens/dist/index.js';
+import vm from 'node:vm';
 import {iconNames,iconGeometry,getIconSvg} from '../packages/icons/dist/index.js';
 const tokens=JSON.parse(fs.readFileSync(new URL('../design/tokens.json',import.meta.url),'utf8'));
+test('SDK disclosure tables match the actual portal model at every CSS sample',()=> {
+  const context=vm.createContext({window:{}});
+  vm.runInContext(fs.readFileSync(new URL('../motion-physics.js',import.meta.url),'utf8'),context);
+  const source=JSON.parse(fs.readFileSync(new URL('../design/interaction-motion.json',import.meta.url),'utf8'));
+  for(const [name,durationMs]of [['disclosureEnter',240],['disclosureExit',180]]) {
+    const expected=context.window.RosemaryPhysics.cssEasing({...source.disclosure,durationMs}).slice(7,-1).split(',').map(Number);
+    assert.deepEqual(rosemaryDisclosure[name],expected);
+    assert.equal(expected.length,41);assert.equal(expected[0],0);assert.equal(expected.at(-1),1);
+    assert.ok(expected[10]>.3); // This must not regress to a linear controller.
+  }
+});
 test('color aliases resolve, cycles and missing role references fail',()=> {
   const value={...tokens.themes.light,raised:'{surface}'};
   assert.equal(resolveAliases(value).raised,'#FFFFFF');

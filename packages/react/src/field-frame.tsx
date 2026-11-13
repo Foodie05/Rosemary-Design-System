@@ -78,7 +78,12 @@ export function FieldFrame({
   const [shape, setShape] = useState({
       width: 0,
       height: 0,
-      radius: 8,
+      corners: [
+        [8, 8],
+        [8, 8],
+        [8, 8],
+        [8, 8],
+      ],
       x: 0.5,
     }),
     [focused, setFocused] = useState(false);
@@ -89,31 +94,122 @@ export function FieldFrame({
     const update = () => {
       const input = node.querySelector<HTMLElement>("input,textarea");
       if (!input) return;
+      const css = getComputedStyle(input);
+      const corner = (value: string) => {
+        const parts = value.trim().split(/\s+/);
+        return [input.offsetWidth, input.offsetHeight].map((extent, i) => {
+          const part = parts[i] ?? parts[0];
+          const n = parseFloat(part);
+          return Number.isFinite(n)
+            ? part.endsWith("%")
+              ? (n * extent) / 100
+              : n
+            : 0;
+        });
+      };
       setShape((s) => ({
         ...s,
         width: input.offsetWidth,
         height: input.offsetHeight,
-        radius: parseFloat(getComputedStyle(input).borderTopLeftRadius) || 8,
+        corners: [
+          css.borderTopLeftRadius,
+          css.borderTopRightRadius,
+          css.borderBottomRightRadius,
+          css.borderBottomLeftRadius,
+        ].map(corner),
       }));
     };
     update();
     const observer =
       typeof ResizeObserver !== "undefined" ? new ResizeObserver(update) : null;
     observer?.observe(node);
-    return () => observer?.disconnect();
+    const input = node.querySelector("input,textarea");
+    const attributes =
+      typeof MutationObserver !== "undefined"
+        ? new MutationObserver(update)
+        : null;
+    if (input)
+      attributes?.observe(input, {
+        attributes: true,
+        attributeFilter: ["class", "style"],
+      });
+    return () => {
+      observer?.disconnect();
+      attributes?.disconnect();
+    };
   }, []);
+  const focusRun = useRef(false);
+  const animations = useRef<Animation[]>([]);
   useEffect(() => {
+    const stop = () => {
+      for (const animation of animations.current) animation.cancel();
+      animations.current = [];
+    };
     if (!focused) {
+      stop();
+      focusRun.current = false;
       setDraw(false);
       return;
     }
-    const frame = window.requestAnimationFrame(() => setDraw(true));
-    return () => window.cancelAnimationFrame(frame);
-  }, [focused]);
+    if (invalid) {
+      stop();
+      setDraw(true);
+      return;
+    }
+    if (focusRun.current || !shape.width || !shape.height) return;
+    focusRun.current = true;
+    const node = host.current;
+    const reduced =
+      node?.closest('[data-rm-reduced-motion="true"]') ||
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    setDraw(true);
+    if (!reduced && !invalid && node) {
+      for (const path of node.querySelectorAll<SVGPathElement>(
+        ".rm-field-outline path",
+      )) {
+        if (typeof path.animate !== "function") continue;
+        const animation = path.animate(
+          [{ strokeDasharray: "0 1" }, { strokeDasharray: "0.501 1" }],
+          {
+            duration: motion.fieldEnterMs,
+            easing: "cubic-bezier(.2,.7,.2,1)",
+            fill: "both",
+          },
+        );
+        animations.current.push(animation);
+        animation.finished.then(() => animation.cancel()).catch(() => {});
+      }
+    }
+  }, [focused, invalid, shape.width, shape.height]);
+  useEffect(() => {
+    const media = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+    const stop = () => {
+      if (
+        media?.matches ||
+        host.current?.closest('[data-rm-reduced-motion="true"]')
+      ) {
+        for (const animation of animations.current) animation.cancel();
+        animations.current = [];
+      }
+    };
+    media?.addEventListener("change", stop);
+    const observer = new MutationObserver(stop);
+    const theme = host.current?.closest(".rm-theme");
+    if (theme)
+      observer.observe(theme, {
+        attributes: true,
+        attributeFilter: ["data-rm-reduced-motion"],
+      });
+    return () => {
+      observer.disconnect();
+      media?.removeEventListener("change", stop);
+      for (const animation of animations.current) animation.cancel();
+    };
+  }, []);
   const g = edges(
     shape.width,
     shape.height,
-    Array.from({ length: 4 }, () => [shape.radius, shape.radius]),
+    shape.corners,
     motion.fieldWidth,
     shape.x,
   );

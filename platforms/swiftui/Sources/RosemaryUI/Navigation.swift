@@ -48,10 +48,8 @@ public struct RosemarySelect<Value: Hashable>: View {
     DispatchQueue.main.async {
       guard token == generation else { return }
       withAnimation(
-        .timingCurve(
-          0.2, 0.7, 0.2, 1,
-          duration: (open ? RosemaryInteraction.disclosureMs : RosemaryInteraction.disclosureExitMs)
-            / 1000), completionCriteria: .logicallyComplete
+        Animation(RosemaryDisclosureAnimation(opening: open)),
+        completionCriteria: .logicallyComplete
       ) {
         reveal = open ? 1 : 0
       } completion: {
@@ -88,9 +86,11 @@ public struct RosemarySelect<Value: Hashable>: View {
       HStack {
         Text(o.label).frame(maxWidth: .infinity, alignment: .leading)
         if o.value == selection { RosemaryIcon("check") }
-      }.padding(12).frame(minHeight: 44).foregroundStyle(
+      }.font(.system(size: 13)).lineSpacing(3).padding(.horizontal, 12).padding(.vertical, 9).frame(
+        minHeight: 44
+      ).foregroundStyle(
         o.disabled ? p.colors.muted : p.colors.ink
-      ).background(cursor == i ? p.colors.primarySoft : p.colors.fieldFill)
+      ).background(cursor == i ? p.colors.primarySoft : .clear)
     }.buttonStyle(RosemaryPressStyle()).disabled(o.disabled).id(i).accessibilityAddTraits(
       o.value == selection ? .isSelected : [])
   }
@@ -101,11 +101,11 @@ public struct RosemarySelect<Value: Hashable>: View {
           ForEach(Array(options.enumerated()), id: \.element.id) { i, o in
             optionRow(i, o)
           }
-        }
+        }.padding(RosemaryNativeMetrics.dimension("select", "popupPadding"))
       }.onAppear { proxy.scrollTo(cursor, anchor: .center) }
         .onChange(of: cursor) { _, value in proxy.scrollTo(value, anchor: .center) }
     }.background(
-      p.colors.fieldFill,
+      p.colors.fieldHover,
       in: UnevenRoundedRectangle(
         topLeadingRadius: openingUp ? 8 : 0, bottomLeadingRadius: openingUp ? 0 : 8,
         bottomTrailingRadius: openingUp ? 0 : 8, topTrailingRadius: openingUp ? 8 : 0)
@@ -127,18 +127,14 @@ public struct RosemarySelect<Value: Hashable>: View {
   private var trigger: some View {
     Button(action: expand) {
       HStack {
-        Text(selectedLabel).frame(
+        Text(selectedLabel).rosemaryControlTypography("select").frame(
           maxWidth: .infinity, alignment: .leading)
-        RosemaryIcon("down").rotationEffect(.degrees(open ? 180 : 0)).animation(
-          p.reduce
-            ? nil
-            : .timingCurve(0.2, 0.7, 0.2, 1, duration: RosemaryInteraction.disclosureMs / 1000),
-          value: open)
+        RosemaryIcon("down").rotationEffect(.degrees(reveal * 180))
       }
     }.buttonStyle(.plain).modifier(
       RosemaryFieldFrame(
         invalid: error != nil, focused: focus, editable: false, joiningProgress: reveal,
-        openingUp: openingUp)
+        openingUp: openingUp, activeFill: presented)
     )
     .focused($focus).accessibilityLabel(label).accessibilityValue(
       "\(options.first { $0.value == selection }?.label ?? ""), \(open ? p.text("Expanded"):p.text("Collapsed"))"
@@ -188,12 +184,15 @@ public struct RosemarySelect<Value: Hashable>: View {
 
   }
   public var body: some View {
-    VStack(alignment: .leading, spacing: 6) {
-      Text(label).rosemaryTypography(.small, weight: .medium).foregroundStyle(p.colors.ink)
+    VStack(alignment: .leading, spacing: 8) {
+      Text(label).rosemaryControlTypography("select", label: true).foregroundStyle(p.colors.ink)
       trigger.overlay(alignment: .topLeading) {
         if presented {
           RosemaryAnchoredLayer(
-            width: 0, height: min(240, CGFloat(options.count) * 44),
+            width: 0,
+            height: min(
+              RosemaryNativeMetrics.dimension("select", "popupMaxHeight"),
+              CGFloat(options.count) * 44 + 12),
             dismissOutside: open ? { open = false } : nil, joined: true, reveal: reveal,
             onDirection: { openingUp = $0 }
           ) { optionsPanel.allowsHitTesting(open).accessibilityHidden(!open) }

@@ -73,7 +73,7 @@ class _OutlineState extends State<RosemaryFieldOutline>
                 origin,
                 widget.invalid || high || reduce
                     ? 1
-                    : Curves.easeOutCubic.transform(progress.value),
+                    : const Cubic(.2, .7, .2, 1).transform(progress.value),
                 (widget.invalid
                         ? c.danger
                         : widget.focused

@@ -4,6 +4,7 @@ import { rosemaryInteraction as interaction } from "@rosemary-ui/tokens";
 import { Button, Icon, IconButton } from "./primitives.js";
 import type { Choice } from "./primitives.js";
 import { useRosemaryTheme, useRosemaryStrings } from "./theme.js";
+import { disclosureEasing } from "./disclosure.js";
 /** Keep popup geometry inside the current visual viewport, including scroll and zoom. */
 function useOptionsPosition(
   open: boolean,
@@ -21,6 +22,16 @@ function useOptionsPosition(
       const anchor = trigger.current,
         element = panel.current;
       if (!anchor || !element) return;
+      // A manual popover retains inherited theme variables while escaping
+      // clipping/containing blocks introduced by transformed ancestors.
+      if (
+        joined &&
+        typeof element.showPopover === "function" &&
+        !element.matches(":popover-open")
+      ) {
+        element.setAttribute("popover", "manual");
+        element.showPopover();
+      }
       const viewport = window.visualViewport;
       const left = viewport?.offsetLeft ?? 0,
         top = viewport?.offsetTop ?? 0,
@@ -42,11 +53,13 @@ function useOptionsPosition(
           bottom: anchorTop + anchorHeight,
         },
         gap = joined ? 0 : 6,
-        margin = 8;
+        margin = joined ? 12 : 8;
       const below = top + height - margin - rect.bottom - gap,
         above = rect.top - top - margin - gap;
-      const flip = below < Math.min(element.scrollHeight, 300) && above > below;
-      const maxHeight = Math.max(32, Math.min(300, flip ? above : below));
+      const cap = joined ? 340 : 300;
+      const flip =
+        below < Math.min(element.scrollHeight, cap, 96) && above > below;
+      const maxHeight = Math.max(40, Math.min(cap, flip ? above : below));
       const popupWidth = Math.min(
         joined ? rect.width : Math.max(180, rect.width),
         width - margin * 2,
@@ -138,6 +151,12 @@ export function Select({
   useEffect(() => {
     const panel = list.current;
     if (!mounted || !panel || popupStyle.visibility !== "visible") return;
+    const easing = disclosureEasing(open);
+    root.current?.style.setProperty("--rm-disclosure-ease", easing);
+    root.current?.style.setProperty(
+      "--rm-disclosure-duration",
+      `${open ? interaction.disclosureMs : interaction.disclosureExitMs}ms`,
+    );
     panel.inert = !open;
     const up = popupStyle.transformOrigin === "bottom",
       closed = up ? "inset(100% 0 0 0)" : "inset(0 0 100% 0)";
@@ -157,7 +176,7 @@ export function Select({
         duration: open
           ? interaction.disclosureMs
           : interaction.disclosureExitMs,
-        easing: "cubic-bezier(.2,.7,.2,1)",
+        easing,
         fill: "forwards",
       },
     );
@@ -249,6 +268,7 @@ export function Select({
       ref={root}
       className="rm-field rm-select"
       data-open={open || undefined}
+      data-connected={mounted || undefined}
       data-up={popupStyle.transformOrigin === "bottom" || undefined}
     >
       <span id={`${id}-label`}>{label}</span>

@@ -1,6 +1,6 @@
-# Rosemary Flutter SDK 0.4.2
+# Rosemary Flutter SDK 0.5.0
 
-> 0.5.0 release candidate implements Forma 1.3.0 with 45 semantic roles and paired scheme imports. See `docs/sdk/0.5.0-migration.md` in the repository. v0.4.2 remains the latest published release; existing historical device evidence below does not establish acceptance for this candidate.
+> 0.5.0 implements Forma 1.3.0 with 45 semantic roles, paired scheme imports, and portal-aligned controls and disclosure curves. See `docs/sdk/0.5.0-migration.md` and `docs/sdk/0.5.0-parity.md`. The Release manifest records exact-main CI provenance; historical evidence below is not a substitute.
 
 
 `rosemary_ui` implements the 33 foundation components from `design/contracts.json`. The library contains UI, typed theme roles and callbacks; application data, navigation, uploads and persistence stay in the host. Code is MIT; the name and brand identity remain separately governed.
@@ -9,7 +9,7 @@ Use Flutter **3.44.8 / Dart 3.12.2**. The example configures Android API **26**,
 
 ## Install
 
-Extract `rosemary-ui-0.4.2-source.tar.gz` into your project’s vendor directory:
+Extract `rosemary-ui-0.5.0-source.tar.gz` into your project’s vendor directory:
 
 ```yaml
 dependencies:
@@ -44,7 +44,7 @@ python3 platforms/flutter/scripts/verify.py ios
 
 The script creates a deterministic source archive, extracts it into an isolated vendor package, copies the example and builds against that extracted package. `test` runs library checks, extracted-package regression checks and the 33-component gallery in both themes. `device` runs representative native interactions from the same isolated consumer; set `ROSEMARY_FLUTTER_DEVICE` to a connected device or desktop target. Windows and Linux modes run on their native CI hosts. Set `ROSEMARY_BUILD_ROOT`, `ROSEMARY_ARTIFACT_ROOT`, `PUB_CACHE` and `GRADLE_USER_HOME` for external cache/build storage.
 
-Artifacts use `rosemary-flutter-0.4.2-{android.apk,web.zip,macos.zip,ios-simulator.zip,windows.zip,linux.tar.gz}`. Apple ZIPs use `ditto` to preserve bundle permissions and symlinks. Desktop archives are extracted and launched for a separate smoke check; this does not substitute for keyboard or screen reader interaction checks. `verification.json`, `SHA256SUMS` and phase logs record actual tool versions, source inputs, Git/GitHub HEAD and outcomes.
+Artifacts use `rosemary-flutter-0.5.0-{android.apk,web.zip,macos.zip,ios-simulator.zip,windows.zip,linux.tar.gz}`. Apple ZIPs use `ditto` to preserve bundle permissions and symlinks. Desktop archives are extracted and launched for a separate smoke check; this does not substitute for keyboard or screen reader interaction checks. `verification.json`, `SHA256SUMS` and phase logs record actual tool versions, source inputs, Git/GitHub HEAD and outcomes.
 
 CI verifies library and extracted-package tests, a real source-archive consumer, all six target builds, and representative native editing/date-cancel/progress-stop interactions on Linux, macOS, Windows and Android API36. The native case executes the actual application `main()` and reads the bundled full Vigilo theme. Every target archive must contain the canonical theme resource byte-for-byte; desktop launch logs must not report Flutter startup exceptions. A successful build alone is insufficient.
 

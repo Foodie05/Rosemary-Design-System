@@ -21,15 +21,17 @@ public struct RosemaryButtonStyle: ButtonStyle {
       ? RosemaryNativeMetrics.dimension("button", "darkFillInset") : 0
   }
   public func makeBody(configuration: Configuration) -> some View {
-    configuration.label.rosemaryTypography(.body, weight: .semibold).padding(
+    configuration.label.rosemaryControlTypography("button").padding(
       .horizontal, RosemaryNativeMetrics.dimension("button", "paddingInline")
     )
     .padding(
-      .vertical, 10
+      .vertical, RosemaryNativeMetrics.dimension("button", "paddingBlock")
     ).frame(minHeight: 44).contentShape(Rectangle())
     .foregroundStyle(
       variant == .primary
-        ? p.colors.onPrimary : variant == .danger ? p.colors.onDanger : p.colors.primary
+        ? p.colors.onPrimary
+        : variant == .danger
+          ? p.colors.onDanger : variant == .secondary ? p.colors.ink : p.colors.primary
     )
     .background {
       RoundedRectangle(cornerRadius: max(0, RosemaryNativeMetrics.radius("button") - fillInset))
@@ -37,12 +39,12 @@ public struct RosemaryButtonStyle: ButtonStyle {
           variant == .primary
             ? p.colors.primary
             : variant == .danger
-              ? p.colors.danger : variant == .secondary ? p.colors.surfaceInset : .clear
+              ? p.colors.danger : variant == .secondary ? p.colors.fieldFill : .clear
         )
         .padding(fillInset)
     }
     .clipShape(RoundedRectangle(cornerRadius: RosemaryNativeMetrics.radius("button"))).opacity(
-      enabled ? (configuration.isPressed ? 0.75 : 1) : showsBusy ? 1 : 0.45
+      enabled || showsBusy ? 1 : 0.45
     )
     .modifier(RosemaryAnimatedWidth())
     .scaleEffect(
@@ -195,8 +197,10 @@ public struct RosemaryInput: View {
     }
   }
   private var framedEditor: some View {
-    editor.textFieldStyle(.plain).focused($focused).onSubmit(onSubmit)
-      .modifier(RosemaryFieldFrame(invalid: invalid, focused: focused))
+    editor.textFieldStyle(.plain).rosemaryControlTypography("input").focused($focused).onSubmit(
+      onSubmit
+    )
+    .modifier(RosemaryFieldFrame(invalid: invalid, focused: focused, readOnly: readOnly))
   }
   private var fieldHint: String { (readOnly ? p.text("Read only") + " " : "") + (error ?? "") }
   private var accessibleEditor: some View {
@@ -210,7 +214,7 @@ public struct RosemaryInput: View {
   }
   public var body: some View {
     VStack(alignment: .leading, spacing: 6) {
-      Text(label).rosemaryTypography(.small, weight: .medium).foregroundStyle(p.colors.ink)
+      Text(label).rosemaryControlTypography("input", label: true).foregroundStyle(p.colors.ink)
       accessibleEditor
       feedback
     }
@@ -261,7 +265,8 @@ public struct RosemaryTextarea: View {
     }
   }
   private var framedEditor: some View {
-    editor.focused($focused).modifier(RosemaryFieldFrame(invalid: invalid, focused: focused))
+    editor.rosemaryControlTypography("textarea").focused($focused).modifier(
+      RosemaryFieldFrame(invalid: invalid, focused: focused, readOnly: readOnly))
   }
   private var fieldHint: String { (readOnly ? p.text("Read only") + " " : "") + (error ?? "") }
   private var accessibleEditor: some View {
@@ -275,7 +280,7 @@ public struct RosemaryTextarea: View {
   }
   public var body: some View {
     VStack(alignment: .leading, spacing: 6) {
-      Text(label).rosemaryTypography(.small, weight: .medium).foregroundStyle(p.colors.ink)
+      Text(label).rosemaryControlTypography("input", label: true).foregroundStyle(p.colors.ink)
       accessibleEditor
       feedback
     }
@@ -383,11 +388,11 @@ public struct RosemaryCheckbox: View {
           } else if checked {
             RosemaryIcon("check", size: 15).foregroundStyle(p.colors.onPrimary)
           }
-        }.frame(width: 20, height: 20)
+        }.frame(width: 20, height: 20).modifier(RosemarySelectionMotion())
         Text(label).foregroundStyle(p.colors.ink)
         Spacer(minLength: 0)
       }.padding(.vertical, 10).frame(minHeight: 44).contentShape(Rectangle())
-    }.buttonStyle(RosemaryPressStyle()).animation(
+    }.buttonStyle(RosemarySelectionStyle()).animation(
       p.reduce ? nil : .easeInOut(duration: RosemaryNativeMetrics.duration("state")), value: checked
     )
     .accessibilityRepresentation {
@@ -416,11 +421,11 @@ public struct RosemaryRadio<Value: Hashable>: View {
         ZStack {
           Circle().stroke(p.colors.control, lineWidth: p.stroke)
           if selection == value { Circle().fill(p.colors.primary).padding(5) }
-        }.frame(width: 20, height: 20)
+        }.frame(width: 20, height: 20).modifier(RosemarySelectionMotion())
         Text(label).foregroundStyle(p.colors.ink)
         Spacer(minLength: 0)
       }.frame(minHeight: 44)
-    }.buttonStyle(RosemaryPressStyle()).animation(
+    }.buttonStyle(RosemarySelectionStyle()).animation(
       p.reduce ? nil : .easeInOut(duration: RosemaryNativeMetrics.duration("state")),
       value: selection
     )
@@ -489,11 +494,19 @@ public struct RosemarySlider: View {
       Text(label).foregroundStyle(p.colors.ink)
       GeometryReader { g in
         ZStack(alignment: .leading) {
-          Capsule().fill(p.colors.border).frame(height: 6)
-          Capsule().fill(p.colors.primary).frame(width: g.size.width * ratio, height: 6)
-          Circle().fill(p.colors.surface).overlay(Circle().stroke(p.colors.primary, lineWidth: 2))
-            .frame(width: 22, height: 22).offset(
-              x: (g.size.width - 22) * ratio * (direction == .rightToLeft ? -1 : 1))
+          Capsule().fill(p.colors.control).frame(
+            height: RosemaryNativeMetrics.dimension("slider", "trackHeight")
+          ).padding(.horizontal, RosemaryNativeMetrics.dimension("slider", "trackInset"))
+          Capsule().fill(p.colors.primary).frame(
+            width: max(0, g.size.width - 16) * ratio,
+            height: RosemaryNativeMetrics.dimension("slider", "trackHeight")
+          ).padding(.leading, RosemaryNativeMetrics.dimension("slider", "trackInset"))
+          Circle().fill(p.colors.primary)
+            .frame(
+              width: RosemaryNativeMetrics.dimension("slider", "thumbSize"),
+              height: RosemaryNativeMetrics.dimension("slider", "thumbSize")
+            ).offset(
+              x: max(0, g.size.width - 16) * ratio * (direction == .rightToLeft ? -1 : 1))
         }.animation(
           p.reduce || dragging
             ? nil : .timingCurve(0.2, 0.8, 0.2, 1, duration: RosemaryInteraction.layoutMs / 1000),
@@ -501,7 +514,7 @@ public struct RosemarySlider: View {
         ).frame(height: 44).contentShape(Rectangle()).gesture(
           DragGesture(minimumDistance: 0).updating($dragging) { _, state, _ in state = true }
             .onChanged { v in
-              let r = max(0, min(1, v.location.x / g.size.width))
+              let r = max(0, min(1, (v.location.x - 8) / max(1, g.size.width - 16)))
               set(
                 range.lowerBound + (direction == .rightToLeft ? 1 - r : r)
                   * (range.upperBound - range.lowerBound))

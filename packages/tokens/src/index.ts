@@ -4,4 +4,4 @@ export * from "./date.js";
 export * from "./dynamic.js";
 export * from "./password.js";
 
-export { rosemaryInteraction } from "./interaction.js";
+export { rosemaryInteraction, rosemaryDisclosure } from "./interaction.js";

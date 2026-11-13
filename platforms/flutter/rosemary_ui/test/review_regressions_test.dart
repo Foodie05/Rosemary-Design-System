@@ -46,7 +46,7 @@ void main() {
       surface = tester.widget<RosemaryActionSurface>(
         find.byType(RosemaryActionSurface),
       );
-      expect(surface.background, RosemaryTokens.light.canvas);
+      expect(surface.background, RosemaryTokens.light.surfaceInset);
       expect(surface.foreground, RosemaryTokens.light.muted);
       expect(surface.dimWhenDisabled, false);
       final opacity = find.ancestor(
@@ -94,12 +94,22 @@ void main() {
         findsOneWidget,
       );
       expect(arrow, findsOneWidget);
-      expect(
-        tester.widget<AnimatedRotation>(find.byType(AnimatedRotation)).turns,
-        .5,
+      final rotations = tester.widgetList<Transform>(
+        find.ancestor(of: arrow, matching: find.byType(Transform)),
       );
       expect(
-        tester.widget<AnimatedRotation>(find.byType(AnimatedRotation)).duration,
+        rotations.any((w) => (w.transform.storage[0] + 1).abs() < .00001),
+        true,
+      );
+      expect(
+        tester
+            .widget<RosemaryActionSurface>(
+              find.descendant(
+                of: find.byType(RosemarySelect),
+                matching: find.byType(RosemaryActionSurface),
+              ),
+            )
+            .transitionDuration,
         Duration.zero,
       );
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
@@ -107,8 +117,12 @@ void main() {
       expect(check, findsNothing);
       expect(arrow, findsOneWidget);
       expect(
-        tester.widget<AnimatedRotation>(find.byType(AnimatedRotation)).turns,
-        0,
+        tester
+            .widgetList<Transform>(
+              find.ancestor(of: arrow, matching: find.byType(Transform)),
+            )
+            .every((w) => w.transform.storage[0] > .99),
+        true,
       );
     },
   );

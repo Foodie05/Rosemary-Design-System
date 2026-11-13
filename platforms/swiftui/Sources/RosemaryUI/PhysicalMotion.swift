@@ -50,3 +50,59 @@ private struct RosemaryButtonWidthKey: PreferenceKey {
   static var defaultValue: CGFloat = 0
   static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = nextValue() }
 }
+
+/// Piecewise-linear interpolation of the portal's actual rounded spring table.
+struct RosemaryDisclosureAnimation: CustomAnimation {
+  let opening: Bool
+  var duration: Double {
+    (opening ? RosemaryInteraction.disclosureMs : RosemaryInteraction.disclosureExitMs) / 1000
+  }
+  func progress(_ fraction: Double) -> Double {
+    let values = opening ? RosemaryInteraction.disclosureEnter : RosemaryInteraction.disclosureExit
+    let position = min(1, max(0, fraction)) * Double(values.count - 1)
+    let index = min(values.count - 2, Int(position))
+    return values[index] + (values[index + 1] - values[index]) * (position - Double(index))
+  }
+  func animate<V: VectorArithmetic>(
+    value: V, time: TimeInterval, context: inout AnimationContext<V>
+  ) -> V? {
+    guard time < duration else { return nil }
+    return value.scaled(by: progress(time / duration))
+  }
+}
+
+private struct RosemarySelectionPressedKey: EnvironmentKey {
+  static let defaultValue = false
+}
+struct RosemarySelectionStyle: ButtonStyle {
+  func makeBody(configuration: Configuration) -> some View {
+    configuration.label.environment(\.rosemarySelectionPressed, configuration.isPressed)
+  }
+}
+extension EnvironmentValues {
+  fileprivate var rosemarySelectionPressed: Bool {
+    get { self[RosemarySelectionPressedKey.self] }
+    set { self[RosemarySelectionPressedKey.self] = newValue }
+  }
+}
+struct RosemarySelectionMotion: ViewModifier {
+  @Environment(\.rosemarySelectionPressed) private var pressed
+  @Environment(\.isEnabled) private var enabled
+  private var p = RosemaryPalette()
+  func body(content: Content) -> some View {
+    content.scaleEffect(pressed && enabled && !p.reduce ? RosemaryInteraction.selectionScale : 1)
+      .animation(
+        p.reduce || !enabled
+          ? nil
+          : .interpolatingSpring(
+            mass: 1,
+            stiffness: pressed
+              ? RosemaryInteraction.pressStiffness : RosemaryInteraction.releaseStiffness,
+            damping: 2
+              * (pressed ? RosemaryInteraction.pressDamping : RosemaryInteraction.releaseDamping)
+              * sqrt(
+                pressed ? RosemaryInteraction.pressStiffness : RosemaryInteraction.releaseStiffness)
+          ),
+        value: pressed)
+  }
+}

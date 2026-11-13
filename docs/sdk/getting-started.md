@@ -1,6 +1,6 @@
-# SDK 0.5.0 候选接入
+# SDK 0.5.0 接入
 
-候选从本轮实际 CI 包或源码目录消费；下面固定 v0.5.0 的 Git / tag 安装指令在正式发布后生效。当前最后正式发布版仍是 v0.4.2。新主题迁移与配方 API 见 [0.5.0 迁移](0.5.0-migration.md)。
+使用 v0.5.0 Release 的同版安装包，校验 release-manifest.json 与 SHA256SUMS 后消费；也可固定 Git tag 或本地源码目录。新主题迁移与配方 API 见 [0.5.0 迁移](0.5.0-migration.md)。
 
 Rosemary Forma **1.3.0** 是设计规范版本；Rosemary SDK **0.5.0** 是组件代码版本。当前实现共用 `design/contracts.json` 的 33 个基础组件 ID 和 `design/tokens.json` 的 45 个语义颜色角色。版本号不表示跨版本源码兼容。
 

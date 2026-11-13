@@ -36,6 +36,7 @@ struct RosemaryAnchoredLayer<Panel: View>: View {
   let reveal: CGFloat
   let onDirection: ((Bool) -> Void)?
   let panel: Panel
+  private var p = RosemaryPalette()
   @State private var viewport = CGRect.zero
   @Environment(\.layoutDirection) private var direction
   init(
@@ -77,7 +78,10 @@ struct RosemaryAnchoredLayer<Panel: View>: View {
         }
         .onAppear { onDirection?(placement.origin.y < 0) }
         .onChange(of: placement.origin.y < 0) { _, up in onDirection?(up) }
-        .shadow(color: .black.opacity(0.12), radius: 12, y: 4)
+        .shadow(
+          color: joined ? p.colors.ink.opacity(0.16) : .black.opacity(0.12),
+          radius: joined ? 19 : 12, y: joined ? 12 : 4
+        )
         .offset(x: placement.origin.x, y: placement.origin.y)
       }
       .environment(\.layoutDirection, .leftToRight)

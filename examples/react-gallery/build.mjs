@@ -12,6 +12,7 @@ await build({
   assetNames: "assets/[name]-[hash]",
 });
 // The module-relative brand PNG URL is kept by esbuild; copy it at that stable runtime path.
+copyFileSync("../../rosemary-design-portal.html", "dist/portal.html");
 mkdirSync("dist/assets", { recursive: true });
 copyFileSync("../../assets/rosemary-logo.png", "dist/assets/rosemary-logo.png");
 writeFileSync(

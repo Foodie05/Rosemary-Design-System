@@ -525,7 +525,7 @@ test("field states and long disclosure labels preserve semantic colors and full 
           return color;
         };
         return Object.fromEntries(
-          ["canvas", "muted", "danger-soft"].map((name) => [
+          ["surface-inset", "muted", "danger-soft"].map((name) => [
             name,
             resolved(name),
           ]),
@@ -533,12 +533,15 @@ test("field states and long disclosure labels preserve semantic colors and full 
       });
       await expect(page.getByLabel("Read only", { exact: true })).toHaveCSS(
         "background-color",
-        colors.canvas,
+        colors["surface-inset"],
       );
       for (const name of ["Unavailable", "Unavailable notes"]) {
         const field = page.getByLabel(name, { exact: true });
         await expect(field).toBeDisabled();
-        await expect(field).toHaveCSS("background-color", colors.canvas);
+        await expect(field).toHaveCSS(
+          "background-color",
+          colors["surface-inset"],
+        );
         await expect(field).toHaveCSS("color", colors.muted);
         await expect(field).toHaveCSS("opacity", "0.65");
       }
@@ -612,11 +615,11 @@ test("semantic floating surfaces retain readable paired content in both appearan
     await section(page, "select").getByRole("combobox").click();
     await expect(section(page, "select").getByRole("listbox")).toHaveCSS(
       "background-color",
-      rgb(colors.fieldFill),
+      rgb(colors.fieldHover),
     );
     await expect(section(page, "select").getByRole("combobox")).toHaveCSS(
       "background-color",
-      rgb(colors.fieldFill),
+      rgb(colors.fieldHover),
     );
     await section(page, "select").getByRole("listbox").press("Escape");
     await expect(section(page, "card").getByRole("article")).toHaveCSS(
@@ -698,4 +701,168 @@ test("field requirements stay adjacent, arm on blur and reset without truncating
     rules.locator('[data-result="invalid"],[data-result="valid"]'),
   ).toHaveCount(0);
   await expect(input).not.toHaveAttribute("aria-invalid", "true");
+});
+
+test("portal and SDK use the same default visual metrics and disclosure easing", async ({
+  page,
+}, testInfo) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/portal.html#/components?component=button");
+  const metrics = (el) => {
+    const s = getComputedStyle(el);
+    return {
+      height: el.offsetHeight,
+      font: s.fontSize,
+      line: s.lineHeight,
+      padding: s.padding,
+      radius: s.borderRadius,
+    };
+  };
+  const portal = await page
+    .getByRole("button", { name: "保存更改", exact: true })
+    .evaluate(metrics);
+  await page.screenshot({
+    path: testInfo.outputPath("portal-buttons.png"),
+    fullPage: true,
+  });
+  await page.goto("/");
+  const sdk = await section(page, "button")
+    .getByRole("button", { name: "保存记录", exact: true })
+    .evaluate(metrics);
+  expect(sdk).toEqual(portal);
+  await expect(page.locator(".rm-range-thumb")).toHaveCSS("width", "16px");
+  await section(page, "select").getByRole("combobox").click();
+  const list = page.getByRole("listbox");
+  const details = await list.evaluate((el) => ({
+    topLayer:
+      typeof el.showPopover !== "function" || el.matches(":popover-open"),
+    easing:
+      el.getAnimations()[0]?.effect?.getTiming().easing ??
+      getComputedStyle(el.parentElement).getPropertyValue(
+        "--rm-disclosure-ease",
+      ),
+  }));
+  expect(details.topLayer).toBe(true);
+  if (
+    await page.evaluate(() =>
+      CSS.supports("animation-timing-function", "linear(0,1)"),
+    )
+  )
+    expect(details.easing).toMatch(/^linear\(/);
+  await list.press("Escape");
+  await page.screenshot({
+    path: testInfo.outputPath("sdk-buttons.png"),
+    fullPage: true,
+  });
+});
+
+test("field focus draws intermediate perimeter frames, blurs cleanly and respects reduced motion", async ({
+  page,
+}, testInfo) => {
+  await page.goto("/");
+  const input = section(page, "search").getByRole("searchbox");
+  await input.scrollIntoViewIfNeeded();
+  // Arm before the input event: a final solid outline alone cannot pass this test.
+  await input.evaluate((el) => {
+    window.__fieldTrace = new Promise((resolve) =>
+      el.addEventListener(
+        "focus",
+        () => {
+          const path = el.closest(".rm-field-frame").querySelector("path");
+          const frames = [],
+            start = performance.now();
+          const sample = () => {
+            frames.push({
+              ms: performance.now() - start,
+              dash: parseFloat(getComputedStyle(path).strokeDasharray),
+            });
+            if (performance.now() - start < 320) requestAnimationFrame(sample);
+            else resolve(frames);
+          };
+          requestAnimationFrame(sample);
+        },
+        { once: true },
+      ),
+    );
+  });
+  await input.click();
+  const frames = await page.evaluate(() => window.__fieldTrace);
+  expect(frames.some((f) => f.dash > 0.005 && f.dash < 0.49)).toBe(true);
+  expect(frames.at(-1).dash).toBeCloseTo(0.501, 3);
+  await testInfo.attach("field-outline-frames.json", {
+    body: JSON.stringify(frames),
+    contentType: "application/json",
+  });
+  await input.press("Tab");
+  await expect(section(page, "search").locator(".rm-field-outline")).toHaveCSS(
+    "opacity",
+    "0",
+  );
+  await page.getByRole("checkbox", { name: "减少动态", exact: true }).check();
+  await input.click();
+  const reduced = await input.evaluate((el) => {
+    const path = el.closest(".rm-field-frame").querySelector("path");
+    return {
+      dash: parseFloat(getComputedStyle(path).strokeDasharray),
+      running: path.getAnimations().length,
+    };
+  });
+  expect(reduced.dash).toBeCloseTo(0.501, 3);
+  expect(reduced.running).toBe(0);
+});
+
+test("checkbox and radio markers shrink, overshoot and settle without moving their labels", async ({
+  page,
+}, testInfo) => {
+  await page.goto("/");
+  for (const id of ["checkbox", "radio"]) {
+    const control = section(page, id).locator("input").last();
+    const label = control.locator("..");
+    const marker = label.locator(
+      id === "checkbox" ? ".rm-check-visual" : ".rm-radio-visual",
+    );
+    await label.scrollIntoViewIfNeeded();
+    const box = await label.boundingBox();
+    const textBox = await label.locator("span").last().boundingBox();
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await expect
+      .poll(async () =>
+        marker.evaluate((el) => parseFloat(getComputedStyle(el).scale) || 1),
+      )
+      .toBeLessThan(0.95);
+    expect(await label.locator("span").last().boundingBox()).toEqual(textBox);
+    await marker.evaluate((el) => {
+      window.__selectionTrace = new Promise((resolve) => {
+        const values = [],
+          start = performance.now();
+        const sample = () => {
+          values.push(parseFloat(getComputedStyle(el).scale) || 1);
+          if (performance.now() - start < 600) requestAnimationFrame(sample);
+          else resolve(values);
+        };
+        requestAnimationFrame(sample);
+      });
+    });
+    await page.mouse.up();
+    const values = await page.evaluate(() => window.__selectionTrace);
+    expect(Math.max(...values)).toBeGreaterThan(1.003);
+    expect(values.at(-1)).toBeCloseTo(1, 3);
+    await testInfo.attach(`${id}-spring-frames.json`, {
+      body: JSON.stringify(values),
+      contentType: "application/json",
+    });
+  }
+  await page.getByRole("checkbox", { name: "减少动态", exact: true }).check();
+  const label = section(page, "checkbox").locator("label");
+  await label.scrollIntoViewIfNeeded();
+  const box = await label.boundingBox();
+  await page.mouse.move(box.x + 10, box.y + box.height / 2);
+  await page.mouse.down();
+  expect(
+    await label
+      .locator(".rm-check-visual")
+      .evaluate((el) => parseFloat(getComputedStyle(el).scale) || 1),
+  ).toBe(1);
+  await page.mouse.up();
 });

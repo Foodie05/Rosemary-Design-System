@@ -44,3 +44,38 @@ extension View {
     -> some View
   { modifier(RosemaryTypographyModifier(role, weight: weight)) }
 }
+
+private struct RosemaryControlTypography: ViewModifier {
+  let component: String
+  let label: Bool
+  @ScaledMetric private var size: CGFloat
+  private let lineRatio: CGFloat
+  init(_ component: String, label: Bool) {
+    self.component = component
+    self.label = label
+    let dimensions = RosemaryTokens.componentTokens[component]!.dimensions
+    let points = dimensions[label ? "labelFontSize" : "fontSize"]!
+    _size = ScaledMetric(wrappedValue: points, relativeTo: .body)
+    lineRatio = dimensions[label ? "labelLineHeight" : "lineHeight"]! / points
+  }
+  func body(content: Content) -> some View {
+    #if canImport(UIKit)
+      let native = UIFont.systemFont(ofSize: size).lineHeight
+    #elseif canImport(AppKit)
+      let font = NSFont.systemFont(ofSize: size)
+      let native = font.ascender - font.descender + font.leading
+    #else
+      let native = size * 1.2
+    #endif
+    return content.font(
+      .system(size: size, weight: label || component == "button" ? .medium : .regular)
+    )
+    .lineSpacing(max(0, size * lineRatio - native))
+    .frame(minHeight: size * lineRatio, alignment: .leading)
+  }
+}
+extension View {
+  func rosemaryControlTypography(_ component: String, label: Bool = false) -> some View {
+    modifier(RosemaryControlTypography(component, label: label))
+  }
+}

@@ -294,20 +294,31 @@ struct RosemaryFieldFrame: ViewModifier {
   var editable = true
   var joiningProgress: CGFloat = 0
   var openingUp = false
+  var readOnly = false
+  var activeFill = false
   init(
     invalid: Bool = false, focused: Bool = false, editable: Bool = true,
     joiningProgress: CGFloat = 0,
-    openingUp: Bool = false
+    openingUp: Bool = false, readOnly: Bool = false, activeFill: Bool = false
   ) {
     self.invalid = invalid
     self.focused = focused
     self.editable = editable
     self.joiningProgress = joiningProgress
     self.openingUp = openingUp
+    self.readOnly = readOnly
+    self.activeFill = activeFill
   }
   func body(content: Content) -> some View {
-    content.padding(12).frame(minHeight: RosemaryNativeMetrics.dimension("input", "minHeight"))
-      .background(!enabled ? p.colors.canvas : invalid ? p.colors.dangerSoft : p.colors.fieldFill)
+    content.padding(.horizontal, 12).padding(
+      .vertical, RosemaryNativeMetrics.dimension("input", "paddingBlock")
+    ).frame(minHeight: RosemaryNativeMetrics.dimension("input", "minHeight"))
+      .background(
+        !enabled || readOnly
+          ? p.colors.surfaceInset
+          : invalid
+            ? p.colors.dangerSoft : activeFill ? p.colors.fieldHover : p.colors.fieldFill
+      )
       .clipShape(
         UnevenRoundedRectangle(
           topLeadingRadius: RosemaryNativeMetrics.radius("input")

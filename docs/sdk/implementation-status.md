@@ -1,4 +1,4 @@
-# SDK 0.5.0 candidate status
+# SDK 0.5.0 status
 
 The 1.3.0 standard now covers shared 45-role themes, coordinated shapes, optical button fills, adjacent field requirements/verification, unified password creation, two-origin focus outlines, connected select disclosure, physical press/release, nonlinear width/slider motion, and inline/dialog search variants on React, Compose, SwiftUI and Flutter. The 33 component IDs and 74 icons remain stable; new field/search APIs are additive.
 

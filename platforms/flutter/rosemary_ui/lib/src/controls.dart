@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/rendering.dart';
 import 'theme.dart';
 import 'primitives.dart';
 import 'overlays.dart';
 import 'generated/rosemary_tokens.dart';
 import 'interaction_tokens.dart';
+import 'disclosure_curve.dart';
 
 class RosemaryOption {
   final String id, label;
@@ -35,36 +37,39 @@ class RosemaryCheckbox extends StatelessWidget {
       enabled: enabled,
       child: RosemaryActionSurface(
         button: false,
+        selectionPress: true,
         enabled: enabled,
         onActivate: () => onChanged(value != true),
         padding: EdgeInsets.zero,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AnimatedContainer(
-              duration: rosemaryDuration(context, 'instantFeedback'),
-              curve: const Cubic(.2, .8, .2, 1),
-              width: 22,
-              height: 22,
-              decoration: BoxDecoration(
-                color: value == false ? c.surface : c.primary,
-                border: Border.all(color: c.control),
-                borderRadius: BorderRadius.circular(
-                  RosemaryTokens.controlRadius / 2,
+            RosemarySelectionMark(
+              child: AnimatedContainer(
+                duration: rosemaryDuration(context, 'instantFeedback'),
+                curve: const Cubic(.2, .8, .2, 1),
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  color: value == false ? c.surface : c.primary,
+                  border: Border.all(color: c.control),
+                  borderRadius: BorderRadius.circular(
+                    RosemaryTokens.controlRadius / 2,
+                  ),
                 ),
-              ),
-              child: ExcludeSemantics(
-                child: value == false
-                    ? null
-                    : value == null
-                    ? Center(
-                        child: Container(
-                          width: 10,
-                          height: 2,
-                          color: c.onPrimary,
-                        ),
-                      )
-                    : RosemaryIcon('check', size: 20, color: c.onPrimary),
+                child: ExcludeSemantics(
+                  child: value == false
+                      ? null
+                      : value == null
+                      ? Center(
+                          child: Container(
+                            width: 10,
+                            height: 2,
+                            color: c.onPrimary,
+                          ),
+                        )
+                      : RosemaryIcon('check', size: 20, color: c.onPrimary),
+                ),
               ),
             ),
             const SizedBox(width: 10),
@@ -110,28 +115,34 @@ class RosemaryRadio extends StatelessWidget {
               enabled: enabled && option.enabled,
               child: RosemaryActionSurface(
                 button: false,
+                selectionPress: true,
                 enabled: enabled && option.enabled,
                 onActivate: () => onChanged(option.id),
                 padding: EdgeInsets.zero,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
-                      width: 22,
-                      height: 22,
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: c.control),
-                      ),
-                      child: AnimatedContainer(
-                        duration: rosemaryDuration(context, 'instantFeedback'),
-                        curve: const Cubic(.2, .8, .2, 1),
+                    RosemarySelectionMark(
+                      child: Container(
+                        width: 20,
+                        height: 20,
+                        padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: value == option.id
-                              ? c.primary
-                              : Colors.transparent,
+                          border: Border.all(color: c.control),
+                        ),
+                        child: AnimatedContainer(
+                          duration: rosemaryDuration(
+                            context,
+                            'instantFeedback',
+                          ),
+                          curve: const Cubic(.2, .8, .2, 1),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: value == option.id
+                                ? c.primary
+                                : Colors.transparent,
+                          ),
                         ),
                       ),
                     ),
@@ -237,6 +248,13 @@ class RosemarySlider extends StatefulWidget {
 
 class _SliderState extends State<RosemarySlider> {
   bool dragging = false;
+  final focus = FocusNode();
+  @override
+  void dispose() {
+    focus.dispose();
+    super.dispose();
+  }
+
   double get value => widget.value;
   double get min => widget.min;
   double get max => widget.max;
@@ -280,6 +298,8 @@ class _SliderState extends State<RosemarySlider> {
           onIncrease: enabled ? () => update(value + step, commit: true) : null,
           onDecrease: enabled ? () => update(value - step, commit: true) : null,
           child: Focus(
+            focusNode: focus,
+            canRequestFocus: enabled,
             onKeyEvent: (node, event) {
               if (event is! KeyDownEvent || !enabled)
                 return KeyEventResult.ignored;
@@ -297,102 +317,107 @@ class _SliderState extends State<RosemarySlider> {
               update(target, commit: true);
               return KeyEventResult.handled;
             },
-            child: Row(
-              children: [
-                RosemaryButton(
-                  label: '−',
-                  onPressed: enabled
-                      ? () => update(value - step, commit: true)
-                      : null,
-                  variant: RosemaryButtonVariant.secondary,
-                ),
-                Expanded(
-                  child: LayoutBuilder(
-                    builder: (context, bounds) {
-                      void fromX(double x, {bool commit = false}) {
-                        final fraction = (x / bounds.maxWidth).clamp(0.0, 1.0);
-                        update(
-                          min + (rtl ? 1 - fraction : fraction) * (max - min),
-                          commit: commit,
-                        );
-                      }
+            child: LayoutBuilder(
+              builder: (context, bounds) {
+                final inset = rosemaryDimension('slider', 'trackInset');
+                final thumb = rosemaryDimension('slider', 'thumbSize');
+                final rail = rosemaryDimension('slider', 'trackHeight');
+                final travel = (bounds.maxWidth - inset * 2).clamp(
+                  0.0,
+                  double.infinity,
+                );
+                final ratio = ((value - min) / (max - min)).clamp(0.0, 1.0);
+                final duration = Duration(
+                  milliseconds: dragging || c.reduceMotion
+                      ? 0
+                      : RosemaryInteraction.layoutMs.toInt(),
+                );
+                void fromX(double x, {bool commit = false}) {
+                  final fraction = travel == 0
+                      ? 0.0
+                      : ((x - inset) / travel).clamp(0.0, 1.0);
+                  update(
+                    min + (rtl ? 1 - fraction : fraction) * (max - min),
+                    commit: commit,
+                  );
+                }
 
-                      return GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTapDown: enabled
-                            ? (d) => fromX(d.localPosition.dx, commit: true)
-                            : null,
-                        onHorizontalDragStart: enabled
-                            ? (_) => setState(() => dragging = true)
-                            : null,
-                        onHorizontalDragCancel: () =>
-                            setState(() => dragging = false),
-                        onHorizontalDragUpdate: enabled
-                            ? (d) => fromX(d.localPosition.dx)
-                            : null,
-                        onHorizontalDragEnd: enabled
-                            ? (_) {
-                                setState(() => dragging = false);
-                                onCommit?.call(normalized(value));
-                              }
-                            : null,
-                        child: Container(
-                          height: 44,
-                          margin: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Container(
-                                height: 4,
-                                decoration: BoxDecoration(
-                                  color: c.control,
-                                  borderRadius: BorderRadius.circular(99),
-                                ),
+                return Opacity(
+                  opacity: enabled ? 1 : .5,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTapDown: enabled ? (_) => focus.requestFocus() : null,
+                    onTapUp: enabled
+                        ? (d) => fromX(d.localPosition.dx, commit: true)
+                        : null,
+                    onHorizontalDragStart: enabled
+                        ? (_) {
+                            focus.requestFocus();
+                            setState(() => dragging = true);
+                          }
+                        : null,
+                    onHorizontalDragUpdate: enabled
+                        ? (d) => fromX(d.localPosition.dx)
+                        : null,
+                    onHorizontalDragCancel: () =>
+                        setState(() => dragging = false),
+                    onHorizontalDragEnd: enabled
+                        ? (_) {
+                            setState(() => dragging = false);
+                            onCommit?.call(normalized(value));
+                          }
+                        : null,
+                    child: SizedBox(
+                      height: 44,
+                      width: bounds.maxWidth,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            left: inset,
+                            right: inset,
+                            top: (44 - rail) / 2,
+                            child: Container(
+                              height: rail,
+                              decoration: BoxDecoration(
+                                color: c.control,
+                                borderRadius: BorderRadius.circular(99),
                               ),
-                              AnimatedAlign(
-                                duration: Duration(
-                                  milliseconds:
-                                      dragging ||
-                                          RosemaryThemeData.of(
-                                            context,
-                                          ).reduceMotion
-                                      ? 0
-                                      : RosemaryInteraction.layoutMs.toInt(),
-                                ),
-                                curve: const Cubic(.2, .8, .2, 1),
-                                alignment: Alignment(
-                                  (rtl ? 1 : -1) +
-                                      (rtl ? -2 : 2) *
-                                          ((value - min) / (max - min)).clamp(
-                                            0.0,
-                                            1.0,
-                                          ),
-                                  0,
-                                ),
-                                child: Container(
-                                  width: 22,
-                                  height: 22,
-                                  decoration: BoxDecoration(
-                                    color: c.primary,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
+                          AnimatedPositionedDirectional(
+                            duration: duration,
+                            curve: const Cubic(.2, .8, .2, 1),
+                            start: inset,
+                            top: (44 - rail) / 2,
+                            width: travel * ratio,
+                            height: rail,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: c.primary,
+                                borderRadius: BorderRadius.circular(99),
+                              ),
+                            ),
+                          ),
+                          AnimatedPositionedDirectional(
+                            duration: duration,
+                            curve: const Cubic(.2, .8, .2, 1),
+                            start: travel * ratio,
+                            top: (44 - thumb) / 2,
+                            width: thumb,
+                            height: thumb,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: c.primary,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-                RosemaryButton(
-                  label: '+',
-                  onPressed: enabled
-                      ? () => update(value + step, commit: true)
-                      : null,
-                  variant: RosemaryButtonVariant.secondary,
-                ),
-              ],
+                );
+              },
             ),
           ),
         ),
@@ -472,7 +497,15 @@ class _SelectState extends State<RosemarySelect>
       disclosure.value = 0;
       remove();
     } else {
-      disclosure.reverse().then((_) => remove());
+      disclosure
+          .animateBack(
+            0,
+            duration: Duration(
+              milliseconds: RosemaryInteraction.disclosureExitMs.toInt(),
+            ),
+            curve: const RosemaryDisclosureCurve(false),
+          )
+          .then((_) => remove());
     }
   }
 
@@ -481,7 +514,13 @@ class _SelectState extends State<RosemarySelect>
     if (entry != null) {
       if (closing) {
         setState(() => closing = false);
-        disclosure.forward();
+        disclosure.animateTo(
+          1,
+          duration: Duration(
+            milliseconds: RosemaryInteraction.disclosureMs.toInt(),
+          ),
+          curve: const RosemaryDisclosureCurve(true),
+        );
         menu.requestFocus();
         entry?.markNeedsBuild();
         widget.onOpenChanged?.call(true);
@@ -492,7 +531,13 @@ class _SelectState extends State<RosemarySelect>
     if (RosemaryThemeData.of(context).reduceMotion) {
       disclosure.value = 1;
     } else {
-      disclosure.forward(from: 0);
+      disclosure.animateTo(
+        1,
+        duration: Duration(
+          milliseconds: RosemaryInteraction.disclosureMs.toInt(),
+        ),
+        curve: const RosemaryDisclosureCurve(true),
+      );
     }
     active = widget.options.indexWhere(
       (o) => o.id == widget.value && o.enabled,
@@ -508,10 +553,13 @@ class _SelectState extends State<RosemarySelect>
               children: [
                 if (!closing)
                   Positioned.fill(
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: _close,
-                      child: const SizedBox.expand(),
+                    child: _AnchorPassThrough(
+                      anchor: anchor,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: _close,
+                        child: const SizedBox.expand(),
+                      ),
                     ),
                   ),
                 RosemaryAnchoredOverlay(
@@ -537,17 +585,21 @@ class _SelectState extends State<RosemarySelect>
                           child: Container(
                             constraints: BoxConstraints(
                               maxWidth: MediaQuery.sizeOf(context).width - 24,
-                              maxHeight:
-                                  MediaQuery.sizeOf(context).height * .55,
+                              maxHeight: rosemaryDimension(
+                                'select',
+                                'popupMaxHeight',
+                              ),
                             ),
                             padding: const EdgeInsets.all(6),
                             decoration: BoxDecoration(
-                              color: RosemaryThemeData.of(context).fieldFill,
+                              color: RosemaryThemeData.of(context).fieldHover,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.12),
-                                  blurRadius: 16,
-                                  offset: const Offset(0, 4),
+                                  color: RosemaryThemeData.of(
+                                    context,
+                                  ).ink.withValues(alpha: 0.16),
+                                  blurRadius: 38,
+                                  offset: const Offset(0, 12),
                                 ),
                               ],
                               borderRadius: openingUp
@@ -585,6 +637,10 @@ class _SelectState extends State<RosemarySelect>
                                         widget.options[i].id,
                                         () => GlobalKey(),
                                       ),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 9,
+                                      ),
                                       selected:
                                           widget.options[i].id == widget.value,
                                       enabled: widget.options[i].enabled,
@@ -600,8 +656,16 @@ class _SelectState extends State<RosemarySelect>
                                       child: Row(
                                         children: [
                                           Expanded(
-                                            child: RosemaryText(
+                                            child: Text(
                                               widget.options[i].label,
+                                              style:
+                                                  rosemaryTextStyle(
+                                                    context,
+                                                    'small',
+                                                  ).copyWith(
+                                                    fontSize: 13,
+                                                    height: 1.5,
+                                                  ),
                                             ),
                                           ),
                                           const SizedBox(width: 8),
@@ -749,102 +813,141 @@ class _SelectState extends State<RosemarySelect>
     final selected = widget.options
         .where((o) => o.id == widget.value)
         .firstOrNull;
-    return KeyedSubtree(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          RosemaryText(widget.label, role: 'small'),
-          Semantics(
-            expanded: expanded,
-            value: selected?.label ?? rString(context, 'Choose'),
-            child: Opacity(
-              opacity: widget.enabled ? 1 : .65,
-              child: RosemaryActionSurface(
-                key: anchor,
-                physicalPress: false,
-                corners: expanded
-                    ? (openingUp
-                          ? const BorderRadius.vertical(
-                              bottom: Radius.circular(
-                                RosemaryTokens.controlRadius,
+    return AnimatedBuilder(
+      animation: disclosure,
+      builder: (context, _) => KeyedSubtree(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.label,
+              style: rosemaryTextStyle(context, 'small').copyWith(
+                fontSize: rosemaryDimension('select', 'labelFontSize'),
+                height: 1.4,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Semantics(
+              expanded: expanded,
+              value: selected?.label ?? rString(context, 'Choose'),
+              child: Opacity(
+                opacity: widget.enabled ? 1 : .65,
+                child: RosemaryActionSurface(
+                  key: anchor,
+                  physicalPress: false,
+                  corners: BorderRadius.lerp(
+                    BorderRadius.circular(RosemaryTokens.controlRadius),
+                    openingUp
+                        ? const BorderRadius.vertical(
+                            bottom: Radius.circular(
+                              RosemaryTokens.controlRadius,
+                            ),
+                          )
+                        : const BorderRadius.vertical(
+                            top: Radius.circular(RosemaryTokens.controlRadius),
+                          ),
+                    disclosure.value,
+                  ),
+                  transitionDuration: Duration.zero,
+                  label:
+                      '${widget.label}: ${selected?.label ?? rString(context, 'Choose')}',
+                  onActivate: expanded ? _close : _open,
+                  enabled: widget.enabled,
+                  dimWhenDisabled: false,
+                  focusNode: trigger,
+                  background: !widget.enabled
+                      ? RosemaryThemeData.of(context).surfaceInset
+                      : widget.error != null
+                      ? RosemaryThemeData.of(context).dangerSoft
+                      : entry != null
+                      ? RosemaryThemeData.of(context).fieldHover
+                      : RosemaryThemeData.of(context).fieldFill,
+                  foreground: widget.enabled
+                      ? RosemaryThemeData.of(context).ink
+                      : RosemaryThemeData.of(context).muted,
+                  border: widget.error != null
+                      ? RosemaryThemeData.of(context).danger
+                      : (MediaQuery.highContrastOf(context)
+                            ? RosemaryThemeData.of(context).control
+                            : null),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          selected?.label ?? rString(context, 'Choose'),
+                          style:
+                              rosemaryTextStyle(
+                                context,
+                                'body',
+                                color: widget.enabled
+                                    ? RosemaryThemeData.of(context).ink
+                                    : RosemaryThemeData.of(context).muted,
+                              ).copyWith(
+                                fontSize: rosemaryDimension(
+                                  'select',
+                                  'fontSize',
+                                ),
+                                height: 1.5,
                               ),
-                            )
-                          : const BorderRadius.vertical(
-                              top: Radius.circular(
-                                RosemaryTokens.controlRadius,
-                              ),
-                            ))
-                    : BorderRadius.circular(RosemaryTokens.controlRadius),
-                transitionDuration: Duration(
-                  milliseconds: RosemaryThemeData.of(context).reduceMotion
-                      ? 0
-                      : (expanded
-                                ? RosemaryInteraction.disclosureMs
-                                : RosemaryInteraction.disclosureExitMs)
-                            .toInt(),
-                ),
-                transitionCurve: const Cubic(.2, .7, .2, 1),
-                label:
-                    '${widget.label}: ${selected?.label ?? rString(context, 'Choose')}',
-                onActivate: expanded ? _close : _open,
-                enabled: widget.enabled,
-                dimWhenDisabled: false,
-                focusNode: trigger,
-                background: !widget.enabled
-                    ? RosemaryThemeData.of(context).canvas
-                    : widget.error != null
-                    ? RosemaryThemeData.of(context).dangerSoft
-                    : RosemaryThemeData.of(context).fieldFill,
-                foreground: widget.enabled
-                    ? RosemaryThemeData.of(context).ink
-                    : RosemaryThemeData.of(context).muted,
-                border: widget.error != null
-                    ? RosemaryThemeData.of(context).danger
-                    : (MediaQuery.highContrastOf(context)
-                          ? RosemaryThemeData.of(context).control
-                          : null),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Flexible(
-                      child: RosemaryText(
-                        selected?.label ?? rString(context, 'Choose'),
-                        color: widget.enabled
-                            ? RosemaryThemeData.of(context).ink
-                            : RosemaryThemeData.of(context).muted,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    AnimatedRotation(
-                      turns: expanded ? 0.5 : 0,
-                      duration: Duration(
-                        milliseconds: RosemaryThemeData.of(context).reduceMotion
-                            ? 0
-                            : (expanded
-                                      ? RosemaryInteraction.disclosureMs
-                                      : RosemaryInteraction.disclosureExitMs)
-                                  .toInt(),
+                      const SizedBox(width: 8),
+                      Transform.rotate(
+                        angle: disclosure.value * 3.141592653589793,
+                        child: const RosemaryIcon('down', size: 18),
                       ),
-                      curve: const Cubic(.2, .7, .2, 1),
-                      child: const RosemaryIcon('down', size: 18),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          if (widget.error != null)
-            RosemaryText(
-              widget.error!,
-              color: RosemaryThemeData.of(context).danger,
-            ),
-        ],
+            if (widget.error != null)
+              RosemaryText(
+                widget.error!,
+                color: RosemaryThemeData.of(context).danger,
+              ),
+          ],
+        ),
       ),
     );
+  }
+}
+
+// Keep the joined head interactive while the outside-dismiss barrier is present.
+class _AnchorPassThrough extends SingleChildRenderObjectWidget {
+  final GlobalKey anchor;
+  const _AnchorPassThrough({required this.anchor, required super.child});
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _AnchorPassThroughBox(anchor);
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    covariant _AnchorPassThroughBox renderObject,
+  ) {
+    renderObject.anchor = anchor;
+  }
+}
+
+class _AnchorPassThroughBox extends RenderProxyBox {
+  GlobalKey anchor;
+  _AnchorPassThroughBox(this.anchor);
+  @override
+  bool hitTest(BoxHitTestResult result, {required Offset position}) {
+    final box = anchor.currentContext?.findRenderObject();
+    if (box is RenderBox &&
+        box.hasSize &&
+        (globalToLocal(box.localToGlobal(Offset.zero)) & box.size).contains(
+          position,
+        ))
+      return false;
+    return super.hitTest(result, position: position);
   }
 }

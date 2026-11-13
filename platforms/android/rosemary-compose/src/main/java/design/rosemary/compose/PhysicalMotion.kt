@@ -15,12 +15,13 @@ import androidx.compose.ui.input.pointer.pointerInput
 internal fun Modifier.rosemaryPhysicalPress(
     source: MutableInteractionSource,
     enabled: Boolean = true,
+    pressScale: Float = RosemaryInteraction.pressScale,
 ): Modifier {
     val held by source.collectIsPressedAsState()
     val reduce = RosemaryTheme.reducedMotion
     val scale by
         animateFloatAsState(
-            if (held && enabled && !reduce) RosemaryInteraction.pressScale else 1f,
+            if (held && enabled && !reduce) pressScale else 1f,
             if (reduce) snap()
             else
                 spring(

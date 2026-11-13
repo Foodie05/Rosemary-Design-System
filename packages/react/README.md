@@ -1,6 +1,6 @@
 # @rosemary-ui/react 0.5.0
 
-> 0.5.0 release candidate implements Forma 1.3.0 with 45 semantic roles and paired scheme imports. See `docs/sdk/0.5.0-migration.md` in the repository. v0.4.2 remains the latest published release; existing historical device evidence below does not establish acceptance for this candidate.
+> 0.5.0 implements Forma 1.3.0 with 45 semantic roles, paired scheme imports, and portal-aligned controls and disclosure curves. See `docs/sdk/0.5.0-migration.md` and `docs/sdk/0.5.0-parity.md`. The Release manifest records exact-main CI provenance; historical evidence below is not a substitute.
 
 
 Rosemary Forma 1.3.0 components for React 18.3.1 and 19.2.8. Install the three supplied tarballs together; packages are not published to a public registry.
@@ -127,7 +127,7 @@ Import `UploadFileState` from the package. `onRetry` and `onCancel` do not optim
 Show requirements directly below their field before editing. Reveal checks after the first nonempty blur, then update while editing. Clearing resets all results. Related verification codes, CAPTCHA, errors, and recovery belong below that same field. These pure checks do not replace identity-service validation.
 
 
-## SDK 0.5.0 field and interaction candidate
+## SDK 0.5.0 fields and interactions
 
 Input and textarea accept optional `requirements` and an adjacent `verification` slot. Requirements are visible before editing; local results start after the first nonempty blur, update after that, and reset on clearing. Existing `error` remains host controlled. Password requirements provide English/Chinese labels; login does not inherit creation complexity. See the repository's `docs/sdk/input-validation.md` and `docs/sdk/interaction.md` for the four platform APIs, composition behavior, focus geometry, physical motion, reduced motion and migration.
 

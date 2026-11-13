@@ -1,17 +1,17 @@
-# RosemaryUI 0.4.2 — SwiftUI
+# RosemaryUI 0.5.0 — SwiftUI
 
-> 0.5.0 release candidate implements Forma 1.3.0 with 45 semantic roles and paired scheme imports. See `docs/sdk/0.5.0-migration.md` in the repository. v0.4.2 remains the latest published release; existing historical device evidence below does not establish acceptance for this candidate.
+> 0.5.0 implements Forma 1.3.0 with 45 semantic roles, paired scheme imports, and portal-aligned controls and disclosure curves. See `docs/sdk/0.5.0-migration.md` and `docs/sdk/0.5.0-parity.md`. The Release manifest records exact-main CI provenance; historical evidence below is not a substitute.
 
 
 RosemaryUI supports iOS 17+ (Swift tools 5.9+, Swift 5 language mode). The root `Package.swift` exposes product/module `RosemaryUI`; the checked-in sample consumes that product through a local package reference to the repository root. macOS 14 is also declared to allow host-side SwiftPM compilation and model tests. iOS simulator build and UI tests are separate checks.
 
 ```swift
-.package(url: "https://github.com/Foodie05/Rosemary-Design-System.git", exact: "0.4.2")
+.package(url: "https://github.com/Foodie05/Rosemary-Design-System.git", exact: "0.5.0")
 // Add .product(name: "RosemaryUI", package: "rosemary-design-system") to your target.
 import RosemaryUI
 ```
 
-Installation is pinned to the `v0.4.2` Git tag. Check the corresponding GitHub Release assets and SHA256 manifest, or extract `RosemaryUI-0.4.2-source.tar.gz` and consume its root package through a local path. No public registry publication is performed. Source is MIT; see repository `BRAND-ASSETS.md` for separate brand asset terms.
+Installation is pinned to the `v0.5.0` Git tag. Check the corresponding GitHub Release assets and SHA256 manifest, or extract `RosemaryUI-0.5.0-source.tar.gz` and consume its root package through a local path. No public registry publication is performed. Source is MIT; see repository `BRAND-ASSETS.md` for separate brand asset terms.
 
 ## Theme, localization and accessibility
 
@@ -150,6 +150,6 @@ The contract's app-state keys are reachable through composition: switch busy/err
 纯检查器不自动控制 UI 时机。要求预先放在字段下方，首次非空脱焦才显示逐条对勾／红叉，此后动态更新；清空恢复中性。验证码、CAPTCHA 及其恢复操作也必须紧邻对应字段下方。
 
 
-## SDK 0.5.0 field and interaction candidate
+## SDK 0.5.0 fields and interactions
 
 Input and textarea accept optional `requirements` and an adjacent `verification` slot. Requirements are visible before editing; local results start after the first nonempty blur, update after that, and reset on clearing. Existing `error` remains host controlled. Password requirements provide English/Chinese labels; login does not inherit creation complexity. See the repository's `docs/sdk/input-validation.md` and `docs/sdk/interaction.md` for the four platform APIs, composition behavior, focus geometry, physical motion, reduced motion and migration.

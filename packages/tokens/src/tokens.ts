@@ -70,8 +70,11 @@ export const componentTokens={
       "medium": 40,
       "large": 48
     },
-    "paddingInline": 16,
-    "darkFillInset": 1
+    "paddingInline": 15,
+    "darkFillInset": 1,
+    "paddingBlock": 9,
+    "fontSize": 13,
+    "lineHeight": 18.2
   },
   "link": {
     "foreground": "ink",
@@ -96,7 +99,12 @@ export const componentTokens={
     "border": "field-line",
     "radius": "control",
     "minTouchTarget": 44,
-    "minHeight": 44
+    "minHeight": 44,
+    "fontSize": 16,
+    "lineHeight": 24,
+    "labelFontSize": 13,
+    "labelLineHeight": 18.2,
+    "paddingBlock": 9
   },
   "textarea": {
     "foreground": "ink",
@@ -104,7 +112,12 @@ export const componentTokens={
     "focus": "focus",
     "border": "field-line",
     "radius": "control",
-    "minTouchTarget": 44
+    "minTouchTarget": 44,
+    "fontSize": 16,
+    "lineHeight": 24,
+    "labelFontSize": 13,
+    "labelLineHeight": 18.2,
+    "paddingBlock": 9
   },
   "select": {
     "foreground": "ink",
@@ -113,7 +126,14 @@ export const componentTokens={
     "border": "control",
     "radius": "control",
     "minTouchTarget": 44,
-    "minHeight": 44
+    "minHeight": 44,
+    "fontSize": 16,
+    "lineHeight": 24,
+    "labelFontSize": 13,
+    "labelLineHeight": 18.2,
+    "paddingBlock": 9,
+    "popupMaxHeight": 340,
+    "popupPadding": 6
   },
   "search": {
     "foreground": "ink",
@@ -154,7 +174,10 @@ export const componentTokens={
     "focus": "focus",
     "border": "control",
     "radius": "control",
-    "minTouchTarget": 44
+    "minTouchTarget": 44,
+    "trackHeight": 4,
+    "thumbSize": 16,
+    "trackInset": 8
   },
   "date": {
     "foreground": "ink",

@@ -11,6 +11,7 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.*
 import androidx.compose.foundation.shape.*
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -21,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
@@ -34,10 +36,31 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.PopupProperties
 import kotlin.math.roundToInt
+
+@Composable
+private fun controlTextStyle(
+    component: String,
+    label: Boolean = false,
+    color: Color = RosemaryTheme.colors.ink,
+): TextStyle {
+    val dimensions =
+        design.rosemary.compose.generated.RosemaryTokens.componentTokens
+            .getValue(component)
+            .dimensions
+    return rosemaryTextStyle(color = color)
+        .copy(
+            fontSize = dimensions.getValue(if (label) "labelFontSize" else "fontSize").sp,
+            lineHeight = dimensions.getValue(if (label) "labelLineHeight" else "lineHeight").sp,
+            fontWeight =
+                if (label || component == "button") FontWeight.Medium else FontWeight.Normal,
+        )
+}
 
 @Composable
 fun RosemaryButton(
@@ -57,13 +80,14 @@ fun RosemaryButton(
         when (variant) {
             RosemaryButtonVariant.Primary -> c.primary
             RosemaryButtonVariant.Danger -> c.danger
-            RosemaryButtonVariant.Secondary -> c.surfaceInset
+            RosemaryButtonVariant.Secondary -> c.fieldFill
             RosemaryButtonVariant.Text -> Color.Transparent
         }
     val ink =
         when (variant) {
             RosemaryButtonVariant.Primary -> c.onPrimary
             RosemaryButtonVariant.Danger -> c.onDanger
+            RosemaryButtonVariant.Secondary -> c.ink
             else -> c.primary
         }
     val interaction = remember { MutableInteractionSource() }
@@ -140,12 +164,15 @@ fun RosemaryButton(
                 onClick = onClick,
             )
             .semantics { if (busy) stateDescription = strings.text("Busy") }
-            .padding(horizontal = 16.dp, vertical = 10.dp),
+            .padding(
+                horizontal = rosemaryDimension("button", "paddingInline"),
+                vertical = rosemaryDimension("button", "paddingBlock"),
+            ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         if (busy) RosemaryLoading(size = 18.dp, label = "", color = ink) else leading?.invoke()
-        RosemaryText(label, color = if (enabled) ink else c.muted)
+        BasicText(label, style = controlTextStyle("button", color = if (enabled) ink else c.muted))
         trailing?.invoke()
     }
 }
@@ -344,8 +371,8 @@ private fun Field(
         if (editing.text == value) editing
         else TextFieldValue(value, TextRange(editing.selection.end.coerceAtMost(value.length)))
     val c = RosemaryTheme.colors
-    Column(modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        RosemaryText(label, size = 14.sp)
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        BasicText(label, style = controlTextStyle("input", label = true))
         BasicTextField(
             displayed,
             { next ->
@@ -361,11 +388,12 @@ private fun Field(
                 .heightIn(min = rosemaryDimension("input", "minTouchTarget"))
                 .rosemaryFieldFocus(invalid)
                 .background(
-                    if (!enabled) c.canvas else if (invalid) c.dangerSoft else c.fieldFill,
+                    if (!enabled || readOnly) c.surfaceInset
+                    else if (invalid) c.dangerSoft else c.fieldFill,
                     RoundedCornerShape(rosemaryRadius("input")),
                 )
                 .alpha(if (enabled) 1f else .65f)
-                .padding(12.dp)
+                .padding(horizontal = 12.dp, vertical = rosemaryDimension("input", "paddingBlock"))
                 .semantics {
                     contentDescription = label
                     if (invalid)
@@ -378,7 +406,7 @@ private fun Field(
                 },
             enabled = enabled,
             readOnly = readOnly,
-            textStyle = rosemaryTextStyle(color = if (enabled) c.ink else c.muted),
+            textStyle = controlTextStyle("input", color = if (enabled) c.ink else c.muted),
             keyboardOptions =
                 if (password && options == KeyboardOptions.Default)
                     options.copy(keyboardType = KeyboardType.Password)
@@ -435,7 +463,7 @@ fun RosemarySelect(
                 tween(
                     if (open) RosemaryInteraction.disclosureMs.toInt()
                     else RosemaryInteraction.disclosureExitMs.toInt(),
-                    easing = CubicBezierEasing(.2f, .7f, .2f, 1f),
+                    easing = rosemaryDisclosureEasing(open),
                 ),
             )
     }
@@ -484,8 +512,8 @@ fun RosemarySelect(
             onOpenChange(false)
         }
     }
-    Column(modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        RosemaryText(label, size = 14.sp)
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        BasicText(label, style = controlTextStyle("select", label = true))
         Box {
             Row(
                 Modifier.fillMaxWidth()
@@ -506,7 +534,9 @@ fun RosemarySelect(
                     .rosemaryFocus()
                     .clip(triggerShape)
                     .background(
-                        if (!enabled) c.canvas else if (error != null) c.dangerSoft else c.fieldFill
+                        if (!enabled) c.surfaceInset
+                        else if (error != null) c.dangerSoft
+                        else if (open || progress.value > 0f) c.fieldHover else c.fieldFill
                     )
                     .alpha(if (enabled) 1f else .65f)
                     .border(
@@ -527,10 +557,14 @@ fun RosemarySelect(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                RosemaryText(
+                BasicText(
                     options.find { it.id == value }?.label ?: rString("Choose…"),
                     Modifier.weight(1f),
-                    color = if (!enabled || value == null) c.muted else c.ink,
+                    style =
+                        controlTextStyle(
+                            "select",
+                            color = if (!enabled || value == null) c.muted else c.ink,
+                        ),
                 )
                 RosemaryIcon(
                     "down",
@@ -558,11 +592,18 @@ fun RosemarySelect(
                                     this@drawWithContent.drawContent()
                                 }
                             }
+                            .shadow(
+                                12.dp,
+                                panelShape,
+                                clip = false,
+                                ambientColor = c.ink.copy(alpha = .08f),
+                                spotColor = c.ink.copy(alpha = .16f),
+                            )
                             .clip(panelShape)
-                            .heightIn(max = 360.dp)
+                            .heightIn(max = rosemaryDimension("select", "popupMaxHeight"))
                             .verticalScroll(rememberScrollState())
-                            .background(c.fieldFill, panelShape)
-                            .padding(4.dp)
+                            .background(c.fieldHover, panelShape)
+                            .padding(rosemaryDimension("select", "popupPadding"))
                             .selectableGroup()
                             .onPreviewKeyEvent { event ->
                                 if (event.type != KeyEventType.KeyDown) false
@@ -648,14 +689,20 @@ fun RosemarySelect(
                                     .background(
                                         if (option.id == value) c.primarySoft else Color.Transparent
                                     )
-                                    .padding(12.dp),
+                                    .padding(horizontal = 12.dp, vertical = 9.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
-                                RosemaryText(
+                                BasicText(
                                     option.label,
                                     Modifier.weight(1f),
-                                    color = if (option.enabled) c.ink else c.muted,
+                                    style =
+                                        rosemaryTextStyle(
+                                                "small",
+                                                color = if (option.enabled) c.ink else c.muted,
+                                                size = 13.sp,
+                                            )
+                                            .copy(lineHeight = 19.5.sp),
                                 )
                                 Box(Modifier.size(18.dp)) {
                                     if (option.id == value)
@@ -803,7 +850,7 @@ fun RosemaryCheckbox(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
-    val strings = LocalRosemaryStrings.current
+    val source = remember { MutableInteractionSource() }
 
     val checkboxRadius = rosemaryRadius("checkbox") / 2
     val c = RosemaryTheme.colors
@@ -825,6 +872,8 @@ fun RosemaryCheckbox(
                 },
                 enabled = enabled,
                 role = Role.Checkbox,
+                interactionSource = source,
+                indication = null,
             ) {
                 onCheckedChange(checked != true)
             }
@@ -832,7 +881,10 @@ fun RosemaryCheckbox(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        Canvas(Modifier.size(20.dp)) {
+        Canvas(
+            Modifier.size(20.dp)
+                .rosemaryPhysicalPress(source, enabled, RosemaryInteraction.selectionScale)
+        ) {
             drawRoundRect(
                 fill,
                 cornerRadius = androidx.compose.ui.geometry.CornerRadius(checkboxRadius.toPx()),
@@ -868,7 +920,7 @@ fun RosemaryRadio(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
-    val strings = LocalRosemaryStrings.current
+    val source = remember { MutableInteractionSource() }
 
     val c = RosemaryTheme.colors
     val fraction by
@@ -881,12 +933,22 @@ fun RosemaryRadio(
         modifier
             .heightIn(min = rosemaryDimension("input", "minTouchTarget"))
             .rosemaryFocus()
-            .selectable(selected, enabled, Role.RadioButton, onClick = onSelect)
+            .selectable(
+                selected = selected,
+                enabled = enabled,
+                role = Role.RadioButton,
+                interactionSource = source,
+                indication = null,
+                onClick = onSelect,
+            )
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        Canvas(Modifier.size(20.dp)) {
+        Canvas(
+            Modifier.size(20.dp)
+                .rosemaryPhysicalPress(source, enabled, RosemaryInteraction.selectionScale)
+        ) {
             drawCircle(c.control, style = Stroke(1.dp.toPx()))
             if (fraction > 0) drawCircle(c.primary, radius = size.minDimension * .28f * fraction)
         }
@@ -971,6 +1033,11 @@ fun RosemarySlider(
     val latestChange by rememberUpdatedState(onValueChange)
     val latestCommit by rememberUpdatedState(onCommit)
     var pixels by remember { mutableIntStateOf(1) }
+    var focused by remember { mutableStateOf(false) }
+    val inset = rosemaryDimension("slider", "trackInset")
+    val thumb = rosemaryDimension("slider", "thumbSize")
+    val rail = rosemaryDimension("slider", "trackHeight")
+    val insetPx = with(LocalDensity.current) { inset.toPx() }
     val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     var dragging by remember { mutableStateOf(false) }
     val reduced = RosemaryTheme.reducedMotion
@@ -993,24 +1060,17 @@ fun RosemarySlider(
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
         RosemaryText("$label: ${"%.1f".format(safe)}")
         Row(verticalAlignment = Alignment.CenterVertically) {
-            RosemaryButton(
-                "−",
-                {
-                    set(safe - step)
-                    onCommit()
-                },
-                enabled = enabled,
-                variant = RosemaryButtonVariant.Secondary,
-            )
             BoxWithConstraints(
                 Modifier.weight(1f)
                     .height(44.dp)
-                    .padding(horizontal = 12.dp)
                     .onSizeChanged { pixels = it.width }
                     .pointerInput(range, step, enabled, rtl) {
                         if (enabled)
                             detectTapGestures { position ->
-                                val f = (position.x / pixels).coerceIn(0f, 1f)
+                                val f =
+                                    ((position.x - insetPx) /
+                                            (pixels - 2 * insetPx).coerceAtLeast(1f))
+                                        .coerceIn(0f, 1f)
                                 latestChange(
                                     (range.start +
                                             ((range.endInclusive - range.start) *
@@ -1026,7 +1086,10 @@ fun RosemarySlider(
                             detectDragGestures(
                                 onDragStart = { position ->
                                     dragging = true
-                                    val f = (position.x / pixels).coerceIn(0f, 1f)
+                                    val f =
+                                        ((position.x - insetPx) /
+                                                (pixels - 2 * insetPx).coerceAtLeast(1f))
+                                            .coerceIn(0f, 1f)
                                     latestChange(
                                         (range.start +
                                                 ((range.endInclusive - range.start) *
@@ -1042,7 +1105,10 @@ fun RosemarySlider(
                                 onDragCancel = { dragging = false },
                                 onDrag = { change, _ ->
                                     change.consume()
-                                    val f = (change.position.x / pixels).coerceIn(0f, 1f)
+                                    val f =
+                                        ((change.position.x - insetPx) /
+                                                (pixels - 2 * insetPx).coerceAtLeast(1f))
+                                            .coerceIn(0f, 1f)
                                     latestChange(
                                         (range.start +
                                                 ((range.endInclusive - range.start) *
@@ -1053,7 +1119,7 @@ fun RosemarySlider(
                                 },
                             )
                     }
-                    .rosemaryFocus()
+                    .onFocusChanged { focused = it.isFocused }
                     .focusable(enabled)
                     .onPreviewKeyEvent {
                         if (it.type == KeyEventType.KeyDown && enabled) {
@@ -1106,33 +1172,32 @@ fun RosemarySlider(
             ) {
                 val width = maxWidth
                 Box(
-                    Modifier.fillMaxWidth()
-                        .height(4.dp)
+                    Modifier.padding(horizontal = inset)
+                        .fillMaxWidth()
+                        .height(rail)
                         .align(Alignment.Center)
-                        .background(c.border, CircleShape)
+                        .background(c.control, CircleShape)
                 )
                 Box(
-                    Modifier.fillMaxWidth(fraction.coerceAtLeast(.001f))
-                        .height(4.dp)
+                    Modifier.offset(x = inset)
+                        .width((width - inset * 2) * fraction)
+                        .height(rail)
                         .align(Alignment.CenterStart)
                         .background(c.primary, CircleShape)
                 )
                 Box(
-                    Modifier.offset(x = (width - 20.dp) * fraction)
-                        .size(20.dp)
+                    Modifier.offset(x = (width - inset * 2) * fraction + inset - thumb / 2)
+                        .size(thumb)
+                        .drawBehind {
+                            if (focused) {
+                                drawCircle(c.focus, radius = size.minDimension / 2 + 4.dp.toPx())
+                                drawCircle(c.canvas, radius = size.minDimension / 2 + 2.dp.toPx())
+                            }
+                        }
                         .align(Alignment.CenterStart)
                         .background(c.primary, CircleShape)
                 )
             }
-            RosemaryButton(
-                "+",
-                {
-                    set(safe + step)
-                    onCommit()
-                },
-                enabled = enabled,
-                variant = RosemaryButtonVariant.Secondary,
-            )
         }
     }
 }
