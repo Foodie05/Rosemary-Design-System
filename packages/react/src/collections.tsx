@@ -48,7 +48,7 @@ function useOptionsPosition(
       const flip = below < Math.min(element.scrollHeight, 300) && above > below;
       const maxHeight = Math.max(32, Math.min(300, flip ? above : below));
       const popupWidth = Math.min(
-        Math.max(180, rect.width),
+        joined ? rect.width : Math.max(180, rect.width),
         width - margin * 2,
       );
       const popupHeight = Math.min(element.scrollHeight, maxHeight);
@@ -210,7 +210,7 @@ export function Select({
     if (top < panel.scrollTop) panel.scrollTop = top;
     else if (top + option.offsetHeight > panel.scrollTop + panel.clientHeight)
       panel.scrollTop = top + option.offsetHeight - panel.clientHeight;
-  }, [open, active, id, enabled]);
+  }, [open, active, id, options]);
   function close() {
     setOpen(false);
     trigger.current?.focus();
@@ -318,7 +318,7 @@ export function Select({
                 }
               }}
             >
-              {option.label}
+              <div className="rm-option-label">{option.label}</div>
               {value === option.value && <Icon name="check" size={16} />}
             </div>
           ))}

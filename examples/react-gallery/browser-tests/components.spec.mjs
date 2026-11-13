@@ -453,10 +453,23 @@ test("live tab geometry, long-list visibility, viewport edges and nested RTL to 
     )
     .toBe(true);
   const bounds = await list.boundingBox();
+  const headBounds = await page
+    .getByRole("combobox", { name: "Long list" })
+    .boundingBox();
+  expect(Math.abs(bounds.width - headBounds.width)).toBeLessThan(1);
   expect(bounds.x).toBeGreaterThanOrEqual(8);
   expect(bounds.x + bounds.width).toBeLessThanOrEqual(773);
   expect(bounds.y).toBeGreaterThanOrEqual(8);
   expect(bounds.y + bounds.height).toBeLessThanOrEqual(633);
+  await list.press("Home");
+  const beforeWheel = await page.evaluate(() => scrollY);
+  await list.hover();
+  await page.mouse.wheel(0, 180);
+  await expect
+    .poll(() => list.evaluate((el) => el.scrollTop))
+    .toBeGreaterThan(40);
+  expect(await page.evaluate(() => scrollY)).toBe(beforeWheel);
+  await list.press("End");
   await list.press("Enter");
   await expect(page.getByRole("combobox")).toHaveText("Option 59");
   await page.getByRole("button", { name: "Edge menu" }).click();

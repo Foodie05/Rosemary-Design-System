@@ -47,6 +47,11 @@ struct RosemaryFieldOutline: ViewModifier {
   let invalid: Bool
   let focused: Bool
   let editable: Bool
+  init(invalid: Bool, focused: Bool, editable: Bool) {
+    self.invalid = invalid
+    self.focused = focused
+    self.editable = editable
+  }
   @State private var origin: CGFloat = 0.5
   @State private var progress: CGFloat = 0
   @State private var pointerPending = false

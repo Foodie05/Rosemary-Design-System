@@ -125,4 +125,38 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets(
+    'keyboard hints preserve multiline editing and secure password entry',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: RosemaryTheme(
+            child: Scaffold(
+              body: Column(
+                children: [
+                  RosemaryTextarea(
+                    label: 'Notes',
+                    value: '',
+                    onChanged: (_) {},
+                  ),
+                  RosemaryInput(
+                    label: 'Password',
+                    value: '',
+                    onChanged: (_) {},
+                    password: true,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      final editors = tester
+          .widgetList<EditableText>(find.byType(EditableText))
+          .toList();
+      expect(editors[0].keyboardType, TextInputType.multiline);
+      expect(editors[1].keyboardType, TextInputType.visiblePassword);
+    },
+  );
 }

@@ -623,7 +623,7 @@ class _InputState extends State<RosemaryInput> {
                         widget.keyboardType ??
                         (widget.password
                             ? TextInputType.visiblePassword
-                            : TextInputType.text),
+                            : null),
                     minLines: widget.minLines,
                     maxLines: widget.maxLines,
                     selectionControls: materialTextSelectionControls,

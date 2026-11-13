@@ -1635,3 +1635,12 @@ button.rm-input,
   white-space: normal;
   overflow-wrap: anywhere;
 }
+
+.rm-option-label {
+  min-width: 0;
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+.rm-option > svg {
+  flex-shrink: 0;
+}

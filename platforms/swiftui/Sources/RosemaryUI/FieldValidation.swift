@@ -40,6 +40,11 @@ struct RosemaryFieldRequirements: View {
   let value: String
   let rules: [RosemaryFieldRequirement]
   let active: Bool
+  init(value: String, rules: [RosemaryFieldRequirement], active: Bool) {
+    self.value = value
+    self.rules = rules
+    self.active = active
+  }
   var body: some View {
     VStack(alignment: .leading, spacing: 5) {
       ForEach(rules) { rule in
