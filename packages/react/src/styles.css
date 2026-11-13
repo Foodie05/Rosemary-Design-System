@@ -1840,3 +1840,26 @@ textarea.rm-input:read-only {
 .rm-field-frame[data-focused] > .rm-field-outline {
   transition: none;
 }
+
+/* Reduced motion snaps on native focus, before React's drawing effect commits. */
+[data-rm-reduced-motion="true"]
+  .rm-field-frame:focus-within
+  > .rm-field-outline {
+  opacity: 1;
+  transition: none;
+}
+[data-rm-reduced-motion="true"]
+  .rm-field-frame:focus-within
+  > .rm-field-outline
+  path {
+  stroke-dasharray: 0.501 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rm-field-frame:focus-within > .rm-field-outline {
+    opacity: 1;
+    transition: none;
+  }
+  .rm-field-frame:focus-within > .rm-field-outline path {
+    stroke-dasharray: 0.501 1;
+  }
+}
