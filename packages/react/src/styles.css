@@ -398,6 +398,8 @@ textarea.rm-input {
   position: fixed;
   inset: 0;
   z-index: 40;
+  height: fit-content;
+  margin: auto;
   background: var(--rm-surface);
   color: var(--rm-ink);
   border: 1px solid var(--rm-border);

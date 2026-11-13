@@ -231,13 +231,14 @@ test("drawer actual 220/180ms completion and interruption, modal=false, narrow r
     .getByRole("button", { name: "打开抽屉" })
     .click();
   await expect(drawer).toBeVisible();
+  // Model a host-driven interruption; do not force pointer clicks through a visible panel.
   await section(page, "drawer")
     .getByRole("button", { name: "打开抽屉" })
-    .click({ force: true });
+    .evaluate((el) => el.click());
   await drawer.getByRole("button", { name: "关闭抽屉", exact: true }).click();
   await section(page, "drawer")
     .getByRole("button", { name: "打开抽屉" })
-    .click({ force: true });
+    .evaluate((el) => el.click());
   await expect(drawer).toBeVisible();
   await expect(page.locator(".gallery-events")).toHaveText(
     "drawer animation completed: true",
