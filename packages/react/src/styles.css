@@ -1509,6 +1509,7 @@ button.rm-input,
   rotate: 180deg;
 }
 .rm-select > .rm-options {
+  min-width: 0;
   background: var(--rm-field-fill);
   border: 0;
   padding: 4px;
